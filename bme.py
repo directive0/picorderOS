@@ -3,7 +3,7 @@ import bme680
 import time
 
 
-sensor = bme680.BME680()
+sensor = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
 
 # These oversampling settings can be tweaked to
 # change the balance between accuracy and noise in
@@ -19,7 +19,7 @@ def GetSensors():
 
         output = (sensor.data.temperature, sensor.data.pressure, sensor.data.humidity)
         
-        #print(output)
+        print(output)
         return output
 
 

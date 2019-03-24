@@ -103,7 +103,7 @@ class graphlist(object):
         # Figure out how 'wide' each range is
         
         leftMax,leftMin = source
-        rightMax,rightMin = target
+        rightMin,rightMax = target
         
         leftSpan = leftMax - leftMin
         rightSpan = rightMax - rightMin

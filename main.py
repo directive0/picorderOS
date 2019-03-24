@@ -8,7 +8,7 @@ import Adafruit_Nokia_LCD as LCD
 import Adafruit_GPIO.SPI as SPI
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
-
+import PIL.ImageOps
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
@@ -23,7 +23,7 @@ from graph import *
 from gpiocontrol import *
 
 # Load default font.
-font = ImageFont.truetype("font2.ttf",8)
+font = ImageFont.truetype("font2.ttf",10)
 titlefont = ImageFont.truetype("font.ttf",8)
 
 # Raspberry Pi hardware SPI config:
@@ -119,7 +119,7 @@ class MultiFrame(object):
         data2 = data.split(".")
         dataa = data2[0]
         datab = data2[1]
-        
+
         datadecimal = datab[0:self.decimal]
         
         datareturn = dataa + "." + datadecimal
@@ -128,7 +128,7 @@ class MultiFrame(object):
         
     # this function defines the labels for the screen
     def labels(self):
-            
+        
         self.titlex = 57
         
         degreesymbol =  u'\N{DEGREE SIGN}'
@@ -137,7 +137,7 @@ class MultiFrame(object):
         tempstring = adjustedtemp + degreesymbol
 
         self.temLabel = LabelObj(tempstring,font,self.draw)
-        self.temLabel.push(self.titlex,9)
+        self.temLabel.push(self.titlex,7)
         
         
         rawbaro = str(self.pres)
@@ -160,9 +160,9 @@ class MultiFrame(object):
         self.buttonstate = buttons
         
         if self.buttonstate["geobut"] == 1:
-            self.auto = False
-        else:
             self.auto = True
+        else:
+            self.auto = False
         
     #push the image frame and contents to the draw object.
     def push(self):
@@ -173,7 +173,7 @@ class MultiFrame(object):
         #Top Bar - Needs to be scaled based on title string size.
         self.draw.rectangle((2,0,self.barlength,6), fill=0)
         
-        self.title.push(self.barlength + 2,0)
+        self.title.push(self.barlength + 2,-1)
         
         self.sense()
         self.graphs()
@@ -214,9 +214,10 @@ class Screen(object):
         self.pixdrw()
 
     def pixdrw(self):
+
+        #invert_image = PIL.ImageOps.invert(self.image)
         disp.image(self.image)
         disp.display()
-        
 
 # Instantiate the multi screen
 Screen1 = Screen() 
