@@ -1,0 +1,1 @@
+In this folder you will find all the documents I have made to help me lay out the design of the picorder's physical arrangement as well as the UI for the software. I provide these files as reference with no further annotation.
