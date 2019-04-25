@@ -3,6 +3,20 @@ import time
 
 # This module contains generally useful objects that the entire program may call on.
 
+class preferences(object):
+
+	#determines device ("pc", "tr108", "tr109")
+	def __init__(self):
+		self.pc = True
+		self.tr108 = True
+		self.tr109 = False
+		self.colourlcd = False
+		self.dotscreen = False
+		self.leds = False
+		self.display = "none"
+		self.auto = True
+
+configure = preferences()
 
 # the following function maps a value from the target range onto the desination range
 def translate(value, leftMin, leftMax, rightMin, rightMax):
@@ -11,7 +25,7 @@ def translate(value, leftMin, leftMax, rightMin, rightMax):
 	if leftSpan == 0:
 		leftSpan = 1
 	rightSpan = rightMax - rightMin
-	
+
 	# Convert the left range into a 0-1 range (float)
 	valueScaled = float(value - leftMin) / float(leftSpan)
 
@@ -79,6 +93,7 @@ class timer(object):
 	# Constructor code logs the time it was instantiated.
 	def __init__(self):
 		self.timeInit = time.time()
+		self.logtime()
 
 	# The following funtion returns the last logged value.
 	def timestart(self):

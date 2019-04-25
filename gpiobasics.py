@@ -49,7 +49,7 @@ def ledb_on():
 
 def ledc_on():
 	GPIO.output(led3, GPIO.HIGH)
-	
+
 def ledd_on():
 	GPIO.output(led4, GPIO.HIGH)
 
@@ -61,46 +61,46 @@ def ledb_off():
 
 def ledc_off():
 	GPIO.output(led3, GPIO.LOW)
-	
+
 def ledd_off():
 	GPIO.output(led4, GPIO.LOW)
 
 class ripple(object):
 	def __init__(self):
 		self.beat = 0
-		
+
 		pass
-		
+
 	def cycle(self):
 		self.beat += 1
-		
+
 		if self.beat > 3:
 			self.beat = 0
-		
+
 		if self.beat == 0:
 			leda_on()
 			ledb_off()
 			ledc_off()
 			ledd_off()
-			
+
 		if self.beat == 1:
 			leda_off()
 			ledb_on()
 			ledc_off()
 			ledd_off()
-			
+
 		if self.beat == 2:
 			leda_off()
 			ledb_off()
 			ledc_on()
 			ledd_off()
-			
+
 		if self.beat == 3:
 			leda_off()
 			ledb_off()
 			ledc_off()
 			ledd_on()
-		
+
 
 # The following function returns the instantanious state of each button.
 def buttonget():
