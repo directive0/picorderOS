@@ -8,13 +8,14 @@ class preferences(object):
 	#determines device ("pc", "tr108", "tr109")
 	def __init__(self):
 		self.pc = True
-		self.tr108 = True
-		self.tr109 = False
-		self.colourlcd = False
+		self.tr108 = False
+		self.tr109 = True
+		self.colourlcd = True
 		self.dotscreen = False
 		self.leds = False
 		self.display = "none"
 		self.auto = True
+		self.display = "st7735"
 
 configure = preferences()
 

@@ -1,21 +1,33 @@
 import pygame
 import random
+
+# Load up the image library stuff to help draw bitmaps to push to the screen
+import PIL.ImageOps
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+
 #import busio
 #import board
+#import adafruit_amg88xx
+
+#i2c = busio.I2C(board.SCL, board.SDA)
+#amg = adafruit_amg88xx.AMG88XX(i2c)
 
 
+#pygame.init()
+#pygame.font.init()
+#pygame.display.set_caption('amgstart')
 
-pygame.init()
-pygame.font.init()
-pygame.display.set_caption('amgstart')
-
- #the list of colors we can choose from
-#blue = Color("indigo")
-#colors = list(blue.range_to(Color("red"), COLORDEPTH))
+# #the list of colors we can choose from
+# blue = Color("indigo")
+# colors = list(blue.range_to(Color("red"), COLORDEPTH))
 
 #create the array of colors
-#colors = [(int(c.red * 255), int(c.green * 255), int(c.blue * 255)) for c in colors]
-
+# colors = [(int(c.red * 255), int(c.green * 255), int(c.blue * 255)) for c in colors]
+#
+# displayPixelWidth = width / 30
+# displayPixelHeight = height / 30
 width = 320
 height = 240
 surface = pygame.display.set_mode((width, height))
@@ -23,7 +35,7 @@ surface = pygame.display.set_mode((width, height))
 surface.fill((0,0,0))
 
 pygame.display.update()
-
+#pygame.mouse.set_visible(False)
 
 #some utility functions
 def constrain(val, min_val, max_val):
@@ -58,11 +70,14 @@ class ThermalPixel(object):
 
 
 	def update(self,value):
-		color = map(value, 10, 80, 0, 254)
+		print(value)
+		color = map(value, 1, 81, 0, 254)
+		print(color)
 		pygame.draw.rect(self.surface, (color,color,color), pygame.Rect(self.x,self.y,self.w,self.h))
 
 
 class ThermalRows(object):
+
 	def __init__(self,x,y,w,h,surface):
 		self.x = x
 		self.y = y
@@ -79,6 +94,8 @@ class ThermalRows(object):
 	def update(self,data):
 		for i in range(8):
 			self.pixels[i].update(data[i])
+
+
 
 class ThermalGrid(object):
 
@@ -102,11 +119,11 @@ class ThermalGrid(object):
 
 # #let the sensor initialize
 # time.sleep(.1)
-a = ThermalGrid(32,32,256,168,surface)
-while(1):
-	a.update(makegrid())
-	#print(amg.pixels)
-	pygame.display.flip()
+# a = ThermalGrid(32,32,256,168,surface)
+# while(1):
+# 	a.update(makegrid())#amg.pixels)
+# 	#print(amg.pixels)
+# 	pygame.display.flip()
 #	surface =
 # 	#read the pixels
 	#pixels = sensor.pixels

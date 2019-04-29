@@ -101,7 +101,8 @@ def Main():
 					if configure.tr108:
 						status = onScreen.graph_screen(data)
 					if configure.tr109:
-						lights.cycle()
+						if configure.leds:
+							lights.cycle()
 
 					if configure.display == "5110":
 						colourscreen.push(data)
@@ -117,7 +118,8 @@ def Main():
 					if configure.tr108:
 						status = onScreen.slider_screen(data)
 					if configure.tr109:
-						lights.cycle()
+						if configure.leds:
+							lights.cycle()
 
 					if configure.display == "5110":
 						colourscreen.push(data)

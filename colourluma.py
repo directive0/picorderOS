@@ -8,7 +8,7 @@ import time
 #import Adafruit_GPIO.SPI as SPI
 from luma.core.interface.serial import spi
 from luma.core.render import canvas
-from luma.lcd.device import pcd8544
+from luma.lcd.device import st7735
 from luma.emulator.device import pygame
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
@@ -19,6 +19,7 @@ from PIL import ImageDraw
 
 # load the module that draws graphs
 from pilgraph import *
+from amg8833_pil import *
 
 
 # Load default font.
@@ -39,10 +40,10 @@ SPI_DEVICE = 0
 
 # Hardware SPI usage:
 #disp = LCD.PCD8544(DC, RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=4000000))
-# serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
-# device = pcd8544(serial)
+#serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
+#device = st7735(serial, width = 160, height = 128, mode = "RGB")
 # device.contrast(50)
-emudevice = pygame(width = 160, height = 128, mode = "RGB")
+device = pygame(width = 160, height = 128, mode = "RGB")
 # Initialize library.
 #disp.begin(contrast=50)
 
@@ -83,15 +84,17 @@ class LabelObj(object):
 class MultiFrame(object):
 
 	def __init__(self):#,draw):
-		self.graphx = 15
-		self.graphy = 25
-		self.gspanx = 128
-		self.gspany = 70
+		self.graphx = 23
+		self.graphy = 24
+		self.gspanx = 135
+		self.gspany = 71
 		self.back = Image.open('assets/lcarsframe.png')
 		self.auto = True
 		self.interval = timer()
 		self.interval.logtime()
 		#self.draw = draw
+		self.titlex = 23
+		self.titley = 6
 
 		self.graphcycle = 0
 		self.decimal = 1
@@ -99,15 +102,16 @@ class MultiFrame(object):
 		self.divider = 47
 
 		# graphlist((lower,upperrange),(x1,y1),(span),cycle?)
-		self.tempGraph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_orange)
+		self.tempGraph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_orange, width = 1)
 		#tempGraph.auto
 
-		self.baroGraph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_blue)
+		self.baroGraph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_blue, width = 1)
 		#baroGraph.auto
 
-		self.humidGraph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_pinker)
+		self.humidGraph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_pinker, width = 1)
 		#humidGraph.auto
 
+		self.cam = ThermalGrid(23,24,135,71,surface)
 		#print(self.humidGraph.giveperiod())
 
 	def definetitle(self):
@@ -130,22 +134,22 @@ class MultiFrame(object):
 		self.humidGraph.update(self.humi)
 		self.humidGraph.render(self.draw, self.auto)
 
-		self.tempGraph.update(self.temp)
-		self.tempGraph.render(self.draw, self.auto)
-
 		self.baroGraph.update(self.pres)
 		self.baroGraph.render(self.draw, self.auto)
 
+		self.tempGraph.update(self.temp)
+		self.tempGraph.render(self.draw, self.auto)
+
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
-		data2 = data.split(".")
-		dataa = data2[0]
-		datab = data2[1]
-
-		datadecimal = datab[0:self.decimal]
-
-		datareturn = dataa + "." + datadecimal
-
+		# data2 = data.split(".")
+		# dataa = data2[0]
+		# datab = data2[1]
+		#
+		# datadecimal = datab[0:self.decimal]
+		#
+		# datareturn = dataa + "." + datadecimal
+		datareturn = format(float(data), '.2f')
 		return datareturn
 
 	def datatext(self):
@@ -153,32 +157,32 @@ class MultiFrame(object):
 
 
 	# this function defines the labels for the screen
-	def labels(self):
+	def labels(self,sensors):
 
-		self.titlex = 18
 
-		degreesymbol =  u'\N{DEGREE SIGN}'
+
+		#degreesymbol =  u'\N{DEGREE SIGN}'
 		rawtemp = str(self.temp)
 		adjustedtemp = self.arrangelabel(rawtemp)
-		tempstring = adjustedtemp + degreesymbol
+		tempstring = adjustedtemp + sensors[0][4]
 
 		self.temLabel = LabelObj(tempstring,titlefont,self.draw, colour = lcars_orange)
-		self.temLabel.push(16,95)
+		self.temLabel.push(18,100)
 
 
 		rawbaro = str(self.pres)
 		adjustedbaro = self.arrangelabel(rawbaro)
-		barostring = adjustedbaro
+		barostring = adjustedbaro + " " + sensors[1][4]
 
 		self.baroLabel = LabelObj(barostring,titlefont,self.draw, colour = lcars_blue)
-		self.baroLabel.push(67,95)
+		self.baroLabel.push(57,100)
 
 		rawhumi = str(self.humi)
 		adjustedhumi = self.arrangelabel(rawhumi)
-		humistring = adjustedhumi + "%"
+		humistring = adjustedhumi + sensors[2][4]
 
-		#self.humiLabel = LabelObj(humistring,font,self.draw)
-		#self.humiLabel.push(self.titlex,35)
+		self.humiLabel = LabelObj(humistring,titlefont,self.draw, colour = lcars_pinker)
+		self.humiLabel.push(117,100)
 
 
 	#push the image frame and contents to the draw object.
@@ -197,11 +201,11 @@ class MultiFrame(object):
 		#self.draw.rectangle((2,0,self.barlength,6), fill="black")
 		self.definetitle()
 		self.layout()
-		self.title.push(16,6)
+		self.title.push(self.titlex,self.titley)
 
 		self.sense()
 		self.graphs()
-		self.labels()
+		self.labels(sensors)
 
 # governs the screen drawing of the entire program. Everything flows through Screen.
 # Screen instantiates a draw object and passes it the image background.
@@ -224,6 +228,7 @@ class ColourScreen(object):
 
 
 		self.frame = MultiFrame()#self.draw)
+		#self.cam = ThermalGrid(32,32,256,168,surface)
 		#self.graph = graphlist
 
 
@@ -237,7 +242,8 @@ class ColourScreen(object):
 
 	def pixdrw(self):
 		#self.draw = ImageDraw.Draw(self.image)
-		emudevice.display(self.newimage)
+		thisimage = self.newimage.convert(mode = "RGB")
+		device.display(thisimage)
 		#invert_image = PIL.ImageOps.invert(self.image)
 		#disp.image(self.image)
 		#disp.display()
