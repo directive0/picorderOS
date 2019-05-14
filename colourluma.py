@@ -23,7 +23,7 @@ from amg8833_pil import *
 
 
 # Load default font.
-font = ImageFont.truetype("assets/babs.otf",10)
+font = ImageFont.truetype("assets/babs.otf",13)
 titlefont = ImageFont.truetype("assets/babs.otf",16)
 
 # Raspberry Pi hardware SPI config:
@@ -40,10 +40,12 @@ SPI_DEVICE = 0
 
 # Hardware SPI usage:
 #disp = LCD.PCD8544(DC, RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=4000000))
-#serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
-#device = st7735(serial, width = 160, height = 128, mode = "RGB")
-# device.contrast(50)
-device = pygame(width = 160, height = 128, mode = "RGB")
+
+if configure.pc:
+	device = pygame(width = 160, height = 128, mode = "RGB")
+else:
+	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
+	device = st7735(serial, width = 160, height = 128, mode = "RGB")
 # Initialize library.
 #disp.begin(contrast=50)
 
@@ -72,6 +74,23 @@ class LabelObj(object):
 		self.string = string
 		self.colour = colour
 
+	def center(self,y,x,w):
+		size = self.font.getsize(self.string)
+		xmid = x + w/2
+		#ymid = y + h/2
+		textposx = xmid - (size[0]/2)
+		#textposy = ymid - (size[1]/2) + self.scaler
+		self.push(textposx,y)
+
+	def r_align(self,x,y):
+		size = self.font.getsize(self.string)
+		self.push(x-size[0],y)
+
+	# def update(self, string = self.string, colour = self.colour):
+	# 	self.string = string
+	# 	self.colour = colour
+	# 	pass
+
 	def push(self,locx,locy):
 		self.draw.text((locx, locy), self.string, font = self.font, fill= self.colour)
 
@@ -86,7 +105,7 @@ class MultiFrame(object):
 	def __init__(self):#,draw):
 		self.graphx = 23
 		self.graphy = 24
-		self.gspanx = 135
+		self.gspanx = 133
 		self.gspany = 71
 		self.back = Image.open('assets/lcarsframe.png')
 		self.auto = True
@@ -95,11 +114,14 @@ class MultiFrame(object):
 		#self.draw = draw
 		self.titlex = 23
 		self.titley = 6
+		self.labely = 102
 
 		self.graphcycle = 0
 		self.decimal = 1
 
 		self.divider = 47
+
+		#self.temLabel = LabelObj("default",titlefont,self.draw, colour = lcars_orange)
 
 		# graphlist((lower,upperrange),(x1,y1),(span),cycle?)
 		self.tempGraph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_orange, width = 1)
@@ -111,7 +133,7 @@ class MultiFrame(object):
 		self.humidGraph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_pinker, width = 1)
 		#humidGraph.auto
 
-		self.cam = ThermalGrid(23,24,135,71,surface)
+		#self.cam = ThermalGrid(23,24,135,71,surface)
 		#print(self.humidGraph.giveperiod())
 
 	def definetitle(self):
@@ -142,14 +164,8 @@ class MultiFrame(object):
 
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
-		# data2 = data.split(".")
-		# dataa = data2[0]
-		# datab = data2[1]
-		#
-		# datadecimal = datab[0:self.decimal]
-		#
-		# datareturn = dataa + "." + datadecimal
-		datareturn = format(float(data), '.2f')
+
+		datareturn = format(float(data), '.0f')
 		return datareturn
 
 	def datatext(self):
@@ -159,40 +175,40 @@ class MultiFrame(object):
 	# this function defines the labels for the screen
 	def labels(self,sensors):
 
-
-
 		#degreesymbol =  u'\N{DEGREE SIGN}'
 		rawtemp = str(self.temp)
 		adjustedtemp = self.arrangelabel(rawtemp)
 		tempstring = adjustedtemp + sensors[0][4]
 
-		self.temLabel = LabelObj(tempstring,titlefont,self.draw, colour = lcars_orange)
-		self.temLabel.push(18,100)
+		self.temLabel = LabelObj(tempstring,font,self.draw,colour = lcars_orange)
+		self.temLabel.push(23,self.labely)
 
 
 		rawbaro = str(self.pres)
 		adjustedbaro = self.arrangelabel(rawbaro)
 		barostring = adjustedbaro + " " + sensors[1][4]
 
-		self.baroLabel = LabelObj(barostring,titlefont,self.draw, colour = lcars_blue)
-		self.baroLabel.push(57,100)
+		self.baroLabel = LabelObj(barostring,font,self.draw, colour = lcars_blue)
+		self.baroLabel.center(self.labely,23,135)
+		#self.baroLabel.push(57,100)
 
 		rawhumi = str(self.humi)
 		adjustedhumi = self.arrangelabel(rawhumi)
 		humistring = adjustedhumi + sensors[2][4]
 
-		self.humiLabel = LabelObj(humistring,titlefont,self.draw, colour = lcars_pinker)
-		self.humiLabel.push(117,100)
-
+		self.humiLabel = LabelObj(humistring,font,self.draw, colour = lcars_pinker)
+		#self.humiLabel.push(117,100)
+		self.humiLabel.r_align(156,self.labely)
 
 	#push the image frame and contents to the draw object.
 	def push(self,sensors,draw):
 		self.draw = draw
 		#self.draw.paste((0,0),self.back)
-		self.temp = sensors[0][0]
-		self.pres = sensors[1][0]
-		self.humi = sensors[2][0]
 
+
+		self.humi = sensors[2][0]
+		self.pres = sensors[1][0]
+		self.temp = sensors[0][0]
 		#Draw the background
 		#self.draw.rectangle((15,8,150,120),fill="black")
 		#self.draw.paste(self.back)
@@ -211,23 +227,23 @@ class MultiFrame(object):
 # Screen instantiates a draw object and passes it the image background.
 # Screen monitors button presses and passes flags for interface updates to the draw object.
 
+class ThermalFrame(object):
+	pass
+
+
 class ColourScreen(object):
 
 	def __init__(self):
 
 		#---------------------------IMAGE LIBRARY STUFF------------------------------#
-		# Create image buffer.
-		# Load the background LCARS frame
-		#image = Image.open('frame.ppm')#.convert('1')
-
-
 
 		# instantiates an image and uses it in a draw object.
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
 
 
-
+		self.cam = ThermalGrid(23,24,135,71)
 		self.frame = MultiFrame()#self.draw)
+
 		#self.cam = ThermalGrid(32,32,256,168,surface)
 		#self.graph = graphlist
 
@@ -238,10 +254,12 @@ class ColourScreen(object):
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.frame.push(sensors,self.draw)
 
+
 		self.pixdrw()
 
 	def pixdrw(self):
 		#self.draw = ImageDraw.Draw(self.image)
+		#self.cam.update(self.draw)
 		thisimage = self.newimage.convert(mode = "RGB")
 		device.display(thisimage)
 		#invert_image = PIL.ImageOps.invert(self.image)

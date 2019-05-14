@@ -8,7 +8,7 @@
 #import sys
 #import os
 import psutil
-from filehandling import *
+#from filehandling import *
 #import time
 
 from objects import *
@@ -22,17 +22,17 @@ class Sensor(object):
 		#0 (reading)		1			2			3		4
 		#info = 		(lower range, upper range, unit, symbol)
 		self.infoa = [0,100,"CPU Percent","%"]
-		self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory", ""]
-		self.infoc = [0,100000,"Bytes Sent", ""]
+		self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory", "b"]
+		self.infoc = [0,100000,"Bytes Sent", "b"]
 		self.VOC_info = []
 
-		self.filehandler = datalog()
+		#self.filehandler = datalog()
 
 
 	def get(self):
 		dummyload = [float(psutil.cpu_percent())]
-		dummyload2 = [float(psutil.virtual_memory().available) / 1024]
-		dummyload3 = [float(psutil.net_io_counters().bytes_sent) / (1024 * 64)]
+		dummyload2 = [float(psutil.virtual_memory().available) * 0.0000001]
+		dummyload3 = [float(psutil.net_io_counters().bytes_sent) * 0.00001]
 
 		item1 = dummyload + self.infoa
 		item2 = dummyload2 + self.infob

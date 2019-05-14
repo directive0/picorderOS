@@ -4,16 +4,13 @@
 # Created by Chris Barrett ------------------------- directive0
 #
 # Intended Goals:
-# Query data from 3 or more sensors and displays them on screen
-# Monitor 3 or more HMI elements to provide user control
-# Store data as CSV file for later viewing
+# Support three display modes (B/W LCD, Colour LCD, Pygame for tr108)
+# Support multiple sensor options across all platforms (BME680, AMG8833, sensehat)
 
 print("PicorderOS - alpha stage")
 print("Loading Main Script")
 
 
-# filehandling controls saving data to disk and retrieving information
-from filehandling import *
 from objects import *
 
 
@@ -49,20 +46,20 @@ firstpage = "mode_a"
 
 # the following function is our main object, it contains all the flow for our program.
 def Main():
-	status = "mode_a"
+	status = firstpage
 
+
+	# From out here in the loop we should instantiate the objects that are common to whatever display configuration we want to use.
+	sensors = Sensor()
 	timeit = timer()
 	ledtime = timer()
 	interval = 0
 	buttons = debounce()
 
-	# Instantiate a screen object to draw data to screen.
+
+	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
 	if configure.tr108:
 		onScreen = Screen(buttons)
-
-
-	sensors = Sensor()
-
 	if configure.display == "5110":
 		dotscreen = NokiaScreen()
 	if configure.display == "st7735":
@@ -71,8 +68,8 @@ def Main():
 	timeit.logtime()
 	ledtime.logtime()
 
-
-	#lights = ripple()
+	if configure.leds:
+		lights = ripple()
 	# The following while loop catches ctrl-c exceptions. I use this structure so that status changes will loop back around and have a chance to activate different functions. It gets a little weird going forward, bear with me.
 	while status != "quit":
 		print(status)
