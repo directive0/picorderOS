@@ -60,10 +60,12 @@ def Main():
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
 	if configure.tr108:
 		onScreen = Screen(buttons)
-	if configure.display == "5110":
-		dotscreen = NokiaScreen()
-	if configure.display == "st7735":
-		colourscreen = ColourScreen()
+
+	if configure.tr109:
+		if configure.display == "5110":
+			dotscreen = NokiaScreen()
+		if configure.display == "st7735":
+			colourscreen = ColourScreen()
 
 	timeit.logtime()
 	ledtime.logtime()
@@ -98,13 +100,14 @@ def Main():
 					if configure.tr108:
 						status = onScreen.graph_screen(data)
 					if configure.tr109:
+						if configure.display == "5110":
+							colourscreen.push(data)
+						if configure.display == "st7735":
+							colourscreen.push(data)
 						if configure.leds:
 							lights.cycle()
 
-					if configure.display == "5110":
-						colourscreen.push(data)
-					if configure.display == "st7735":
-						colourscreen.push(data)
+
 
 					timeit.logtime()
 
