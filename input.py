@@ -24,7 +24,6 @@ buttons = 15
 
 from objects import *
 
-import uinput
 import time
 
 
