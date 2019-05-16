@@ -16,9 +16,9 @@ class preferences(object):
 		self.tr108 = True
 		self.tr109 = False
 
-		#deprecated, used to select SPI screen
-		#self.colourlcd = True
-		#self.dotscreen = False
+		# testing this setting to switch between Pygame controls and gpio ones
+		self.input_kb = True
+		self.input_gpio = False
 
 		# bit controls the onboard LEDS. Easy to turn them off if need be.
 		self.leds = False

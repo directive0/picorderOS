@@ -79,7 +79,7 @@ class Inputs(object):
 
 	def read(self):
 
-		if configure.pc:
+		if configure.input_kb:
 
 			# the following button inputs allow the test program to run on PC and be interactive.
 			key = self.keypress()
@@ -120,7 +120,9 @@ class Inputs(object):
 
 			print("buttonlist: ", self.buttonlist)
 			return self.buttonlist
-		else:
+
+
+		if configure.input_gpio:
 			for i in range(3):
 				if (not self.fired[i]) and (not GPIO.input(pins[i])):  # Fire button pressed
 					self.fired[i] = True
