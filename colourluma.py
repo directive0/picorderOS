@@ -3,6 +3,7 @@
 
 import math
 import time
+from input import *
 
 #import Adafruit_Nokia_LCD as LCD
 #import Adafruit_GPIO.SPI as SPI
@@ -20,6 +21,7 @@ from PIL import ImageDraw
 # load the module that draws graphs
 from pilgraph import *
 from amg8833_pil import *
+
 
 
 # Load default font.
@@ -108,7 +110,7 @@ class MultiFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 		self.back = Image.open('assets/lcarsframe.png')
-		self.auto = True
+		self.auto = configure.auto
 		self.interval = timer()
 		self.interval.logtime()
 		#self.draw = draw
@@ -234,7 +236,7 @@ class ThermalFrame(object):
 class ColourScreen(object):
 
 	def __init__(self):
-
+		self.input = Inputs()
 		#---------------------------IMAGE LIBRARY STUFF------------------------------#
 
 		# instantiates an image and uses it in a draw object.
@@ -255,6 +257,7 @@ class ColourScreen(object):
 		self.frame.push(sensors,self.draw)
 
 
+		self.input.read()
 		self.pixdrw()
 
 	def pixdrw(self):

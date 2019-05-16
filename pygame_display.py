@@ -6,6 +6,7 @@
 import pygame
 import time
 from objects import *
+from input import *
 #from gpiobasics import *
 #
 # The following commands initiate a pygame environment.
@@ -57,56 +58,6 @@ status = "startup"
 pygame.display.set_icon(blueInsignia)
 
 
-class input(object):
-
-	def __init__(self):
-		self.awaspressed = False
-		self.bwaspressed = False
-		self.cwaspressed = False
-		self.afire = False
-		self.bfire = False
-		self.cfire = False
-
-	def read(self):
-		#button_readings = buttonget()
-		key = keypress()
-		#print(key)
-
-		self.afire = False
-		self.bfire = False
-		self.cfire = False
-
-		if key[pygame.K_LEFT]:
-			if not self.awaspressed:
-				self.afire = True
-				self.awaspressed = True
-
-		if self.awaspressed:
-			if not key[pygame.K_LEFT]:
-				self.awaspressed = False
-
-		if key[pygame.K_DOWN]:
-			if not self.bwaspressed:
-				self.bfire = True
-				self.bwaspressed = True
-
-		if self.bwaspressed:
-			if not key[pygame.K_DOWN]:
-				self.bwaspressed = False
-
-		if key[pygame.K_RIGHT]:
-			if not self.cwaspressed:
-				self.cfire = True
-				self.cwaspressed = True
-
-		if self.cwaspressed:
-			if not key[pygame.K_RIGHT]:
-				self.cwaspressed = False
-
-
-		buttonlist = [self.afire, self.bfire, self.cfire]
-		print("buttonlist: ", buttonlist)
-		return buttonlist
 
 # The following function defines button behaviours and allows the program to query the button events and act accordingly.
 def butswitch():
@@ -318,13 +269,6 @@ def graphit(data,new, auto = True):
 	return data.graphprep(prep)
 
 
-def keypress():
-	pygame.event.get()
-	#pygame.time.wait(50)
-	key = pygame.key.get_pressed()
-
-	return key
-
 class Settings_Panel(object):
 	def __init__(self,surface,input):
 
@@ -358,6 +302,12 @@ class Settings_Panel(object):
 			i.draw(self.surface)
 
 		pygame.display.flip()
+
+		# draws UI to frame buffer
+		#if (rot.read() == True): < can flip screen if necessary
+		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
+		if self.input.read()[1]:
+			return "mode_a"
 
 
 
@@ -621,7 +571,7 @@ class Screen(object):
 			pygame.mouse.set_visible(False)
 
 		self.timed = time.time()
-		self.input = input()
+		self.input = Inputs()
 		self.graphscreen = Graph_Screen(self.surface,self.input)
 		self.slidescreen = Slider_Screen(self.surface,self.input)
 		self.settings_screen = Settings_Panel(self.surface,self.input)
@@ -631,18 +581,18 @@ class Screen(object):
 
 		status = startUp(self.surface,start_time)
 
-		key = keypress()
-		if key[pygame.K_q]:
-			status = "quit"
+		# key = keypress()
+		# if key[pygame.K_q]:
+		# 	status = "quit"
 
 		return status
 
 	def slider_screen(self,sensors):
 		status = self.slidescreen.frame(sensors)
 
-		key = keypress()
-		if key[pygame.K_q]:
-			status = "quit"
+		# key = keypress()
+		# if key[pygame.K_q]:
+		# 	status = "quit"
 
 		return status
 		#return grapher(self.surface,sensors,self.data_a,self.data_b,self.data_c)
@@ -650,16 +600,16 @@ class Screen(object):
 	def graph_screen(self,sensors):
 		status = self.graphscreen.frame(sensors)
 
-		key = keypress()
-		if key[pygame.K_q]:
-			status = "quit"
+		# key = keypress()
+		# if key[pygame.K_q]:
+		# 	status = "quit"
 
 		return status
 
 
 	def settings(self):
 		status = self.settings_screen.frame()
-		key = keypress()
-		if key[pygame.K_q]:
-			status = "quit"
+		# key = keypress()
+		# if key[pygame.K_q]:
+		# 	status = "quit"
 		return status

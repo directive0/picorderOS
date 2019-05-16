@@ -26,6 +26,12 @@ if configure.tr109:
 	if not configure.pc:
 		from bme import *
 
+	if configure.display == "1":
+		from colourluma import *
+
+	if configure.display == "0":
+		from nokialuma import *
+
 if configure.pc:
 	from getcpu import *
 	from gpiodummy import *
@@ -33,11 +39,7 @@ else:
 	from gpiobasics import *
 
 
-if configure.display == "st7735":
-	from colourluma import *
 
-if configure.display == "5110":
-	from nokialuma import *
 
 # Default parameters:
 
@@ -62,9 +64,9 @@ def Main():
 		onScreen = Screen(buttons)
 
 	if configure.tr109:
-		if configure.display == "5110":
+		if configure.display == "0":
 			dotscreen = NokiaScreen()
-		if configure.display == "st7735":
+		if configure.display == "1":
 			colourscreen = ColourScreen()
 
 	timeit.logtime()
@@ -100,9 +102,9 @@ def Main():
 					if configure.tr108:
 						status = onScreen.graph_screen(data)
 					if configure.tr109:
-						if configure.display == "5110":
-							colourscreen.push(data)
-						if configure.display == "st7735":
+						if configure.display == "0":
+							dotscreen.push(data)
+						if configure.display == "1":
 							colourscreen.push(data)
 						if configure.leds:
 							lights.cycle()
@@ -121,10 +123,10 @@ def Main():
 						if configure.leds:
 							lights.cycle()
 
-					if configure.display == "5110":
-						colourscreen.push(data)
-					if configure.display == "st7735":
-						colourscreen.push(data)
+						if configure.display == "0":
+							colourscreen.push(data)
+						if configure.display == "1":
+							colourscreen.push(data)
 
 					timeit.logtime()
 

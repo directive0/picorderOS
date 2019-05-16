@@ -7,15 +7,27 @@ class preferences(object):
 
 	#determines device ("pc", "tr108", "tr109")
 	def __init__(self):
+
+		# enables "PC Mode", sensors and GPIO calls are disabled.
+		# Machine vitals are substituted and Luma screens use emulator
 		self.pc = True
-		self.tr108 = False
-		self.tr109 = True
-		self.colourlcd = True
-		self.dotscreen = False
+
+		# These two bits determine the target device (Original picorder or new version)
+		self.tr108 = True
+		self.tr109 = False
+
+		#deprecated, used to select SPI screen
+		#self.colourlcd = True
+		#self.dotscreen = False
+
+		# bit controls the onboard LEDS. Easy to turn them off if need be.
 		self.leds = False
-		self.display = "none"
-		self.auto = True
-		self.display = "st7735"
+
+		# bit controls auto ranging of graphs
+		self.auto = False
+
+		# chooses SPI display (0 for nokia 5110, 1 for st7735)
+		self.display = "0"
 
 configure = preferences()
 
