@@ -80,7 +80,7 @@ class Inputs(object):
 			for i in range(3):
 				if (not self.fired[i]) and (not GPIO.input(pins[i])):  # Fire button pressed
 					self.fired[i] = True
-					print("Button registered!")
+					print("Button ", i, " registered!")
 				#device.emit(uinput.KEY_LEFTCTRL, 1) # Press Left Ctrl key
 				if self.fired[i] and GPIO.input(pins[i]):  # Fire button released
 					self.fired[i] = False
