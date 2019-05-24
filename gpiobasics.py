@@ -3,8 +3,11 @@
 # new Changes
 # will need to support a reed switch and more inputs.
 
-# External module imports
+# External module import
 import RPi.GPIO as GPIO
+from objects import *
+
+global_notify = "Sensehat is loading"
 
 # Pin Definitons:
 led1 = 19 # Broadcom pin 19

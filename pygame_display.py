@@ -270,6 +270,7 @@ def graphit(data,new, auto = True):
 
 
 class Settings_Panel(object):
+
 	def __init__(self,surface,input):
 
 		self.input = input
@@ -282,7 +283,7 @@ class Settings_Panel(object):
 		self.option1.update("Auto Range",30,15*2,205,titleFont,red)
 		self.option1.center(320,50,0,60)
 		self.option2 = SelectableLabel()
-		self.option2.update("Moire Animate", 30, 15*3, 205, titleFont, red)
+		self.option2.update("Sensor: 1", 30, 15*3, 205, titleFont, red)
 		self.option2.center(320,50,0,60+30)
 		self.option3 = SelectableLabel()
 		self.option3.update("Moire Animate", 30, 15*3, 205, titleFont, red)
@@ -303,15 +304,18 @@ class Settings_Panel(object):
 
 		pygame.display.flip()
 
+		result = "settings"
 		# draws UI to frame buffer
 		#if (rot.read() == True): < can flip screen if necessary
 		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
-		if self.input.read()[1]:
-			return "mode_a"
+		if self.input.read()[0]:
+			print("key registered!")
 
+			if self.input.is_down(0):
+				print("attempting to switch")
+				result = "mode_a"
 
-
-		return "settings"
+		return result
 
 
 # The graph screen object is a self contained screen that is fed the surface and the sensor at the current moment and draws a frame when called.
@@ -455,20 +459,15 @@ class Graph_Screen(object):
 
 		keys = self.input.read()
 		#print(self.input.read())
-		if keys[2]:
-			status =  "mode_b"
-
-
 		if keys[1]:
-			print("set status to settings")
-			status = "settings"
-		# if "up" in butswitch():
-		# 	print("settings commanded")
-		# 	return "settings"
-		# if "a" in butswitch():
-		# 	self.auto = -self.auto
+			if self.input.is_down(1):
+				status =  "mode_b"
 
-		#returns state to main loop
+		if keys[2]:
+			if self.input.is_down(2):
+				print("set status to settings")
+				status = "settings"
+
 		return status
 
 	def visible(self,item,option):
@@ -541,7 +540,7 @@ class Slider_Screen(object):
 		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
 		if self.input.read()[0]:
 			return "mode_a"
-		if self.input.read()[1]:
+		if self.input.read()[2]:
 			return "settings"
 
 		pygame.display.flip()

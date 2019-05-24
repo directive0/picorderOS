@@ -27,10 +27,10 @@ from objects import *
 import time
 
 
-if configure.pc:
+if configure.input_kb:
 	import pygame
-else:
 
+if configure.input_gpio:
 	# setup for ugeek test rig.
 	import RPi.GPIO as GPIO
 
@@ -48,12 +48,12 @@ class Inputs(object):
 
 		# # create some status variables for debounce.
 		self.fired = []
+		self.buttonlist = []
+		self.down = []
 		for i in range(buttons):
 			self.fired.append(False)
-
-		self.buttonlist = []
-		for i in range(buttons):
 			self.buttonlist.append(False)
+			self.down.append(True)
 
 		self.awaspressed = False
 		self.bwaspressed = False
@@ -61,62 +61,48 @@ class Inputs(object):
 		self.afire = False
 		self.bfire = False
 		self.cfire = False
-		# self.pwr = False
-		# self.f1_f2 = False
-		# self.I = False
-		# self.E = False
-		# self.geo = False
-		# self.met = False
-		# self.bio = False
-		# self.accpt_pool = False
-		# self.intrship = False
-		# self.EMRG = False
-		# self.fwd = False
-		# self.rvs = False
-		# self.Ib = False
-		# self.Eb = False
-		# self.ID = False
+
+	def is_down(self, i):
+		if self.down[i]:
+			self.down[i] = False
+			return True
+		else:
+			return False
 
 	def read(self):
 
 		if configure.input_kb:
-
 			# the following button inputs allow the test program to run on PC and be interactive.
 			key = self.keypress()
 			#print(key)
 
-			if key[pygame.K_LEFT]:
-				if not self.awaspressed:
+			if key[pygame.K_LEFT] and not self.awaspressed:
 					self.buttonlist[0] = True
-					configure.auto = not configure.auto
-					print(configure.auto)
+					#configure.auto = not configure.auto
 					self.awaspressed = True
 
-			if self.awaspressed:
-				if not key[pygame.K_LEFT]:
+			if not key[pygame.K_LEFT] and self.awaspressed:
 					self.awaspressed = False
 					self.buttonlist[0] = False
+					self.down[0] = True
 
-			if key[pygame.K_DOWN]:
-				if not self.bwaspressed:
+			if key[pygame.K_DOWN] and not self.bwaspressed:
 					self.buttonlist[1] = True
 					self.bwaspressed = True
 
-			if self.bwaspressed:
-				if not key[pygame.K_DOWN]:
+			if not key[pygame.K_DOWN] and self.bwaspressed:
 					self.bwaspressed = False
 					self.buttonlist[1] = False
+					self.down[1] = True
 
-			if key[pygame.K_RIGHT]:
-				if not self.cwaspressed:
+			if key[pygame.K_RIGHT] and not self.cwaspressed:
 					self.buttonlist[2] = True
 					self.cwaspressed = True
 
-			if self.cwaspressed:
-				if not key[pygame.K_RIGHT]:
+			if not key[pygame.K_RIGHT] and self.cwaspressed:
 					self.cwaspressed = False
 					self.buttonlist[2] = False
-
+					self.down[2] = True
 
 			print("buttonlist: ", self.buttonlist)
 			return self.buttonlist

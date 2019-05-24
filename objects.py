@@ -3,6 +3,10 @@ import time
 
 # This module contains generally useful objects that the entire program may call on.
 
+# This variable is used to pass information to things like progress notifications
+global_notify = "PicorderOS is not active"
+
+
 class preferences(object):
 
 	#determines device ("pc", "tr108", "tr109")
@@ -24,7 +28,7 @@ class preferences(object):
 		self.leds = False
 
 		# bit controls auto ranging of graphs
-		self.auto = False
+		self.auto = True
 
 		# chooses SPI display (0 for nokia 5110, 1 for st7735)
 		self.display = "0"

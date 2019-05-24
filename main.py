@@ -44,7 +44,7 @@ else:
 # Default parameters:
 
 # sets the default mode that is called after the splash screen.
-firstpage = "mode_a"
+firstpage = "startup"
 
 # the following function is our main object, it contains all the flow for our program.
 def Main():
@@ -91,7 +91,7 @@ def Main():
 					status = onScreen.startup_screen(start_time)
 
 			if status == "ready":
-				status = firstpage
+				status = "mode_a"
 
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			while(status == "mode_a"):
