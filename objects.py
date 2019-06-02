@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import time
-
+print("Loading prefs")
 # This module contains generally useful objects that the entire program may call on.
 
 # This variable is used to pass information to things like progress notifications
@@ -12,7 +12,7 @@ class preferences(object):
 	#determines device ("pc", "tr108", "tr109")
 	def __init__(self):
 
-		# enables "PC Mode", sensors and GPIO calls are disabled.
+		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
 		self.pc = True
 
@@ -28,10 +28,18 @@ class preferences(object):
 		self.leds = False
 
 		# bit controls auto ranging of graphs
-		self.auto = True
+		self.auto = [True]
 
 		# chooses SPI display (0 for nokia 5110, 1 for st7735)
 		self.display = "0"
+
+		# enables thermal cam support
+		self.tcam = False
+
+		#selects the three sensor targets to plot
+		self.sensor1 = [0]
+		self.sensor2 = [1]
+		self.sensor3 = [2]
 
 configure = preferences()
 

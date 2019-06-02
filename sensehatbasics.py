@@ -28,23 +28,27 @@ class Sensor(object):
 		self.temp_info = [0,65,"Temperature",self.deg_sym + "c"]
 		self.humidity_info = [20,80,"Relative Humidity", "%"]
 		self.pressure_info = [260,1260,"Barometric Pressure","hPa"]
-		self.magnet_info = [-500,500,"Magnetomer","G"]
-		self.accelerometer_info = [-500,500,"Acceleration","G"]
+		self.magnet_info = [-500,500,"Magnetomer"]
+		self.accelerometer_info = [-500,500,"Acceleration","g"]
 
 
 	def get(self):
 		dummyload = [sense.get_temperature()]
 		dummyload2 = [sense.get_pressure()]
 		dummyload3 = [sense.get_humidity()]
-		dummyload4 = [sense.get_compass()]
-		dummyload5 = [sense.get_accelerometer_raw()]
+		dummyload4 = [sense.get_compass()[0]]
+		dummyload5 = [sense.get_compass()[1]]
+		dummyload6 = [sense.get_compass()[2]]
+		dummyload7 = [sense.get_accelerometer_raw()]
 
 		item1 = dummyload + self.temp_info
 		item2 = dummyload2 + self.pressure_info
 		item3 = dummyload3 + self.humidity_info
-		item4 = dummyload4 + self.magnet_info
-		item5 = dummyload5 + self.accelerometer_info
-		sensorlist = [item1, item2, item3, item4, item5]
+		item4 = dummyload4 + self.magnet_info + ["x"]
+		item5 = dummyload5 + self.magnet_info + ["y"]
+		item6 = dummyload6 + self.magnet_info + ["z"]
+		item7 = dummyload7 + self.accelerometer_info
+		sensorlist = [item1, item2, item3, item4, item5, item6, item7]
 
 
 		return sensorlist

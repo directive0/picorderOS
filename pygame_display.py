@@ -76,7 +76,7 @@ def butswitch():
 
 	if key[pygame.K_a]:
 		print("key a")
-		configure.auto = not configure.auto
+		configure.auto[0] = not configure.auto[0]
 
 	return message
 
@@ -126,7 +126,7 @@ class Label(object):
 		return textw,texth
 
 class SelectableLabel(Label):
-	def __init__(self):
+	def __init__(self, oper):
 		self.x = 0
 		self.y = 0
 		self.color = white
@@ -138,6 +138,7 @@ class SelectableLabel(Label):
 		self.selected = False
 		self.indicator = Image()
 		self.content = "default"
+		self.oper = oper
 
 	def update(self, content, fontSize, nx, ny, fontType, color):
 		self.x = nx
@@ -148,10 +149,20 @@ class SelectableLabel(Label):
 		self.color = color
 		self.indicator.update(sliderb, nx - 23, ny+6)
 
+	def toggle(self):
+		print(self.oper)
+		if isinstance(self.oper[0], bool):
+			self.oper[0] = not self.oper[0]
+		elif isinstance(self.oper[0], int):
+			self.oper[0] += 1
+			if self.oper[0] > 9:
+				self.oper[0] = 0
+		return self.oper[0]
+
 	def draw(self, surface):
 		if self.selected:
 			self.indicator.draw(surface)
-		label = self.myfont.render(self.content, 1, self.color)
+		label = self.myfont.render(self.content + str(self.oper[0]), 1, self.color)
 		surface.blit(label, (self.x, self.y))
 
 
@@ -261,7 +272,7 @@ def graphit(data,new, auto = True):
 	data_low = min(buffer)
 	#print(new)
 	for i in data.grablist():
-		if configure.auto:
+		if configure.auto[0]:
 			prep.append(translate(i, data_low, data_high, 204, 17))
 		else:
 			prep.append(translate(i, new[1], new[2], 204, 17))
@@ -279,28 +290,40 @@ class Settings_Panel(object):
 		self.titlelabel = Label()
 		self.titlelabel.update("Configuration",30,15,205,titleFont,yellow)
 		self.titlelabel.center(320,50,0,0)
-		self.option1 = SelectableLabel()
-		self.option1.update("Auto Range",30,15*2,205,titleFont,red)
-		self.option1.center(320,50,0,60)
-		self.option2 = SelectableLabel()
-		self.option2.update("Sensor: 1", 30, 15*3, 205, titleFont, red)
-		self.option2.center(320,50,0,60+30)
-		self.option3 = SelectableLabel()
-		self.option3.update("Moire Animate", 30, 15*3, 205, titleFont, red)
-		self.option3.center(320,50,0,60+60)
-		self.options = [self.option1,self.option2,self.option3]
+		self.option1 = SelectableLabel(configure.auto)
+		self.option1.update("Auto Ranging: ",30,15*2,205,titleFont,red)
+
+		self.option2 = SelectableLabel(configure.sensor1)
+		self.option2.update("Sensor 1: ", 30, 15*3, 205, titleFont, red)
+
+		self.option3 = SelectableLabel(configure.sensor2)
+		self.option3.update("Sensor 2: ", 30, 15*3, 205, titleFont, red)
+
+		self.option4 = SelectableLabel(configure.sensor3)
+		self.option4.update("Sensor 3: ", 30, 15*3, 205, titleFont, red)
+
+		self.options = [self.option1,self.option2,self.option3,self.option4]
 		pass
 
 	def frame(self):
+		self.option1.center(320,50,0,60)
+		self.option2.center(320,50,0,60+30)
+		self.option3.center(320,50,0,60+60)
+		self.option4.center(320,50,0,60+90)
 
 		self.surface.fill(black)
 
 		self.titlelabel.draw(self.surface)
 
-		self.options[1].selected = True
+		self.options[self.index].selected = True
 
-		for i in self.options:
-			i.draw(self.surface)
+		for i in range(len(self.options)):
+			if i == self.index:
+				self.options[i].selected = True
+			else:
+				self.options[i].selected = False
+
+			self.options[i].draw(self.surface)
 
 		pygame.display.flip()
 
@@ -308,11 +331,22 @@ class Settings_Panel(object):
 		# draws UI to frame buffer
 		#if (rot.read() == True): < can flip screen if necessary
 		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
-		if self.input.read()[0]:
-			print("key registered!")
 
+		keys = self.input.read()
+		#print(self.input.read())
+		if keys[0]:
 			if self.input.is_down(0):
-				print("attempting to switch")
+				self.index += 1
+
+				if self.index > (len(self.options) - 1):
+					self.index = 0
+
+		if keys[1]:
+			if self.input.is_down(1):
+				self.options[self.index].toggle()
+
+		if keys[2]:
+			if self.input.is_down(2):
 				result = "mode_a"
 
 		return result
@@ -380,7 +414,7 @@ class Graph_Screen(object):
 		#converts data to float
 		a_newest = float(sensors[0][0])
 
-		# updates the data storage object and retrieves a fresh graph ready to
+		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
 		a_cords = graphit(self.data_a,sensors[0])
 
 		#repeat for each sensor
@@ -413,7 +447,7 @@ class Graph_Screen(object):
 		self.intervallabelshadow.update(intervaltext, 30, interx + 2, intery + 2 ,titleFont,(100,100,100))
 
 
-		if not configure.auto:
+		if not configure.auto[0]:
 			a_slide = translate(a_newest, sensors[0][1], sensors[0][2], 194, 7)
 
 			b_slide = translate(b_newest, sensors[1][1], sensors[1][2], 194, 7)
@@ -508,9 +542,9 @@ class Slider_Screen(object):
 
 
 		# data labels
-		self.a_label.update(str(a_newest) + "\xb0",19,47,215,titleFont,yellow)
-		self.b_label.update(str(b_newest),19,152,215,titleFont,yellow)
-		self.c_label.update(str(c_newest),19,254,215,titleFont,yellow)
+		self.a_label.update(str(int(a_newest)) + "\xb0",19,47,215,titleFont,yellow)
+		self.b_label.update(str(int(b_newest)),19,152,215,titleFont,yellow)
+		self.c_label.update(str(int(c_newest)),19,254,215,titleFont,yellow)
 
 		# slider data adjustment
 		# the routine takes the raw sensor data and converts it to screen coordinates to move the sliders

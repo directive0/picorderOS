@@ -104,7 +104,7 @@ class Inputs(object):
 					self.buttonlist[2] = False
 					self.down[2] = True
 
-			print("buttonlist: ", self.buttonlist)
+			#print("buttonlist: ", self.buttonlist)
 			return self.buttonlist
 
 
@@ -112,7 +112,7 @@ class Inputs(object):
 			for i in range(3):
 				if (not self.fired[i]) and (not GPIO.input(pins[i])):  # Fire button pressed
 					self.fired[i] = True
-					print("Button ", i, " registered!")
+					#print("Button ", i, " registered!")
 					self.buttonlist[i] = True
 				#device.emit(uinput.KEY_LEFTCTRL, 1) # Press Left Ctrl key
 				if self.fired[i] and GPIO.input(pins[i]):  # Fire button released
