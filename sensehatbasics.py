@@ -25,12 +25,12 @@ class Sensor(object):
 
 		#0				1			2		3		4
 		#info = (lower range, upper range, unit, symbol)
-		self.temp_info = [0,65,"Temperature",self.deg_sym + "c"]
-		self.humidity_info = [20,80,"Relative Humidity", "%"]
-		self.pressure_info = [260,1260,"Barometric Pressure","hPa"]
+		self.temp_info = [0,65,"Thermometer",self.deg_sym + "c"]
+		self.humidity_info = [20,80,"Hygrometer", "%"]
+		self.pressure_info = [260,1260,"Barometer","hPa"]
 		self.magnet_info = [-500,500,"Magnetomer"]
-		self.accelerometer_info = [-500,500,"Acceleration","g"]
-
+		self.accelerometer_info = [-500,500,"Accelerometer"]
+		configure.max_sensors[0] = 9
 
 	def get(self):
 		dummyload = [sense.get_temperature()]
@@ -39,7 +39,9 @@ class Sensor(object):
 		dummyload4 = [sense.get_compass()[0]]
 		dummyload5 = [sense.get_compass()[1]]
 		dummyload6 = [sense.get_compass()[2]]
-		dummyload7 = [sense.get_accelerometer_raw()]
+		dummyload7 = [sense.get_accelerometer_raw()[0]]
+		dummyload8 = [sense.get_accelerometer_raw()[1]]
+		dummyload9 = [sense.get_accelerometer_raw()[2]]
 
 		item1 = dummyload + self.temp_info
 		item2 = dummyload2 + self.pressure_info
@@ -47,8 +49,10 @@ class Sensor(object):
 		item4 = dummyload4 + self.magnet_info + ["x"]
 		item5 = dummyload5 + self.magnet_info + ["y"]
 		item6 = dummyload6 + self.magnet_info + ["z"]
-		item7 = dummyload7 + self.accelerometer_info
-		sensorlist = [item1, item2, item3, item4, item5, item6, item7]
+		item7 = dummyload7 + self.accelerometer_info + ["x"]
+		item8 = dummyload8 + self.accelerometer_info + ["y"]
+		item9 = dummyload9 + self.accelerometer_info + ["z"]
+		sensorlist = [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 
 		return sensorlist

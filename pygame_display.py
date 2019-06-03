@@ -155,7 +155,7 @@ class SelectableLabel(Label):
 			self.oper[0] = not self.oper[0]
 		elif isinstance(self.oper[0], int):
 			self.oper[0] += 1
-			if self.oper[0] > 9:
+			if self.oper[0] > configure.max_sensors[0]-1:
 				self.oper[0] = 0
 		return self.oper[0]
 
@@ -287,29 +287,36 @@ class Settings_Panel(object):
 		self.input = input
 		self.index = 0
 		self.surface = surface
+
 		self.titlelabel = Label()
 		self.titlelabel.update("Configuration",30,15,205,titleFont,yellow)
 		self.titlelabel.center(320,50,0,0)
+
 		self.option1 = SelectableLabel(configure.auto)
-		self.option1.update("Auto Ranging: ",30,15*2,205,titleFont,red)
+		self.option1.update("Auto Ranging: ",25,15*2,205,titleFont,red)
 
 		self.option2 = SelectableLabel(configure.sensor1)
-		self.option2.update("Sensor 1: ", 30, 15*3, 205, titleFont, red)
+		self.option2.update("Sensor 1: ", 25, 15*3, 205, titleFont, red)
 
 		self.option3 = SelectableLabel(configure.sensor2)
-		self.option3.update("Sensor 2: ", 30, 15*3, 205, titleFont, red)
+		self.option3.update("Sensor 2: ", 25, 15*3, 205, titleFont, red)
 
 		self.option4 = SelectableLabel(configure.sensor3)
-		self.option4.update("Sensor 3: ", 30, 15*3, 205, titleFont, red)
+		self.option4.update("Sensor 3: ", 25, 15*3, 205, titleFont, red)
 
-		self.options = [self.option1,self.option2,self.option3,self.option4]
-		pass
+		self.option5 = SelectableLabel(configure.leds)
+		self.option5.update("LED Moire: ", 25, 15*3, 205, titleFont, red)
 
-	def frame(self):
+		self.options = [self.option1,self.option2,self.option3,self.option4,self.option5]
+
 		self.option1.center(320,50,0,60)
 		self.option2.center(320,50,0,60+30)
 		self.option3.center(320,50,0,60+60)
 		self.option4.center(320,50,0,60+90)
+		self.option5.center(320,50,0,60+120)
+
+
+	def frame(self):
 
 		self.surface.fill(black)
 
@@ -412,27 +419,27 @@ class Graph_Screen(object):
 		self.graphback.draw(self.surface)
 
 		#converts data to float
-		a_newest = float(sensors[0][0])
+		a_newest = float(sensors[configure.sensor1[0]][0])
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
-		a_cords = graphit(self.data_a,sensors[0])
+		a_cords = graphit(self.data_a,sensors[configure.sensor1[0]])
 
 		#repeat for each sensor
-		b_newest = float(sensors[1][0])
-		b_cords = graphit(self.data_b,sensors[1])
+		b_newest = float(sensors[configure.sensor2[0]][0])
+		b_cords = graphit(self.data_b,sensors[configure.sensor2[0]])
 
-		c_newest = float(sensors[2][0])
-		c_cords = graphit(self.data_c,sensors[2])
+		c_newest = float(sensors[configure.sensor3[0]][0])
+		c_cords = graphit(self.data_c,sensors[configure.sensor3[0]])
 
 		a_content = str(int(a_newest))
-		self.a_label.update(a_content + sensors[0][4],30,15,205,titleFont,red)
+		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],30,15,205,titleFont,red)
 
 		c_content = str(int(c_newest))
-		c_position = resolution[0] - (self.c_label.get_size(c_content + sensors[2][4])+15)
+		c_position = resolution[0] - (self.c_label.get_size(c_content + sensors[configure.sensor3[0]][4])+15)
 		self.c_label.update(c_content + sensors[2][4],30,c_position,205,titleFont,yellow)
 
 		b_content = str(int(b_newest))
-		self.b_label.update( b_content + sensors[1][4],30,114,205,titleFont,green)
+		self.b_label.update( b_content + sensors[configure.sensor2[0]][4],30,114,205,titleFont,green)
 		self.b_label.center(resolution[0],31,0,205)
 
 		intervaltime = float(self.drawinterval.timelapsed())

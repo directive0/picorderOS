@@ -1,15 +1,9 @@
 #!/usr/bin/python
 
-## This file fetches CPU load values and relates them to the caller. This file is used in place of the
+#	This file fetches CPU load values and relates them to the caller.
+#	It is used in place of the various sensor modules to demonstrate functionality.
 
-#from __future__ import division
-#import copy
-#import math
-#import sys
-#import os
 import psutil
-#from filehandling import *
-#import time
 
 from objects import *
 
@@ -25,11 +19,13 @@ class Sensor(object):
 		self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory", "b"]
 		self.infoc = [0,100000,"Bytes Sent", "b"]
 		self.VOC_info = []
+		configure.max_sensors[0] = 3
 
 		#self.filehandler = datalog()
 
 
 	def get(self):
+
 		dummyload = [float(psutil.cpu_percent())]
 		dummyload2 = [float(psutil.virtual_memory().available) * 0.0000001]
 		dummyload3 = [float(psutil.net_io_counters().bytes_sent) * 0.00001]
@@ -37,14 +33,15 @@ class Sensor(object):
 		item1 = dummyload + self.infoa
 		item2 = dummyload2 + self.infob
 		item3 = dummyload3 + self.infoc
+		item4 = dummyload + self.infoa
+		item5 = dummyload2 + self.infob
+		item6 = dummyload3 + self.infoc
+		item7 = dummyload + self.infoa
+		item8 = dummyload2 + self.infob
+		item9 = dummyload3 + self.infoc
 
-		sensorlist = [item1, item2, item3]
-		#sensorlist = [[dummyload,self.infoa],[dummyload2,self.infob],[dummyload3,self.infoc]]
+		sensorlist = [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
-		#self.filehandler.write_data(item1)
-		#self.filehandler.write_data(item2)
-		#self.filehandler.write_data(item3)
-		#self.filehandler.write_data()
 		return sensorlist
 
 #

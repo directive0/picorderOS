@@ -18,38 +18,37 @@ class Sensor(object):
 		self.sensor.set_pressure_oversample(bme680.OS_4X)
 		self.sensor.set_temperature_oversample(bme680.OS_8X)
 		self.sensor.set_filter(bme680.FILTER_SIZE_3)
-	
+
 
 
 
 		self.sensor_name = "BME680"
 		self.deg_sym = '\xB0'
 
-		
+
 		#0				1			2		3		4
 		#info = (lower range, upper range, unit, symbol)
 		self.temp_info = [-40,85,"Temperature",self.deg_sym + "c"]
 		self.humidity_info = [0,100,"Relative Humidity", "%"]
 		self.pressure_info = [300,1100,"Barometric Pressure","hPa"]
-		self.VOC_info = []
+		self.VOC_info = [300,1100,"Air Quality","hPa"]
 
 
 
 	def get(self):
 		#print("retrieving sensor data")
 		if self.sensor.get_sensor_data():
-				
+
 			dummyload = [self.sensor.data.temperature]
 			dummyload2 = [self.sensor.data.pressure]
 			dummyload3 = [self.sensor.data.humidity]
-	
-			
+
+
 			item1 = dummyload + self.temp_info
 			item2 = dummyload2 + self.pressure_info
 			item3 = dummyload3 + self.humidity_info
-	
+
 			sensorlist = [item1, item2, item3]
 
-	
-			return sensorlist
 
+			return sensorlist

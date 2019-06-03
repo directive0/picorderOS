@@ -25,7 +25,7 @@ class preferences(object):
 		self.input_gpio = False
 
 		# bit controls the onboard LEDS. Easy to turn them off if need be.
-		self.leds = False
+		self.leds = [False]
 
 		# bit controls auto ranging of graphs
 		self.auto = [True]
@@ -35,6 +35,8 @@ class preferences(object):
 
 		# enables thermal cam support
 		self.tcam = False
+
+		self.max_sensors = [9]
 
 		#selects the three sensor targets to plot
 		self.sensor1 = [0]

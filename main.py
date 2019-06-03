@@ -72,7 +72,7 @@ def Main():
 	timeit.logtime()
 	ledtime.logtime()
 
-	if configure.leds:
+	if configure.leds[0]:
 		lights = ripple()
 	# The following while loop catches ctrl-c exceptions. I use this structure so that status changes will loop back around and have a chance to activate different functions. It gets a little weird going forward, bear with me.
 	while status != "quit":
@@ -106,7 +106,7 @@ def Main():
 							dotscreen.push(data)
 						if configure.display == "1":
 							colourscreen.push(data)
-						if configure.leds:
+						if configure.leds[0]:
 							lights.cycle()
 
 
@@ -120,7 +120,7 @@ def Main():
 					if configure.tr108:
 						status = onScreen.slider_screen(data)
 					if configure.tr109:
-						if configure.leds:
+						if configure.leds[0]:
 							lights.cycle()
 
 						if configure.display == "0":
