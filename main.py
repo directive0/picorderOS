@@ -19,8 +19,6 @@ if configure.tr108:
 	if not configure.pc:
 		from sensehatbasics import *
 
-		if configure.amg88xx:
-			from sensehatbasics import *
 
 if configure.tr109:
 	if not configure.pc:

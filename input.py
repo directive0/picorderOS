@@ -17,7 +17,7 @@
 # array holds the pin#s for each hard coded button on the tric
 
 #ugeek setup
-pins = [5,24,22]
+pins = [5,6,13]
 
 # number of buttons
 buttons = 15

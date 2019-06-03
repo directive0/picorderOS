@@ -2,6 +2,7 @@
 
 from sense_hat import SenseHat
 import time
+from objects import *
 
 # instantiate a sensehat object,
 sense = SenseHat()
@@ -36,9 +37,9 @@ class Sensor(object):
 		dummyload = [sense.get_temperature()]
 		dummyload2 = [sense.get_pressure()]
 		dummyload3 = [sense.get_humidity()]
-		dummyload4 = [sense.get_compass()[0]]
-		dummyload5 = [sense.get_compass()[1]]
-		dummyload6 = [sense.get_compass()[2]]
+		dummyload4 = [sense.get_compass_raw()[0]]
+		dummyload5 = [sense.get_compass_raw()[1]]
+		dummyload6 = [sense.get_compass_raw()[2]]
 		dummyload7 = [sense.get_accelerometer_raw()[0]]
 		dummyload8 = [sense.get_accelerometer_raw()[1]]
 		dummyload9 = [sense.get_accelerometer_raw()[2]]

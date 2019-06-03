@@ -162,6 +162,7 @@ class SelectableLabel(Label):
 	def draw(self, surface):
 		if self.selected:
 			self.indicator.draw(surface)
+
 		label = self.myfont.render(self.content + str(self.oper[0]), 1, self.color)
 		surface.blit(label, (self.x, self.y))
 
