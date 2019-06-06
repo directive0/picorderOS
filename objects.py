@@ -43,6 +43,8 @@ class preferences(object):
 		self.sensor2 = [1]
 		self.sensor3 = [2]
 
+		self.sensor_info = []
+
 configure = preferences()
 
 # the following function maps a value from the target range onto the desination range

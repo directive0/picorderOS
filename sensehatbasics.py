@@ -32,6 +32,7 @@ class Sensor(object):
 		self.magnet_info = [-500,500,"Magnetomer"]
 		self.accelerometer_info = [-500,500,"Accelerometer"]
 		configure.max_sensors[0] = 9
+		configure.sensor_info = self.get()
 
 	def get(self):
 		dummyload = [sense.get_temperature()]

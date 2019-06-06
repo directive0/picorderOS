@@ -20,7 +20,7 @@ class Sensor(object):
 		self.infoc = [0,100000,"Bytes Sent", "b"]
 		self.VOC_info = []
 		configure.max_sensors[0] = 3
-
+		configure.sensor_info = self.get()
 		#self.filehandler = datalog()
 
 

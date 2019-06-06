@@ -29,6 +29,7 @@ red = (255,0,0)
 green = (106,255,69)
 blue = (99,157,255)
 yellow = (255,221,5)
+orange = (255,192,2)
 black = (0,0,0)
 white = (255,255,255)
 
@@ -126,7 +127,8 @@ class Label(object):
 		return textw,texth
 
 class SelectableLabel(Label):
-	def __init__(self, oper):
+	def __init__(self, oper, special = 0):
+		self.special = special
 		self.x = 0
 		self.y = 0
 		self.color = white
@@ -147,7 +149,7 @@ class SelectableLabel(Label):
 		self.fontSize = fontSize
 		self.myfont = pygame.font.Font(fontType, self.fontSize)
 		self.color = color
-		self.indicator.update(sliderb, nx - 23, ny+6)
+		self.indicator.update(sliderb, nx - 23, ny+1)
 
 	def toggle(self):
 		print(self.oper)
@@ -163,10 +165,22 @@ class SelectableLabel(Label):
 		if self.selected:
 			self.indicator.draw(surface)
 
-		label = self.myfont.render(self.content + str(self.oper[0]), 1, self.color)
+		label = self.myfont.render(self.content, 1, self.color)
+
+
+		status_text = "dummy"
+		if self.special == 0:
+			status_text = str(self.oper[0])
+		else:
+			#print(configure.sensor_info)
+			status_text = configure.sensor_info[self.oper[0]][3]
+
+		pos = resolution[0] - (self.get_size(status_text) + 37)
+		state = self.myfont.render(status_text, 1, self.color)
+
+
 		surface.blit(label, (self.x, self.y))
-
-
+		surface.blit(state, (pos, self.y))
 
 # the following class is used to display images
 class Image(object):
@@ -285,37 +299,31 @@ class Settings_Panel(object):
 
 	def __init__(self,surface,input):
 
+		self.left_margin = 37
 		self.input = input
 		self.index = 0
 		self.surface = surface
 
 		self.titlelabel = Label()
-		self.titlelabel.update("Configuration",30,15,205,titleFont,yellow)
-		self.titlelabel.center(320,50,0,0)
+		self.titlelabel.update("Picorder OS Control Panel",25,17,15,titleFont,orange)
 
-		self.option1 = SelectableLabel(configure.auto)
-		self.option1.update("Auto Ranging: ",25,15*2,205,titleFont,red)
 
-		self.option2 = SelectableLabel(configure.sensor1)
-		self.option2.update("Sensor 1: ", 25, 15*3, 205, titleFont, red)
+		self.option1 = SelectableLabel(configure.sensor1, special = 1)
+		self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,red)
 
-		self.option3 = SelectableLabel(configure.sensor2)
-		self.option3.update("Sensor 2: ", 25, 15*3, 205, titleFont, red)
+		self.option2 = SelectableLabel(configure.sensor2, special = 1)
+		self.option2.update("Graph 2: ", 20, self.left_margin, 68, titleFont, green)
 
-		self.option4 = SelectableLabel(configure.sensor3)
-		self.option4.update("Sensor 3: ", 25, 15*3, 205, titleFont, red)
+		self.option3 = SelectableLabel(configure.sensor3, special = 1)
+		self.option3.update("Graph 3: ", 20, self.left_margin, 90, titleFont, yellow)
+
+		self.option4 = SelectableLabel(configure.auto)
+		self.option4.update("Auto Ranging:  ", 20, self.left_margin, 111, titleFont, orange)
 
 		self.option5 = SelectableLabel(configure.leds)
-		self.option5.update("LED Moire: ", 25, 15*3, 205, titleFont, red)
+		self.option5.update("Moire: ", 20, self.left_margin, 132, titleFont, orange)
 
 		self.options = [self.option1,self.option2,self.option3,self.option4,self.option5]
-
-		self.option1.center(320,50,0,60)
-		self.option2.center(320,50,0,60+30)
-		self.option3.center(320,50,0,60+60)
-		self.option4.center(320,50,0,60+90)
-		self.option5.center(320,50,0,60+120)
-
 
 	def frame(self):
 
@@ -323,7 +331,7 @@ class Settings_Panel(object):
 
 		self.titlelabel.draw(self.surface)
 
-		self.options[self.index].selected = True
+		#self.options[self.index].selected = True
 
 		for i in range(len(self.options)):
 			if i == self.index:
@@ -332,6 +340,10 @@ class Settings_Panel(object):
 				self.options[i].selected = False
 
 			self.options[i].draw(self.surface)
+
+		# for i in range(len(self.statuses)):
+		# 	self.statuses[i].draw(self.surface,sensors)
+
 
 		pygame.display.flip()
 

@@ -104,10 +104,6 @@ class Inputs(object):
 					self.buttonlist[2] = False
 					self.down[2] = True
 
-			#print("buttonlist: ", self.buttonlist)
-			return self.buttonlist
-
-
 		if configure.input_gpio:
 			for i in range(3):
 				if (not self.fired[i]) and (not GPIO.input(pins[i])):  # Fire button pressed
@@ -118,7 +114,9 @@ class Inputs(object):
 				if self.fired[i] and GPIO.input(pins[i]):  # Fire button released
 					self.fired[i] = False
 					self.buttonlist[i] = False
-				#device.emit(uinput.KEY_LEFTCTRL, 0) # Release Left Ctrl key
+
+		return self.buttonlist
+
 
 	def keypress(self):
 		pygame.event.get()
