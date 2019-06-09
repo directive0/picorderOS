@@ -567,9 +567,12 @@ class Slider_Screen(object):
 
 
 		# data labels
+		a_content = str(int(a_newest))
 		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],19,47,215,titleFont,yellow)
-		self.b_label.update(a_content + sensors[configure.sensor2[0]][4],19,152,215,titleFont,yellow)
-		self.c_label.update(a_content + sensors[configure.sensor3[0]][4],19,254,215,titleFont,yellow)
+		b_content = str(int(b_newest))
+		self.b_label.update(b_content + sensors[configure.sensor2[0]][4],19,152,215,titleFont,yellow)
+		c_content = str(int(c_newest)
+		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],19,254,215,titleFont,yellow)
 
 		# slider data adjustment
 		# the routine takes the raw sensor data and converts it to screen coordinates to move the sliders
