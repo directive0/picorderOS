@@ -647,36 +647,18 @@ class Screen(object):
 	def startup_screen(self,start_time):
 
 		status = startUp(self.surface,start_time)
-
-		# key = keypress()
-		# if key[pygame.K_q]:
-		# 	status = "quit"
-
 		return status
 
 	def slider_screen(self,sensors):
 		status = self.slidescreen.frame(sensors)
-
-		# key = keypress()
-		# if key[pygame.K_q]:
-		# 	status = "quit"
-
 		return status
 		#return grapher(self.surface,sensors,self.data_a,self.data_b,self.data_c)
 
 	def graph_screen(self,sensors):
 		status = self.graphscreen.frame(sensors)
-
-		# key = keypress()
-		# if key[pygame.K_q]:
-		# 	status = "quit"
-
 		return status
 
 
 	def settings(self):
 		status = self.settings_screen.frame()
-		# key = keypress()
-		# if key[pygame.K_q]:
-		# 	status = "quit"
 		return status

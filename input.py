@@ -117,7 +117,7 @@ class Inputs(object):
 					self.down[i] = True
 
 
-		print(self.buttonlist)
+		#print(self.buttonlist)
 		return self.buttonlist
 
 

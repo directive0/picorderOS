@@ -74,7 +74,7 @@ def Main():
 		lights = ripple()
 	# The following while loop catches ctrl-c exceptions. I use this structure so that status changes will loop back around and have a chance to activate different functions. It gets a little weird going forward, bear with me.
 	while status != "quit":
-		print(status)
+
 		# try allows us to capture a keyboard interrupt and assign behaviours.
 		try:
 			# Runs the startup animation played when you first boot the program.
@@ -129,6 +129,7 @@ def Main():
 					timeit.logtime()
 
 			while (status == "settings"):
+				#print(status)
 				status = onScreen.settings()
 
 
