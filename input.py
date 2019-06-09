@@ -9,21 +9,24 @@
 
 # array needs:
 
-#	0	1	 2  	3  	4	5	6		7				8			9		10			11	  12	13	14
-# geo, met, bio, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
 
 # geo, met and bio are going to be standard across all trics.
 
-# array holds the pin#s for each hard coded button on the tric
-
-#ugeek setup
-pins = [5,6,13]
-
-# number of buttons
-buttons = 15
 
 from objects import *
 
+
+# array holds the pin#s for each hard coded button on the tric
+# The TR-108 only has 3 buttons
+
+# Max number of buttons
+#	0	1	 2  	3  	4	5	6		7				8			9		10			11	  12	13	14
+# geo, met, bio, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
+
+buttons = 15
+
+if configure.tr108:
+	pins = [5,6,13]
 import time
 
 
