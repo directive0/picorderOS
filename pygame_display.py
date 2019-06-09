@@ -435,27 +435,28 @@ class Graph_Screen(object):
 
 		#converts data to float
 		a_newest = float(sensors[configure.sensor1[0]][0])
+		b_newest = float(sensors[configure.sensor2[0]][0])
+		c_newest = float(sensors[configure.sensor3[0]][0])
+
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
 		a_cords = graphit(self.data_a,sensors[configure.sensor1[0]])
-
-		#repeat for each sensor
-		b_newest = float(sensors[configure.sensor2[0]][0])
 		b_cords = graphit(self.data_b,sensors[configure.sensor2[0]])
-
-		c_newest = float(sensors[configure.sensor3[0]][0])
 		c_cords = graphit(self.data_c,sensors[configure.sensor3[0]])
+
 
 		a_content = str(int(a_newest))
 		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],30,15,205,titleFont,red)
+
+		b_content = str(int(b_newest))
+		self.b_label.update( b_content + sensors[configure.sensor2[0]][4],30,114,205,titleFont,green)
+		self.b_label.center(resolution[0],31,0,205)
 
 		c_content = str(int(c_newest))
 		c_position = resolution[0] - (self.c_label.get_size(c_content + sensors[configure.sensor3[0]][4])+15)
 		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],30,c_position,205,titleFont,yellow)
 
-		b_content = str(int(b_newest))
-		self.b_label.update( b_content + sensors[configure.sensor2[0]][4],30,114,205,titleFont,green)
-		self.b_label.center(resolution[0],31,0,205)
+
 
 		intervaltime = float(self.drawinterval.timelapsed())
 		lapse = format(intervaltime, '.2f')
@@ -470,11 +471,11 @@ class Graph_Screen(object):
 
 
 		if not configure.auto[0]:
-			a_slide = translate(a_newest, sensors[0][1], sensors[0][2], 194, 7)
+			a_slide = translate(a_newest, sensors[configure.sensor1[0]][1], sensors[configure.sensor1[0]][2], 194, 7)
 
-			b_slide = translate(b_newest, sensors[1][1], sensors[1][2], 194, 7)
+			b_slide = translate(b_newest, sensors[configure.sensor2[0]][1], sensors[configure.sensor2[0]][2], 194, 7)
 
-			c_slide = translate(c_newest, sensors[2][1], sensors[2][2], 194, 7)
+			c_slide = translate(c_newest, sensors[configure.sensor3[0]][1], sensors[configure.sensor3[0]][2], 194, 7)
 
 			self.slider1.update(sliderb, 283, a_slide)
 			self.slider2.update(sliderb, 283, b_slide)
@@ -558,22 +559,23 @@ class Slider_Screen(object):
 
 	def frame(self,sensors):
 
-		# parses dictionary of data from sensor/weather based on the
-		a_newest = float(sensors[0][0])
-		b_newest = float(sensors[1][0])
-		c_newest = float(sensors[2][0])
+		#converts data to float
+		a_newest = float(sensors[configure.sensor1[0]][0])
+		b_newest = float(sensors[configure.sensor2[0]][0])
+		c_newest = float(sensors[configure.sensor3[0]][0])
+
 
 
 		# data labels
-		self.a_label.update(str(int(a_newest)) + "\xb0",19,47,215,titleFont,yellow)
-		self.b_label.update(str(int(b_newest)),19,152,215,titleFont,yellow)
-		self.c_label.update(str(int(c_newest)),19,254,215,titleFont,yellow)
+		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],19,47,215,titleFont,yellow)
+		self.b_label.update(a_content + sensors[configure.sensor2[0]][4],19,152,215,titleFont,yellow)
+		self.c_label.update(a_content + sensors[configure.sensor3[0]][4],19,254,215,titleFont,yellow)
 
 		# slider data adjustment
 		# the routine takes the raw sensor data and converts it to screen coordinates to move the sliders
-		a_slide = translate(float(sensors[0][0]), sensors[0][1], sensors[0][2], 204, 15)
-		b_slide = translate(float(sensors[1][0]), sensors[1][1], sensors[1][2], 204, 15)
-		c_slide = translate(float(sensors[2][0]), sensors[2][1], sensors[2][2], 204, 15)
+		a_slide = translate(float(sensors[configure.sensor1[0]][0]), sensors[configure.sensor1[0]][1], sensors[configure.sensor1[0]][2], 204, 15)
+		b_slide = translate(float(sensors[configure.sensor2[0]][0]), sensors[configure.sensor2[0]][1], sensors[configure.sensor2[0]][2], 204, 15)
+		c_slide = translate(float(sensors[configure.sensor3[0]][0]), sensors[configure.sensor3[0]][1], sensors[configure.sensor3[0]][2], 204, 15)
 
 		# Updates our UI objects with data parsed from sensor/weather
 		self.backPlane.update(backplane, 0, 0)
