@@ -634,6 +634,7 @@ class Screen(object):
 		else:
 			# on the picorder use this option.
 			self.surface = pygame.display.set_mode(screenSize, pygame.FULLSCREEN)
+			pygame.event.set_blocked(pygame.MOUSEMOTION)
 			pygame.mouse.set_visible(False)
 
 		self.timed = time.time()

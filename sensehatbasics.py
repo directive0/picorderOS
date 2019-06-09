@@ -29,8 +29,12 @@ class Sensor(object):
 		self.temp_info = [0,65,"Thermometer",self.deg_sym + "c"]
 		self.humidity_info = [20,80,"Hygrometer", "%"]
 		self.pressure_info = [260,1260,"Barometer","hPa"]
-		self.magnet_info = [-500,500,"Magnetomer"]
-		self.accelerometer_info = [-500,500,"Accelerometer"]
+		self.magnet_infox = [-500,500,"Magnetomer X"]
+		self.magnet_infoy = [-500,500,"Magnetomer Y"]
+		self.magnet_infoz = [-500,500,"Magnetomer Z"]
+		self.accelerometer_infox = [-500,500,"Accelerometer X"]
+		self.accelerometer_infoy = [-500,500,"Accelerometer Y"]
+		self.accelerometer_infoz = [-500,500,"Accelerometer Z"]
 		configure.max_sensors[0] = 9
 		configure.sensor_info = self.get()
 
@@ -38,22 +42,23 @@ class Sensor(object):
 		dummyload = [sense.get_temperature()]
 		dummyload2 = [sense.get_pressure()]
 		dummyload3 = [sense.get_humidity()]
-		dummyload4 = [sense.get_compass_raw()[0]]
-		dummyload5 = [sense.get_compass_raw()[1]]
-		dummyload6 = [sense.get_compass_raw()[2]]
-		dummyload7 = [sense.get_accelerometer_raw()[0]]
-		dummyload8 = [sense.get_accelerometer_raw()[1]]
-		dummyload9 = [sense.get_accelerometer_raw()[2]]
+		dummyload4 = [sense.get_compass_raw()[x]]
+		dummyload5 = [sense.get_compass_raw()[y]]
+		dummyload6 = [sense.get_compass_raw()[z]]
+		dummyload7 = [sense.get_accelerometer_raw()[x]]
+		dummyload8 = [sense.get_accelerometer_raw()[y]]
+		dummyload9 = [sense.get_accelerometer_raw()[z]]
 
 		item1 = dummyload + self.temp_info
 		item2 = dummyload2 + self.pressure_info
 		item3 = dummyload3 + self.humidity_info
-		item4 = dummyload4 + self.magnet_info + ["x"]
-		item5 = dummyload5 + self.magnet_info + ["y"]
-		item6 = dummyload6 + self.magnet_info + ["z"]
-		item7 = dummyload7 + self.accelerometer_info + ["x"]
-		item8 = dummyload8 + self.accelerometer_info + ["y"]
-		item9 = dummyload9 + self.accelerometer_info + ["z"]
+
+		item4 = dummyload4 + self.magnet_infox
+		item5 = dummyload5 + self.magnet_infoy
+		item6 = dummyload6 + self.magnet_infoz
+		item7 = dummyload7 + self.accelerometer_infox
+		item8 = dummyload8 + self.accelerometer_infoy
+		item9 = dummyload9 + self.accelerometer_infoz
 		sensorlist = [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 
