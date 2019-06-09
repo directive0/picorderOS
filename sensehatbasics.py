@@ -29,12 +29,12 @@ class Sensor(object):
 		self.temp_info = [0,65,"Thermometer",self.deg_sym + "c"]
 		self.humidity_info = [20,80,"Hygrometer", "%"]
 		self.pressure_info = [260,1260,"Barometer","hPa"]
-		self.magnet_infox = [-500,500,"Magnetomer X"]
-		self.magnet_infoy = [-500,500,"Magnetomer Y"]
-		self.magnet_infoz = [-500,500,"Magnetomer Z"]
-		self.accelerometer_infox = [-500,500,"Accelerometer X"]
-		self.accelerometer_infoy = [-500,500,"Accelerometer Y"]
-		self.accelerometer_infoz = [-500,500,"Accelerometer Z"]
+		self.magnet_infox = [-500,500,"Magnetomer X","G"]
+		self.magnet_infoy = [-500,500,"Magnetomer Y","G"]
+		self.magnet_infoz = [-500,500,"Magnetomer Z","G"]
+		self.accelerometer_infox = [-500,500,"Accelerometer X","g"]
+		self.accelerometer_infoy = [-500,500,"Accelerometer Y","g"]
+		self.accelerometer_infoz = [-500,500,"Accelerometer Z","g"]
 		configure.max_sensors[0] = 9
 		configure.sensor_info = self.get()
 
