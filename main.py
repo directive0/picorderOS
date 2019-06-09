@@ -55,7 +55,6 @@ def Main():
 	timeit = timer()
 	ledtime = timer()
 	interval = 0
-	buttons = debounce()
 
 
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
