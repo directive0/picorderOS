@@ -42,12 +42,12 @@ class Sensor(object):
 		dummyload = [sense.get_temperature()]
 		dummyload2 = [sense.get_pressure()]
 		dummyload3 = [sense.get_humidity()]
-		dummyload4 = [sense.get_compass_raw()[x]]
-		dummyload5 = [sense.get_compass_raw()[y]]
-		dummyload6 = [sense.get_compass_raw()[z]]
-		dummyload7 = [sense.get_accelerometer_raw()[x]]
-		dummyload8 = [sense.get_accelerometer_raw()[y]]
-		dummyload9 = [sense.get_accelerometer_raw()[z]]
+		dummyload4 = [sense.get_compass_raw()["x"]]
+		dummyload5 = [sense.get_compass_raw()["y"]]
+		dummyload6 = [sense.get_compass_raw()["z"]]
+		dummyload7 = [sense.get_accelerometer_raw()["x"]]
+		dummyload8 = [sense.get_accelerometer_raw()["y"]]
+		dummyload9 = [sense.get_accelerometer_raw()["z"]]
 
 		item1 = dummyload + self.temp_info
 		item2 = dummyload2 + self.pressure_info
