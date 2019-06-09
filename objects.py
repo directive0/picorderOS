@@ -44,6 +44,7 @@ class preferences(object):
 		self.sensor3 = [2]
 
 		self.sensor_info = []
+		self.last_status = ["startup"]
 
 configure = preferences()
 

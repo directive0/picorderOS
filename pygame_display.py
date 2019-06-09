@@ -349,7 +349,7 @@ class Settings_Panel(object):
 		pygame.display.flip()
 
 		result = "settings"
-		print(last_status)
+		print(configure.last_status[0])
 		# draws UI to frame buffer
 		#if (rot.read() == True): < can flip screen if necessary
 		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
@@ -369,7 +369,7 @@ class Settings_Panel(object):
 
 		if keys[2]:
 			if self.input.is_down(2):
-				result = last_status
+				result = configure.last_status[0]
 
 		return result
 
@@ -522,7 +522,7 @@ class Graph_Screen(object):
 		if keys[2]:
 			if self.input.is_down(2):
 				print("set status to settings")
-				last_status = "mode_a"
+				configure.last_status[0] = "mode_a"
 				status = "settings"
 
 		return status
@@ -606,9 +606,8 @@ class Slider_Screen(object):
 		if keys[2]:
 			if self.input.is_down(2):
 				print("set status to settings")
-				last_status = "mode_b"
+				configure.last_status[0] = "mode_b"
 				status = "settings"
-				print("last status = ", last_status)
 
 
 		pygame.display.flip()
