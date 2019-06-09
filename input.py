@@ -114,7 +114,10 @@ class Inputs(object):
 				if self.fired[i] and GPIO.input(pins[i]):  # Fire button released
 					self.fired[i] = False
 					self.buttonlist[i] = False
+					self.down[i] = True
 
+
+		print(self.buttonlist)
 		return self.buttonlist
 
 

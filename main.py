@@ -34,7 +34,8 @@ if configure.pc:
 	from getcpu import *
 	from gpiodummy import *
 else:
-	from gpiobasics import *
+	pass
+	#from gpiobasics import *
 
 
 

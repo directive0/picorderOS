@@ -54,6 +54,7 @@ backgraph = pygame.image.load('assets/backgraph.png')
 slidera = pygame.image.load('assets/slider.png')
 sliderb = pygame.image.load('assets/slider2.png')
 status = "startup"
+last_status = "startup"
 
 # sets the icon for the program (will show up in docks/taskbars on PCs)
 pygame.display.set_icon(blueInsignia)
@@ -367,7 +368,7 @@ class Settings_Panel(object):
 
 		if keys[2]:
 			if self.input.is_down(2):
-				result = "mode_a"
+				result = last_status
 
 		return result
 
@@ -520,6 +521,7 @@ class Graph_Screen(object):
 		if keys[2]:
 			if self.input.is_down(2):
 				print("set status to settings")
+				last_status = "mode_a"
 				status = "settings"
 
 		return status
@@ -592,16 +594,27 @@ class Slider_Screen(object):
 		# draws UI to frame buffer
 		#if (rot.read() == True): < can flip screen if necessary
 		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
-		if self.input.read()[0]:
-			return "mode_a"
-		if self.input.read()[2]:
-			return "settings"
+		status  = "mode_b"
+
+		keys = self.input.read()
+		#print(self.input.read())
+		if keys[0]:
+			if self.input.is_down(0):
+				status =  "mode_a"
+
+		if keys[2]:
+			if self.input.is_down(2):
+				print("set status to settings")
+				last_status = "mode_b"
+				status = "settings"
+				print("last status = ", last_status)
+
 
 		pygame.display.flip()
 		#tock.timed = time.time()
 
 			#returns state to main loop
-		return self.status
+		return status
 
 
 # A basic screen object. Is given parameters and displays them on a number of preset panels
