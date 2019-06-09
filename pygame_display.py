@@ -451,7 +451,7 @@ class Graph_Screen(object):
 
 		c_content = str(int(c_newest))
 		c_position = resolution[0] - (self.c_label.get_size(c_content + sensors[configure.sensor3[0]][4])+15)
-		self.c_label.update(c_content + sensors[2][4],30,c_position,205,titleFont,yellow)
+		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],30,c_position,205,titleFont,yellow)
 
 		b_content = str(int(b_newest))
 		self.b_label.update( b_content + sensors[configure.sensor2[0]][4],30,114,205,titleFont,green)
