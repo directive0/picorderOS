@@ -349,6 +349,7 @@ class Settings_Panel(object):
 		pygame.display.flip()
 
 		result = "settings"
+		print(last_status)
 		# draws UI to frame buffer
 		#if (rot.read() == True): < can flip screen if necessary
 		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
