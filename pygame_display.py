@@ -571,7 +571,7 @@ class Slider_Screen(object):
 		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],19,47,215,titleFont,yellow)
 		b_content = str(int(b_newest))
 		self.b_label.update(b_content + sensors[configure.sensor2[0]][4],19,152,215,titleFont,yellow)
-		c_content = str(int(c_newest)
+		c_content = str(int(c_newest))
 		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],19,254,215,titleFont,yellow)
 
 		# slider data adjustment
