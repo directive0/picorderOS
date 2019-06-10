@@ -117,14 +117,14 @@ def Main():
 					timeit.logtime()
 
 			while(status == "mode_b"):
-				
+
 				if timeit.timelapsed() > interval:
 					data = sensors.get()
 
 					if configure.tr108:
 						status = onScreen.slider_screen(data)
-						leda_on()
-						ledb_off()
+						leda_off()
+						ledb_on()
 						ledc_off()
 
 
@@ -141,7 +141,12 @@ def Main():
 
 			while (status == "settings"):
 				#print(status)
-				status = onScreen.settings()
+				if configure.tr108:
+					status = onScreen.settings()
+					leda_off()
+					ledb_off()
+					ledc_on()
+
 
 
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
