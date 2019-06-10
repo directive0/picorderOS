@@ -100,6 +100,10 @@ def Main():
 
 					if configure.tr108:
 						status = onScreen.graph_screen(data)
+						leda_on()
+						ledb_off()
+						ledc_off()
+
 					if configure.tr109:
 						if configure.display == "0":
 							dotscreen.push(data)
@@ -113,11 +117,17 @@ def Main():
 					timeit.logtime()
 
 			while(status == "mode_b"):
+				
 				if timeit.timelapsed() > interval:
 					data = sensors.get()
 
 					if configure.tr108:
 						status = onScreen.slider_screen(data)
+						leda_on()
+						ledb_off()
+						ledc_off()
+
+
 					if configure.tr109:
 						if configure.leds[0]:
 							lights.cycle()

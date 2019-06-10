@@ -376,7 +376,7 @@ class Settings_Panel(object):
 
 # The graph screen object is a self contained screen that is fed the surface and the sensor at the current moment and draws a frame when called.
 class Graph_Screen(object):
-	leda_on()
+
 	# Draws three graphs in a grid and three corresponding labels.
 
 	def __init__(self,surface,input):

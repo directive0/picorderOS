@@ -8,21 +8,30 @@ import RPi.GPIO as GPIO
 from objects import *
 
 
+if configure.tr108:
+
+	led1 = 4
+	led2 = 17
+	led3 = 27
+
+	GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
+	GPIO.setup(led1, GPIO.OUT) # LED pin set as output
+	GPIO.setup(led2, GPIO.OUT) # LED pin set as output
+	GPIO.setup(led3, GPIO.OUT) # LED pin set as output
+
+if configure.tr109:
 # Pin Definitons:
-led1 = 19 # Broadcom pin 19
-led2 = 6 # Broadcom pin 13
-led3 = 20
-led4 = 16
+	led1 = 19 # Broadcom pin 19
+	led2 = 6 # Broadcom pin 13
+	led3 = 20
+	led4 = 16
 
-
-
-
-# Pin Setup:
-GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
-GPIO.setup(led1, GPIO.OUT) # LED pin set as output
-GPIO.setup(led2, GPIO.OUT) # LED pin set as output
-GPIO.setup(led3, GPIO.OUT) # LED pin set as output
-GPIO.setup(led4, GPIO.OUT) # LED pin set as output
+	# Pin Setup:
+	GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
+	GPIO.setup(led1, GPIO.OUT) # LED pin set as output
+	GPIO.setup(led2, GPIO.OUT) # LED pin set as output
+	GPIO.setup(led3, GPIO.OUT) # LED pin set as output
+	GPIO.setup(led4, GPIO.OUT) # LED pin set as output
 
 
 # a function to clear the gpio
@@ -31,12 +40,20 @@ def cleangpio():
 
 # a function to clear the LEDs
 def resetleds():
-	GPIO.output(led1, GPIO.LOW)
-	GPIO.output(led2, GPIO.LOW)
-	GPIO.output(led3, GPIO.LOW)
-	GPIO.output(led4, GPIO.LOW)
+	if configure.tr108:
+		GPIO.output(led1, GPIO.LOW)
+		GPIO.output(led2, GPIO.LOW)
+		GPIO.output(led3, GPIO.LOW)
 
-# The following set of functions are for activating each LED individually. I figured it was easier than having different functions for different combinations. This way you can just manually set them as you please.
+	if configure.tr109:
+		GPIO.output(led1, GPIO.LOW)
+		GPIO.output(led2, GPIO.LOW)
+		GPIO.output(led3, GPIO.LOW)
+		GPIO.output(led4, GPIO.LOW)
+
+# The following set of functions are for activating each LED individually.
+# I figured it was easier than having different functions for different combinations.
+# This way you can just manually set them as you please.
 def leda_on():
 	GPIO.output(led1, GPIO.HIGH)
 
