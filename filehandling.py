@@ -3,7 +3,7 @@ import time
 import csv
 import os
 
-# Sensor data fragment array anatomy:
+# Sensor data fragment array anatomy (All of this is wrong now):
 # [0] - reading, in raw float
 # [1] - unit as a string (°c, °f, etc)
 # [2] - low end of sensor
@@ -51,21 +51,6 @@ class datalog(object):
 				datawriter.writerow([fragment[0]]+[fragment[1]]+[fragment[2]]+[fragment[3]]+[fragment[4]])
 				#datawriter.writerow([randoval]+["°c"]+[-40]+[200]+[10]+[24]+["BME680"]+["Ambient Temperature"])
 				print("writing")
-
-		#self.d1 = str((time.strftime("%d-%m-%Y")))
-		#file = open("log/" + self.d1 + '-loggedvals.csv', 'a')
-		#self.t = str((time.strftime("%H:%M:%S")))
-		#self.d = str((time.strftime("%d/%m/%Y")))
-		#self.temp = str(sensors['temp'])
-		#self.press = str(sensors['pressure'])
-		#self.humid = str(sensors['humidity'])
-		#self.x = str(sensors['x'])
-		#self.y = str(sensors['y'])
-		#self.z = str(sensors['z'])
-##        file.write("/log/" + self.d + "," + self.t + "," + str(sensors['humidity']) + "," + str(sensors['pressure']) + str(sensors['temp']) + "\r")
-		#file.write( self.d + "," + self.t + "," + self.humid + "," + self.press + "," + self.temp + ","+ self.x + "," + self.y + "," + self.z + "\r")
-		#print('logged a value to file!' + "\r")
-		#print( "Time: " + self.d + " Date: " + self.t + " Humdity:" + self.humid + " Pressure:" + self.press + " Temperature:" + self.temp + " X:"+ self.x + " Y:" + self.y + " Z:" + self.z + "\r")
 
 	def end_file():
 		pass

@@ -61,6 +61,8 @@ def Main():
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
 	if configure.tr108:
 		onScreen = Screen(buttons)
+		if not configure.pc:
+			moire = led_display()
 
 	if configure.tr109:
 		if configure.display == "0":
@@ -98,11 +100,17 @@ def Main():
 				if timeit.timelapsed() > interval:
 					data = sensors.get()
 
+					# the following is only run if the tr108 flag is set
 					if configure.tr108:
+
 						status = onScreen.graph_screen(data)
-						leda_on()
-						ledb_off()
-						ledc_off()
+
+						if not configure.pc:
+							leda_on()
+							ledb_off()
+							ledc_off()
+							if configure.moire:
+								moire.animate()
 
 					if configure.tr109:
 						if configure.display == "0":

@@ -47,8 +47,9 @@ class Sensor(object):
 			item1 = dummyload + self.temp_info
 			item2 = dummyload2 + self.pressure_info
 			item3 = dummyload3 + self.humidity_info
+			item4 = dummyload4 + self.VOC_info
 
-			sensorlist = [item1, item2, item3]
+			sensorlist = [item1, item2, item3, item4]
 
 
 			return sensorlist

@@ -14,6 +14,8 @@ pygame.init()
 pygame.font.init()
 pygame.display.set_caption('PicorderOS')
 
+
+
 # The following commands disable the mouse and cursor.
 #pygame.event.set_blocked(pygame.MOUSEMOTION)
 #pygame.mouse.set_visible(0)
@@ -32,6 +34,9 @@ yellow = (255,221,5)
 orange = (255,192,2)
 black = (0,0,0)
 white = (255,255,255)
+
+theme1 = [red,green,yellow]
+theme2 = [blue,white,green]
 
 # The following are for LCARS colours from LCARScom.net
 lcars_orange = (255,153,0)
@@ -321,7 +326,7 @@ class Settings_Panel(object):
 		self.option4 = SelectableLabel(configure.auto)
 		self.option4.update("Auto Ranging:  ", 20, self.left_margin, 111, titleFont, orange)
 
-		self.option5 = SelectableLabel(configure.leds)
+		self.option5 = SelectableLabel(configure.moire)
 		self.option5.update("Moire: ", 20, self.left_margin, 132, titleFont, orange)
 
 		self.options = [self.option1,self.option2,self.option3,self.option4,self.option5]
@@ -384,6 +389,7 @@ class Graph_Screen(object):
 		self.input = input
 		# State variable
 		self.status = "mode_a"
+		self.selection = 0
 
 		# An fps controller
 		self.drawinterval = timer()
@@ -437,25 +443,27 @@ class Graph_Screen(object):
 		a_newest = float(sensors[configure.sensor1[0]][0])
 		b_newest = float(sensors[configure.sensor2[0]][0])
 		c_newest = float(sensors[configure.sensor3[0]][0])
-
+		newests = [a_newest,b_newest,c_newest]
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
 		a_cords = graphit(self.data_a,sensors[configure.sensor1[0]])
 		b_cords = graphit(self.data_b,sensors[configure.sensor2[0]])
 		c_cords = graphit(self.data_c,sensors[configure.sensor3[0]])
-
+		cords = [a_cords,b_cords,c_cords]
 
 		a_content = str(int(a_newest))
-		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],30,15,205,titleFont,red)
+		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],30,15,205,titleFont,theme1[0])
 
 		b_content = str(int(b_newest))
-		self.b_label.update( b_content + sensors[configure.sensor2[0]][4],30,114,205,titleFont,green)
+		self.b_label.update( b_content + sensors[configure.sensor2[0]][4],30,114,205,titleFont,theme1[1])
 		self.b_label.center(resolution[0],31,0,205)
 
 		c_content = str(int(c_newest))
 		c_position = resolution[0] - (self.c_label.get_size(c_content + sensors[configure.sensor3[0]][4])+15)
-		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],30,c_position,205,titleFont,yellow)
+		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],30,c_position,205,titleFont,theme1[2])
+		contents = [a_content,b_content,c_content]
 
+		labels = [self.a_label,self.b_label,self.c_label]
 
 
 		intervaltime = float(self.drawinterval.timelapsed())
@@ -485,25 +493,37 @@ class Graph_Screen(object):
 			self.slider2.update(sliderb, 283, b_cords[-1][1]-10)
 			self.slider3.update(sliderb, 283, c_cords[-1][1]-10)
 
+		sliders = [self.slider1,self.slider2,self.slider3]
 
-		#draw the lines
-		if self.graphon1:
-			pygame.draw.lines(self.surface, red, False, a_cords, 2)
-			self.a_label.draw(self.surface)
+		if self.selection == 0:
+			#draw the lines
+			pygame.draw.lines(self.surface, theme1[0], False, a_cords, 2)
 			self.slider1.draw(self.surface)
 
-		if self.graphon2:
-			pygame.draw.lines(self.surface, green, False, b_cords, 2)
-			self.b_label.draw(self.surface)
+			pygame.draw.lines(self.surface, theme1[1], False, b_cords, 2)
 			self.slider2.draw(self.surface)
 
-		if self.graphon3:
-			pygame.draw.lines(self.surface, yellow, False, c_cords, 2)
-			self.c_label.draw(self.surface)
+			pygame.draw.lines(self.surface, theme1[2], False, c_cords, 2)
 			self.slider3.draw(self.surface)
 
-		#
-		#
+			# draws the labels
+			self.a_label.draw(self.surface)
+			self.b_label.draw(self.surface)
+			self.c_label.draw(self.surface)
+
+
+		if self.selection != 0:
+			this = self.selection - 1
+			print(this)
+			focus_cords = cords[this]
+			focus_slider = sliders[this]
+			pygame.draw.lines(self.surface, theme1[this], False, focus_cords, 2)
+			focus_slider.draw(self.surface)
+
+			self.a_label.update(contents[this] + sensors[configure.sensors[this][0]][4],30,15,205,titleFont,theme1[this])
+			self.a_label.draw(self.surface)
+
+		# draws the interval label (indicates refresh rate)
 		self.intervallabelshadow.draw(self.surface)
 		self.intervallabel.draw(self.surface)
 
@@ -516,6 +536,13 @@ class Graph_Screen(object):
 
 		keys = self.input.read()
 		#print(self.input.read())
+		if keys[0]:
+			if self.input.is_down(0):
+				self.selection += 1
+
+				if self.selection > 3:
+					self.selection = 0
+
 		if keys[1]:
 			if self.input.is_down(1):
 				status =  "mode_b"

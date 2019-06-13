@@ -19,10 +19,8 @@ sense.low_light = True
 class Sensor(object):
 	def __init__(self):
 
-
 		self.sensor_name = "Sensehat"
 		self.deg_sym = '\xB0'
-
 
 		#0				1			2		3		4
 		#info = (lower range, upper range, unit, symbol)
@@ -39,6 +37,7 @@ class Sensor(object):
 		configure.sensor_info = self.get()
 
 	def get(self):
+
 		dummyload = [sense.get_temperature()]
 		dummyload2 = [sense.get_pressure()]
 		dummyload3 = [sense.get_humidity()]
@@ -60,7 +59,6 @@ class Sensor(object):
 		item8 = dummyload8 + self.accelerometer_infoy
 		item9 = dummyload9 + self.accelerometer_infoz
 		sensorlist = [item1, item2, item3, item4, item5, item6, item7, item8, item9]
-
 
 		return sensorlist
 
