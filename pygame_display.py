@@ -13,6 +13,7 @@ from input import *
 if not configure.pc:
 	if configure.tr108:
 		import os
+		# runs a CLI command to disable the raspberry pi's screen blanking
 		os.system('xset -display :0 -dpms')
 
 # The following commands initiate a pygame environment.
@@ -265,8 +266,8 @@ def startUp(surface,timeSinceStart):
 	timenow = time.time()
 
 	#compares time just taken with time of start to animate the apperance of text
-	if (timenow - timeSinceStart) > .5:
-	 mainTitle.draw(surface)
+	#if (timenow - timeSinceStart) > .5:
+	 #mainTitle.draw(surface)
 
 	if (timenow - timeSinceStart) > 1:
 	 secTitle.draw(surface)
