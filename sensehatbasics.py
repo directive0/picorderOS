@@ -3,6 +3,7 @@
 from sense_hat import SenseHat
 import time
 from objects import *
+import math
 
 # instantiate a sensehat object,
 sense = SenseHat()
