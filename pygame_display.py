@@ -6,9 +6,14 @@
 # The following are some necessary modules for the Picorder.
 import pygame
 import time
+
 from objects import *
 from input import *
 
+if not configure.pc:
+	if configure.tr108:
+		import os
+		os.system('xset -display :0 -dpms')
 
 # The following commands initiate a pygame environment.
 pygame.init()
@@ -661,6 +666,7 @@ class Screen(object):
 			self.surface = pygame.display.set_mode(screenSize, pygame.FULLSCREEN)
 			pygame.event.set_blocked(pygame.MOUSEMOTION)
 			pygame.mouse.set_visible(False)
+
 
 		self.timed = time.time()
 		self.input = Inputs()
