@@ -1,20 +1,19 @@
  #!/usr/bin/python
 
 # This display module uses Pygame to draw picorder routines to the screen.
+# It is built upon the original Picorder UI.
 
 # The following are some necessary modules for the Picorder.
 import pygame
 import time
 from objects import *
 from input import *
-#from gpiobasics import *
-#
+
+
 # The following commands initiate a pygame environment.
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption('PicorderOS')
-
-
 
 # The following commands disable the mouse and cursor.
 #pygame.event.set_blocked(pygame.MOUSEMOTION)
@@ -82,7 +81,6 @@ def butswitch():
 		message += ["up"]
 
 	if key[pygame.K_a]:
-		print("key a")
 		configure.auto[0] = not configure.auto[0]
 
 	return message
@@ -158,7 +156,6 @@ class SelectableLabel(Label):
 		self.indicator.update(sliderb, nx - 23, ny+1)
 
 	def toggle(self):
-		print(self.oper)
 		if isinstance(self.oper[0], bool):
 			self.oper[0] = not self.oper[0]
 		elif isinstance(self.oper[0], int):
@@ -178,7 +175,6 @@ class SelectableLabel(Label):
 		if self.special == 0:
 			status_text = str(self.oper[0])
 		else:
-			#print(configure.sensor_info)
 			status_text = configure.sensor_info[self.oper[0]][3]
 
 		pos = resolution[0] - (self.get_size(status_text) + 37)
@@ -252,9 +248,9 @@ def startUp(surface,timeSinceStart):
 	logoposx = (resolution[0]/2) - (226/2)
 	#sets out UI objects with the appropriate data
 	insignia.update(pioslogo, logoposx, 60)
-	mainTitle.update("Picorder OS",25,22,181,titleFont,white)
-	mainTitle.center(resolution[0],20,0,181)
-	secTitle.update("Alpha Test Version - March 2019",19,37,210,titleFont,blue)
+	#mainTitle.update("Picorder OS",25,22,181,titleFont,white)
+	#mainTitle.center(resolution[0],20,0,181)
+	secTitle.update("Alpha Test Version - June 2019",19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer
@@ -291,7 +287,7 @@ def graphit(data,new, auto = True):
 
 	data_high = max(buffer)
 	data_low = min(buffer)
-	#print(new)
+
 	for i in data.grablist():
 		if configure.auto[0]:
 			prep.append(translate(i, data_low, data_high, 204, 17))
@@ -337,8 +333,6 @@ class Settings_Panel(object):
 
 		self.titlelabel.draw(self.surface)
 
-		#self.options[self.index].selected = True
-
 		for i in range(len(self.options)):
 			if i == self.index:
 				self.options[i].selected = True
@@ -347,20 +341,17 @@ class Settings_Panel(object):
 
 			self.options[i].draw(self.surface)
 
-		# for i in range(len(self.statuses)):
-		# 	self.statuses[i].draw(self.surface,sensors)
 
-
+		# draws UI to frame buffer
 		pygame.display.flip()
 
 		result = "settings"
-		print(configure.last_status[0])
-		# draws UI to frame buffer
-		#if (rot.read() == True): < can flip screen if necessary
-		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
 
+
+
+		# pulls input information
 		keys = self.input.read()
-		#print(self.input.read())
+
 		if keys[0]:
 			if self.input.is_down(0):
 				self.index += 1
@@ -386,7 +377,9 @@ class Graph_Screen(object):
 
 	def __init__(self,surface,input):
 
+		# initializes the input
 		self.input = input
+
 		# State variable
 		self.status = "mode_a"
 		self.selection = 0
