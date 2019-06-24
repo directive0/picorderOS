@@ -17,7 +17,7 @@ from objects import *
 if configure.tr108:
 	from pygame_display import *
 	if not configure.pc:
-		from gpiobasics import *
+		from leds import *
 		from sensehatbasics import *
 
 
@@ -34,9 +34,7 @@ if configure.tr109:
 if configure.pc:
 	from getcpu import *
 	from gpiodummy import *
-else:
-	pass
-	#from gpiobasics import *
+
 
 
 
