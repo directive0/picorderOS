@@ -16,9 +16,10 @@ class preferences(object):
 		# Machine vitals are substituted and Luma screens use emulator
 		self.pc = True
 
+
 		# These two bits determine the target device (Original picorder or new version)
-		self.tr108 = False
-		self.tr109 = True
+		self.tr108 = True
+		self.tr109 = False
 
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = True
@@ -32,6 +33,8 @@ class preferences(object):
 
 		# chooses SPI display (0 for nokia 5110, 1 for st7735)
 		self.display = "1"
+
+		self.theme = [0]
 
 		# enables thermal cam support
 		self.tcam = False
