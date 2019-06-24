@@ -43,6 +43,8 @@ white = (255,255,255)
 
 theme1 = [red,green,yellow]
 theme2 = [blue,white,green]
+themes = [theme1,theme2]
+themenames = ["alpha", "beta"]
 
 # The following are for LCARS colours from LCARScom.net
 lcars_orange = (255,153,0)
@@ -137,11 +139,22 @@ class Label(object):
 
 		return textw,texth
 
+# this class provides functionality for interactive text labels.
 class SelectableLabel(Label):
+
+
 	def __init__(self, oper, special = 0):
+
+		# special determines the behaviour of the label for each type of oper
+		# the class is supplied. There may be multiple types of int or boolean based
+		# configuration parameters so this variable helps make new options
 		self.special = special
+
+		# coordinates
 		self.x = 0
 		self.y = 0
+
+		# basic graphical parameters
 		self.color = white
 		self.fontSize = 33
 		self.myfont = pygame.font.Font(titleFont, self.fontSize)
@@ -151,6 +164,9 @@ class SelectableLabel(Label):
 		self.selected = False
 		self.indicator = Image()
 		self.content = "default"
+
+		# this variable is a reference to a list stored in "objects.py"
+		# containing either a boolean or an integer
 		self.oper = oper
 
 	def update(self, content, fontSize, nx, ny, fontType, color):
@@ -163,12 +179,25 @@ class SelectableLabel(Label):
 		self.indicator.update(sliderb, nx - 23, ny+1)
 
 	def toggle(self):
+
+		# if the parameter supplied is a boolean
 		if isinstance(self.oper[0], bool):
+			#toggle its state
 			self.oper[0] = not self.oper[0]
+
+		#if the parameter supplied is an integer
 		elif isinstance(self.oper[0], int):
+
+			# increment the integer.
 			self.oper[0] += 1
-			if self.oper[0] > configure.max_sensors[0]-1:
+
+			# if the integer is larger than the pool
+			if self.special == 1 and self.oper[0] > configure.max_sensors[0]-1:
 				self.oper[0] = 0
+
+			if self.special == 2 and self.oper[0] > (len(themes) - 1):
+				self.oper[0] = 0
+
 		return self.oper[0]
 
 	def draw(self, surface):
@@ -181,8 +210,10 @@ class SelectableLabel(Label):
 		status_text = "dummy"
 		if self.special == 0:
 			status_text = str(self.oper[0])
-		else:
+		elif self.special == 1:
 			status_text = configure.sensor_info[self.oper[0]][3]
+		elif self.special == 2:
+			status_text = themenames[self.oper[0]]
 
 		pos = resolution[0] - (self.get_size(status_text) + 37)
 		state = self.myfont.render(status_text, 1, self.color)
@@ -314,7 +345,7 @@ class Settings_Panel(object):
 		self.surface = surface
 
 		self.titlelabel = Label()
-		self.titlelabel.update("Picorder OS Control Panel",25,17,15,titleFont,orange)
+		self.titlelabel.update("Control Panel",25,17,15,titleFont,orange)
 
 
 		self.option1 = SelectableLabel(configure.sensor1, special = 1)
@@ -326,13 +357,19 @@ class Settings_Panel(object):
 		self.option3 = SelectableLabel(configure.sensor3, special = 1)
 		self.option3.update("Graph 3: ", 20, self.left_margin, 90, titleFont, yellow)
 
-		self.option4 = SelectableLabel(configure.auto)
-		self.option4.update("Auto Ranging:  ", 20, self.left_margin, 111, titleFont, orange)
+		self.option4 = SelectableLabel(configure.theme, special = 2)
+		self.option4.update("Theme:  ", 20, self.left_margin, 111, titleFont, orange)
 
-		self.option5 = SelectableLabel(configure.moire)
-		self.option5.update("Moire: ", 20, self.left_margin, 132, titleFont, orange)
+		self.option5 = SelectableLabel(configure.auto)
+		self.option5.update("Auto Range: ", 20, self.left_margin, 132, titleFont, orange)
 
-		self.options = [self.option1,self.option2,self.option3,self.option4,self.option5]
+		self.option6 = SelectableLabel(configure.leds)
+		self.option6.update("LEDs: ", 20, self.left_margin, 154, titleFont, orange)
+
+		self.option7 = SelectableLabel(configure.moire)
+		self.option7.update("Moire: ", 20, self.left_margin, 176, titleFont, orange)
+
+		self.options = [self.option1,self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
 
 	def frame(self):
 
@@ -452,15 +489,18 @@ class Graph_Screen(object):
 		cords = [a_cords,b_cords,c_cords]
 
 		a_content = str(int(a_newest))
-		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],30,15,205,titleFont,theme1[0])
+		a_color = themes[configure.theme[0]][0]
+		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],30,15,205,titleFont,a_color)
 
 		b_content = str(int(b_newest))
-		self.b_label.update( b_content + sensors[configure.sensor2[0]][4],30,114,205,titleFont,theme1[1])
+		b_color = themes[configure.theme[0]][1]
+		self.b_label.update( b_content + sensors[configure.sensor2[0]][4],30,114,205,titleFont,b_color)
 		self.b_label.center(resolution[0],31,0,205)
 
 		c_content = str(int(c_newest))
+		c_color = themes[configure.theme[0]][2]
 		c_position = resolution[0] - (self.c_label.get_size(c_content + sensors[configure.sensor3[0]][4])+15)
-		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],30,c_position,205,titleFont,theme1[2])
+		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],30,c_position,205,titleFont,c_color)
 		contents = [a_content,b_content,c_content]
 
 		labels = [self.a_label,self.b_label,self.c_label]
@@ -497,13 +537,13 @@ class Graph_Screen(object):
 
 		if self.selection == 0:
 			#draw the lines
-			pygame.draw.lines(self.surface, theme1[0], False, a_cords, 2)
+			pygame.draw.lines(self.surface, a_color, False, a_cords, 2)
 			self.slider1.draw(self.surface)
 
-			pygame.draw.lines(self.surface, theme1[1], False, b_cords, 2)
+			pygame.draw.lines(self.surface, b_color, False, b_cords, 2)
 			self.slider2.draw(self.surface)
 
-			pygame.draw.lines(self.surface, theme1[2], False, c_cords, 2)
+			pygame.draw.lines(self.surface, c_color, False, c_cords, 2)
 			self.slider3.draw(self.surface)
 
 			# draws the labels
@@ -514,13 +554,14 @@ class Graph_Screen(object):
 
 		if self.selection != 0:
 			this = self.selection - 1
-			print(this)
+			this_color = themes[configure.theme[0]][this]
 			focus_cords = cords[this]
 			focus_slider = sliders[this]
-			pygame.draw.lines(self.surface, theme1[this], False, focus_cords, 2)
+			pygame.draw.lines(self.surface, this_color, False, focus_cords, 2)
 			focus_slider.draw(self.surface)
 
-			self.a_label.update(contents[this] + sensors[configure.sensors[this][0]][4],30,15,205,titleFont,theme1[this])
+
+			self.a_label.update(contents[this] + sensors[configure.sensors[this][0]][4],30,15,205,titleFont,this_color)
 			self.a_label.draw(self.surface)
 
 		# draws the interval label (indicates refresh rate)
