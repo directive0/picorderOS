@@ -105,11 +105,21 @@ class LabelObj(object):
 class MultiFrame(object):
 
 	def __init__(self):#,draw):
+		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
+
+		# Sets the x and y span of the graph
 		self.gspanx = 133
 		self.gspany = 71
+
+		# sets the background image for the display
 		self.back = Image.open('assets/lcarsframe.png')
+
+		self.selection = 0
+
+		self.input = Inputs()
+
 		self.auto = configure.auto[0]
 		self.interval = timer()
 		self.interval.logtime()
@@ -123,20 +133,20 @@ class MultiFrame(object):
 
 		self.divider = 47
 
-		#self.temLabel = LabelObj("default",titlefont,self.draw, colour = lcars_orange)
+		#self.A_Label = LabelObj("default",titlefont,self.draw, colour = lcars_orange)
 
 		# graphlist((lower,upperrange),(x1,y1),(span),cycle?)
-		self.tempGraph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_orange, width = 1)
-		#tempGraph.auto
+		self.A_Graph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_orange, width = 1)
+		#A_Graph.auto
 
-		self.baroGraph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_blue, width = 1)
-		#baroGraph.auto
+		self.B_Graph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_blue, width = 1)
+		#B_Graph.auto
 
-		self.humidGraph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_pinker, width = 1)
-		#humidGraph.auto
+		self.C_Graph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_pinker, width = 1)
+		#C_Graph.auto
 
 		#self.cam = ThermalGrid(23,24,135,71,surface)
-		#print(self.humidGraph.giveperiod())
+		#print(self.C_Graph.giveperiod())
 
 	def definetitle(self):
 		self.string = "MULTI-GRAPH"
@@ -155,14 +165,14 @@ class MultiFrame(object):
 	# this function updates the graph for the screen
 	def graphs(self):
 
-		self.humidGraph.update(self.humi)
-		self.humidGraph.render(self.draw, self.auto)
+		self.C_Graph.update(self.C_Data)
+		self.C_Graph.render(self.draw)
 
-		self.baroGraph.update(self.pres)
-		self.baroGraph.render(self.draw, self.auto)
+		self.B_Graph.update(self.B_Data)
+		self.B_Graph.render(self.draw)
 
-		self.tempGraph.update(self.temp)
-		self.tempGraph.render(self.draw, self.auto)
+		self.A_Graph.update(self.A_Data)
+		self.A_Graph.render(self.draw)
 
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
@@ -178,15 +188,15 @@ class MultiFrame(object):
 	def labels(self,sensors):
 
 		#degreesymbol =  u'\N{DEGREE SIGN}'
-		rawtemp = str(self.temp)
+		rawtemp = str(self.A_Data)
 		adjustedtemp = self.arrangelabel(rawtemp)
 		tempstring = adjustedtemp + sensors[0][4]
 
-		self.temLabel = LabelObj(tempstring,font,self.draw,colour = lcars_orange)
-		self.temLabel.push(23,self.labely)
+		self.A_Label = LabelObj(tempstring,font,self.draw,colour = lcars_orange)
+		self.A_Label.push(23,self.labely)
 
 
-		rawbaro = str(self.pres)
+		rawbaro = str(self.B_Data)
 		adjustedbaro = self.arrangelabel(rawbaro)
 		barostring = adjustedbaro + " " + sensors[1][4]
 
@@ -194,23 +204,22 @@ class MultiFrame(object):
 		self.baroLabel.center(self.labely,23,135)
 		#self.baroLabel.push(57,100)
 
-		rawhumi = str(self.humi)
+		rawhumi = str(self.C_Data)
 		adjustedhumi = self.arrangelabel(rawhumi)
 		humistring = adjustedhumi + sensors[2][4]
 
-		self.humiLabel = LabelObj(humistring,font,self.draw, colour = lcars_pinker)
-		#self.humiLabel.push(117,100)
-		self.humiLabel.r_align(156,self.labely)
+		self.C_DataLabel = LabelObj(humistring,font,self.draw, colour = lcars_pinker)
+		#self.C_DataLabel.push(117,100)
+		self.C_DataLabel.r_align(156,self.labely)
 
 	#push the image frame and contents to the draw object.
 	def push(self,sensors,draw):
 		self.draw = draw
 		#self.draw.paste((0,0),self.back)
 
-
-		self.humi = sensors[2][0]
-		self.pres = sensors[1][0]
-		self.temp = sensors[0][0]
+		self.C_Data = sensors[configure.sensor1[0]][0]
+		self.B_Data = sensors[configure.sensor2[0]][0]
+		self.A_Data = sensors[configure.sensor3[0]][0]
 		#Draw the background
 		#self.draw.rectangle((15,8,150,120),fill="black")
 		#self.draw.paste(self.back)
@@ -225,6 +234,28 @@ class MultiFrame(object):
 		self.graphs()
 		self.labels(sensors)
 
+		status  = "mode_a"
+
+		keys = self.input.read()
+		#print(self.input.read())
+		if keys[0]:
+			if self.input.is_down(0):
+				self.selection += 1
+
+				if self.selection > 3:
+					self.selection = 0
+
+		if keys[1]:
+			if self.input.is_down(1):
+				status =  "mode_b"
+
+		if keys[2]:
+			if self.input.is_down(2):
+				print("set status to settings")
+				configure.last_status[0] = "mode_a"
+				status = "settings"
+
+		return status
 # governs the screen drawing of the entire program. Everything flows through Screen.
 # Screen instantiates a draw object and passes it the image background.
 # Screen monitors button presses and passes flags for interface updates to the draw object.
