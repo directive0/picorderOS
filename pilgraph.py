@@ -137,7 +137,7 @@ class graphlist(object):
 
 	def render(self, draw, auto = True, dot = True):
 
-		self.auto = configure.auto
+		self.auto = configure.auto[0]
 		#preps the list by adding the X coordinate to every sensor value
 		cords = self.graphprep(self.buff)
 

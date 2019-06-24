@@ -110,7 +110,7 @@ class MultiFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 		self.back = Image.open('assets/lcarsframe.png')
-		self.auto = configure.auto
+		self.auto = configure.auto[0]
 		self.interval = timer()
 		self.interval.logtime()
 		#self.draw = draw
