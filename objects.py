@@ -29,6 +29,7 @@ class preferences(object):
 		# bit controls the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
 		self.leds = [False]
+
 		# bit controls auto ranging of graphs
 		self.auto = [True]
 
@@ -48,6 +49,7 @@ class preferences(object):
 		self.sensor3 = [2]
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
 
+		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []
 		self.last_status = ["startup"]
 
