@@ -39,20 +39,12 @@ SPI_DEVICE = 0
 # SPI_DEVICE = 0
 
 # Hardware SPI usage:
-#disp = LCD.PCD8544(DC, RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=4000000))
 if configure.pc:
 	device = pygame(width = 84, height = 48, mode = "1")
 else:
 	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
 	device = pcd8544(serial)
 	device.contrast(50)
-
-# Initialize library.
-#disp.begin(contrast=50)
-
-# Clear display.
-#disp.clear()
-#disp.display()
 
 fore_col = 0
 back_col = 1
@@ -87,17 +79,11 @@ class MultiFrame(object):
 
 		self.divider = 47
 
-		# graphlist((lower,upperrange),(x1,y1),(span),cycle?)
 		self.tempGraph = graphlist((-40,85),(4,8),(self.divider,11),self.graphcycle)
-		#tempGraph.auto
 
 		self.baroGraph = graphlist((300,1100),(4,21),(self.divider,11),self.graphcycle)
-		#baroGraph.auto
 
 		self.humidGraph = graphlist((0,100),(4,34),(self.divider,11),self.graphcycle)
-		#humidGraph.auto
-
-		#print(self.humidGraph.giveperiod())
 
 	def definetitle(self):
 		self.string = "MULTISCAN"
@@ -117,13 +103,13 @@ class MultiFrame(object):
 	def graphs(self):
 
 		self.humidGraph.update(self.humi)
-		self.humidGraph.render(self.draw, self.auto)
+		self.humidGraph.render(self.draw)
 
 		self.tempGraph.update(self.temp)
-		self.tempGraph.render(self.draw, self.auto)
+		self.tempGraph.render(self.draw)
 
 		self.baroGraph.update(self.pres)
-		self.baroGraph.render(self.draw, self.auto)
+		self.baroGraph.render(self.draw)
 
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
@@ -212,16 +198,12 @@ class NokiaScreen(object):
 
 	def push(self,sensors):
 
-
-
 		self.frame.push(sensors)
 		self.input.read()
 		self.pixdrw()
 
 	def pixdrw(self):
-		#pass
-		#with canvas(device) as draw:
-		#invert_image = PIL.ImageOps.invert(self.image)
+
 		im = self.image.convert("L")
 		im = PIL.ImageOps.invert(im)
 		im = im.convert("1")
@@ -230,7 +212,3 @@ class NokiaScreen(object):
 			device.display(self.image)
 		else:
 			device.display(im)
-
-		#invert_image = PIL.ImageOps.invert(self.image)
-		#disp.image(self.image)
-		#disp.display()

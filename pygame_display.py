@@ -576,7 +576,7 @@ class Graph_Screen(object):
 		status  = "mode_a"
 
 		keys = self.input.read()
-		#print(self.input.read())
+
 		if keys[0]:
 			if self.input.is_down(0):
 				self.selection += 1
@@ -590,7 +590,7 @@ class Graph_Screen(object):
 
 		if keys[2]:
 			if self.input.is_down(2):
-				print("set status to settings")
+
 				configure.last_status[0] = "mode_a"
 				status = "settings"
 
@@ -606,10 +606,12 @@ class Slider_Screen(object):
 	def __init__(self, surface,input):
 		# This function draws the main 3-slider interface, modelled after McCoy's tricorder in "Plato's Stepchildren". It displays temperature, humidity and pressure.
 		self.surface = surface
+
 		#checks time
 		self.timenow = time.time()
+		
 		#compares time just taken with time of start to animate the apperance of text
-		#print(timenow - tock.timed)
+
 		# Sets a black screen ready for our UI elements
 		self.surface.fill(black)
 
@@ -671,14 +673,13 @@ class Slider_Screen(object):
 		status  = "mode_b"
 
 		keys = self.input.read()
-		#print(self.input.read())
+
 		if keys[0]:
 			if self.input.is_down(0):
 				status =  "mode_a"
 
 		if keys[2]:
 			if self.input.is_down(2):
-				print("set status to settings")
 				configure.last_status[0] = "mode_b"
 				status = "settings"
 

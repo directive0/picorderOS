@@ -10,16 +10,14 @@
 print("PicorderOS - alpha stage")
 print("Loading Main Script")
 
-
 from objects import *
-
 
 if configure.tr108:
 	from pygame_display import *
+
 	if not configure.pc:
 		from leds import *
-		from sensehatbasics import *
-
+		from sensehat import *
 
 if configure.tr109:
 	if not configure.pc:
