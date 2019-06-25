@@ -391,8 +391,6 @@ class Settings_Panel(object):
 
 		result = "settings"
 
-
-
 		# pulls input information
 		keys = self.input.read()
 
@@ -609,7 +607,7 @@ class Slider_Screen(object):
 
 		#checks time
 		self.timenow = time.time()
-		
+
 		#compares time just taken with time of start to animate the apperance of text
 
 		# Sets a black screen ready for our UI elements

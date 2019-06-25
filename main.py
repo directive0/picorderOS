@@ -56,7 +56,7 @@ def Main():
 
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
 	if configure.tr108:
-		onScreen = Screen(buttons)
+		PyScreen = Screen(buttons)
 		if not configure.pc:
 			moire = led_display()
 
@@ -85,7 +85,7 @@ def Main():
 				status = "mode_a"
 
 				if configure.tr108:
-					status = onScreen.startup_screen(start_time)
+					status = PyScreen.startup_screen(start_time)
 
 			if status == "ready":
 				status = "mode_a"
@@ -99,7 +99,7 @@ def Main():
 					# the following is only run if the tr108 flag is set
 					if configure.tr108:
 
-						status = onScreen.graph_screen(data)
+						status = PyScreen.graph_screen(data)
 
 						if not configure.pc:
 							leda_on()
@@ -112,7 +112,7 @@ def Main():
 						if configure.display == "0":
 							dotscreen.push(data)
 						if configure.display == "1":
-							colourscreen.push(data)
+							colourscreen.graph_screen(data)
 						if configure.leds[0]:
 							lights.cycle()
 
@@ -126,7 +126,7 @@ def Main():
 					data = sensors.get()
 
 					if configure.tr108:
-						status = onScreen.slider_screen(data)
+						status = PyScreen.slider_screen(data)
 						leda_off()
 						ledb_on()
 						ledc_off()
@@ -137,20 +137,22 @@ def Main():
 							lights.cycle()
 
 						if configure.display == "0":
-							colourscreen.push(data)
+							dotscreen.push(data)
 						if configure.display == "1":
-							colourscreen.push(data)
+							colourscreen.thermal_screen(data)
 
 					timeit.logtime()
 
 			while (status == "settings"):
 				#print(status)
 				if configure.tr108:
-					status = onScreen.settings()
+					status = PyScreen.settings()
 					leda_off()
 					ledb_off()
 					ledc_on()
 
+				if configure.tr109:
+					status = PyScreen.settings()
 
 
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.

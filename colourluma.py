@@ -100,6 +100,91 @@ class LabelObj(object):
 		size = self.draw.textsize(self.string, font=self.font)
 		return size
 
+class SelectableLabel(LabelObj):
+
+
+	def __init__(self, oper, special = 0):
+
+		# special determines the behaviour of the label for each type of oper
+		# the class is supplied. There may be multiple types of int or boolean based
+		# configuration parameters so this variable helps make new options
+		self.special = special
+
+		# coordinates
+		self.x = 0
+		self.y = 0
+
+		# basic graphical parameters
+		self.color = white
+		self.fontSize = 33
+		self.myfont = pygame.font.Font(titleFont, self.fontSize)
+		text = "Basic Item"
+		self.size = self.myfont.size(text)
+		self.scaler = 3
+		self.selected = False
+		self.indicator = Image()
+		self.content = "default"
+
+		# this variable is a reference to a list stored in "objects.py"
+		# containing either a boolean or an integer
+		self.oper = oper
+
+	def update(self, content, fontSize, nx, ny, fontType, color):
+		self.x = nx
+		self.y = ny
+		self.content = content
+		self.fontSize = fontSize
+		self.myfont = pygame.font.Font(fontType, self.fontSize)
+		self.color = color
+		self.indicator.update(sliderb, nx - 23, ny+1)
+
+	def toggle(self):
+
+		# if the parameter supplied is a boolean
+		if isinstance(self.oper[0], bool):
+			#toggle its state
+			self.oper[0] = not self.oper[0]
+
+		#if the parameter supplied is an integer
+		elif isinstance(self.oper[0], int):
+
+			# increment the integer.
+			self.oper[0] += 1
+
+			# if the integer is larger than the pool
+			if self.special == 1 and self.oper[0] > configure.max_sensors[0]-1:
+				self.oper[0] = 0
+
+			if self.special == 2 and self.oper[0] > (len(themes) - 1):
+				self.oper[0] = 0
+
+		return self.oper[0]
+
+	def draw(self, surface):
+		if self.selected:
+			self.indicator.draw(surface)
+
+		label = self.myfont.render(self.content, 1, self.color)
+
+
+		status_text = "dummy"
+		if self.special == 0:
+			status_text = str(self.oper[0])
+		elif self.special == 1:
+			status_text = configure.sensor_info[self.oper[0]][3]
+		elif self.special == 2:
+			status_text = themenames[self.oper[0]]
+
+		pos = resolution[0] - (self.get_size(status_text) + 37)
+		state = self.myfont.render(status_text, 1, self.color)
+
+
+		surface.blit(label, (self.x, self.y))
+		surface.blit(state, (pos, self.y))
+
+
+class SettingsFrame(object):
+	pass
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
@@ -237,23 +322,18 @@ class MultiFrame(object):
 		status  = "mode_a"
 
 		keys = self.input.read()
-		#print(self.input.read())
+
 		if keys[0]:
 			if self.input.is_down(0):
-				self.selection += 1
-
-				if self.selection > 3:
-					self.selection = 0
+				print("Input1")
 
 		if keys[1]:
 			if self.input.is_down(1):
-				status =  "mode_b"
+				print("Input2")
 
 		if keys[2]:
 			if self.input.is_down(2):
-				print("set status to settings")
-				configure.last_status[0] = "mode_a"
-				status = "settings"
+				print("Input3")
 
 		return status
 # governs the screen drawing of the entire program. Everything flows through Screen.
@@ -267,7 +347,6 @@ class ThermalFrame(object):
 class ColourScreen(object):
 
 	def __init__(self):
-		self.input = Inputs()
 		#---------------------------IMAGE LIBRARY STUFF------------------------------#
 
 		# instantiates an image and uses it in a draw object.
@@ -275,21 +354,38 @@ class ColourScreen(object):
 
 
 		self.cam = ThermalGrid(23,24,135,71)
-		self.frame = MultiFrame()#self.draw)
+		self.multi_frame = MultiFrame()#self.draw)
+		self.settings_frame = SettingsFrame()
+		self.thermal_frame = ThermalFrame()
+
+		self.status = "mode_a"
 
 		#self.cam = ThermalGrid(32,32,256,168,surface)
 		#self.graph = graphlist
 
 
-	def push(self,sensors):
-
+	def graph_screen(self,sensors):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-		self.frame.push(sensors,self.draw)
-
-
-		self.input.read()
+		self.status = self.multi_frame.push(sensors,self.draw)
 		self.pixdrw()
+		return self.status
+
+	def thermal_screen(self,sensors):
+		self.newimage = self.image.copy()
+		self.draw = ImageDraw.Draw(self.newimage)
+		self.status = self.thermal_frame.push(sensors,self.draw)
+		self.pixdrw()
+		return self.status
+
+	def settings(self,sensors):
+		self.newimage = self.image.copy()
+		self.draw = ImageDraw.Draw(self.newimage)
+		self.status = self.settings_frame.push(sensors,self.draw)
+		self.pixdrw()
+		return self.status
+
+
 
 	def pixdrw(self):
 		#self.draw = ImageDraw.Draw(self.image)
