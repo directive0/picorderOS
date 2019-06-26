@@ -5,7 +5,19 @@
 
 # External module import
 import RPi.GPIO as GPIO
+
 from objects import *
+
+if configure.neopixel:
+	import board
+	import neopixel
+
+	pwr = 0
+	alpha = 1
+	beta = 2
+	delta = 3
+	gamma = 4
+
 
 
 # loads the pin configurations and modes for the tr-108  (3 leds)
