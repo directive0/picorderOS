@@ -353,7 +353,7 @@ class ColourScreen(object):
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
 
 
-		self.cam = ThermalGrid(23,24,135,71)
+		#self.cam = ThermalGrid(23,24,135,71)
 		self.multi_frame = MultiFrame()#self.draw)
 		self.settings_frame = SettingsFrame()
 		self.thermal_frame = ThermalFrame()
@@ -384,8 +384,6 @@ class ColourScreen(object):
 		self.status = self.settings_frame.push(sensors,self.draw)
 		self.pixdrw()
 		return self.status
-
-
 
 	def pixdrw(self):
 		#self.draw = ImageDraw.Draw(self.image)
