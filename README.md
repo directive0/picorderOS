@@ -1,4 +1,4 @@
-![Logo](https://raw.githubusercontent.com/directive0/picorder/master/assets/picorderOS_logo.png?raw=true "PicorderOS Logo")
+![Logo](https://raw.githubusercontent.com/directive0/picorderOS/master/assets/picorderOS_logo.png?raw=true "PicorderOS Logo")
 
 # PicorderOS
 A set of python components that together provide functionality for a number of raspberry pi based tricorder replicas that I call "Picorders". A Picorder includes a sensor package, battery, display and supplemental components to provide a satisfying and accurate Tricorder experience. The goal is to have a raspberry pi based device that provides the operator with a selection of sensor readings that may be useful.
