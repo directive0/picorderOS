@@ -7,7 +7,7 @@ A set of python components that together provide functionality for a number of r
 At present PicorderOS supports a number of displays, sensors, and inputs. The user can mix and match their desired picorder load out using the configure object contained in objects.py.
 
 ## Requirements:
-Picorder.py uses a number of modules to operate, specifically:
+PicorderOS uses a number of modules to operate, specifically:
 - Pygame
 - Luma.lcd
 - Adafruit Blinka
