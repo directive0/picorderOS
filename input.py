@@ -53,6 +53,8 @@ if configure.input_gpio:
 if configure.input_cap:
 	# if using the capacitive touch board from adafruit we import that library
 	import adafruit_mpr121
+	import busio
+	import board
 
 	# Create I2C bus.
 	i2c = busio.I2C(board.SCL, board.SDA)
@@ -148,8 +150,10 @@ class Inputs(object):
 			# instatiates a capacitive button object
 			touched = mpr121.touched_pins
 
+			print(touched)
+
 			# runs a loop to check each possible button
-			for i in range(buttons):
+			for i in range(len(touched)):
 
 				# if the button has not been registered as pressed
 				if not self.fired[i] and touched[i]:  # button pressed

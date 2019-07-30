@@ -42,7 +42,7 @@ class Sensor(object):
 			dummyload = [self.sensor.data.temperature]
 			dummyload2 = [self.sensor.data.pressure]
 			dummyload3 = [self.sensor.data.humidity]
-
+			dummyload4 = [self.sensor.data.gas_resistance]
 
 			item1 = dummyload + self.temp_info
 			item2 = dummyload2 + self.pressure_info
