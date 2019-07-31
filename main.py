@@ -22,6 +22,7 @@ if configure.tr108:
 if configure.tr109:
 	if not configure.pc:
 		from bme import *
+		from leds import *
 
 	if configure.display == "1":
 		from colourluma import *

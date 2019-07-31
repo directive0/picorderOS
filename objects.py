@@ -28,7 +28,9 @@ class preferences(object):
 
 		# bit controls the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
-		self.leds = [False]
+		self.leds = [True]
+		self.neopixel = [False]
+
 
 		# bit controls auto ranging of graphs
 		self.auto = [True]

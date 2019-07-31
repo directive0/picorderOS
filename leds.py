@@ -9,8 +9,8 @@ import RPi.GPIO as GPIO
 from objects import *
 
 if configure.neopixel:
-	import board
-	import neopixel
+#	import board
+#	import neopixel
 
 	pwr = 0
 	alpha = 1
@@ -69,28 +69,28 @@ def resetleds():
 # I figured it was easier than having different functions for different combinations.
 # This way you can just manually set them as you please.
 def leda_on():
-	GPIO.output(led1, GPIO.HIGH)
-
-def ledb_on():
-	GPIO.output(led2, GPIO.HIGH)
-
-def ledc_on():
-	GPIO.output(led3, GPIO.HIGH)
-
-def ledd_on():
-	GPIO.output(led4, GPIO.HIGH)
-
-def leda_off():
 	GPIO.output(led1, GPIO.LOW)
 
-def ledb_off():
+def ledb_on():
 	GPIO.output(led2, GPIO.LOW)
 
-def ledc_off():
+def ledc_on():
 	GPIO.output(led3, GPIO.LOW)
 
-def ledd_off():
+def ledd_on():
 	GPIO.output(led4, GPIO.LOW)
+
+def leda_off():
+	GPIO.output(led1, GPIO.HIGH)
+
+def ledb_off():
+	GPIO.output(led2, GPIO.HIGH)
+
+def ledc_off():
+	GPIO.output(led3, GPIO.HIGH)
+
+def ledd_off():
+	GPIO.output(led4, GPIO.HIGH)
 
 class ripple(object):
 	def __init__(self):
