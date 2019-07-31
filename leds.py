@@ -35,10 +35,10 @@ if configure.tr108:
 # loads the pin configurations and modes for the tr-109 (many switches)
 if configure.tr109:
 # Pin Definitons:
-	led1 = 19 # Broadcom pin 19
-	led2 = 6 # Broadcom pin 13
-	led3 = 20
-	led4 = 16
+	led1 = 16 #19 # Broadcom pin 19
+	led2 = 20 #6 # Broadcom pin 13
+	led3 = 6 #20
+	led4 = 19 #16
 
 	# Pin Setup:
 	GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme

@@ -150,8 +150,6 @@ class Inputs(object):
 			# instatiates a capacitive button object
 			touched = mpr121.touched_pins
 
-			print(touched)
-
 			# runs a loop to check each possible button
 			for i in range(len(touched)):
 
