@@ -184,12 +184,70 @@ class SelectableLabel(LabelObj):
 
 
 class SettingsFrame(object):
-	pass
+	def __init__(self,input):
+		# Sets the topleft origin of the graph
+		self.graphx = 23
+		self.graphy = 24
+
+		# Sets the x and y span of the graph
+		self.gspanx = 133
+		self.gspany = 71
+
+		# sets the background image for the display
+		self.back = Image.open('assets/lcarsframe.png')
+
+		self.selection = 0
+
+		self.input = Inputs()
+
+		self.auto = configure.auto[0]
+		self.interval = timer()
+		self.interval.logtime()
+		#self.draw = draw
+		self.titlex = 23
+		self.titley = 6
+		self.labely = 102
+
+		self.graphcycle = 0
+		self.decimal = 1
+
+		self.divider = 47
+
+		# device needs to show multiple settings
+		# first the sensor palette configuration
+
+		self.titlelabel = Label()
+		self.titlelabel.update("Control Panel",25,17,15,titleFont,orange)
+
+
+		self.option1 = SelectableLabel(configure.sensor1, special = 1)
+		self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,red)
+
+		self.option2 = SelectableLabel(configure.sensor2, special = 1)
+		self.option2.update("Graph 2: ", 20, self.left_margin, 68, titleFont, green)
+
+		self.option3 = SelectableLabel(configure.sensor3, special = 1)
+		self.option3.update("Graph 3: ", 20, self.left_margin, 90, titleFont, yellow)
+
+		self.option4 = SelectableLabel(configure.theme, special = 2)
+		self.option4.update("Theme:  ", 20, self.left_margin, 111, titleFont, orange)
+
+		self.option5 = SelectableLabel(configure.auto)
+		self.option5.update("Auto Range: ", 20, self.left_margin, 132, titleFont, orange)
+
+		self.option6 = SelectableLabel(configure.leds)
+		self.option6.update("LEDs: ", 20, self.left_margin, 154, titleFont, orange)
+
+		self.option7 = SelectableLabel(configure.moire)
+		self.option7.update("Moire: ", 20, self.left_margin, 176, titleFont, orange)
+
+		self.options = [self.option1,self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
+
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
 
-	def __init__(self):#,draw):
+	def __init__(self,input):
 		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
@@ -261,7 +319,6 @@ class MultiFrame(object):
 
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
-
 		datareturn = format(float(data), '.0f')
 		return datareturn
 
@@ -273,6 +330,7 @@ class MultiFrame(object):
 	def labels(self,sensors):
 
 		#degreesymbol =  u'\N{DEGREE SIGN}'
+
 		rawtemp = str(self.A_Data)
 		adjustedtemp = self.arrangelabel(rawtemp)
 		tempstring = adjustedtemp + sensors[0][4]
@@ -285,8 +343,8 @@ class MultiFrame(object):
 		adjustedbaro = self.arrangelabel(rawbaro)
 		barostring = adjustedbaro + " " + sensors[1][4]
 
-		self.baroLabel = LabelObj(barostring,font,self.draw, colour = lcars_blue)
-		self.baroLabel.center(self.labely,23,135)
+		self.B_Label = LabelObj(barostring,font,self.draw, colour = lcars_blue)
+		self.B_Label.center(self.labely,23,135)
 		#self.baroLabel.push(57,100)
 
 		rawhumi = str(self.C_Data)
@@ -302,9 +360,9 @@ class MultiFrame(object):
 		self.draw = draw
 		#self.draw.paste((0,0),self.back)
 
-		self.C_Data = sensors[configure.sensor1[0]][0]
+		self.C_Data = sensors[configure.sensor3[0]][0]
 		self.B_Data = sensors[configure.sensor2[0]][0]
-		self.A_Data = sensors[configure.sensor3[0]][0]
+		self.A_Data = sensors[configure.sensor1[0]][0]
 		#Draw the background
 		#self.draw.rectangle((15,8,150,120),fill="black")
 		#self.draw.paste(self.back)
@@ -319,6 +377,8 @@ class MultiFrame(object):
 		self.graphs()
 		self.labels(sensors)
 
+		# returns mode_a so we will stay on this screen
+		# should change it button pressed.
 		status  = "mode_a"
 
 		keys = self.input.read()
@@ -330,6 +390,8 @@ class MultiFrame(object):
 		if keys[1]:
 			if self.input.is_down(1):
 				print("Input2")
+				status  = "mode_b"
+
 
 		if keys[2]:
 			if self.input.is_down(2):
@@ -341,28 +403,26 @@ class MultiFrame(object):
 # Screen monitors button presses and passes flags for interface updates to the draw object.
 
 class ThermalFrame(object):
-	pass
+	def __init__(self,input):
+		pass
 
 
 class ColourScreen(object):
 
 	def __init__(self):
-		#---------------------------IMAGE LIBRARY STUFF------------------------------#
 
 		# instantiates an image and uses it in a draw object.
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
 
 
-		#self.cam = ThermalGrid(23,24,135,71)
-		self.multi_frame = MultiFrame()#self.draw)
-		self.settings_frame = SettingsFrame()
-		self.thermal_frame = ThermalFrame()
-
 		self.status = "mode_a"
 
-		#self.cam = ThermalGrid(32,32,256,168,surface)
-		#self.graph = graphlist
+		# Creates a local reference for our input object.
+		self.input = Inputs()
 
+		self.multi_frame = MultiFrame(self.input)
+		self.settings_frame = SettingsFrame(self.input)
+		self.thermal_frame = ThermalFrame(self.input)
 
 	def graph_screen(self,sensors):
 		self.newimage = self.image.copy()
@@ -386,10 +446,5 @@ class ColourScreen(object):
 		return self.status
 
 	def pixdrw(self):
-		#self.draw = ImageDraw.Draw(self.image)
-		#self.cam.update(self.draw)
 		thisimage = self.newimage.convert(mode = "RGB")
 		device.display(thisimage)
-		#invert_image = PIL.ImageOps.invert(self.image)
-		#disp.image(self.image)
-		#disp.display()

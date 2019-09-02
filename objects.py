@@ -14,7 +14,7 @@ class preferences(object):
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
-		self.pc = False
+		self.pc = True
 
 
 		# These two bits determine the target device (Original picorder or new version)
@@ -22,13 +22,13 @@ class preferences(object):
 		self.tr109 = True
 
 		# testing this setting to switch between Pygame controls and gpio ones
-		self.input_kb = False
+		self.input_kb = True
 		self.input_gpio = False
-		self.input_cap = True
+		self.input_cap = False
 
 		# bit controls the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
-		self.leds = [True]
+		self.leds = [False]
 		self.neopixel = [False]
 
 

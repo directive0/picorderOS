@@ -704,7 +704,7 @@ class Screen(object):
 			#for development use this one (windowed mode)
 			self.surface = pygame.display.set_mode(screenSize)
 		else:
-			# on the picorder use this option.
+			# on the picorder use this option (Fullscreen).
 			self.surface = pygame.display.set_mode(screenSize, pygame.FULLSCREEN)
 			pygame.event.set_blocked(pygame.MOUSEMOTION)
 			pygame.mouse.set_visible(False)
@@ -718,19 +718,16 @@ class Screen(object):
 
 
 	def startup_screen(self,start_time):
-
 		status = startUp(self.surface,start_time)
 		return status
 
 	def slider_screen(self,sensors):
 		status = self.slidescreen.frame(sensors)
 		return status
-		#return grapher(self.surface,sensors,self.data_a,self.data_b,self.data_c)
 
 	def graph_screen(self,sensors):
 		status = self.graphscreen.frame(sensors)
 		return status
-
 
 	def settings(self):
 		status = self.settings_screen.frame()
