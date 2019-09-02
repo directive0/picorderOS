@@ -111,9 +111,9 @@ def Main():
 
 					if configure.tr109:
 						if configure.display == "0":
-							dotscreen.push(data)
+							status = dotscreen.push(data)
 						if configure.display == "1":
-							colourscreen.graph_screen(data)
+							status = colourscreen.graph_screen(data)
 						if configure.leds[0]:
 							lights.cycle()
 
@@ -138,9 +138,9 @@ def Main():
 							lights.cycle()
 
 						if configure.display == "0":
-							dotscreen.push(data)
+							status = dotscreen.push(data)
 						if configure.display == "1":
-							colourscreen.thermal_screen(data)
+							status = colourscreen.thermal_screen(data)
 
 					timeit.logtime()
 

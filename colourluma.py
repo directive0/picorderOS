@@ -216,33 +216,33 @@ class SettingsFrame(object):
 		# device needs to show multiple settings
 		# first the sensor palette configuration
 
-		self.titlelabel = Label()
-		self.titlelabel.update("Control Panel",25,17,15,titleFont,orange)
+		#self.titlelabel = LabelObj()
+		#self.titlelabel.update("Control Panel",25,17,15,titleFont,orange)
 
-
-		self.option1 = SelectableLabel(configure.sensor1, special = 1)
-		self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,red)
-
-		self.option2 = SelectableLabel(configure.sensor2, special = 1)
-		self.option2.update("Graph 2: ", 20, self.left_margin, 68, titleFont, green)
-
-		self.option3 = SelectableLabel(configure.sensor3, special = 1)
-		self.option3.update("Graph 3: ", 20, self.left_margin, 90, titleFont, yellow)
-
-		self.option4 = SelectableLabel(configure.theme, special = 2)
-		self.option4.update("Theme:  ", 20, self.left_margin, 111, titleFont, orange)
-
-		self.option5 = SelectableLabel(configure.auto)
-		self.option5.update("Auto Range: ", 20, self.left_margin, 132, titleFont, orange)
-
-		self.option6 = SelectableLabel(configure.leds)
-		self.option6.update("LEDs: ", 20, self.left_margin, 154, titleFont, orange)
-
-		self.option7 = SelectableLabel(configure.moire)
-		self.option7.update("Moire: ", 20, self.left_margin, 176, titleFont, orange)
-
-		self.options = [self.option1,self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
-
+		#
+		# self.option1 = SelectableLabel(configure.sensor1, special = 1)
+		# self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,red)
+		#
+		# self.option2 = SelectableLabel(configure.sensor2, special = 1)
+		# self.option2.update("Graph 2: ", 20, self.left_margin, 68, titleFont, green)
+		#
+		# self.option3 = SelectableLabel(configure.sensor3, special = 1)
+		# self.option3.update("Graph 3: ", 20, self.left_margin, 90, titleFont, yellow)
+		#
+		# self.option4 = SelectableLabel(configure.theme, special = 2)
+		# self.option4.update("Theme:  ", 20, self.left_margin, 111, titleFont, orange)
+		#
+		# self.option5 = SelectableLabel(configure.auto)
+		# self.option5.update("Auto Range: ", 20, self.left_margin, 132, titleFont, orange)
+		#
+		# self.option6 = SelectableLabel(configure.leds)
+		# self.option6.update("LEDs: ", 20, self.left_margin, 154, titleFont, orange)
+		#
+		# self.option7 = SelectableLabel(configure.moire)
+		# self.option7.update("Moire: ", 20, self.left_margin, 176, titleFont, orange)
+		#
+		# self.options = [self.option1,self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
+		#
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
@@ -331,25 +331,25 @@ class MultiFrame(object):
 
 		#degreesymbol =  u'\N{DEGREE SIGN}'
 
-		rawtemp = str(self.A_Data)
-		adjustedtemp = self.arrangelabel(rawtemp)
-		tempstring = adjustedtemp + sensors[0][4]
+		raw_a = str(self.A_Data)
+		adjusted_a = self.arrangelabel(raw_a)
+		a_string = adjusted_a + sensors[configure.sensor1[0]][4]
 
-		self.A_Label = LabelObj(tempstring,font,self.draw,colour = lcars_orange)
+		self.A_Label = LabelObj(a_string,font,self.draw,colour = lcars_orange)
 		self.A_Label.push(23,self.labely)
 
 
-		rawbaro = str(self.B_Data)
-		adjustedbaro = self.arrangelabel(rawbaro)
-		barostring = adjustedbaro + " " + sensors[1][4]
+		raw_b = str(self.B_Data)
+		adjusted_b = self.arrangelabel(raw_b)
+		b_string = adjusted_b + " " + sensors[configure.sensor2[0]][4]
 
-		self.B_Label = LabelObj(barostring,font,self.draw, colour = lcars_blue)
+		self.B_Label = LabelObj(b_string,font,self.draw, colour = lcars_blue)
 		self.B_Label.center(self.labely,23,135)
 		#self.baroLabel.push(57,100)
 
 		rawhumi = str(self.C_Data)
 		adjustedhumi = self.arrangelabel(rawhumi)
-		humistring = adjustedhumi + sensors[2][4]
+		humistring = adjustedhumi + " " + sensors[2][4]
 
 		self.C_DataLabel = LabelObj(humistring,font,self.draw, colour = lcars_pinker)
 		#self.C_DataLabel.push(117,100)
@@ -360,9 +360,12 @@ class MultiFrame(object):
 		self.draw = draw
 		#self.draw.paste((0,0),self.back)
 
-		self.C_Data = sensors[configure.sensor3[0]][0]
-		self.B_Data = sensors[configure.sensor2[0]][0]
+
+
 		self.A_Data = sensors[configure.sensor1[0]][0]
+		self.B_Data = sensors[configure.sensor2[0]][0]
+		self.C_Data = sensors[configure.sensor3[0]][0]
+
 		#Draw the background
 		#self.draw.rectangle((15,8,150,120),fill="black")
 		#self.draw.paste(self.back)
@@ -404,8 +407,44 @@ class MultiFrame(object):
 
 class ThermalFrame(object):
 	def __init__(self,input):
+		# Sets the topleft origin of the graph
+		self.input = input
+		self.graphx = 23
+		self.graphy = 24
+
+		# Sets the x and y span of the graph
+		self.gspanx = 133
+		self.gspany = 71
+		self.t_grid = ThermalGrid(23,24,133,71)
+		self.titlex = 23
+		self.titley = 6
 		pass
 
+	def push(self, sensor, draw):
+		self.title = LabelObj("Thermal Array",titlefont,draw)
+		self.title.push(self.titlex,self.titley)
+		self.t_grid.update(draw)
+
+
+		status  = "mode_b"
+
+		keys = self.input.read()
+
+		if keys[0]:
+			if self.input.is_down(0):
+				print("Input1")
+				status  = "mode_a"
+
+		if keys[1]:
+			if self.input.is_down(1):
+				print("Input2")
+
+
+		if keys[2]:
+			if self.input.is_down(2):
+				print("Input3")
+
+		return status
 
 class ColourScreen(object):
 
@@ -429,6 +468,7 @@ class ColourScreen(object):
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(sensors,self.draw)
 		self.pixdrw()
+		print(self.status)
 		return self.status
 
 	def thermal_screen(self,sensors):
