@@ -41,11 +41,11 @@ if configure.pc:
 # Default parameters:
 
 # sets the default mode that is called after the splash screen.
-firstpage = "startup"
+
 
 # the following function is our main object, it contains all the flow for our program.
 def Main():
-	status = firstpage
+	status = configure.status
 
 
 	# From out here in the loop we should instantiate the objects that are common to whatever display configuration we want to use.
@@ -81,6 +81,7 @@ def Main():
 
 			# Create a timer object to time things.
 			start_time = time.time()
+			#print("status is: ", configure.status)
 
 			while status == "startup":
 				status = "mode_a"
@@ -153,7 +154,10 @@ def Main():
 					ledc_on()
 
 				if configure.tr109:
-					status = PyScreen.settings()
+					if configure.display == "0":
+						status = dotscreen.push(data)
+					if configure.display == "1":
+						status = colourscreen.settings(data)
 
 
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.

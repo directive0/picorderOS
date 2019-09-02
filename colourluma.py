@@ -216,33 +216,34 @@ class SettingsFrame(object):
 		# device needs to show multiple settings
 		# first the sensor palette configuration
 
-		#self.titlelabel = LabelObj()
-		#self.titlelabel.update("Control Panel",25,17,15,titleFont,orange)
+	def push(self, sensor, draw):
+		self.title = LabelObj("Settings",titlefont,draw)
+		self.title.push(self.titlex,self.titley)
 
-		#
-		# self.option1 = SelectableLabel(configure.sensor1, special = 1)
-		# self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,red)
-		#
-		# self.option2 = SelectableLabel(configure.sensor2, special = 1)
-		# self.option2.update("Graph 2: ", 20, self.left_margin, 68, titleFont, green)
-		#
-		# self.option3 = SelectableLabel(configure.sensor3, special = 1)
-		# self.option3.update("Graph 3: ", 20, self.left_margin, 90, titleFont, yellow)
-		#
-		# self.option4 = SelectableLabel(configure.theme, special = 2)
-		# self.option4.update("Theme:  ", 20, self.left_margin, 111, titleFont, orange)
-		#
-		# self.option5 = SelectableLabel(configure.auto)
-		# self.option5.update("Auto Range: ", 20, self.left_margin, 132, titleFont, orange)
-		#
-		# self.option6 = SelectableLabel(configure.leds)
-		# self.option6.update("LEDs: ", 20, self.left_margin, 154, titleFont, orange)
-		#
-		# self.option7 = SelectableLabel(configure.moire)
-		# self.option7.update("Moire: ", 20, self.left_margin, 176, titleFont, orange)
-		#
-		# self.options = [self.option1,self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
-		#
+		# returns mode_a so we will stay on this screen
+		# should change it button pressed.
+		status  = "settings"
+
+		keys = self.input.read()
+
+		if keys[0]:
+			if self.input.is_down(0):
+				print("Input1")
+				status  = "mode_a"
+
+		if keys[1]:
+			if self.input.is_down(1):
+				print("Input2")
+				status  = "mode_b"
+
+
+		if keys[2]:
+			if self.input.is_down(2):
+				print("Input3")
+				status = "settings"
+
+		return status
+
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
@@ -399,6 +400,7 @@ class MultiFrame(object):
 		if keys[2]:
 			if self.input.is_down(2):
 				print("Input3")
+				status = "settings"
 
 		return status
 # governs the screen drawing of the entire program. Everything flows through Screen.
@@ -438,11 +440,13 @@ class ThermalFrame(object):
 		if keys[1]:
 			if self.input.is_down(1):
 				print("Input2")
+				
 
 
 		if keys[2]:
 			if self.input.is_down(2):
 				print("Input3")
+				status = "settings"
 
 		return status
 
@@ -468,7 +472,7 @@ class ColourScreen(object):
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(sensors,self.draw)
 		self.pixdrw()
-		print(self.status)
+
 		return self.status
 
 	def thermal_screen(self,sensors):

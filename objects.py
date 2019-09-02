@@ -12,6 +12,9 @@ class preferences(object):
 	#determines device ("pc", "tr108", "tr109")
 	def __init__(self):
 
+		# holds the global state of the program (allows secondary modules to quit the program should we require it)
+		self.status = "startup"
+
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
 		self.pc = True
@@ -36,7 +39,7 @@ class preferences(object):
 		self.auto = [True]
 
 		# chooses SPI display (0 for nokia 5110, 1 for st7735)
-		self.display = "1"
+		self.display = "0"
 
 		self.theme = [0]
 

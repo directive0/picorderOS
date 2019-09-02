@@ -79,11 +79,11 @@ class MultiFrame(object):
 
 		self.divider = 47
 
-		self.tempGraph = graphlist((-40,85),(4,8),(self.divider,11),self.graphcycle)
+		self.A_Graph = graphlist((-40,85),(4,8),(self.divider,11),self.graphcycle)
 
-		self.baroGraph = graphlist((300,1100),(4,21),(self.divider,11),self.graphcycle)
+		self.B_Graph = graphlist((300,1100),(4,21),(self.divider,11),self.graphcycle)
 
-		self.humidGraph = graphlist((0,100),(4,34),(self.divider,11),self.graphcycle)
+		self.C_Graph = graphlist((0,100),(4,34),(self.divider,11),self.graphcycle)
 
 	def definetitle(self):
 		self.string = "MULTISCAN"
@@ -102,14 +102,14 @@ class MultiFrame(object):
 	# this function updates the graph for the screen
 	def graphs(self):
 
-		self.humidGraph.update(self.humi)
-		self.humidGraph.render(self.draw)
+		self.C_Graph.update(self.humi)
+		self.C_Graph.render(self.draw)
 
-		self.tempGraph.update(self.temp)
-		self.tempGraph.render(self.draw)
+		self.A_Graph.update(self.temp)
+		self.A_Graph.render(self.draw)
 
-		self.baroGraph.update(self.pres)
-		self.baroGraph.render(self.draw)
+		self.B_Graph.update(self.pres)
+		self.B_Graph.render(self.draw)
 
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
@@ -128,18 +128,17 @@ class MultiFrame(object):
 
 		self.titlex = self.divider + 7
 
-		degreesymbol =  u'\N{DEGREE SIGN}'
-		rawtemp = str(self.temp)
-		adjustedtemp = self.arrangelabel(rawtemp)
-		tempstring = adjustedtemp + degreesymbol
+		raw_a = str(self.A_Data)
+		adjusted_a = self.arrangelabel(raw_a)
+		a_string = adjusted_a + sensors[configure.sensor1[0]][4]
 
 		self.temLabel = LabelObj(tempstring,font,self.draw)
 		self.temLabel.push(self.titlex,7)
 
 
-		rawbaro = str(self.pres)
+		raw_b = str(self.B_Data)
 		adjustedbaro = self.arrangelabel(rawbaro)
-		barostring = adjustedbaro
+		barostring = adjusted_b + " " + sensors[configure.sensor2[0]][4]
 
 		self.baroLabel = LabelObj(barostring,font,self.draw)
 		self.baroLabel.push(self.titlex,22)
@@ -154,7 +153,9 @@ class MultiFrame(object):
 
 	#push the image frame and contents to the draw object.
 	def push(self,sensors):
-		self.temp = sensors[0][0]
+		self.A_Data = sensors[configure.sensor1[0]][0]
+		self.B_Data = sensors[configure.sensor2[0]][0]
+		self.C_Data = sensors[configure.sensor3[0]][0]
 		self.pres = sensors[1][0]
 		self.humi = sensors[2][0]
 
@@ -201,6 +202,7 @@ class NokiaScreen(object):
 		self.frame.push(sensors)
 		self.input.read()
 		self.pixdrw()
+		return "mode_a"
 
 	def pixdrw(self):
 
