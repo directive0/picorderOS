@@ -11,22 +11,14 @@ Since picorderOS uses Luma.LCD it can address screens that use ST7735 drivers fo
 Using pygame it is also possible to use standard monitors or any display that connects to the Pi via HDMI or Composite.
 
 ## Requirements:
-PicorderOS uses a number of modules to operate, specifically:
+PicorderOS requires a number of exotic modules to operate, specifically:
 - [Pygame](https://www.pygame.org/wiki/GettingStarted)
 - [Luma.lcd](https://pypi.org/project/luma.lcd/)
 - [Adafruit Blinka](https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi)
 - [MPR121 Capacitive Sensor](https://github.com/adafruit/Adafruit_CircuitPython_MPR121)
 - [Sensehat](https://projects.raspberrypi.org/en/projects/getting-started-with-the-sense-hat/2)
 - [RPi.GPIO](https://pypi.org/project/RPi.GPIO/)
-- sys
-- time
-- math
-- os
-- psutil (PC Demo only)
+- [os](https://pythonprogramming.net/python-3-os-module/)
+- [psutil](https://psutil.readthedocs.io/en/latest/) (PC Demo only)
 
-Be sure you have these modules installed before attempting to run this program.
-
-## Sources
-This project was made possible by information and inspiration provided by these sources:
-- https://hackaday.io/project/5437-star-trek-tos-picorder
-- https://github.com/tobykurien/rpi_lcars
+Be sure you have these modules installed before attempting to run picorderOS.
