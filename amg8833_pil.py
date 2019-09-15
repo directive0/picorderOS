@@ -6,6 +6,12 @@ import PIL.ImageOps
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
+from colour import Color
+
+cool = Color("blue")
+hot = Color("red")
+colrange = list(cool.range_to(hot, 255))
+print(colrange)
 
 from objects import *
 
@@ -16,6 +22,7 @@ if not configure.pc:
 
 	i2c = busio.I2C(board.SCL, board.SDA)
 	amg = adafruit_amg88xx.AMG88XX(i2c)
+
 
 
 #some utility functions
@@ -51,13 +58,19 @@ class ThermalPixel(object):
 		#print(value)
 
 		color = map(value, low, high, 0, 254)
-		#color = translate(value, low, high, 0, 255)
-		#print(low)
-		if value == low:
-			print("lowest found, coloring: ", color)
-		#print(color)
-		surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (int(color),int(color),int(color)), outline=None)
-		#pygame.draw.rect(self.surface, (color,color,color), pygame.Rect(self.x,self.y,self.w,self.h))
+		colorindex = int(color)
+		print(colorindex)
+		temp = colrange[colorindex].rgb
+		print(temp)
+		red = int(temp[0]) * 255
+		green = int(temp[1]) * 255
+		blue = int(temp[2]) * 255
+		#if value == low:
+			#print("lowest found, coloring: ", color)
+
+		#surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (int(color),int(color),int(color)), outline=None)
+		surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (red,green,blue), outline=None)
+
 
 
 class ThermalRows(object):
