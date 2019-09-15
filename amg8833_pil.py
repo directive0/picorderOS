@@ -17,6 +17,9 @@ if not configure.pc:
 	i2c = busio.I2C(board.SCL, board.SDA)
 	amg = adafruit_amg88xx.AMG88XX(i2c)
 
+high = 0.0
+low = 0.0
+
 #some utility functions
 def constrain(val, min_val, max_val):
     return min(max_val, max(min_val, val))
@@ -48,7 +51,10 @@ class ThermalPixel(object):
 
 	def update(self,value,surface):
 		#print(value)
-		color = map(value, 1, 81, 0, 254)
+		color = map(value, 1, 80, 0, 254)
+		print(value)
+		#color = translate(value, low, high, 0, 255)
+		print(color)
 		#print(color)
 		surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (int(color),int(color),int(color)), outline=None)
 		#pygame.draw.rect(self.surface, (color,color,color), pygame.Rect(self.x,self.y,self.w,self.h))
@@ -92,5 +98,20 @@ class ThermalGrid(object):
 			data = amg.pixels
 		else:
 			data = makegrid()
+			#print(len(data))
+
+		rangemax = []
+		rangemin = []
+		for i in range(8):
+			thismax = max(data[i])
+			thismin = min(data[i])
+			rangemin.append(thismin)
+			rangemax.append(thismax)
+
+		high = max(rangemax)
+		low = min(rangemin)
+
+		print(high, low)
 		for i in range(8):
 			self.rows[i].update(data[i],surface)
+		#print(rangesmax)
