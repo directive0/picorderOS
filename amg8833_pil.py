@@ -63,6 +63,10 @@ class ThermalPixel(object):
 			color = map(value, low, high, 0, 254)
 		else:
 			color = map(value, 0, 80, 0, 254)
+		if color > 255:
+			color = 255
+		if color < 0:
+			color = 0
 		#colorindex = int(color)
 		colorindex = int(color)
 		print("color index is ",colorindex)
