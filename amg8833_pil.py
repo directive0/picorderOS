@@ -55,10 +55,14 @@ class ThermalPixel(object):
 		self.temp = 0
 		self.count = 0
 
+
 	def update(self,value,high,low,surface):
 		#print(value)
 
-		color = map(value, low, high, 0, 254)
+		if configure.auto:
+			color = map(value, low, high, 0, 254)
+		else:
+			color = map(value, 0, 80, 0, 254)
 		#colorindex = int(color)
 		colorindex = int(color)
 		#print(colorindex)
