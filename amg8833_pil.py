@@ -58,9 +58,9 @@ class ThermalPixel(object):
 	def update(self,value,high,low,surface):
 		#print(value)
 
-		color = map(value, low, high, 0, 255)
+		color = map(value, low, high, 0, 254)
 		#colorindex = int(color)
-		colorindex = int(self.count)
+		colorindex = int(color)
 		#print(colorindex)
 		temp = colrange[colorindex].rgb
 		print(temp)
