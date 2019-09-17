@@ -69,14 +69,14 @@ class ThermalPixel(object):
 			color = 0
 		#colorindex = int(color)
 		colorindex = int(color)
-		print("color index is ",colorindex)
+		#print("color index is ",colorindex)
 		temp = colrange[colorindex].rgb
-		print(temp)
+		#print(temp)
 		red = int(temp[0] * 255.0)
 		green = int(temp[1] * 255.0)
 		blue = int(temp[2] * 255.0)
 
-		print(red,green,blue)
+		#print(red,green,blue)
 
 		self.count += 1
 
@@ -143,7 +143,7 @@ class ThermalGrid(object):
 		self.high = max(rangemax)
 		self.low = min(rangemin)
 
-		print(self.high, self.low)
+		#print(self.high, self.low)
 		for i in range(8):
 			self.rows[i].update(data[i],self.high,self.low,surface)
 		#print(rangesmax)
