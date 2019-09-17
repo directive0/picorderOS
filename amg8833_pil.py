@@ -10,7 +10,7 @@ from colour import Color
 
 cool = Color("blue")
 hot = Color("red")
-colrange = list(cool.range_to(hot, 255))
+colrange = list(cool.range_to(hot, 256))
 print(colrange)
 
 from objects import *
