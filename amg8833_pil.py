@@ -65,7 +65,7 @@ class ThermalPixel(object):
 			color = map(value, 0, 80, 0, 254)
 		#colorindex = int(color)
 		colorindex = int(color)
-		#print(colorindex)
+		print("color index is ",colorindex)
 		temp = colrange[colorindex].rgb
 		print(temp)
 		red = int(temp[0] * 255.0)
