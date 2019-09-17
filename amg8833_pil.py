@@ -53,18 +53,27 @@ class ThermalPixel(object):
 		self.h = h
 		self.colour = (255,255,255)
 		self.temp = 0
+		self.count = 0
 
 	def update(self,value,high,low,surface):
 		#print(value)
 
-		color = map(value, low, high, 0, 254)
-		colorindex = int(color)
-		print(colorindex)
+		color = map(value, low, high, 0, 255)
+		#colorindex = int(color)
+		colorindex = int(self.count)
+		#print(colorindex)
 		temp = colrange[colorindex].rgb
 		print(temp)
-		red = int(temp[0]) * 255
-		green = int(temp[1]) * 255
-		blue = int(temp[2]) * 255
+		red = int(temp[0] * 255.0)
+		green = int(temp[1] * 255.0)
+		blue = int(temp[2] * 255.0)
+
+		print(red,green,blue)
+
+		self.count += 1
+
+		if self.count > 255:
+			self.count = 0
 		#if value == low:
 			#print("lowest found, coloring: ", color)
 
