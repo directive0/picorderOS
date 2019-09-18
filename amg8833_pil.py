@@ -7,9 +7,20 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 from colour import Color
+# The following are for LCARS colours from LCARScom.net
+lcars_orange = (255,153,0)
+lcars_pink = (204,153,204)
+lcars_blue = (153,153,204)
+lcars_red = (204,102,102)
+lcars_peach = (255,204,153)
+lcars_bluer = (153,153,255)
+lcars_orpeach = (255,153,102)
+lcars_pinker = (204,102,153)
 
-cool = Color("blue")
-hot = Color("red")
+#cool = Color("blue")
+cool = Color(lcars_bluer)
+#hot = Color("red")
+hot = Color(lcars_red)
 colrange = list(cool.range_to(hot, 256))
 
 from objects import *
