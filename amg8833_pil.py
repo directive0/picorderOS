@@ -146,8 +146,8 @@ class ThermalGrid(object):
 			rangemin.append(thismin)
 			rangemax.append(thismax)
 
-			self.average = thisaverage / (8*8)
-			print(self.average)
+		self.average = thisaverage / (8*8)
+		print("Average: ", self.average, ", ", "High: ", self.high,", ","Low: ", self.low)
 
 
 		self.high = max(rangemax)
