@@ -18,9 +18,9 @@ lcars_orpeach = (255,153,102)
 lcars_pinker = (204,102,153)
 
 #cool = Color("blue")
-cool = Color(lcars_bluer)
+cool = Color("#9999FF")
 #hot = Color("red")
-hot = Color(lcars_red)
+hot = Color("#CC6666")
 colrange = list(cool.range_to(hot, 256))
 
 from objects import *
@@ -42,7 +42,7 @@ def constrain(val, min_val, max_val):
 def map(x, in_min, in_max, out_min, out_max):
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-#create an 8x8 array for testing purposes. Displays random 'sensor data'.
+# create an 8x8 array for testing purposes. Displays random 'sensor data'.
 def makegrid():
 	dummyvalue = []
 	#
