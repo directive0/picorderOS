@@ -103,7 +103,10 @@ class LabelObj(object):
 class SelectableLabel(LabelObj):
 
 
-	def __init__(self, oper, special = 0):
+	def __init__(self,font,draw,oper,colour = lcars_blue, special = 0):
+		self.font = font
+		self.draw = draw
+		self.colour = colour
 
 		# special determines the behaviour of the label for each type of oper
 		# the class is supplied. There may be multiple types of int or boolean based
@@ -115,11 +118,12 @@ class SelectableLabel(LabelObj):
 		self.y = 0
 
 		# basic graphical parameters
-		self.color = white
 		self.fontSize = 33
-		self.myfont = pygame.font.Font(titleFont, self.fontSize)
-		text = "Basic Item"
-		self.size = self.myfont.size(text)
+
+		# self.myfont = pygame.font.Font(titleFont, self.fontSize)
+		# text = "Basic Item"
+		# self.size = self.myfont.size(text)
+
 		self.scaler = 3
 		self.selected = False
 		self.indicator = Image()
@@ -185,6 +189,9 @@ class SelectableLabel(LabelObj):
 
 class SettingsFrame(object):
 	def __init__(self,input):
+
+		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto]]
+
 		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
@@ -192,9 +199,6 @@ class SettingsFrame(object):
 		# Sets the x and y span of the graph
 		self.gspanx = 133
 		self.gspany = 71
-
-		# sets the background image for the display
-		self.back = Image.open('assets/lcarsframe.png')
 
 		self.selection = 0
 
@@ -204,7 +208,7 @@ class SettingsFrame(object):
 		self.interval = timer()
 		self.interval.logtime()
 		#self.draw = draw
-		self.titlex = 23
+		self.titlex = 25
 		self.titley = 6
 		self.labely = 102
 
@@ -216,12 +220,43 @@ class SettingsFrame(object):
 		# device needs to show multiple settings
 		# first the sensor palette configuration
 
+	def toggle(self,oper):
+
+		# if the parameter supplied is a boolean
+		if isinstance(oper[0], bool):
+			#toggle its state
+			oper[0] = not oper[0]
+
+		#if the parameter supplied is an integer
+		elif isinstance(oper[0], int):
+
+			# increment the integer.
+			oper[0] += 1
+
+			# if the integer is larger than the pool
+			if oper[0] > configure.max_sensors[0]-1:
+				oper[0] = 0
+
+		return oper[0]
+
 	def push(self, sensor, draw):
+
+		#draw the frame heading
 		self.title = LabelObj("Settings",titlefont,draw)
 		self.title.push(self.titlex,self.titley)
 
+
+		#draw the option item heading
+		self.itemlabel = LabelObj(self.pages[self.selection][0],titlefont,draw,colour = lcars_peach)
+		self.itemlabel.push(self.titlex,self.titley+20)
+
+		#draw the 3 graph parameter items
+		if self.selection == 0 or self.selection == 1 or self.selection == 2:
+			test = configure.sensor_info[self.pages[self.selection][1][0]][3]
+			self.item = LabelObj(str(test),titlefont,draw,colour = lcars_peach)
+			self.item.push(self.titlex,self.titley+40)
 		# returns mode_a so we will stay on this screen
-		# should change it button pressed.
+		# hould change it button pressed.
 		status  = "settings"
 
 		keys = self.input.read()
@@ -229,18 +264,19 @@ class SettingsFrame(object):
 		if keys[0]:
 			if self.input.is_down(0):
 				print("Input1")
-				status  = "mode_a"
+				self.selection = self.selection + 1
+				if self.selection > (len(self.pages) - 1):
+					self.selection = 0
 
 		if keys[1]:
 			if self.input.is_down(1):
-				print("Input2")
-				status  = "mode_b"
-
+				print(self.pages[self.selection])
+				self.toggle(self.pages[self.selection][1]	)
 
 		if keys[2]:
 			if self.input.is_down(2):
 				print("Input3")
-				status = "settings"
+				status = configure.last_status[0]
 
 		return status
 
@@ -332,44 +368,39 @@ class MultiFrame(object):
 
 		#degreesymbol =  u'\N{DEGREE SIGN}'
 
-		raw_a = str(self.A_Data)
-		adjusted_a = self.arrangelabel(raw_a)
-		a_string = adjusted_a + sensors[configure.sensor1[0]][4]
+		if self.selection == 0 or self.selection == 1:
+			raw_a = str(self.A_Data)
+			adjusted_a = self.arrangelabel(raw_a)
+			a_string = adjusted_a + sensors[configure.sensor1[0]][4]
 
-		self.A_Label = LabelObj(a_string,font,self.draw,colour = lcars_orange)
-		self.A_Label.push(23,self.labely)
+			self.A_Label = LabelObj(a_string,font,self.draw,colour = lcars_orange)
+			self.A_Label.push(23,self.labely)
 
+		if self.selection == 0 or self.selection == 2:
+			raw_b = str(self.B_Data)
+			adjusted_b = self.arrangelabel(raw_b)
+			b_string = adjusted_b + " " + sensors[configure.sensor2[0]][4]
 
-		raw_b = str(self.B_Data)
-		adjusted_b = self.arrangelabel(raw_b)
-		b_string = adjusted_b + " " + sensors[configure.sensor2[0]][4]
+			self.B_Label = LabelObj(b_string,font,self.draw, colour = lcars_blue)
+			self.B_Label.center(self.labely,23,135)
+			#self.baroLabel.push(57,100)
 
-		self.B_Label = LabelObj(b_string,font,self.draw, colour = lcars_blue)
-		self.B_Label.center(self.labely,23,135)
-		#self.baroLabel.push(57,100)
+		if self.selection == 0 or self.selection == 3:
+			raw_c = str(self.C_Data)
+			adjusted_c = self.arrangelabel(raw_c)
+			c_string = adjusted_c + " " + sensors[configure.sensor3[0]][4]
 
-		rawhumi = str(self.C_Data)
-		adjustedhumi = self.arrangelabel(rawhumi)
-		humistring = adjustedhumi + " " + sensors[2][4]
-
-		self.C_DataLabel = LabelObj(humistring,font,self.draw, colour = lcars_pinker)
-		#self.C_DataLabel.push(117,100)
-		self.C_DataLabel.r_align(156,self.labely)
+			self.C_DataLabel = LabelObj(c_string,font,self.draw, colour = lcars_pinker)
+			#self.C_DataLabel.push(117,100)
+			self.C_DataLabel.r_align(156,self.labely)
 
 	#push the image frame and contents to the draw object.
 	def push(self,sensors,draw):
 		self.draw = draw
-		#self.draw.paste((0,0),self.back)
-
-
 
 		self.A_Data = sensors[configure.sensor1[0]][0]
 		self.B_Data = sensors[configure.sensor2[0]][0]
 		self.C_Data = sensors[configure.sensor3[0]][0]
-
-		#Draw the background
-		#self.draw.rectangle((15,8,150,120),fill="black")
-		#self.draw.paste(self.back)
 
 		#Top Bar - Needs to be scaled based on title string size.
 		#self.draw.rectangle((2,0,self.barlength,6), fill="black")
@@ -378,7 +409,30 @@ class MultiFrame(object):
 		self.title.push(self.titlex,self.titley)
 
 		self.sense()
-		self.graphs()
+		#self.graphs()
+
+		if self.selection == 0:
+			self.C_Graph.update(self.C_Data)
+			self.C_Graph.render(self.draw)
+
+			self.B_Graph.update(self.B_Data)
+			self.B_Graph.render(self.draw)
+
+			self.A_Graph.update(self.A_Data)
+			self.A_Graph.render(self.draw)
+
+		if self.selection == 1:
+			self.A_Graph.update(self.A_Data)
+			self.A_Graph.render(self.draw)
+
+		if self.selection == 2:
+			self.B_Graph.update(self.B_Data)
+			self.B_Graph.render(self.draw)
+
+		if self.selection == 3:
+			self.C_Graph.update(self.C_Data)
+			self.C_Graph.render(self.draw)
+
 		self.labels(sensors)
 
 		# returns mode_a so we will stay on this screen
@@ -390,6 +444,9 @@ class MultiFrame(object):
 		if keys[0]:
 			if self.input.is_down(0):
 				print("Input1")
+				self.selection = self.selection + 1
+				if self.selection > 3:
+					self.selection = 0
 
 		if keys[1]:
 			if self.input.is_down(1):
@@ -401,6 +458,7 @@ class MultiFrame(object):
 			if self.input.is_down(2):
 				print("Input3")
 				status = "settings"
+				configure.last_status[0] = "mode_a"
 
 		return status
 # governs the screen drawing of the entire program. Everything flows through Screen.
@@ -440,13 +498,14 @@ class ThermalFrame(object):
 		if keys[1]:
 			if self.input.is_down(1):
 				print("Input2")
-				
+
 
 
 		if keys[2]:
 			if self.input.is_down(2):
 				print("Input3")
 				status = "settings"
+				configure.last_status[0] = "mode_b"
 
 		return status
 

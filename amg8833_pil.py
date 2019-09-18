@@ -167,4 +167,6 @@ class ThermalGrid(object):
 		#print(self.high, self.low)
 		for i in range(8):
 			self.rows[i].update(data[i],self.high,self.low,surface)
+
+		return self.average, self.high, self.low
 		#print(rangesmax)
