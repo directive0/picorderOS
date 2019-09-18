@@ -11,7 +11,6 @@ from colour import Color
 cool = Color("blue")
 hot = Color("red")
 colrange = list(cool.range_to(hot, 256))
-print(colrange)
 
 from objects import *
 
@@ -32,6 +31,7 @@ def constrain(val, min_val, max_val):
 def map(x, in_min, in_max, out_min, out_max):
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
+#create an 8x8 array for testing purposes. Displays random 'sensor data'.
 def makegrid():
 	dummyvalue = []
 	#
@@ -43,7 +43,7 @@ def makegrid():
 
 	return dummyvalue
 
-
+# a single pixel of temperature information
 class ThermalPixel(object):
 
 	def __init__(self,x,y,w,h):
@@ -121,6 +121,7 @@ class ThermalGrid(object):
 		self.rows = []
 		self.high = 0.0
 		self.low = 0.0
+		self.average = 0
 
 		for i in range(8):
 			self.rows.append(ThermalRows(self.x, self.y + (i * (h/8)), self.w, self.h / 8))
@@ -132,13 +133,22 @@ class ThermalGrid(object):
 			data = makegrid()
 			#print(len(data))
 
+		thisaverage = 0
 		rangemax = []
 		rangemin = []
 		for i in range(8):
+
+			for j in range(8):
+				thisaverage += data[i][j]
+
 			thismax = max(data[i])
 			thismin = min(data[i])
 			rangemin.append(thismin)
 			rangemax.append(thismax)
+
+			self.average = thisaverage / (8*8)
+			print(self.average)
+
 
 		self.high = max(rangemax)
 		self.low = min(rangemin)

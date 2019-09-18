@@ -21,6 +21,7 @@ class preferences(object):
 
 
 		# These two bits determine the target device (Original picorder or new version)
+		# If both true the screens will fight for control!
 		self.tr108 = False
 		self.tr109 = True
 
