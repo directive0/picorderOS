@@ -252,6 +252,7 @@ class SettingsFrame(object):
 
 		#draw the 3 graph parameter items
 		if self.selection == 0 or self.selection == 1 or self.selection == 2:
+			print(configure.sensor_info[self.pages[self.selection][1][0]])
 			test = configure.sensor_info[self.pages[self.selection][1][0]][3]
 			self.item = LabelObj(str(test),titlefont,draw,colour = lcars_peach)
 			self.item.push(self.titlex,self.titley+40)
