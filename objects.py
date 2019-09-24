@@ -49,6 +49,13 @@ class preferences(object):
 
 		self.max_sensors = [9]
 
+		# Toggles individual sensor support (to avoid)
+		self.bme = True
+		self.amg8833 = True
+		self.sensehat = False
+
+
+
 		#selects the three sensor targets to plot
 		self.sensor1 = [0]
 		self.sensor2 = [1]

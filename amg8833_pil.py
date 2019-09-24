@@ -17,10 +17,13 @@ lcars_bluer = (153,153,255)
 lcars_orpeach = (255,153,102)
 lcars_pinker = (204,102,153)
 
+standard_blue = (0,0,255)
+standard_red = (255,0,0)
+
 #cool = Color("blue")
-cool = Color("#9999FF")
+cool = Color("blue")
 #hot = Color("red")
-hot = Color("#CC6666")
+hot = Color("red")
 colrange = list(cool.range_to(hot, 256))
 
 from objects import *
@@ -93,6 +96,7 @@ class ThermalPixel(object):
 
 		if self.count > 255:
 			self.count = 0
+
 		#if value == low:
 			#print("lowest found, coloring: ", color)
 
@@ -128,6 +132,7 @@ class ThermalGrid(object):
 		self.y = y
 		self.h = h
 		self.w = w
+		self.data = []
 
 		self.rows = []
 		self.high = 0.0
@@ -137,12 +142,23 @@ class ThermalGrid(object):
 		for i in range(8):
 			self.rows.append(ThermalRows(self.x, self.y + (i * (h/8)), self.w, self.h / 8))
 
-	def update(self,surface):
+		self.update()
+
+	def push(self,surface):
+
+
+		#print(self.high, self.low)
+		for i in range(8):
+			self.rows[i].update(self.data[i],self.high,self.low,surface)
+
+
+
+
+	def update(self):
 		if not configure.pc:
-			data = amg.pixels
+			self.data = amg.pixels
 		else:
-			data = makegrid()
-			#print(len(data))
+			self.data = makegrid()
 
 		thisaverage = 0
 		rangemax = []
@@ -150,23 +166,19 @@ class ThermalGrid(object):
 		for i in range(8):
 
 			for j in range(8):
-				thisaverage += data[i][j]
+				thisaverage += self.data[i][j]
 
-			thismax = max(data[i])
-			thismin = min(data[i])
+			thismax = max(self.data[i])
+			thismin = min(self.data[i])
 			rangemin.append(thismin)
 			rangemax.append(thismax)
 
 		self.average = thisaverage / (8*8)
-		print("Average: ", self.average, ", ", "High: ", self.high,", ","Low: ", self.low)
+		#print("Average: ", self.average, ", ", "High: ", self.high,", ","Low: ", self.low)
 
 
 		self.high = max(rangemax)
 		self.low = min(rangemin)
-
-		#print(self.high, self.low)
-		for i in range(8):
-			self.rows[i].update(data[i],self.high,self.low,surface)
 
 		return self.average, self.high, self.low
 		#print(rangesmax)

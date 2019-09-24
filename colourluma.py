@@ -239,6 +239,7 @@ class SettingsFrame(object):
 
 		return oper[0]
 
+
 	def push(self, sensor, draw):
 
 		#draw the frame heading
@@ -252,7 +253,7 @@ class SettingsFrame(object):
 
 		#draw the 3 graph parameter items
 		if self.selection == 0 or self.selection == 1 or self.selection == 2:
-			print(configure.sensor_info[self.pages[self.selection][1][0]])
+			#print(configure.sensor_info[self.pages[self.selection][1][0]])
 			test = configure.sensor_info[self.pages[self.selection][1][0]][3]
 			self.item = LabelObj(str(test),titlefont,draw,colour = lcars_peach)
 			self.item.push(self.titlex,self.titley+40)
@@ -412,6 +413,7 @@ class MultiFrame(object):
 		self.sense()
 		#self.graphs()
 
+		# turns each channel on individually
 		if self.selection == 0:
 			self.C_Graph.update(self.C_Data)
 			self.C_Graph.render(self.draw)
@@ -479,18 +481,81 @@ class ThermalFrame(object):
 		self.t_grid = ThermalGrid(23,24,133,71)
 		self.titlex = 23
 		self.titley = 6
+
+		self.high = 0
+		self.low = 0
+		self.average = 0
+		self.labely = 102
+
+		self.selection = 0
+
+		self.timed = timer()
+		self.timed.logtime()
+		self.interval = .1
 		pass
+	# this function takes a value and sheds the second digit after the decimal place
+	def arrangelabel(self,data):
+		datareturn = format(float(data), '.0f')
+		return datareturn
+
+	def labels(self):
+
+
+		if self.selection == 0 or self.selection == 1:
+			raw_a = str(self.low)
+			adjusted_a = self.arrangelabel(raw_a)
+			a_string = adjusted_a
+
+			self.A_Label = LabelObj(a_string,font,self.draw,colour = (0,0,255))
+			self.A_Label.push(23,self.labely)
+
+		if self.selection == 0 or self.selection == 2:
+			raw_b = str(self.high)
+			adjusted_b = self.arrangelabel(raw_b)
+			b_string = adjusted_b
+
+			self.B_Label = LabelObj(b_string,font,self.draw, colour = (255,0,0))
+			self.B_Label.center(self.labely,23,135)
+			#self.baroLabel.push(57,100)
+
+		if self.selection == 0 or self.selection == 3:
+			raw_c = str(self.average)
+			adjusted_c = self.arrangelabel(raw_c)
+			c_string = adjusted_c
+
+			self.C_DataLabel = LabelObj(c_string,font,self.draw, colour = (255,0,255))
+			#self.C_DataLabel.push(117,100)
+			self.C_DataLabel.r_align(156,self.labely)
 
 	def push(self, sensor, draw):
+				#degreesymbol =  u'\N{DEGREE SIGN}'
+
+		self.draw = draw
+
+		self.labels()
+
+		# Draw title
 		self.title = LabelObj("Thermal Array",titlefont,draw)
 		self.title.push(self.titlex,self.titley)
-		self.t_grid.update(draw)
+
+		# Draw ThermalGrid object
+		if self.timed.timelapsed() > self.interval:
+			self.average,self.high,self.low = self.t_grid.update()
+			self.timed.logtime()
+
+		self.t_grid.push(draw)
+
+		if self.selection == 0:
+			pass
 
 
 		status  = "mode_b"
 
 		keys = self.input.read()
 
+
+
+		# ------------- Input handling -------------- #
 		if keys[0]:
 			if self.input.is_down(0):
 				print("Input1")
@@ -499,8 +564,6 @@ class ThermalFrame(object):
 		if keys[1]:
 			if self.input.is_down(1):
 				print("Input2")
-
-
 
 		if keys[2]:
 			if self.input.is_down(2):
