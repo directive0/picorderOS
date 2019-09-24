@@ -1,5 +1,6 @@
 #import pygame
 import random
+import math
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
@@ -46,13 +47,16 @@ def map(x, in_min, in_max, out_min, out_max):
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 # create an 8x8 array for testing purposes. Displays random 'sensor data'.
-def makegrid():
+def makegrid(random = True):
 	dummyvalue = []
 	#
 	for i in range(8):
 		dummyrow = []
 		for r in range(8):
-			dummyrow.append(random.uniform(1.0,81.0))
+			if random:
+				dummyrow.append(random.uniform(1.0,81.0))
+			else:
+				dummyrow.append(0)
 		dummyvalue.append(dummyrow)
 
 	return dummyvalue
@@ -138,6 +142,7 @@ class ThermalGrid(object):
 		self.high = 0.0
 		self.low = 0.0
 		self.average = 0
+		self.ticks = 0
 
 		for i in range(8):
 			self.rows.append(ThermalRows(self.x, self.y + (i * (h/8)), self.w, self.h / 8))
@@ -152,13 +157,28 @@ class ThermalGrid(object):
 			self.rows[i].update(self.data[i],self.high,self.low,surface)
 
 
+    # Function to draw a pretty pattern to the display.
+	def animate(self):
+		self.dummy = makegrid(random = False)
+		for x in range(8):
+			for y in range(8):
+					cx = x + 0.5*math.sin(self.ticks/5.0)
+					cy = y + 0.5*math.cos(self.ticks/3.0)
+					v = math.sin(math.sqrt(1.0*(math.pow(cx, 2.0)+math.pow(cy, 2.0))+1.0)+self.ticks)
+              		#v = v + math.sin(x*10.0+self.ticks)
+					v = (v + 1.0)/2.0
+					v = int(v*255.0)
+					self.dummy[x][y] = v
+					#dsense.set_pixel(x,y,v,v,v)
+		self.ticks = self.ticks+1
+		return self.dummy
 
 
 	def update(self):
 		if not configure.pc:
 			self.data = amg.pixels
 		else:
-			self.data = makegrid()
+			self.data = self.animate()#makegrid()
 
 		thisaverage = 0
 		rangemax = []
