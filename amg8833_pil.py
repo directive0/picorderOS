@@ -164,9 +164,10 @@ class ThermalGrid(object):
 			for y in range(8):
 					cx = x + 0.5*math.sin(self.ticks/5.0)
 					cy = y + 0.5*math.cos(self.ticks/3.0)
-					v = math.sin(math.sqrt(1.0*(math.pow(cx, 2.0)+math.pow(cy, 2.0))+1.0)+self.ticks)
-              		#v = v + math.sin(x*10.0+self.ticks)
-					v = (v + 1.0)/2.0
+					a = math.sin(math.sqrt(1.0*(math.pow(cx, 2.0)+math.pow(cy, 2.0))+1.0)+self.ticks)
+					b = math.sin(10*(x * math.sin(self.ticks/2) + y * math.cos(self.ticks/3))+self.ticks)
+					v = (a + 1.0)/2.0
+					#v = a
 					v = int(v*255.0)
 					self.dummy[x][y] = v
 					#dsense.set_pixel(x,y,v,v,v)
