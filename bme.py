@@ -17,11 +17,11 @@ class Sensor(object):
 		self.sensor.set_pressure_oversample(bme680.OS_4X)
 		self.sensor.set_temperature_oversample(bme680.OS_8X)
 		self.sensor.set_filter(bme680.FILTER_SIZE_3)
-		self.sensor.set_gas_status(bme680.ENABLE_GAS_MEAS)
-
-		self.sensor.set_gas_heater_temperature(320)
-		self.sensor.set_gas_heater_duration(150)
-		self.sensor.select_gas_heater_profile(0)
+		# self.sensor.set_gas_status(bme680.ENABLE_GAS_MEAS)
+		#
+		# self.sensor.set_gas_heater_temperature(320)
+		# self.sensor.set_gas_heater_duration(150)
+		# self.sensor.select_gas_heater_profile(0)
 
 		self.start_time = timer()
 		self.start_time.logtime()
@@ -43,6 +43,8 @@ class Sensor(object):
 		self.pressure_info = [300,1100,"Barometric Pressure","hPa"]
 		self.VOC_info = [300,1100,"Air Quality","Ω","not_ready" ]
 
+		configure.max_sensors[0] = 4
+		configure.sensor_info = self.get()
 
 
 	def get(self):
