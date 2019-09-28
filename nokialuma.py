@@ -67,7 +67,8 @@ class LabelObj(object):
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
 
-	def __init__(self,draw):
+	def __init__(self,draw, input):
+		self.input = input
 		self.auto = configure.auto
 		self.interval = timer()
 		self.interval.logtime()
@@ -76,6 +77,7 @@ class MultiFrame(object):
 		self.layout()
 		self.graphcycle = 0
 		self.decimal = 1
+		self.selection = 0
 
 		self.divider = 47
 
@@ -102,14 +104,17 @@ class MultiFrame(object):
 	# this function updates the graph for the screen
 	def graphs(self):
 
-		self.C_Graph.update(self.humi)
-		self.C_Graph.render(self.draw)
+		if self.selection == 0 or self.selection == 1:
+			self.C_Graph.update(self.C_Data)
+			self.C_Graph.render(self.draw)
 
-		self.A_Graph.update(self.temp)
-		self.A_Graph.render(self.draw)
+		if self.selection == 0 or self.selection == 2:
+			self.A_Graph.update(self.A_Data)
+			self.A_Graph.render(self.draw)
 
-		self.B_Graph.update(self.pres)
-		self.B_Graph.render(self.draw)
+		if self.selection == 0 or self.selection == 3:
+			self.B_Graph.update(self.B_Data)
+			self.B_Graph.render(self.draw)
 
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
@@ -130,17 +135,17 @@ class MultiFrame(object):
 
 		raw_a = str(self.A_Data)
 		adjusted_a = self.arrangelabel(raw_a)
-		a_string = adjusted_a + sensors[configure.sensor1[0]][4]
+		a_string = adjusted_a + self.sensors[configure.sensor1[0]][4]
 
-		self.temLabel = LabelObj(tempstring,font,self.draw)
+		self.temLabel = LabelObj(a_string,font,self.draw)
 		self.temLabel.push(self.titlex,7)
 
 
 		raw_b = str(self.B_Data)
-		adjustedbaro = self.arrangelabel(rawbaro)
-		barostring = adjusted_b + " " + sensors[configure.sensor2[0]][4]
+		adjusted_b = self.arrangelabel(raw_b)
+		b_string = adjusted_b + " " + self.sensors[configure.sensor2[0]][4]
 
-		self.baroLabel = LabelObj(barostring,font,self.draw)
+		self.baroLabel = LabelObj(b_string,font,self.draw)
 		self.baroLabel.push(self.titlex,22)
 
 		rawhumi = str(self.humi)
@@ -166,10 +171,35 @@ class MultiFrame(object):
 		self.draw.rectangle((2,0,self.barlength,6), fill="black")
 
 		self.title.push(self.barlength + 2,-1)
-
+		self.sensors = sensors
 		self.sense()
 		self.graphs()
 		self.labels()
+
+		status  = "mode_a"
+
+		keys = self.input.read()
+
+		if keys[0]:
+			if self.input.is_down(0):
+				print("Input1")
+				self.selection = self.selection + 1
+				if self.selection > 3:
+					self.selection = 0
+
+		if keys[1]:
+			if self.input.is_down(1):
+				print("Input2")
+				status  = "mode_b"
+
+
+		if keys[2]:
+			if self.input.is_down(2):
+				print("Input3")
+				status = "settings"
+				configure.last_status[0] = "mode_a"
+
+		return status
 
 # governs the screen drawing of the entire program. Everything flows through Screen.
 # Screen instantiates a draw object and passes it the image background.
@@ -193,7 +223,7 @@ class NokiaScreen(object):
 		self.draw = ImageDraw.Draw(self.image)
 
 
-		self.frame = MultiFrame(self.draw)
+		self.frame = MultiFrame(self.draw,self.input)
 		#self.graph = graphlist
 
 

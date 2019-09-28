@@ -32,6 +32,11 @@ class graphlist(object):
 		self.x, self.y = graphcoords
 		self.spanx,self.spany = graphspan
 
+		self.newx,self.newy = graphcoords
+		self.newspanx,self.newspany = graphspan
+
+
+
 		self.targetrange = (self.y,(self.y + self.spany))
 
 		# seeds a list with the coordinates for 0 to give us a list that we can put our scaled graph values in

@@ -96,7 +96,7 @@ class led_display(object):
 
     # Function to draw a pretty pattern to the display.
     def animate(self):
-        if self.onoff == 1:
+        if configure.moire:
             for x in range(8):
                 for y in range(8):
                     cx = x + 0.5*math.sin(self.ticks/5.0)

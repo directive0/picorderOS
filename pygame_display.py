@@ -288,7 +288,7 @@ def startUp(surface,timeSinceStart):
 	insignia.update(pioslogo, logoposx, 60)
 	#mainTitle.update("Picorder OS",25,22,181,titleFont,white)
 	#mainTitle.center(resolution[0],20,0,181)
-	secTitle.update("Alpha Test Version - June 2019",19,37,210,titleFont,blue)
+	secTitle.update("Alpha Test Version - 2019",19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer

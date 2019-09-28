@@ -115,7 +115,7 @@ def Main():
 							status = dotscreen.push(data)
 						if configure.display == "1":
 							status = colourscreen.graph_screen(data)
-						if configure.leds[0]:
+						if configure.leds[0] and not configure.pc:
 							lights.cycle()
 
 

@@ -1,16 +1,13 @@
 #!/usr/bin/env python
-
+# This module controls the st7735 type screens
 
 import math
 import time
-from input import *
 
-#import Adafruit_Nokia_LCD as LCD
-#import Adafruit_GPIO.SPI as SPI
 from luma.core.interface.serial import spi
 from luma.core.render import canvas
 from luma.lcd.device import st7735
-from luma.emulator.device import pygame
+from luma.emulator.device import pygame as pyscreen
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
@@ -22,11 +19,14 @@ from PIL import ImageDraw
 from pilgraph import *
 from amg8833_pil import *
 
+#load the module that handles input_kb
+from input import *
 
 
 # Load default font.
 font = ImageFont.truetype("assets/babs.otf",13)
 titlefont = ImageFont.truetype("assets/babs.otf",16)
+bigfont = ImageFont.truetype("assets/babs.otf",20)
 
 # Raspberry Pi hardware SPI config:
 DC = 23
@@ -44,7 +44,7 @@ SPI_DEVICE = 0
 #disp = LCD.PCD8544(DC, RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=4000000))
 
 if configure.pc:
-	device = pygame(width = 160, height = 128, mode = "RGB")
+	device = pyscreen(width = 160, height = 128, mode = "RGB")
 else:
 	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
 	device = st7735(serial, width = 160, height = 128, mode = "RGB")
@@ -190,7 +190,7 @@ class SelectableLabel(LabelObj):
 class SettingsFrame(object):
 	def __init__(self,input):
 
-		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto]]
+		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto], ["LEDs", configure.leds]]
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
@@ -253,10 +253,16 @@ class SettingsFrame(object):
 
 		#draw the 3 graph parameter items
 		if self.selection == 0 or self.selection == 1 or self.selection == 2:
-			#print(configure.sensor_info[self.pages[self.selection][1][0]])
+
 			test = configure.sensor_info[self.pages[self.selection][1][0]][3]
-			self.item = LabelObj(str(test),titlefont,draw,colour = lcars_peach)
+			self.item = LabelObj(str(test),bigfont,draw,colour = lcars_pink)
 			self.item.push(self.titlex,self.titley+40)
+		else:
+
+			if isinstance(self.pages[self.selection][1][0], bool):
+				test = str(self.pages[self.selection][1][0])
+				self.item = LabelObj(str(test),bigfont,draw,colour = lcars_pink)
+				self.item.push(self.titlex,self.titley+40)
 		# returns mode_a so we will stay on this screen
 		# hould change it button pressed.
 		status  = "settings"
@@ -272,8 +278,8 @@ class SettingsFrame(object):
 
 		if keys[1]:
 			if self.input.is_down(1):
-				print(self.pages[self.selection])
-				self.toggle(self.pages[self.selection][1]	)
+				#print(self.pages[self.selection])
+				self.toggle(self.pages[self.selection][1])
 
 		if keys[2]:
 			if self.input.is_down(2):
@@ -479,6 +485,7 @@ class ThermalFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 		self.t_grid = ThermalGrid(23,24,133,71)
+		self.t_grid_full = ThermalGrid(23,9,133,106)
 		self.titlex = 23
 		self.titley = 6
 
@@ -500,35 +507,33 @@ class ThermalFrame(object):
 
 	def labels(self):
 
-
 		if self.selection == 0 or self.selection == 1:
 			raw_a = str(self.low)
 			adjusted_a = self.arrangelabel(raw_a)
-			a_string = adjusted_a
+			a_string = "Low: " + adjusted_a
 
-			self.A_Label = LabelObj(a_string,font,self.draw,colour = (0,0,255))
+			self.A_Label = LabelObj(a_string,font,self.draw,colour = lcars_blue)
 			self.A_Label.push(23,self.labely)
 
 		if self.selection == 0 or self.selection == 2:
 			raw_b = str(self.high)
 			adjusted_b = self.arrangelabel(raw_b)
-			b_string = adjusted_b
+			b_string = "High: " + adjusted_b
 
-			self.B_Label = LabelObj(b_string,font,self.draw, colour = (255,0,0))
+			self.B_Label = LabelObj(b_string,font,self.draw, colour = lcars_pinker)
 			self.B_Label.center(self.labely,23,135)
 			#self.baroLabel.push(57,100)
 
 		if self.selection == 0 or self.selection == 3:
 			raw_c = str(self.average)
 			adjusted_c = self.arrangelabel(raw_c)
-			c_string = adjusted_c
+			c_string = "Avg: " + adjusted_c
 
-			self.C_DataLabel = LabelObj(c_string,font,self.draw, colour = (255,0,255))
+			self.C_DataLabel = LabelObj(c_string,font,self.draw, colour = lcars_orange)
 			#self.C_DataLabel.push(117,100)
 			self.C_DataLabel.r_align(156,self.labely)
 
 	def push(self, sensor, draw):
-				#degreesymbol =  u'\N{DEGREE SIGN}'
 
 		self.draw = draw
 
@@ -538,15 +543,22 @@ class ThermalFrame(object):
 		self.title = LabelObj("Thermal Array",titlefont,draw)
 		self.title.push(self.titlex,self.titley)
 
+
 		# Draw ThermalGrid object
 		if self.timed.timelapsed() > self.interval:
-			self.average,self.high,self.low = self.t_grid.update()
-			self.timed.logtime()
 
-		self.t_grid.push(draw)
+			if self.selection == 0:
+				self.average,self.high,self.low = self.t_grid.update()
+				self.timed.logtime()
+			if self.selection == 1:
+				self.average,self.high,self.low = self.t_grid_full.update()
+				self.timed.logtime()
 
 		if self.selection == 0:
-			pass
+			self.t_grid.push(draw)
+		elif self.selection ==1:
+			self.t_grid_full.push(draw)
+
 
 
 		status  = "mode_b"
@@ -564,6 +576,9 @@ class ThermalFrame(object):
 		if keys[1]:
 			if self.input.is_down(1):
 				print("Input2")
+				self.selection += 1
+				if self.selection > 1:
+					self.selection = 0
 
 		if keys[2]:
 			if self.input.is_down(2):

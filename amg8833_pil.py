@@ -151,15 +151,15 @@ class ThermalGrid(object):
 
 	def push(self,surface):
 
-
-		#print(self.high, self.low)
 		for i in range(8):
 			self.rows[i].update(self.data[i],self.high,self.low,surface)
 
 
     # Function to draw a pretty pattern to the display.
 	def animate(self):
+
 		self.dummy = makegrid(random = False)
+
 		for x in range(8):
 			for y in range(8):
 					cx = x + 0.5*math.sin(self.ticks/5.0)
@@ -167,8 +167,8 @@ class ThermalGrid(object):
 					a = math.sin(math.sqrt(1.0*(math.pow(cx, 2.0)+math.pow(cy, 2.0))+1.0)+self.ticks)
 					b = math.sin(10*(x * math.sin(self.ticks/2) + y * math.cos(self.ticks/3))+self.ticks)
 					v = (a + 1.0)/2.0
-					#v = a
-					v = int(v*255.0)
+
+					v = int(v*256.0)
 					self.dummy[x][y] = v
 					#dsense.set_pixel(x,y,v,v,v)
 		self.ticks = self.ticks+1
