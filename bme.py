@@ -3,8 +3,7 @@
 # the following is a sensor module for use with the PicorderOS
 print("Loading BME680 Sensor Module")
 import bme680
-import objects
-
+from objects import *
 
 class Sensor(object):
 	def __init__(self):
