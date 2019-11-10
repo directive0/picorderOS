@@ -105,7 +105,7 @@ class Sensor(object):
 
 			sensorlist = [item1, item2, item3, item4]
 
-
+			print(sensorlist)
 			return sensorlist
 
 		if configure.sensehat:
@@ -130,5 +130,6 @@ class Sensor(object):
 			item8 = dummyload8 + self.accelerometer_infoy
 			item9 = dummyload9 + self.accelerometer_infoz
 			sensorlist = [item1, item2, item3, item4, item5, item6, item7, item8, item9]
+
 
 			return sensorlist
