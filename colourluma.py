@@ -34,6 +34,8 @@ RST = 24
 SPI_PORT = 0
 SPI_DEVICE = 0
 
+TRANSITION = [False]
+
 # Beaglebone Black hardware SPI config:
 # DC = 'P9_15'
 # RST = 'P9_12'
@@ -216,6 +218,7 @@ class SettingsFrame(object):
 		self.decimal = 1
 
 		self.divider = 47
+		self.labely = 102
 
 		# device needs to show multiple settings
 		# first the sensor palette configuration
@@ -251,9 +254,19 @@ class SettingsFrame(object):
 		self.itemlabel = LabelObj(self.pages[self.selection][0],titlefont,draw,colour = lcars_peach)
 		self.itemlabel.push(self.titlex,self.titley+20)
 
+
+		self.A_Label = LabelObj("Next",font,draw,colour = lcars_blue)
+		self.A_Label.push(23,self.labely)
+
+		self.B_Label = LabelObj("Enter",font,draw, colour = lcars_blue)
+		self.B_Label.center(self.labely,23,135)
+
+		self.C_DataLabel = LabelObj("Exit",font,draw, colour = lcars_blue)
+		self.C_DataLabel.r_align(156,self.labely)
+
+
 		#draw the 3 graph parameter items
 		if self.selection == 0 or self.selection == 1 or self.selection == 2:
-
 			test = configure.sensor_info[self.pages[self.selection][1][0]][3]
 			self.item = LabelObj(str(test),bigfont,draw,colour = lcars_pink)
 			self.item.push(self.titlex,self.titley+40)
@@ -508,6 +521,7 @@ class ThermalFrame(object):
 	def labels(self):
 
 		if self.selection == 0 or self.selection == 1:
+
 			raw_a = str(self.low)
 			adjusted_a = self.arrangelabel(raw_a)
 			a_string = "Low: " + adjusted_a
@@ -530,7 +544,6 @@ class ThermalFrame(object):
 			c_string = "Avg: " + adjusted_c
 
 			self.C_DataLabel = LabelObj(c_string,font,self.draw, colour = lcars_orange)
-			#self.C_DataLabel.push(117,100)
 			self.C_DataLabel.r_align(156,self.labely)
 
 	def push(self, sensor, draw):

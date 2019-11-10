@@ -83,7 +83,7 @@ class Inputs(object):
 		for i in range(buttons):
 			self.fired.append(False)
 			self.buttonlist.append(False)
-			self.down.append(True)
+			self.down.append(False)
 
 		self.awaspressed = False
 		self.bwaspressed = False
@@ -108,7 +108,6 @@ class Inputs(object):
 
 			if key[pygame.K_LEFT] and not self.awaspressed:
 					self.buttonlist[0] = True
-					#configure.auto = not configure.auto
 					self.awaspressed = True
 
 			if not key[pygame.K_LEFT] and self.awaspressed:
