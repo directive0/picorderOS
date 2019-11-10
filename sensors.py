@@ -2,14 +2,14 @@ from objects import *
 import time
 
 
-    # the following is a sensor module for use with the PicorderOS
-    print("Loading BME680 Sensor Module")
-    import bme680
+# the following is a sensor module for use with the PicorderOS
+print("Loading BME680 Sensor Module")
+import bme680
 
 if configure.sensehat:
 	# instantiates and defines paramteres for the sensehat
 
-    from sense_hat import SenseHat
+	from sense_hat import SenseHat
 	# instantiate a sensehat object,
 	sense = SenseHat()
 
@@ -58,11 +58,20 @@ class Sensor(object):
 		#info = (lower range, upper range, description, symbol)
 
 		if configure.bme:
+			self.sensor = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
 			self.temp_info = [-40,85,"Temperature (BME)",self.deg_sym + "c"]
 			self.humidity_info = [0,100,"Relative Humidity (BME)", "%"]
 			self.pressure_info = [300,1100,"Barometric Pressure (BME)","hPa"]
 			self.VOC_info = [300,1100,"Air Quality (BME)","hPa"]
 		if configure.sensehat:
+			# instantiate a sensehat object,
+			sense = SenseHat()
+			# Initially clears the LEDs once loaded
+			sense.clear()
+			# Sets the IMU Configuration.
+			sense.set_imu_config(True,False,False)
+			# activates low light conditions to not blind the user.
+			sense.low_light = True
 			self.temp_info = [0,65,"Thermometer (SH)",self.deg_sym + "c"]
 			self.humidity_info = [20,80,"Hygrometer (SH)", "%"]
 			self.pressure_info = [260,1260,"Barometer (SH)","hPa"]
