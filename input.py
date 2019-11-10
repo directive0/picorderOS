@@ -60,7 +60,7 @@ if configure.input_cap:
 	i2c = busio.I2C(board.SCL, board.SDA)
 
 	# Create MPR121 object.
-	mpr121 = adafruit_mpr121.MPR121(i2c)
+	mpr121 = adafruit_mpr121.MPR121(i2c, address = 0x5B)
 
 # the input class handles all the requirements for handling user directed inputs
 class Inputs(object):
@@ -83,7 +83,7 @@ class Inputs(object):
 		for i in range(buttons):
 			self.fired.append(False)
 			self.buttonlist.append(False)
-			self.down.append(False)
+			self.down.append(True)
 
 		self.awaspressed = False
 		self.bwaspressed = False
