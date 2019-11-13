@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+print("Loading Unified Indicator Module")
 # new Changes
 # will need to support a reed switch and more inputs.
 
@@ -7,8 +7,6 @@
 import RPi.GPIO as GPIO
 
 from objects import *
-
-
 
 if configure.neopixel:
 #	import board

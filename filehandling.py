@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-print("Loading File Handling Module!")
+print("Loading File Handling Module")
 
 import time
 import csv
