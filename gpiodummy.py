@@ -1,4 +1,5 @@
 #!/usr/bin/python
+print("Loading GPIO Dummy")
 
 # External module imports
 #import RPi.GPIO as GPIO

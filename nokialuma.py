@@ -23,8 +23,8 @@ from pilgraph import *
 
 
 # Load default font.
-font = ImageFont.truetype("font2.ttf",10)
-titlefont = ImageFont.truetype("font.ttf",8)
+font = ImageFont.truetype("assets/font2.ttf",10)
+titlefont = ImageFont.truetype("assets/font.ttf",8)
 
 # Raspberry Pi hardware SPI config:
 DC = 23
@@ -219,7 +219,7 @@ class NokiaScreen(object):
 
 
 		# instantiates an image and uses it in a draw object.
-		self.image = Image.open('frame.ppm').convert('1')
+		self.image = Image.open('assets/frame.ppm').convert('1')
 		self.draw = ImageDraw.Draw(self.image)
 
 

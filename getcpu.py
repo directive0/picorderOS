@@ -2,12 +2,13 @@
 
 #	This file fetches CPU load values and relates them to the caller.
 #	It is used in place of the various sensor modules to demonstrate functionality.
-print("Loading CPU Dummy")
+print("Loading GetCPU/sensor dummy")
 
 import psutil
 import math
 
 from objects import *
+from filehandling import *
 
 
 class Sensor(object):
@@ -29,8 +30,10 @@ class Sensor(object):
 		self.infof = [-500,500,"Tangent Wave", ""]
 		self.VOC_info = []
 		configure.max_sensors[0] = 6
+		self.filehandler = datalog()
 		configure.sensor_info = self.get()
-		#self.filehandler = datalog()
+
+
 
 
 	def get(self):
@@ -50,6 +53,7 @@ class Sensor(object):
 		item6 = dummyload6 + self.infof
 
 		sensorlist = [item1, item2, item3, item4, item5,item6]
+		self.filehandler.write_data(sensorlist)
 
 		return sensorlist
 

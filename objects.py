@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import time
-print("Loading prefs")
+print("Loading Globals Objects")
 # This module contains generally useful objects that the entire program may call on.
 
 # This variable is used to pass information to things like progress notifications
@@ -61,6 +61,9 @@ class preferences(object):
 		self.sensor2 = [1]
 		self.sensor3 = [2]
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
+
+		self.logdata = [True]
+		self.samplerate = [1]
 
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []

@@ -1,3 +1,5 @@
+print("Loading Python IL Module")
+
 from objects import *
 from PIL import Image
 from PIL import ImageFont

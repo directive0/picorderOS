@@ -5,6 +5,7 @@ print("Loading File Handling Module")
 import time
 import csv
 import os
+from objects import *
 
 # Sensor data fragment array anatomy (All of this is wrong now):
 # [0] - reading, in raw float
@@ -27,38 +28,43 @@ class datalog(object):
 	def __init__(self):
 		try:
 			self.attempt = open('datalog.csv', newline='')
-			print("file found")
+			print("File Handler - Existing file found")
 		except FileNotFoundError:
 			initial = open('datalog.csv', mode='w', newline='')
 			initial_write = csv.writer(initial, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator='\n')
 			initial_write.writerow(['Reading']+['Lower Range']+['Upper Range']+['Unit']+['Symbol'])
 			#+['Safe high']+["Sensor name"]+['Description']+["Time Index"])
-			print("file written")
+			print("File Handler - New file created")
+
+		self.sampletimer = timer()
 		#self.d1 = str((time.strftime("%d-%m-%Y")))
 		#file = open("log/" + self.d1 + '-loggedvals.csv', 'a')
 
 		#file.write("Date, Time, Humidity, Pressure, Temperature, MagX, MagY, MagZ" + "\r")
 
 	def read_data(self, lines = 1):
+		print("File Handler - Reading datalog")
 		with open('datalog.csv', newline='') as csvfile:
 			spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
 			for row in spamreader:
 				pass
 				#print(', '.join(row))
 
-	def write_data(self, fragment = (100,0,100,"CPU Percent","%")):
+	def write_data(self, fragment):
 		#with open('datalog.csv', 'w', newline='') as csvfile:
-		with open('datalog.csv', 'a', newline='') as csvfile:
-				print(time.time())
-				datawriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator='\n')
-				datawriter.writerow([fragment[0]]+[fragment[1]]+[fragment[2]]+[fragment[3]]+[fragment[4]])
-				#datawriter.writerow([randoval]+["°c"]+[-40]+[200]+[10]+[24]+["BME680"]+["Ambient Temperature"])
-				print("writing")
-
+		print(self.sampletimer.timelapsed())
+		if self.sampletimer.timelapsed() > configure.samplerate[0]:
+			print("File Handler - Writing fragment to datalog")
+			with open('datalog.csv', 'a', newline='') as csvfile:
+					print(time.time())
+					datawriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator='\n')
+					datawriter.writerow([fragment[0]]+[fragment[1]]+[fragment[2]]+[fragment[3]]+[fragment[4]])
+					#datawriter.writerow([randoval]+["°c"]+[-40]+[200]+[10]+[24]+["BME680"]+["Ambient Temperature"])
+			self.sampletimer.logtime()
 	def end_file():
 		pass
 		#file.write("END OF LOG")
 
-new = datalog()
-new.write_data()
-new.read_data()
+#new = datalog()
+#new.write_data()
+#new.read_data()
