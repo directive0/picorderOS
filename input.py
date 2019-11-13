@@ -1,3 +1,5 @@
+
+print("Unified Input Module Loading!")
 # This script retrieves and packages all input events that might be useful to the program
 # The input object checks the configuration object and returns an array of button inputs.
 
