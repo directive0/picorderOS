@@ -2,7 +2,9 @@
 
 print("Loading File Handling Module")
 
-import time
+#import time
+import datetime
+#from datetime import time
 import csv
 import os
 from objects import *
@@ -32,7 +34,7 @@ class datalog(object):
 		except FileNotFoundError:
 			initial = open('datalog.csv', mode='w', newline='')
 			initial_write = csv.writer(initial, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator='\n')
-			initial_write.writerow(['Reading']+['Lower Range']+['Upper Range']+['Unit']+['Symbol'])
+			#initial_write.writerow(['Reading']+['Lower Range']+['Upper Range']+['Unit']+['Symbol'])
 			#+['Safe high']+["Sensor name"]+['Description']+["Time Index"])
 			print("File Handler - New file created")
 
@@ -46,21 +48,36 @@ class datalog(object):
 		print("File Handler - Reading datalog")
 		with open('datalog.csv', newline='') as csvfile:
 			spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-			for row in spamreader:
+
+			cursor = 0
+			selection = []
+			timenow = datetime.datetime.now().time()
+			for row in reversed(list(spamreader)):
+
+				print(row[0].split(",")[0])
+				thistime = datetime.time(10,10,10,10)
+				print(thistime)
+				break
+
 				pass
 				#print(', '.join(row))
 
+
 	def write_data(self, fragment):
 		#with open('datalog.csv', 'w', newline='') as csvfile:
-		print(self.sampletimer.timelapsed())
-		if self.sampletimer.timelapsed() > configure.samplerate[0]:
+		if self.sampletimer.timelapsed() > configure.samplerate[0] and configure.logdata:
 			print("File Handler - Writing fragment to datalog")
 			with open('datalog.csv', 'a', newline='') as csvfile:
 					print(time.time())
 					datawriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL, lineterminator='\n')
-					datawriter.writerow([fragment[0]]+[fragment[1]]+[fragment[2]]+[fragment[3]]+[fragment[4]])
-					#datawriter.writerow([randoval]+["°c"]+[-40]+[200]+[10]+[24]+["BME680"]+["Ambient Temperature"])
+
+					row = [datetime.datetime.now().time()]
+					for i in range(len(fragment)):
+						row.append(fragment[i][0])
+					#datawriter.writerow([fragment[0]]+[fragment[1]]+[fragment[2]]+[fragment[3]]+[fragment[4]])
+					datawriter.writerow(row)
 			self.sampletimer.logtime()
+			self.read_data()
 	def end_file():
 		pass
 		#file.write("END OF LOG")

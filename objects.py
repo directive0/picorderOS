@@ -62,8 +62,9 @@ class preferences(object):
 		self.sensor3 = [2]
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
 
-		self.logdata = [True]
-		self.samplerate = [1]
+		self.logdata = [False]
+		self.samplerate = [0]
+		self.displayinterval = [0]
 
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []
