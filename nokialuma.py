@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-print("Nokia Luma Screen Loading!")
+print("Luma.LCD Nokia Screen Loading!")
 import math
 import time
 from input import *
