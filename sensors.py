@@ -3,7 +3,7 @@ import time
 
 
 # the following is a sensor module for use with the PicorderOS
-print("Loading BME680 Sensor Module")
+print("Loading Unified Sensor Module!")
 import bme680
 
 if configure.sensehat:

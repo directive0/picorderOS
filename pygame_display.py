@@ -2,7 +2,7 @@
 
 # This display module uses Pygame to draw picorder routines to the screen.
 # It is built upon the original Picorder UI.
-
+print("Pygame Screen Loading!")
 # The following are some necessary modules for the Picorder.
 import pygame
 import time

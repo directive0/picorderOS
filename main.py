@@ -7,7 +7,7 @@
 # Support three display modes (B/W LCD, Colour LCD, Pygame for tr108)
 # Support multiple sensor options across all platforms (BME680, AMG8833, sensehat)
 
-print("PicorderOS - alpha stage")
+print("PicorderOS - Alpha")
 print("Loading Main Script")
 
 from objects import *
@@ -72,6 +72,8 @@ def Main():
 
 	if configure.leds[0]:
 		lights = ripple()
+
+	print("Main Loop Starting")
 	# The following while loop catches ctrl-c exceptions. I use this structure so that status changes will loop back around and have a chance to activate different functions. It gets a little weird going forward, bear with me.
 	while status != "quit":
 
@@ -164,6 +166,7 @@ def Main():
 		except KeyboardInterrupt:
 			status = "quit"
 
+	print("Main Loop Shutting Down")
 	resetleds()
 	cleangpio()
 	#print("Quit reached")

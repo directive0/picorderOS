@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # This module controls the st7735 type screens
-
+print("Luma.LCD st7735 Screen Loading!")
 import math
 import time
 

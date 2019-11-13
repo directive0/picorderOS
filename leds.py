@@ -99,31 +99,35 @@ class ripple(object):
 		pass
 
 	def cycle(self):
-		self.beat += 1
 
-		if self.beat > 3:
-			self.beat = 0
+		if configure.leds[0]:
+			self.beat += 1
 
-		if self.beat == 0:
-			leda_on()
-			ledb_off()
-			ledc_off()
-			ledd_off()
+			if self.beat > 3:
+				self.beat = 0
 
-		if self.beat == 1:
-			leda_off()
-			ledb_on()
-			ledc_off()
-			ledd_off()
+			if self.beat == 0:
+				leda_on()
+				ledb_off()
+				ledc_off()
+				ledd_off()
 
-		if self.beat == 2:
-			leda_off()
-			ledb_off()
-			ledc_on()
-			ledd_off()
+			if self.beat == 1:
+				leda_off()
+				ledb_on()
+				ledc_off()
+				ledd_off()
 
-		if self.beat == 3:
-			leda_off()
-			ledb_off()
-			ledc_off()
-			ledd_on()
+			if self.beat == 2:
+				leda_off()
+				ledb_off()
+				ledc_on()
+				ledd_off()
+
+			if self.beat == 3:
+				leda_off()
+				ledb_off()
+				ledc_off()
+				ledd_on()
+		else:
+			resetleds()

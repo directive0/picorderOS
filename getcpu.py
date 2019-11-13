@@ -2,6 +2,7 @@
 
 #	This file fetches CPU load values and relates them to the caller.
 #	It is used in place of the various sensor modules to demonstrate functionality.
+print("Loading CPU Dummy")
 
 import psutil
 import math
