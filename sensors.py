@@ -36,17 +36,16 @@ class Sensor(object):
 	def __init__(self):
 
 
-		self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
+		self.sensor = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
 
 		# These oversampling settings can be tweaked to
 		# change the balance between accuracy and noise in
 		# the data.
 
-		self.bme.set_humidity_oversample(bme680.OS_2X)
-		self.bme.set_pressure_oversample(bme680.OS_4X)
-		self.bme.set_temperature_oversample(bme680.OS_8X)
-		self.bme.set_filter(bme680.FILTER_SIZE_3)
-
+		self.sensor.set_humidity_oversample(bme680.OS_2X)
+		self.sensor.set_pressure_oversample(bme680.OS_4X)
+		self.sensor.set_temperature_oversample(bme680.OS_8X)
+		self.sensor.set_filter(bme680.FILTER_SIZE_3)
 
 
 
@@ -105,7 +104,7 @@ class Sensor(object):
 
 			sensorlist = [item1, item2, item3, item4]
 
-			print(sensorlist)
+			#print(sensorlist)
 			return sensorlist
 
 		if configure.sensehat:
