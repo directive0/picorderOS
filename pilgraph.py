@@ -1,5 +1,7 @@
 print("Loading Python IL Module")
 
+# PILgraph is here because both the black and white and colour screens need it.
+
 from objects import *
 from PIL import Image
 from PIL import ImageFont

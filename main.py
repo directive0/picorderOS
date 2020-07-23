@@ -12,36 +12,36 @@ print("Loading Main Script")
 
 from objects import *
 
-if configure.tr108:
-	from pygame_display import *
 
-	if not configure.pc:
-		from leds import *
-		from sensehat import *
+# This part loads the appropriate modules depending on which preference flags are set.
 
-if configure.tr109:
-	if not configure.pc:
-		from sensors import *
-		from leds import *
-
-	if configure.display == "1":
-		from colourluma import *
-
-	if configure.display == "0":
-		from nokialuma import *
-
-if configure.pc:
+# If we are NOT just running on a computer for development or demo purposes.
+if not configure.pc:
+	# load up the LED indicator module and sensors.
+	from leds import *
+	from sensehat import *
+else:
+	# otherwise load up the demonstration and dummy modules that emulate sensors and pass GPIO signals without requiring any real GPIO.
 	from getcpu import *
 	from gpiodummy import *
 
+# The following are only loaded in TR-108 mode
+if configure.tr108:
+	# Load the TR-108 display modules
+	from tos_display import *
 
 
 
+# for the new TR-109 there are two display modes supported.
+if configure.tr109:
 
-# Default parameters:
+	# 1.8" TFT colour LCD
+	if configure.display == "1":
+		from lcars_clr import *
 
-# sets the default mode that is called after the splash screen.
-
+	# Nokia 5110 black and white dot matrix screen.
+	if configure.display == "0":
+		from lcars_bw import *
 
 # the following function is our main object, it contains all the flow for our program.
 def Main():
@@ -52,6 +52,8 @@ def Main():
 	sensors = Sensor()
 	timeit = timer()
 	ledtime = timer()
+
+	# I think this sets the delay between draws.
 	interval = 0
 
 
@@ -165,12 +167,14 @@ def Main():
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
 		except KeyboardInterrupt:
 			status = "quit"
-
+	print("Quit Encountered")
 	print("Main Loop Shutting Down")
+
+	# The following calls are for cleanup and just turn "off" any GPIO
 	resetleds()
 	cleangpio()
 	#print("Quit reached")
 
-#print("Main class loaded and online")
-# the following call starts our program
+
+# the following call starts our program and begins the loop.
 Main()

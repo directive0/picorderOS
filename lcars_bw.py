@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
-print("Luma.LCD Nokia Screen Loading!")
+print("Loading Luma.LCD Nokia 5110 Screen")
 import math
 import time
 from input import *
 
-#import Adafruit_Nokia_LCD as LCD
-#import Adafruit_GPIO.SPI as SPI
+
 from luma.core.interface.serial import spi
 from luma.core.render import canvas
 from luma.lcd.device import pcd8544
