@@ -849,6 +849,7 @@ class Screen(object):
 
 
 	def startup_screen(self,start_time):
+		print("in startup")
 		status = startUp(self.surface,start_time)
 		return status
 

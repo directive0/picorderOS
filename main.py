@@ -78,7 +78,7 @@ def Main():
 	print("Main Loop Starting")
 	# The following while loop catches ctrl-c exceptions. I use this structure so that status changes will loop back around and have a chance to activate different functions. It gets a little weird going forward, bear with me.
 	while status != "quit":
-
+		print("made loop")
 		# try allows us to capture a keyboard interrupt and assign behaviours.
 		try:
 			# Runs the startup animation played when you first boot the program.
@@ -86,11 +86,12 @@ def Main():
 			# Create a timer object to time things.
 			start_time = time.time()
 			#print("status is: ", configure.status)
-
+			print("looping")
 			while status == "startup":
 				status = "mode_a"
-
+				print("mode_a")
 				if configure.tr108:
+					print("pystartup")
 					status = PyScreen.startup_screen(start_time)
 
 			if status == "ready":
