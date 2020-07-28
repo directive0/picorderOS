@@ -88,6 +88,9 @@ class led_display(object):
         self.ticks = 0
         self.onoff = 1
 
+		if configure.moire:
+			self.ison = true
+
     def toggle(self):
         if self.onoff == 1:
             self.onoff = 0
@@ -96,9 +99,13 @@ class led_display(object):
 
     # Function to draw a pretty pattern to the display.
     def animate(self):
+
+		# at start Moire checks if moire is active.
         if configure.moire:
             for x in range(8):
                 for y in range(8):
+					# it's this cool plasma effect from demoscene I stole from
+					# somewhere.
                     cx = x + 0.5*math.sin(self.ticks/5.0)
                     cy = y + 0.5*math.cos(self.ticks/3.0)
                     v = math.sin(math.sqrt(1.0*(math.pow(cx, 2.0)+math.pow(cy, 2.0))+1.0)+self.ticks)

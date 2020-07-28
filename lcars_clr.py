@@ -85,11 +85,6 @@ class LabelObj(object):
 		size = self.font.getsize(self.string)
 		self.push(x-size[0],y)
 
-	# def update(self, string = self.string, colour = self.colour):
-	# 	self.string = string
-	# 	self.colour = colour
-	# 	pass
-
 	def push(self,locx,locy):
 		self.draw.text((locx, locy), self.string, font = self.font, fill= self.colour)
 
@@ -309,6 +304,9 @@ class MultiFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 
+		self.marginleft = 23
+		self.marginright= 133
+
 		# sets the background image for the display
 		self.back = Image.open('assets/lcarsframe.png')
 
@@ -349,7 +347,6 @@ class MultiFrame(object):
 
 	#  draws the title and sets the appropriate top bar length to fill the gap.
 	def layout(self):
-
 		self.title = LabelObj(self.string,titlefont,self.draw)
 		self.titlesizex, self.titlesizey = self.title.getsize()
 		self.barlength = (79 - (4+ self.titlesizex)) + 2
@@ -382,7 +379,7 @@ class MultiFrame(object):
 	# this function defines the labels for the screen
 	def labels(self,sensors):
 
-		#degreesymbol =  u'\N{DEGREE SIGN}'
+		# depending on which number the "selection" variable takes on.
 
 		if self.selection == 0 or self.selection == 1:
 			raw_a = str(self.A_Data)

@@ -1,10 +1,16 @@
 from objects import *
 import time
 
+# Todo:
+# - Add possibility for multiple varied sensor loadouts.
+# - merge with getcpu
+
 
 # the following is a sensor module for use with the PicorderOS
 print("Loading Unified Sensor Module!")
-import bme680
+
+if configure.bme:
+	import bme680
 
 if configure.sensehat:
 	# instantiates and defines paramteres for the sensehat
@@ -22,7 +28,7 @@ if configure.sensehat:
 	# activates low light conditions to not blind the user.
 	sense.low_light = True
 
-if configure.amg8833:
+if configure.amg8833 and not configure.simulate:
 	import busio
 	import board
 	import adafruit_amg88xx
@@ -30,26 +36,39 @@ if configure.amg8833:
 	i2c = busio.I2C(board.SCL, board.SDA)
 	amg = adafruit_amg88xx.AMG88XX(i2c)
 
+if configure.bme and not configure.simulate:
+	import bme680
+
+# These imports are for the Sin and Tan waveform generators
+if configure.simulate:
+	import psutil
+	import math
 
 
 class Sensor(object):
 	def __init__(self):
 
-
-
-
-
-
-
 #		self.sensor_name = "BME680"
 		self.deg_sym = '\xB0'
 
+		if configure.simulate:
+			self.step = 0.0
+			self.steptan = 0.0
 
-		#0				1			2			3			4
-		#info = (lower range, upper range, description, symbol)
+			self.sensor_name = "CPU Sensor Dummy"
+			self.infoa = [0,100,"CPU Percent (RPI)","%"]
+			self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory (RPI)", "b"]
+			self.infoc = [0,100000,"Bytes Sent (RPI)", "b"]
+			self.infod = [0,100000,"Bytes Received (RPI)", "b"]
+			self.infoe = [-100,100,"Sine Wave (RPI)", ""]
+			self.infof = [-500,500,"Tangent Wave (RPI)", ""]
+			self.VOC_info = []
+			configure.max_sensors[0] = 6
+			#self.filehandler = datalog()
+			configure.sensor_info = self.get()
 
-		if configure.bme:
 
+		if configure.bme and not configure.simulate:
 			self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
 
 			# These oversampling settings can be tweaked to
@@ -60,78 +79,174 @@ class Sensor(object):
 			self.bme.set_pressure_oversample(bme680.OS_4X)
 			self.bme.set_temperature_oversample(bme680.OS_8X)
 			self.bme.set_filter(bme680.FILTER_SIZE_3)
+
+
+			#		self.sensor_name = "BME680"
+			self.deg_sym = '\xB0'
+			self.sensor = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
 			self.temp_info = [-40,85,"Temperature (BME)",self.deg_sym + "c"]
 			self.humidity_info = [0,100,"Relative Humidity (BME)", "%"]
 			self.pressure_info = [300,1100,"Barometric Pressure (BME)","hPa"]
 			self.VOC_info = [300,1100,"Air Quality (BME)","hPa"]
-			
+
 		if configure.sensehat:
 			# instantiate a sensehat object,
-			sense = SenseHat()
+			self.sense = SenseHat()
 			# Initially clears the LEDs once loaded
-			sense.clear()
+			self.sense.clear()
 			# Sets the IMU Configuration.
-			sense.set_imu_config(True,False,False)
+			self.sense.set_imu_config(True,False,False)
 			# activates low light conditions to not blind the user.
-			sense.low_light = True
+			self.sense.low_light = True
 			self.temp_info = [0,65,"Thermometer (SH)",self.deg_sym + "c"]
 			self.humidity_info = [20,80,"Hygrometer (SH)", "%"]
 			self.pressure_info = [260,1260,"Barometer (SH)","hPa"]
 			self.magnet_infox = [-500,500,"Magnetomer X (SH)","G"]
 			self.magnet_infoy = [-500,500,"Magnetomer Y (SH)","G"]
 			self.magnet_infoz = [-500,500,"Magnetomer Z (SH)","G"]
-			self.accelerometer_infox = [-500,500,"Accelerometer X","g"]
-			self.accelerometer_infoy = [-500,500,"Accelerometer Y","g"]
-			self.accelerometer_infoz = [-500,500,"Accelerometer Z","g"]
-		if configure.amg8833:
-			pass
+			self.accelerometer_infox = [-500,500,"Accelerometer X (SH)","g"]
+			self.accelerometer_infoy = [-500,500,"Accelerometer Y (SH)","g"]
+			self.accelerometer_infoz = [-500,500,"Accelerometer Z (SH)","g"]
+			configure.max_sensors[0] = 9
+			#self.filehandler = datalog()
+			configure.sensor_info = self.get()
+
+		if configure.amg8833 and not configure.simulate:
+			self.amg_info = [0,80,"IR Thermal",self.deg_sym + "c"]
+
+		if configure.envirophat and not configure.simulate:
+
+			self.rgb = light.rgb()
+			self.analog_values = analog.read_all()
+			self.mag_values = motion.magnetometer()
+			self.acc_values = [round(x, 2) for x in motion.accelerometer()]
+
+			self.temp_info = [0,65,"Thermometer (EP)",self.deg_sym + "c"]
+			self.humidity_info = [20,80,"Hygrometer (EP)", "%"]
+			self.pressure_info = [260,1260,"Barometer (EP)","hPa"]
+			self.magnet_infox = [-500,500,"Magnetomer X (EP)","G"]
+			self.magnet_infoy = [-500,500,"Magnetomer Y (EP)","G"]
+			self.magnet_infoz = [-500,500,"Magnetomer Z (EP)","G"]
+			self.accelerometer_infox = [-500,500,"Accelerometer X (EP)","g"]
+			self.accelerometer_infoy = [-500,500,"Accelerometer Y (EP)","g"]
+			self.accelerometer_infoz = [-500,500,"Accelerometer Z (EP)","g"]
+			configure.max_sensors[0] = 9
+			#self.filehandler = datalog()
+			configure.sensor_info = self.get()
 
 
 
-		configure.sensor_info = self.get()
 
+#		sensordata = pd.DataFrame.append(self.get())#, columns=[self.get(),"min","max","desc","symbol"])
+#		print(sensordata)
+		#= self.get()
+
+	def sin_gen(self):
+		wavestep = math.sin(self.step)
+		self.step += .1
+		return wavestep
+
+	def tan_gen(self):
+		wavestep = math.tan(self.steptan)
+		self.steptan += .1
+		#print(wavestep)
+		return wavestep
 
 	def get(self):
+
+		if configure.simulate:
+			dummyload = [float(psutil.cpu_percent())]
+			dummyload2 = [float(psutil.virtual_memory().available) * 0.0000001]
+			dummyload3 = [float(psutil.net_io_counters().bytes_sent) * 0.00001]
+			dummyload4 = [float(psutil.net_io_counters().bytes_recv) * 0.00001]
+			dummyload5 = [float(self.sin_gen()*100)]
+			dummyload6 = [float(self.tan_gen()*100)]
+
+			item1 = dummyload + self.infoa
+			item2 = dummyload2 + self.infob
+			item3 = dummyload3 + self.infoc
+			item4 = dummyload4 + self.infod
+			item5 = dummyload5 + self.infoe
+			item6 = dummyload6 + self.infof
+
+			sensorlist = [item1, item2, item3, item4, item5, item6]
+			#self.filehandler.write_data(sensorlist)
+
+			return sensorlist
 		#print("retrieving sensor data")
-		if configure.bme and self.bme.get_sensor_data():
+		if configure.bme and self.bme.get_sensor_data() and not configure.simulate:
 
-			dummyload = [self.bme.data.temperature]
-			dummyload2 = [self.bme.data.pressure]
-			dummyload3 = [self.bme.data.humidity]
-			dummyload4 = [self.bme.data.gas_resistance]
+			sense_data = [self.sensor.data.temperature]
+			sense_data2 = [self.sensor.data.pressure]
+			sense_data3 = [self.sensor.data.humidity]
+			sense_data4 = [self.sensor.data.gas_resistance]
 
-			item1 = dummyload + self.temp_info
-			item2 = dummyload2 + self.pressure_info
-			item3 = dummyload3 + self.humidity_info
-			item4 = dummyload4 + self.VOC_info
+			item1 = sense_data + self.temp_info
+			item2 = sense_data2 + self.pressure_info
+			item3 = sense_data3 + self.humidity_info
+			item4 = sense_data4 + self.VOC_info
 
 			sensorlist = [item1, item2, item3, item4]
 
-			print(sensorlist)
+			#print(sensorlist)
+			configure.max_sensors[0] = len(sensorlist)
 			return sensorlist
 
-		if configure.sensehat:
-			dummyload = [sense.get_temperature()]
-			dummyload2 = [sense.get_pressure()]
-			dummyload3 = [sense.get_humidity()]
-			dummyload4 = [sense.get_compass_raw()["x"]]
-			dummyload5 = [sense.get_compass_raw()["y"]]
-			dummyload6 = [sense.get_compass_raw()["z"]]
-			dummyload7 = [sense.get_accelerometer_raw()["x"]]
-			dummyload8 = [sense.get_accelerometer_raw()["y"]]
-			dummyload9 = [sense.get_accelerometer_raw()["z"]]
+		if configure.sensehat and not configure.simulate:
+			sense_data = [sense.get_temperature()]
+			sense_data2 = [sense.get_pressure()]
+			sense_data3 = [sense.get_humidity()]
+			sense_data4 = [sense.get_compass_raw()["x"]]
+			sense_data5 = [sense.get_compass_raw()["y"]]
+			sense_data6 = [sense.get_compass_raw()["z"]]
+			sense_data7 = [sense.get_accelerometer_raw()["x"]]
+			sense_data8 = [sense.get_accelerometer_raw()["y"]]
+			sense_data9 = [sense.get_accelerometer_raw()["z"]]
 
-			item1 = dummyload + self.temp_info
-			item2 = dummyload2 + self.pressure_info
-			item3 = dummyload3 + self.humidity_info
+			item1 = sense_data + self.temp_info
+			item2 = sense_data2 + self.pressure_info
+			item3 = sense_data3 + self.humidity_info
 
-			item4 = dummyload4 + self.magnet_infox
-			item5 = dummyload5 + self.magnet_infoy
-			item6 = dummyload6 + self.magnet_infoz
-			item7 = dummyload7 + self.accelerometer_infox
-			item8 = dummyload8 + self.accelerometer_infoy
-			item9 = dummyload9 + self.accelerometer_infoz
+			item4 = sense_data4 + self.magnet_infox
+			item5 = sense_data5 + self.magnet_infoy
+			item6 = sense_data6 + self.magnet_infoz
+			item7 = sense_data7 + self.accelerometer_infox
+			item8 = sense_data8 + self.accelerometer_infoy
+			item9 = sense_data9 + self.accelerometer_infoz
 			sensorlist = [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 
+			return sensorlist
+
+		if configure.amg8833 and not configure.simulate:
+			sense_data = amg.pixels
+			item1 = sense_data + self.amg_info
+
+		if configure.envirophat and not configure.simulate:
+			self.rgb = light.rgb()
+			self.analog_values = analog.read_all()
+			self.mag_values = motion.magnetometer()
+			self.acc_values = [round(x, 2) for x in motion.accelerometer()]
+
+			sense_data = [weather.temperature()]
+			sense_data2 = [weather.pressure(unit='hpa')]
+			sense_data3 = [light.light()]
+			sense_data4 = [self.mag_values[0]]
+			sense_data5 = [self.mag_values[1]]
+			sense_data6 = [self.mag_values[2]]
+			sense_data7 = [self.acc_values[0]]
+			sense_data8 = [self.acc_values[1]]
+			sense_data9 = [self.acc_values[2]]
+
+			item1 = sense_data + self.temp_info
+			item2 = sense_data2 + self.pressure_info
+			item3 = sense_data3 + self.humidity_info
+
+			item4 = sense_data4 + self.magnet_infox
+			item5 = sense_data5 + self.magnet_infoy
+			item6 = sense_data6 + self.magnet_infoz
+			item7 = sense_data7 + self.accelerometer_infox
+			item8 = sense_data8 + self.accelerometer_infoy
+			item9 = sense_data9 + self.accelerometer_infoz
+			sensorlist = [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 			return sensorlist

@@ -1,7 +1,8 @@
  #!/usr/bin/python
 
 # This display module uses Pygame to draw picorder routines to the screen.
-# It is built upon the original Picorder UI.
+# It is built upon the original Picorder UI and is intended to be used for TOS
+# styled tricorders.
 print("Loading Pygame Screen")
 # The following are some necessary modules for the Picorder.
 import pygame
@@ -31,6 +32,9 @@ resolution = (320,240)
 def_modes = 16
 refreshrate = 1
 
+# controls the margins to adjust for adjusting text positioning.
+marginright = 16
+marginleft = 16
 
 # The following lists are for my colour standards.
 red = (255,0,0)
@@ -42,9 +46,10 @@ black = (0,0,0)
 white = (255,255,255)
 
 theme1 = [red,green,yellow]
-theme2 = [blue,white,green]
-themes = [theme1,theme2]
-themenames = ["alpha", "beta"]
+theme2 = [blue,green,white]
+theme3 = [blue, white, red]
+themes = [theme1,theme2, theme3]
+themenames = ["alpha", "beta", "delta"]
 
 # The following are for LCARS colours from LCARScom.net
 lcars_orange = (255,153,0)
@@ -74,7 +79,8 @@ pygame.display.set_icon(blueInsignia)
 
 
 
-# The following function defines button behaviours and allows the program to query the button events and act accordingly.
+# The following function defines button behaviours and allows the program to
+# query the button events and act accordingly. This function is deprecated.
 def butswitch():
 	pygame.event.get()
 	key = pygame.key.get_pressed()
@@ -95,7 +101,7 @@ def butswitch():
 	return message
 
 # the following class defines simple text labels
-# todo: Make labels self center withr ref to screen or within envelope.
+
 class Label(object):
 	def __init__(self):
 		self.x = 0
@@ -107,6 +113,7 @@ class Label(object):
 		self.size = self.myfont.size(text)
 		self.scaler = 3
 
+	# Sets the paramaters of the text, used when ready to push the text.
 	def update(self, content, fontSize, nx, ny, fontType, color):
 		self.x = nx
 		self.y = ny
@@ -115,10 +122,13 @@ class Label(object):
 		self.myfont = pygame.font.Font(fontType, self.fontSize)
 		self.color = color
 
-	def get_size(self, content):
-		width, height = self.myfont.size(content)
-		return width
+	def r_align(self,x,y):
+		size = self.getrect()
+		textposx = x-size[0]
+		textposy = y
+		self.update(self.content,self.fontSize,textposx,textposy,titleFont,self.color)
 
+	# centers the text within an envelope
 	def center(self,w,h,x,y):
 		size = self.getrect()
 		xmid = x + w/2
@@ -127,27 +137,33 @@ class Label(object):
 		textposy = ymid - (size[1]/2) + self.scaler
 		self.update(self.content,self.fontSize,textposx,textposy,titleFont,self.color)
 
-	def draw(self, surface):
-		label = self.myfont.render(self.content, 1, self.color)
-
-		surface.blit(label, (self.x, self.y))
-
+	# returns the width and height of the desired text (useful for justifying)
 	def getrect(self):
 		label = self.myfont.render(self.content, 1, self.color)
 		textw = label.get_width()
 		texth = label.get_height()
-
 		return textw,texth
+
+	# returns only the width of the text.
+	def get_size(self, content):
+		width, height = self.myfont.size(content)
+		return width
+
+	# finally draws the text to screen
+	def draw(self, surface):
+		label = self.myfont.render(self.content, 1, self.color)
+		surface.blit(label, (self.x, self.y))
 
 # this class provides functionality for interactive text labels.
 class SelectableLabel(Label):
 
-
 	def __init__(self, oper, special = 0):
 
-		# special determines the behaviour of the label for each type of oper
-		# the class is supplied. There may be multiple types of int or boolean based
-		# configuration parameters so this variable helps make new options
+		# special determines the behaviour of the label for each type of
+		# operator the class is supplied. There may be multiple types of int or
+		# boolean based configuration parameters so this variable helps make
+		# new options
+
 		self.special = special
 
 		# coordinates
@@ -166,7 +182,8 @@ class SelectableLabel(Label):
 		self.content = "default"
 
 		# this variable is a reference to a list stored in "objects.py"
-		# containing either a boolean or an integer
+		# containing either a boolean or an integer. This allows the Selectable
+		# Lable to actually change settings on the fly.
 		self.oper = oper
 
 	def update(self, content, fontSize, nx, ny, fontType, color):
@@ -178,6 +195,7 @@ class SelectableLabel(Label):
 		self.color = color
 		self.indicator.update(sliderb, nx - 23, ny+1)
 
+	# this function is called when the user decides to change a setting.
 	def toggle(self):
 
 		# if the parameter supplied is a boolean
@@ -191,7 +209,9 @@ class SelectableLabel(Label):
 			# increment the integer.
 			self.oper[0] += 1
 
-			# if the integer is larger than the pool
+			# if the integer is larger than the pool of available sensors.
+			# this assumes this selectable label is being used to control
+			# sensor selection.
 			if self.special == 1 and self.oper[0] > configure.max_sensors[0]-1:
 				self.oper[0] = 0
 
@@ -238,6 +258,21 @@ class Image(object):
 	def draw(self, surface):
 		surface.blit(self.Img, (self.x,self.y))
 
+# a bit ambitious. A function to draw scales for the slider screen
+def make_scale(high,low,grads,lrlow,lrhigh,lylow,lyhigh,grnlow,grnhigh,hylow,hyhigh,hrlow,hrhigh,labels):
+
+	# create a surface to save our background.
+
+	backSurface = pygame.display.set_mode(resolution)
+
+	# draw the lines from top to bottom
+
+	# draw the graduations
+
+
+	# draw labels
+
+	# r	eturn pygame screen
 
 # The following class is used to prepare sensordata for display on the graph.
 class graphlist(object):
@@ -282,14 +317,17 @@ def startUp(surface,timeSinceStart):
 	insignia = Image()
 	mainTitle = Label()
 	secTitle = Label()
+	secblurb = Label()
 
 	logoposx = (resolution[0]/2) - (226/2)
 	#sets out UI objects with the appropriate data
 	insignia.update(pioslogo, logoposx, 60)
 	#mainTitle.update("Picorder OS",25,22,181,titleFont,white)
 	#mainTitle.center(resolution[0],20,0,181)
-	secTitle.update("Alpha Test Version - 2019",19,37,210,titleFont,blue)
-	secTitle.center(resolution[0],20,0,210)
+	secTitle.update(configure.version,19,37,210,titleFont,blue)
+	secTitle.center(resolution[0],20,0,190)
+	secblurb.update("Skurftronics - Toronto",15,37,210,titleFont,blue)
+	secblurb.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer
 	insignia.draw(surface)
@@ -301,8 +339,9 @@ def startUp(surface,timeSinceStart):
 	#if (timenow - timeSinceStart) > .5:
 	 #mainTitle.draw(surface)
 
-	if (timenow - timeSinceStart) > 1:
-	 secTitle.draw(surface)
+	#if (timenow - timeSinceStart) > 1:
+	secTitle.draw(surface)
+	secblurb.draw(surface)
 
 	pygame.display.flip()
 
@@ -311,6 +350,45 @@ def startUp(surface,timeSinceStart):
 	 return "startup"
 	else:
 	 return "ready"
+
+# the following function displays version information about the program
+def about(surface):
+
+	#Sets a black screen ready for our UI elements
+	surface.fill(black)
+
+	#Instantiates the components of the scene
+	insignia = Image()
+	mainTitle = Label()
+	version = Label()
+	secTitle = Label()
+	secblurb = Label()
+
+	logoposx = (resolution[0]/2) - (226/2)
+
+	insignia.update(pioslogo, logoposx, 30)
+	version.update(configure.version,17,37,210,titleFont,blue)
+	version.center(resolution[0],20,0,90)
+
+	secTitle.update(configure.author,17,37,210,titleFont,blue)
+	secTitle.center(resolution[0],20,0,110)
+
+	mainTitle.update("Written in Python",17,37,210,titleFont,blue)
+	mainTitle.center(resolution[0],20,0,125)
+	secblurb.update("Developed By Chris Barrett",15,37,210,titleFont,blue)
+	secblurb.center(resolution[0],20,0,210)
+
+	#writes our objects to the buffer
+	insignia.draw(surface)
+
+
+	version.draw(surface)
+	mainTitle.draw(surface)
+	secTitle.draw(surface)
+	secblurb.draw(surface)
+
+	pygame.display.flip()
+
 
 # graphit is a quick tool to help prepare graphs
 def graphit(data,new, auto = True):
@@ -335,6 +413,7 @@ def graphit(data,new, auto = True):
 	return data.graphprep(prep)
 
 
+
 class Settings_Panel(object):
 
 	def __init__(self,surface,input):
@@ -343,33 +422,44 @@ class Settings_Panel(object):
 		self.input = input
 		self.index = 0
 		self.surface = surface
+		self.labelstart = 47
+		self.labeljump = 21
 
 		self.titlelabel = Label()
 		self.titlelabel.update("Control Panel",25,17,15,titleFont,orange)
 
-
 		self.option1 = SelectableLabel(configure.sensor1, special = 1)
-		self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,red)
+		self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,themes[configure.theme[0]][0])
 
 		self.option2 = SelectableLabel(configure.sensor2, special = 1)
-		self.option2.update("Graph 2: ", 20, self.left_margin, 68, titleFont, green)
+		self.option2.update("Graph 2: ", 20, self.left_margin, self.labelstart + self.labeljump, titleFont, themes[configure.theme[0]][1])
 
 		self.option3 = SelectableLabel(configure.sensor3, special = 1)
-		self.option3.update("Graph 3: ", 20, self.left_margin, 90, titleFont, yellow)
+		self.option3.update("Graph 3: ", 20, self.left_margin, self.labelstart + (self.labeljump*2), titleFont, themes[configure.theme[0]][2])
 
 		self.option4 = SelectableLabel(configure.theme, special = 2)
-		self.option4.update("Theme:  ", 20, self.left_margin, 111, titleFont, orange)
+		self.option4.update("Theme:  ", 20, self.left_margin, self.labelstart + (self.labeljump*3), titleFont, orange)
 
 		self.option5 = SelectableLabel(configure.auto)
-		self.option5.update("Auto Range: ", 20, self.left_margin, 132, titleFont, orange)
+		self.option5.update("Auto Range: ", 20, self.left_margin, self.labelstart + (self.labeljump*4), titleFont, orange)
 
 		self.option6 = SelectableLabel(configure.leds)
-		self.option6.update("LEDs: ", 20, self.left_margin, 154, titleFont, orange)
+		self.option6.update("LEDs: ", 20, self.left_margin, self.labelstart + (self.labeljump*5), titleFont, orange)
 
 		self.option7 = SelectableLabel(configure.moire)
-		self.option7.update("Moire: ", 20, self.left_margin, 176, titleFont, orange)
+		self.option7.update("Moire: ", 20, self.left_margin, self.labelstart + (self.labeljump*6), titleFont, orange)
 
 		self.options = [self.option1,self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
+
+	def colour_update(self):
+		self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,themes[configure.theme[0]][0])
+		self.option2.update("Graph 2: ", 20, self.left_margin, 68, titleFont, themes[configure.theme[0]][1])
+		self.option3.update("Graph 3: ", 20, self.left_margin, 90, titleFont, themes[configure.theme[0]][2])
+		self.option4.update("Theme:  ", 20, self.left_margin, 111, titleFont, orange)
+		self.option5.update("Auto Range: ", 20, self.left_margin, 132, titleFont, orange)
+		self.option6.update("LEDs: ", 20, self.left_margin, 154, titleFont, orange)
+		self.option7.update("Moire: ", 20, self.left_margin, 176, titleFont, orange)
+
 
 	def frame(self):
 
@@ -385,7 +475,7 @@ class Settings_Panel(object):
 
 			self.options[i].draw(self.surface)
 
-
+		self.colour_update()
 		# draws UI to frame buffer
 		pygame.display.flip()
 
@@ -412,7 +502,8 @@ class Settings_Panel(object):
 		return result
 
 
-# The graph screen object is a self contained screen that is fed the surface and the sensor at the current moment and draws a frame when called.
+# The graph screen object is a self contained screen that is fed the surface
+# and the sensor at the current moment and draws a frame when called.
 class Graph_Screen(object):
 
 	# Draws three graphs in a grid and three corresponding labels.
@@ -421,6 +512,10 @@ class Graph_Screen(object):
 
 		# initializes the input
 		self.input = input
+		# for long presses
+		self.input_timer = timer()
+		self.presstime = 5
+		self.longpressed = [False, False, False]
 
 		# State variable
 		self.status = "mode_a"
@@ -435,7 +530,6 @@ class Graph_Screen(object):
 		# Pygame drawing surface.
 		self.surface = surface
 
-
 		# Draws Background gridplane
 		self.graphback = Image()
 		self.graphback.update(backgraph, 0, 0)
@@ -448,6 +542,7 @@ class Graph_Screen(object):
 		self.intervallabel = Label()
 		self.intervallabelshadow = Label()
 
+		self.focus_label = Label()
 
 		self.slider1 = Image()
 		self.slider2 = Image()
@@ -463,6 +558,7 @@ class Graph_Screen(object):
 
 		self.visibility = [self.graphon1,self.graphon2,self.graphon3]
 
+		self.margin = 16
 
 
 	def frame(self,sensors):
@@ -488,7 +584,7 @@ class Graph_Screen(object):
 
 		a_content = str(int(a_newest))
 		a_color = themes[configure.theme[0]][0]
-		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],30,15,205,titleFont,a_color)
+		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],30,marginleft,205,titleFont,a_color)
 
 		b_content = str(int(b_newest))
 		b_color = themes[configure.theme[0]][1]
@@ -497,23 +593,25 @@ class Graph_Screen(object):
 
 		c_content = str(int(c_newest))
 		c_color = themes[configure.theme[0]][2]
-		c_position = resolution[0] - (self.c_label.get_size(c_content + sensors[configure.sensor3[0]][4])+15)
-		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],30,c_position,205,titleFont,c_color)
+		#c_position = resolution[0] - (self.c_label.get_size(c_content + sensors[configure.sensor3[0]][4])+ marginright)
+		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],30,marginright,205,titleFont,c_color)
+		self.c_label.r_align(320 - marginright ,205)
 		contents = [a_content,b_content,c_content]
 
 		labels = [self.a_label,self.b_label,self.c_label]
 
 
-		intervaltime = float(self.drawinterval.timelapsed())
-		lapse = format(intervaltime, '.2f')
-		self.drawinterval.logtime()
-		intervaltext = (lapse + ' sec')
+		#intervaltime = float(self.drawinterval.timelapsed())
+		#persec = 60 / intervaltime
+		#lapse = format(persec, '.2f')
+		#self.drawinterval.logtime()
+		#intervaltext = (lapse + ' sps')
 		interx= (22)
 		intery= (21)
 
 
-		self.intervallabel.update(intervaltext,30,interx,intery,titleFont,white)
-		self.intervallabelshadow.update(intervaltext, 30, interx + 2, intery + 2 ,titleFont,(100,100,100))
+		#self.intervallabel.update(intervaltext,30,interx,intery,titleFont,white)
+		#self.intervallabelshadow.update(intervaltext, 30, interx + 2, intery + 2 ,titleFont,(100,100,100))
 
 
 		if not configure.auto[0]:
@@ -549,22 +647,31 @@ class Graph_Screen(object):
 			self.b_label.draw(self.surface)
 			self.c_label.draw(self.surface)
 
-
+		# this checks if we are viewing a sensor individually and graphing it
+		# alone.
 		if self.selection != 0:
+			# we make a variable carrying the index of the currently selected
+			# item.
 			this = self.selection - 1
+
+			# we collect its default colour based off our theme
 			this_color = themes[configure.theme[0]][this]
+
 			focus_cords = cords[this]
 			focus_slider = sliders[this]
 			pygame.draw.lines(self.surface, this_color, False, focus_cords, 2)
 			focus_slider.draw(self.surface)
 
+			self.focus_label.update(configure.sensor_info[configure.sensors[this][0]][3],30,283,205,titleFont,this_color)
+			self.focus_label.r_align(320 - marginright ,205)
+			self.focus_label.draw(self.surface)
 
 			self.a_label.update(contents[this] + sensors[configure.sensors[this][0]][4],30,15,205,titleFont,this_color)
 			self.a_label.draw(self.surface)
 
 		# draws the interval label (indicates refresh rate)
-		self.intervallabelshadow.draw(self.surface)
-		self.intervallabel.draw(self.surface)
+		#self.intervallabelshadow.draw(self.surface)
+		#self.intervallabel.draw(self.surface)
 
 		#draws UI to frame buffer
 
@@ -573,14 +680,36 @@ class Graph_Screen(object):
 
 		status  = "mode_a"
 
+
+		# The following code handles inputs and button presses.
 		keys = self.input.read()
 
+		# if a key is registering as pressed.
 		if keys[0]:
-			if self.input.is_down(0):
-				self.selection += 1
+			# if this key wasn't pressed previously
+			if not self.input.waspressed[0]:
+				# mark it as now being pressed.
+				self.input.waspressed[0] = True
 
-				if self.selection > 3:
-					self.selection = 0
+				# note the time it was first logged as pressed.
+				self.input_timer.logtime()
+
+			# if the key has been pressed for longer than the desired interval
+			# do a longpress action.
+			if self.input_timer.timelapsed() > self.presstime:
+				configure.last_status[0] = "mode_a"
+				status = "settings"
+
+		else:
+			if self.input.waspressed[0]:
+				self.input.waspressed[0] = False
+				if self.input_timer.timelapsed() < self.presstime:
+					self.selection += 1
+
+					if self.selection > 3:
+						self.selection = 0
+				self.input_timer.logtime()
+
 
 		if keys[1]:
 			if self.input.is_down(1):
@@ -624,6 +753,8 @@ class Slider_Screen(object):
 		self.slider3 = Image()
 		self.status = "mode_b"
 		self.input = input
+
+
 
 	def frame(self,sensors):
 
@@ -719,6 +850,10 @@ class Screen(object):
 
 	def startup_screen(self,start_time):
 		status = startUp(self.surface,start_time)
+		return status
+
+	def about_screen(self):
+		status = about()
 		return status
 
 	def slider_screen(self,sensors):

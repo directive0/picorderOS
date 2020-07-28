@@ -39,6 +39,7 @@ if configure.tr109:
 	led2 = 20 #6 # Broadcom pin 13
 	led3 = 6 #20
 	led4 = 19 #16
+	sc_led = 15
 
 	# Pin Setup:
 	GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
@@ -46,6 +47,7 @@ if configure.tr109:
 	GPIO.setup(led2, GPIO.OUT) # LED pin set as output
 	GPIO.setup(led3, GPIO.OUT) # LED pin set as output
 	GPIO.setup(led4, GPIO.OUT) # LED pin set as output
+	GPIO.setup(sc_led, GPIO.OUT)
 
 
 # a function to clear the gpio
@@ -64,33 +66,39 @@ def resetleds():
 		GPIO.output(led2, GPIO.LOW)
 		GPIO.output(led3, GPIO.LOW)
 		GPIO.output(led4, GPIO.LOW)
-
+		GPIO.output(sc_led, GPIO.LOW)
 # The following set of functions are for activating each LED individually.
 # I figured it was easier than having different functions for different combinations.
 # This way you can just manually set them as you please.
+def screen_on():
+	GPIO.output(sc_led, GPIO.HIGH)
+
 def leda_on():
-	GPIO.output(led1, GPIO.LOW)
-
-def ledb_on():
-	GPIO.output(led2, GPIO.LOW)
-
-def ledc_on():
-	GPIO.output(led3, GPIO.LOW)
-
-def ledd_on():
-	GPIO.output(led4, GPIO.LOW)
-
-def leda_off():
 	GPIO.output(led1, GPIO.HIGH)
 
-def ledb_off():
+def ledb_on():
 	GPIO.output(led2, GPIO.HIGH)
 
-def ledc_off():
+def ledc_on():
 	GPIO.output(led3, GPIO.HIGH)
 
-def ledd_off():
+def ledd_on():
 	GPIO.output(led4, GPIO.HIGH)
+
+def leda_off():
+	GPIO.output(led1, GPIO.LOW)
+
+def ledb_off():
+	GPIO.output(led2, GPIO.LOW)
+
+def ledc_off():
+	GPIO.output(led3, GPIO.LOW)
+
+def ledd_off():
+	GPIO.output(led4, GPIO.LOW)
+
+def screen_off():
+	GPIO.output(sc_led, GPIO.LOW)
 
 class ripple(object):
 	def __init__(self):
@@ -99,7 +107,7 @@ class ripple(object):
 		pass
 
 	def cycle(self):
-
+		screen_on()
 		if configure.leds[0]:
 			self.beat += 1
 

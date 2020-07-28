@@ -133,9 +133,10 @@ def Main():
 
 					if configure.tr108:
 						status = PyScreen.slider_screen(data)
-						leda_off()
-						ledb_on()
-						ledc_off()
+						if not configure.pc:
+							leda_off()
+							ledb_on()
+							ledc_off()
 
 
 					if configure.tr109:
@@ -153,9 +154,10 @@ def Main():
 				#print(status)
 				if configure.tr108:
 					status = PyScreen.settings()
-					leda_off()
-					ledb_off()
-					ledc_on()
+					if not configure.pc:
+						leda_off()
+						ledb_off()
+						ledc_on()
 
 				if configure.tr109:
 					if configure.display == "0":

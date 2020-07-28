@@ -19,6 +19,6 @@ PicorderOS requires a number of exotic modules to operate, specifically:
 - [Sensehat](https://projects.raspberrypi.org/en/projects/getting-started-with-the-sense-hat/2)
 - [RPi.GPIO](https://pypi.org/project/RPi.GPIO/)
 - [os](https://pythonprogramming.net/python-3-os-module/)
-- [psutil](https://psutil.readthedocs.io/en/latest/) (PC Demo only)
+- [psutil](https://psutil.readthedocs.io/en/latest/) (For simulating sensors when testing or demonstrating)
 
 Be sure you have these modules installed before attempting to run picorderOS.

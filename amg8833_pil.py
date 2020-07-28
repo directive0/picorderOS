@@ -34,7 +34,9 @@ if not configure.pc:
 	import busio
 	import board
 	import adafruit_amg88xx
+	import sensors
 
+if configure.amg8833:
 	i2c = busio.I2C(board.SCL, board.SDA)
 	amg = adafruit_amg88xx.AMG88XX(i2c)
 
@@ -177,7 +179,7 @@ class ThermalGrid(object):
 
 
 	def update(self):
-		if not configure.pc:
+		if not configure.simulate and configure.amg8833:
 			self.data = amg.pixels
 		else:
 			self.data = self.animate()#makegrid()

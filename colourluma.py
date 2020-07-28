@@ -192,7 +192,8 @@ class SelectableLabel(LabelObj):
 class SettingsFrame(object):
 	def __init__(self,input):
 
-		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto], ["LEDs", configure.leds]]
+		# pages holds all the configuration items that are offered to toggle.
+		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto], ["LEDs", configure.leds],["Log Data", configure.logdata]]
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
@@ -202,6 +203,7 @@ class SettingsFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 
+		# holds the page number
 		self.selection = 0
 
 		self.input = Inputs()
@@ -223,6 +225,7 @@ class SettingsFrame(object):
 		# device needs to show multiple settings
 		# first the sensor palette configuration
 
+	# toggle is used to change the target configuration item. Whatever type of item it is the toggle function should change it properly.
 	def toggle(self,oper):
 
 		# if the parameter supplied is a boolean
@@ -240,6 +243,7 @@ class SettingsFrame(object):
 			if oper[0] > configure.max_sensors[0]-1:
 				oper[0] = 0
 
+		# return the new state
 		return oper[0]
 
 
@@ -255,6 +259,7 @@ class SettingsFrame(object):
 		self.itemlabel.push(self.titlex,self.titley+20)
 
 
+		# draw the tips for the button uses at the bottom of the screen
 		self.A_Label = LabelObj("Next",font,draw,colour = lcars_blue)
 		self.A_Label.push(23,self.labely)
 
@@ -265,9 +270,12 @@ class SettingsFrame(object):
 		self.C_DataLabel.r_align(156,self.labely)
 
 
-		#draw the 3 graph parameter items
+		# if the current selection is the first to third page (only defines the behaviour of the first 3 pages in this case the 3 multigraph graphs).
 		if self.selection == 0 or self.selection == 1 or self.selection == 2:
+
+			# grab the name of the sensor that is currently being used to draw this items particular graph
 			test = configure.sensor_info[self.pages[self.selection][1][0]][3]
+
 			self.item = LabelObj(str(test),bigfont,draw,colour = lcars_pink)
 			self.item.push(self.titlex,self.titley+40)
 		else:

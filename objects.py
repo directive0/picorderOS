@@ -11,6 +11,8 @@ class preferences(object):
 
 	#determines device ("pc", "tr108", "tr109")
 	def __init__(self):
+		self.version = "v0.01"
+		self.author = "Developed by Chris Barrett"
 
 		# holds the global state of the program (allows secondary modules to quit the program should we require it)
 		self.status = "startup"
@@ -22,21 +24,20 @@ class preferences(object):
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
-		self.tr108 = False
-		self.tr109 = True
+		self.tr108 = True
+		self.tr109 = False
 
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = True
 		self.input_gpio = False
 		self.input_cap = False
 
-		# bit controls the onboard LEDS. Easy to turn them off if need be.
+		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
 		self.leds = [False]
 		self.neopixel = [False]
 
-
-		# bit controls auto ranging of graphs
+		# flag controls auto ranging of graphs
 		self.auto = [True]
 
 		# chooses SPI display (0 for nokia 5110, 1 for st7735)
@@ -54,13 +55,17 @@ class preferences(object):
 		self.amg8833 = True
 		self.sensehat = False
 
-
-
 		#selects the three sensor targets to plot
 		self.sensor1 = [0]
 		self.sensor2 = [1]
 		self.sensor3 = [2]
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
+
+		# this flag can be used to signal to the rest of the program that then
+		# sensor arrangement has been altered, allowing the program to adjust
+		# background elements if needed.
+		self.sensorschanged = [False]
+
 
 		self.logdata = [False]
 		self.samplerate = [0]

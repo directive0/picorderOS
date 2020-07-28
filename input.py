@@ -11,12 +11,10 @@ print("Loading Unified Input Module")
 
 # array needs:
 
-
 # geo, met and bio are going to be standard across all trics.
 
 
 from objects import *
-
 
 # array holds the pin#s for each hard coded button on the tric
 # The TR-108 only has 3 buttons
@@ -61,8 +59,8 @@ if configure.input_cap:
 	# Create I2C bus.
 	i2c = busio.I2C(board.SCL, board.SDA)
 
-	# Create MPR121 object.
-	mpr121 = adafruit_mpr121.MPR121(i2c, address = 0x5B)
+	# Create MPR121 object. Address can be 5A or 5B (proto uses 5A)
+	mpr121 = adafruit_mpr121.MPR121(i2c, address = 0x5A)
 
 # the input class handles all the requirements for handling user directed inputs
 class Inputs(object):
@@ -77,15 +75,22 @@ class Inputs(object):
 		# down stores the first moment of activation, for instances where falling edge detection is required
 		self.down = []
 
+		# up stores the return to being not pressed
+		self.up = []
+
+		# waspressed stores information about previous state
+		self.waspressed = []
+
 		# this list stores the final state of all buttons to allow the program to check for multiple button presses for hidden features
 		self.buttonlist = []
-
 
 		# prepares these lists for the script
 		for i in range(buttons):
 			self.fired.append(False)
 			self.buttonlist.append(False)
-			self.down.append(True)
+			self.down.append(False)
+			self.up.append(True)
+			self.waspressed.append(False)
 
 		self.awaspressed = False
 		self.bwaspressed = False
@@ -101,8 +106,13 @@ class Inputs(object):
 		else:
 			return False
 
-	def read(self):
+	def is_up(self, i):
+		if not self.down[i]:
+			return True
+		else:
+			return False
 
+	def read(self):
 		if configure.input_kb:
 			# the following button inputs allow the test program to run on PC and be interactive.
 			key = self.keypress()
@@ -110,6 +120,7 @@ class Inputs(object):
 
 			if key[pygame.K_LEFT] and not self.awaspressed:
 					self.buttonlist[0] = True
+					self.waspressed[0] = True
 					self.awaspressed = True
 
 			if not key[pygame.K_LEFT] and self.awaspressed:
@@ -163,8 +174,6 @@ class Inputs(object):
 				if self.fired[i] and not touched[i]:  # Fire button released
 					self.fired[i] = False
 					self.buttonlist[i] = False
-
-
 
 				pass
 

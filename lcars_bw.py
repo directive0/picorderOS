@@ -96,10 +96,6 @@ class MultiFrame(object):
 		self.titlesizex, self.titlesizey = self.title.getsize()
 		self.barlength = (79 - (4+ self.titlesizex)) + 2
 
-	# this function grabs the sensor values and puts them in an object for us to use.
-	def sense(self):
-		pass
-
 	# this function updates the graph for the screen
 	def graphs(self):
 
