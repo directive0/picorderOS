@@ -20,10 +20,12 @@ if not configure.pc:
 	# load up the LED indicator module and sensors.
 	from leds import *
 	from sensehat import *
+	from sensors import *
 else:
 	# otherwise load up the demonstration and dummy modules that emulate sensors and pass GPIO signals without requiring any real GPIO.
-	from getcpu import *
+	#from getcpu import *
 	from gpiodummy import *
+
 
 # The following are only loaded in TR-108 mode
 if configure.tr108:
