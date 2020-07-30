@@ -485,19 +485,16 @@ class Settings_Panel(object):
 		keys = self.input.read()
 
 		if keys[0]:
-			if self.input.is_down(0):
-				self.index += 1
+			self.index += 1
 
-				if self.index > (len(self.options) - 1):
-					self.index = 0
+			if self.index > (len(self.options) - 1):
+				self.index = 0
 
 		if keys[1]:
-			if self.input.is_down(1):
-				self.options[self.index].toggle()
+			self.options[self.index].toggle()
 
 		if keys[2]:
-			if self.input.is_down(2):
-				result = configure.last_status[0]
+			result = configure.last_status[0]
 
 		return result
 
@@ -686,40 +683,20 @@ class Graph_Screen(object):
 
 		# if a key is registering as pressed.
 		if keys[0]:
-			# if this key wasn't pressed previously
-			if not self.input.waspressed[0]:
-				# mark it as now being pressed.
-				self.input.waspressed[0] = True
+			self.selection += 1
+			if self.selection > 3:
+				self.selection = 0
 
-				# note the time it was first logged as pressed.
-				self.input_timer.logtime()
-
-			# if the key has been pressed for longer than the desired interval
-			# do a longpress action.
-			if self.input_timer.timelapsed() > self.presstime:
-				configure.last_status[0] = "mode_a"
-				status = "settings"
-
-		else:
-			if self.input.waspressed[0]:
-				self.input.waspressed[0] = False
-				if self.input_timer.timelapsed() < self.presstime:
-					self.selection += 1
-
-					if self.selection > 3:
-						self.selection = 0
-				self.input_timer.logtime()
-
+		if self.input.holding[0]:
+			configure.last_status[0] = "mode_a"
+			status = "settings"
 
 		if keys[1]:
-			if self.input.is_down(1):
-				status =  "mode_b"
+			status =  "mode_b"
 
 		if keys[2]:
-			if self.input.is_down(2):
-
-				configure.last_status[0] = "mode_a"
-				status = "settings"
+			configure.last_status[0] = "mode_a"
+			status = "settings"
 
 		return status
 
@@ -804,13 +781,11 @@ class Slider_Screen(object):
 		keys = self.input.read()
 
 		if keys[0]:
-			if self.input.is_down(0):
-				status =  "mode_a"
+			status =  "mode_a"
 
 		if keys[2]:
-			if self.input.is_down(2):
-				configure.last_status[0] = "mode_b"
-				status = "settings"
+			configure.last_status[0] = "mode_b"
+			status = "settings"
 
 
 		pygame.display.flip()
@@ -849,7 +824,6 @@ class Screen(object):
 
 
 	def startup_screen(self,start_time):
-		print("in startup")
 		status = startUp(self.surface,start_time)
 		return status
 

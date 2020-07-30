@@ -7,7 +7,7 @@ import time
 
 
 # the following is a sensor module for use with the PicorderOS
-print("Loading Unified Sensor Module!")
+print("Loading Unified Sensor Module")
 
 if configure.bme:
 	import bme680
@@ -171,6 +171,17 @@ class Sensor(object):
 		self.steptan += .1
 		#print(wavestep)
 		return wavestep
+
+	def sin2_gen(self, offset = 0):
+		wavestep = math.sin(self.step2)
+		self.step2 += .05
+		return wavestep
+
+	def cos_gen(self, offset = 0):
+		wavestep = math.cos(self.step)
+		self.step += .1
+		return wavestep
+
 
 	def get(self):
 		sensorlist = []

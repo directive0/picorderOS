@@ -8,10 +8,10 @@
 # Support multiple sensor options across all platforms (BME680, AMG8833, sensehat)
 
 print("PicorderOS - Alpha")
-print("Loading Main Script")
+print("Loading Components")
 
 from objects import *
-
+from sensors import *
 
 # This part loads the appropriate modules depending on which preference flags are set.
 
@@ -20,7 +20,7 @@ if not configure.pc:
 	# load up the LED indicator module and sensors.
 	from leds import *
 	from sensehat import *
-	from sensors import *
+	#from sensors import *
 else:
 	# otherwise load up the demonstration and dummy modules that emulate sensors and pass GPIO signals without requiring any real GPIO.
 	#from getcpu import *
@@ -80,20 +80,18 @@ def Main():
 	print("Main Loop Starting")
 	# The following while loop catches ctrl-c exceptions. I use this structure so that status changes will loop back around and have a chance to activate different functions. It gets a little weird going forward, bear with me.
 	while status != "quit":
-		print("made loop")
+
 		# try allows us to capture a keyboard interrupt and assign behaviours.
 		try:
 			# Runs the startup animation played when you first boot the program.
 
 			# Create a timer object to time things.
 			start_time = time.time()
-			#print("status is: ", configure.status)
-			print("looping")
+
 			while status == "startup":
 				status = "mode_a"
-				print("mode_a")
+
 				if configure.tr108:
-					print("pystartup")
 					status = PyScreen.startup_screen(start_time)
 
 			if status == "ready":
