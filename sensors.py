@@ -28,7 +28,7 @@ if configure.sensehat:
 	# activates low light conditions to not blind the user.
 	sense.low_light = True
 
-if configure.amg8833:# and not configure.simulate:
+if configure.amg8833: # and not configure.simulate:
 	import busio
 	import board
 	import adafruit_amg88xx
@@ -36,8 +36,6 @@ if configure.amg8833:# and not configure.simulate:
 	i2c = busio.I2C(board.SCL, board.SDA)
 	amg = adafruit_amg88xx.AMG88XX(i2c)
 
-if configure.bme and not configure.simulate:
-	import bme680
 
 # These imports are for the Sin and Tan waveform generators
 if configure.system_vitals:

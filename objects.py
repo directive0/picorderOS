@@ -24,8 +24,8 @@ class preferences(object):
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
-		self.tr108 = True
-		self.tr109 = False
+		self.tr108 = False
+		self.tr109 = True
 
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = True
@@ -51,8 +51,8 @@ class preferences(object):
 		self.max_sensors = [9]
 
 		# Toggles individual sensor support
-		self.bme = False
-		self.amg8833 = False
+		self.bme = True
+		self.amg8833 = True
 		self.sensehat = False
 		self.envirophat = False
 		self.system_vitals = True
