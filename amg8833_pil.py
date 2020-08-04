@@ -2,8 +2,7 @@ print("Loading AMG8833 Thermal Camera Module")
 #import pygame
 import random
 import math
-import busio
-import board
+
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
 from PIL import Image
@@ -31,13 +30,12 @@ colrange = list(cool.range_to(hot, 256))
 
 from objects import *
 
-#if not configure.pc:
-import busio
-import board
-import adafruit_amg88xx
 import sensors
 
 if configure.amg8833:
+	import adafruit_amg88xx
+	import busio
+	import board
 	i2c = busio.I2C(board.SCL, board.SDA)
 	amg = adafruit_amg88xx.AMG88XX(i2c)
 

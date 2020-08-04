@@ -273,21 +273,15 @@ class SettingsFrame(object):
 		keys = self.input.read()
 
 		if keys[0]:
-			if self.input.is_down(0):
-				print("Input1")
-				self.selection = self.selection + 1
-				if self.selection > (len(self.pages) - 1):
-					self.selection = 0
+			self.selection = self.selection + 1
+			if self.selection > (len(self.pages) - 1):
+				self.selection = 0
 
 		if keys[1]:
-			if self.input.is_down(1):
-				#print(self.pages[self.selection])
-				self.toggle(self.pages[self.selection][1])
+			self.toggle(self.pages[self.selection][1])
 
 		if keys[2]:
-			if self.input.is_down(2):
-				print("Input3")
-				status = configure.last_status[0]
+			status = configure.last_status[0]
 
 		return status
 
@@ -454,25 +448,22 @@ class MultiFrame(object):
 		status  = "mode_a"
 
 		keys = self.input.read()
-
+		# if a key is registering as pressed.
 		if keys[0]:
-			if self.input.is_down(0):
-				print("Input1")
-				self.selection = self.selection + 1
-				if self.selection > 3:
-					self.selection = 0
+			self.selection += 1
+			if self.selection > 3:
+				self.selection = 0
+
+		if self.input.holding[0]:
+			configure.last_status[0] = "mode_a"
+			status = "settings"
 
 		if keys[1]:
-			if self.input.is_down(1):
-				print("Input2")
-				status  = "mode_b"
-
+			status =  "mode_b"
 
 		if keys[2]:
-			if self.input.is_down(2):
-				print("Input3")
-				status = "settings"
-				configure.last_status[0] = "mode_a"
+			configure.last_status[0] = "mode_a"
+			status = "settings"
 
 		return status
 # governs the screen drawing of the entire program. Everything flows through Screen.
@@ -574,22 +565,16 @@ class ThermalFrame(object):
 
 		# ------------- Input handling -------------- #
 		if keys[0]:
-			if self.input.is_down(0):
-				print("Input1")
-				status  = "mode_a"
+			status  = "mode_a"
 
 		if keys[1]:
-			if self.input.is_down(1):
-				print("Input2")
-				self.selection += 1
-				if self.selection > 1:
-					self.selection = 0
+			self.selection += 1
+			if self.selection > 1:
+				self.selection = 0
 
 		if keys[2]:
-			if self.input.is_down(2):
-				print("Input3")
-				status = "settings"
-				configure.last_status[0] = "mode_b"
+			status = "settings"
+			configure.last_status[0] = "mode_b"
 
 		return status
 
