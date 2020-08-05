@@ -17,7 +17,7 @@ from sensors import *
 
 # If we are NOT just running on a computer for development or demo purposes.
 if not configure.pc:
-	# load up the LED indicator module and sensors.
+	# load up the LED indicator module and sensors that require GPIO.
 	from leds import *
 	from sensehat import *
 	#from sensors import *

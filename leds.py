@@ -8,17 +8,33 @@ import RPi.GPIO as GPIO
 
 from objects import *
 
+
+PIN_DATA  = 26
+PIN_LATCH = 21
+PIN_CLOCK = 20
+
+GPIO.setup(PIN_DATA,  GPIO.OUT)
+GPIO.setup(PIN_LATCH, GPIO.OUT)
+GPIO.setup(PIN_CLOCK, GPIO.OUT)
+
+
 if configure.neopixel:
 #	import board
 #	import neopixel
-
 	pwr = 0
 	alpha = 1
 	beta = 2
 	delta = 3
 	gamma = 4
 
-
+# delivers data to the shift register
+def shiftout(byte):
+	GPIO.output(PIN_LATCH, 0)
+	for x in range(8)
+		GPIO.output(PIN_DATA, (byte >> x) & 1)
+		GPIO.output(PIN_CLOCK, 1)
+		GPIO.output(PIN_CLOCK, 0)
+	GPIO.output(PIN_LATCH, 1)
 
 # loads the pin configurations and modes for the tr-108  (3 leds)
 if configure.tr108:

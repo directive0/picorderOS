@@ -16,7 +16,7 @@ print("Loading Unified Input Module")
 
 from objects import *
 
-# array holds the pin#s for each hard coded button on the tric
+# array holds the pins for each hard coded button on the tric
 # The TR-108 only has 3 buttons
 
 # Max number of buttons
