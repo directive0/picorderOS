@@ -28,6 +28,7 @@ cool = Color("blue")
 hot = Color("red")
 colrange = list(cool.range_to(hot, 256))
 
+rotate = True
 from objects import *
 
 import sensors
@@ -109,7 +110,23 @@ class ThermalPixel(object):
 		#surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (int(color),int(color),int(color)), outline=None)
 		surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (red,green,blue), outline=None)
 
+class ThermalColumns(object):
 
+	def __init__(self,x,y,w,h):
+		self.x = x
+		self.y = y
+		self.w = w
+		self.h = h
+
+		self.pixels = []
+
+		for i in range(8):
+			self.pixels.append(ThermalPixel(self.x, self.y + (i * (h/8)), self.w, self.h / 8))
+
+	#[10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0]
+	def update(self,data,high,low,surface):
+		for i in range(8):
+			self.pixels[i].update(data[i],high, low, surface)
 
 class ThermalRows(object):
 
@@ -182,6 +199,9 @@ class ThermalGrid(object):
 			self.data = amg.pixels
 		else:
 			self.data = self.animate()#makegrid()
+
+		if rotate:
+			self.data = list(reversed(list(zip(*self.data))))
 
 		thisaverage = 0
 		rangemax = []
