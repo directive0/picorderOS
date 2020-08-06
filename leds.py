@@ -83,38 +83,43 @@ def resetleds():
 		GPIO.output(led3, GPIO.LOW)
 		GPIO.output(led4, GPIO.LOW)
 		GPIO.output(sc_led, GPIO.LOW)
-# The following set of functions are for activating each LED individually.
-# I figured it was easier than having different functions for different combinations.
-# This way you can just manually set them as you please.
-def screen_on():
-	GPIO.output(sc_led, GPIO.HIGH)
 
-def leda_on():
-	GPIO.output(led1, GPIO.HIGH)
 
-def ledb_on():
-	GPIO.output(led2, GPIO.HIGH)
 
-def ledc_on():
-	GPIO.output(led3, GPIO.HIGH)
 
-def ledd_on():
-	GPIO.output(led4, GPIO.HIGH)
 
-def leda_off():
-	GPIO.output(led1, GPIO.LOW)
-
-def ledb_off():
-	GPIO.output(led2, GPIO.LOW)
-
-def ledc_off():
-	GPIO.output(led3, GPIO.LOW)
-
-def ledd_off():
-	GPIO.output(led4, GPIO.LOW)
-
-def screen_off():
-	GPIO.output(sc_led, GPIO.LOW)
+# # The following set of functions are for activating each LED individually.
+# # I figured it was easier than having different functions for different combinations.
+# # This way you can just manually set them as you please.
+# def screen_on():
+# 	GPIO.output(sc_led, GPIO.HIGH)
+#
+# def leda_on():
+# 	GPIO.output(led1, GPIO.HIGH)
+#
+# def ledb_on():
+# 	GPIO.output(led2, GPIO.HIGH)
+#
+# def ledc_on():
+# 	GPIO.output(led3, GPIO.HIGH)
+#
+# def ledd_on():
+# 	GPIO.output(led4, GPIO.HIGH)
+#
+# def leda_off():
+# 	GPIO.output(led1, GPIO.LOW)
+#
+# def ledb_off():
+# 	GPIO.output(led2, GPIO.LOW)
+#
+# def ledc_off():
+# 	GPIO.output(led3, GPIO.LOW)
+#
+# def ledd_off():
+# 	GPIO.output(led4, GPIO.LOW)
+#
+# def screen_off():
+# 	GPIO.output(sc_led, GPIO.LOW)
 
 class ripple(object):
 	def __init__(self):
@@ -123,6 +128,7 @@ class ripple(object):
 		pass
 
 	def cycle(self):
+
 		screen_on()
 		if configure.leds[0]:
 			self.beat += 1
@@ -131,27 +137,15 @@ class ripple(object):
 				self.beat = 0
 
 			if self.beat == 0:
-				leda_on()
-				ledb_off()
-				ledc_off()
-				ledd_off()
+				shiftout(1)
 
 			if self.beat == 1:
-				leda_off()
-				ledb_on()
-				ledc_off()
-				ledd_off()
+				shiftout(2)
 
 			if self.beat == 2:
-				leda_off()
-				ledb_off()
-				ledc_on()
-				ledd_off()
+				shiftout(3)
 
 			if self.beat == 3:
-				leda_off()
-				ledb_off()
-				ledc_off()
-				ledd_on()
+				shiftout(4)
 		else:
 			resetleds()

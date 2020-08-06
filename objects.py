@@ -53,6 +53,7 @@ class preferences(object):
 		# Toggles individual sensor support
 		self.bme = False
 		self.amg8833 = False
+		self.ir_thermo = False
 		self.sensehat = False
 		self.envirophat = False
 		self.system_vitals = True
