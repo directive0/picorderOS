@@ -51,9 +51,9 @@ class preferences(object):
 		self.max_sensors = [9]
 
 		# Toggles individual sensor support
-		self.bme = False
-		self.amg8833 = False
-		self.ir_thermo = False
+		self.bme = True
+		self.amg8833 = True
+		self.ir_thermo = True
 		self.sensehat = False
 		self.envirophat = False
 		self.system_vitals = True

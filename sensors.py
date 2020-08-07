@@ -200,7 +200,7 @@ class Sensor(object):
 			#return sensorlist
 
 		#print("retrieving sensor data")
-		if configure.bme and self.bme.get_sensor_data():# and not configure.simulate:
+		if configure.bme and self.bme.get_sensor_data():
 
 			sense_data = [self.bme.data.temperature]
 			sense_data2 = [self.bme.data.pressure]
@@ -215,10 +215,9 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4]
 
 			#print(sensorlist)
-			configure.max_sensors[0] = len(sensorlist)
 			#return sensorlist
 
-		if configure.sensehat:# and not configure.simulate:
+		if configure.sensehat:
 			sense_data = [sense.get_temperature()]
 			sense_data2 = [sense.get_pressure()]
 			sense_data3 = [sense.get_humidity()]
@@ -244,8 +243,8 @@ class Sensor(object):
 
 
 		if configure.ir_thermo:
-			ambient = self.mlx.ambient_temperature
-			objectir = self.mlx.object_temperature
+			ambient = [self.mlx.ambient_temperature]
+			objectir = [self.mlx.object_temperature]
 
 			item1 = ambient + self.ir_thermo_ambient
 			item2 = objectir + self.ir_thermo_object
@@ -304,6 +303,8 @@ class Sensor(object):
 			item8 = dummyload8 + self.infoh
 
 			sensorlist += [item1, item2, item3, item4, item5,item6, item7, item8]
+			configure.max_sensors[0] = len(sensorlist)
+
 		return sensorlist
 
 class MLX90614():
