@@ -38,8 +38,9 @@ if configure.amg8833: # and not configure.simulate:
 
 # support for the MLX90614 IR Thermo
 if configure.ir_thermo:
-	import smbus
-	from time import sleep
+	import board
+	import busio as io
+	import adafruit_mlx90614
 
 # These imports are for the Sin and Tan waveform generators
 if configure.system_vitals:
@@ -134,11 +135,14 @@ class Sensor(object):
 
 
 		if configure.amg8833: # and not configure.simulate:
-			self.amg_info = [0,80,"IR Thermal",self.deg_sym + "c"]
+			self.amg_info = [0,80,"IR [amg]",self.deg_sym + "c"]
 
 
 		if configure.ir_thermo:
-			pass
+			i2c = io.I2C(board.SCL, board.SDA, frequency=100000)
+			self.mlx = adafruit_mlx90614.MLX90614(i2c)
+			self.ir_thermo_ambient = [0,80,"IR ambient [mlx]",self.deg_sym + "c"]
+			self.ir_thermo_object = [0,80,"IR object [mlx]",self.deg_sym + "c"]
 
 		if configure.envirophat: # and not configure.simulate:
 
@@ -238,13 +242,21 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 
-			#return sensorlist
 
-		if configure.amg8833:# and not configure.simulate:
+		if configure.ir_thermo:
+			ambient = self.mlx.ambient_temperature
+			objectir = self.mlx.object_temperature
+
+			item1 = ambient + self.ir_thermo_ambient
+			item2 = objectir + self.ir_thermo_object
+
+			sensorlist += [item1, item2]
+
+		if configure.amg8833:
 			sense_data = amg.pixels
 			item1 = sense_data + self.amg_info
 
-		if configure.envirophat:# and not configure.simulate:
+		if configure.envirophat:
 			self.rgb = light.rgb()
 			self.analog_values = analog.read_all()
 			self.mag_values = motion.magnetometer()
