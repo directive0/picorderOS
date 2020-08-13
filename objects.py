@@ -19,7 +19,7 @@ class preferences(object):
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
-		self.pc = True
+		self.pc = False
 
 
 		# These two bits determine the target device (Original picorder or new version)
@@ -28,13 +28,13 @@ class preferences(object):
 		self.tr109 = True
 
 		# testing this setting to switch between Pygame controls and gpio ones
-		self.input_kb = True
+		self.input_kb = False
 		self.input_gpio = False
-		self.input_cap = False
+		self.input_cap = True
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
-		self.leds = [False]
+		self.leds = [True]
 		self.neopixel = [False]
 
 		# flag controls auto ranging of graphs
@@ -51,11 +51,11 @@ class preferences(object):
 		self.max_sensors = [9]
 
 		# Toggles individual sensor support
-		self.bme = True
-		self.amg8833 = True
-		self.ir_thermo = True
+		self.bme = False
+		self.amg8833 = False
+		self.ir_thermo = False
 		self.sensehat = False
-		self.envirophat = False
+		self.envirophat = True
 		self.system_vitals = True
 
 		#selects the three sensor targets to plot

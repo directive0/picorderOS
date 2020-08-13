@@ -9,10 +9,11 @@ import RPi.GPIO as GPIO
 from objects import *
 
 
-PIN_DATA  = 26
-PIN_LATCH = 21
-PIN_CLOCK = 20
+PIN_DATA  = 16
+PIN_LATCH = 20
+PIN_CLOCK = 6
 
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_DATA,  GPIO.OUT)
 GPIO.setup(PIN_LATCH, GPIO.OUT)
 GPIO.setup(PIN_CLOCK, GPIO.OUT)
@@ -30,7 +31,7 @@ if configure.neopixel:
 # delivers data to the shift register
 def shiftout(byte):
 	GPIO.output(PIN_LATCH, 0)
-	for x in range(8)
+	for x in range(8):
 		GPIO.output(PIN_DATA, (byte >> x) & 1)
 		GPIO.output(PIN_CLOCK, 1)
 		GPIO.output(PIN_CLOCK, 0)
@@ -91,8 +92,8 @@ def resetleds():
 # # The following set of functions are for activating each LED individually.
 # # I figured it was easier than having different functions for different combinations.
 # # This way you can just manually set them as you please.
-# def screen_on():
-# 	GPIO.output(sc_led, GPIO.HIGH)
+def screen_on():
+	GPIO.output(sc_led, GPIO.HIGH)
 #
 # def leda_on():
 # 	GPIO.output(led1, GPIO.HIGH)
@@ -118,8 +119,8 @@ def resetleds():
 # def ledd_off():
 # 	GPIO.output(led4, GPIO.LOW)
 #
-# def screen_off():
-# 	GPIO.output(sc_led, GPIO.LOW)
+def screen_off():
+	GPIO.output(sc_led, GPIO.LOW)
 
 class ripple(object):
 	def __init__(self):
@@ -137,15 +138,16 @@ class ripple(object):
 				self.beat = 0
 
 			if self.beat == 0:
-				shiftout(1)
+				shiftout(128)
 
 			if self.beat == 1:
-				shiftout(2)
+				shiftout(64)
 
 			if self.beat == 2:
-				shiftout(3)
+				shiftout(32)
 
 			if self.beat == 3:
-				shiftout(4)
+				shiftout(16)
 		else:
 			resetleds()
+			screen_off()

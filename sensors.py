@@ -36,6 +36,9 @@ if configure.amg8833: # and not configure.simulate:
 	i2c = busio.I2C(board.SCL, board.SDA)
 	amg = adafruit_amg88xx.AMG88XX(i2c)
 
+if configure.envirophat:
+	from envirophat import light, weather, motion, analog
+
 # support for the MLX90614 IR Thermo
 if configure.ir_thermo:
 	import board
