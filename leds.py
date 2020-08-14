@@ -73,6 +73,7 @@ def cleangpio():
 
 # a function to clear the LEDs
 def resetleds():
+	shiftout(0)
 	if configure.tr108:
 		GPIO.output(led1, GPIO.LOW)
 		GPIO.output(led2, GPIO.LOW)
@@ -149,5 +150,7 @@ class ripple(object):
 			if self.beat == 3:
 				shiftout(16)
 		else:
+			print("leds shutting down")
 			resetleds()
+			shiftout(0)
 			screen_off()

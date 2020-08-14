@@ -1,4 +1,4 @@
-
+\
 print("Loading Unified Input Module")
 # This script retrieves and packages all input events that might be useful to the program
 # The input object checks the configuration object and returns an array of button inputs.
@@ -25,6 +25,10 @@ from objects import *
 
 # stores the number of buttons to be queried
 buttons = 15
+
+threshold = 3
+release_threshold = 2
+
 
 # if tr108 set up pins
 if configure.tr108:
@@ -61,7 +65,11 @@ if configure.input_cap:
 
 	# Create MPR121 object. Address can be 5A or 5B (proto uses 5A)
 	mpr121 = adafruit_mpr121.MPR121(i2c, address = 0x5A)
-
+	
+	for i in range(3):
+		test = adafruit_mpr121.MPR121_Channel(mpr121,i)
+		test.threshold = threshold
+		test.release_threshold = release_threshold
 # the input class handles all the requirements for handling user directed inputs
 class Inputs(object):
 
