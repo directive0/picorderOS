@@ -65,7 +65,7 @@ if configure.input_cap:
 
 	# Create MPR121 object. Address can be 5A or 5B (proto uses 5A)
 	mpr121 = adafruit_mpr121.MPR121(i2c, address = 0x5A)
-	
+
 	for i in range(3):
 		test = adafruit_mpr121.MPR121_Channel(mpr121,i)
 		test.threshold = threshold
@@ -230,18 +230,24 @@ class Inputs(object):
 
 			# runs a loop to check each possible button
 			for i in range(len(touched)):
-
 				# if the button has not been registered as pressed
-				if not self.fired[i] and touched[i]:  # button pressed
-					self.fired[i] = True
-					self.buttonlist[i] = True
-					self.down[i] = True
+				if touched[i]:  # button pressed
+					if not self.waspressed[i]:
+						self.waspressed[i] = True
+						self.holdtimers[i].logtime()
+					else:
 
-				if self.fired[i] and not touched[i]:  # Fire button released
-					self.fired[i] = False
-					self.buttonlist[i] = False
+						if self.holdtimers[i].timelapsed() > self.thresh_hold:
+							self.holding[i] = True
 
-				pass
+				if not touched[i]:
+					self.holding[i] = False
+					if self.waspressed[i]:
+						self.buttonlist[i] = True
+						self.waspressed[i] = False
+					else:
+						self.buttonlist[i] = False
+
 
 		#print(self.buttonlist)
 		return self.buttonlist
