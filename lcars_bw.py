@@ -129,6 +129,7 @@ class MultiFrame(object):
 		self.titlex = self.divider + 7
 
 		raw_a = str(self.A_Data)
+		print("raw a is ", raw_a)
 		adjusted_a = self.arrangelabel(raw_a)
 		a_string = adjusted_a + self.sensors[configure.sensor1[0]][4]
 
@@ -167,7 +168,7 @@ class MultiFrame(object):
 
 		self.title.push(self.barlength + 2,-1)
 		self.sensors = sensors
-		self.sense()
+		#self.sense()
 		self.graphs()
 		self.labels()
 

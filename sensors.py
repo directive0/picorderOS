@@ -41,12 +41,12 @@ if configure.envirophat:
 
 # support for the MLX90614 IR Thermo
 if configure.ir_thermo:
-	import board
-	import busio as io
-	import adafruit_mlx90614
+	import smbus
+	from time import sleep
 
 # These imports are for the Sin and Tan waveform generators
 if configure.system_vitals:
+
 	import psutil
 	import math
 
@@ -74,7 +74,7 @@ class Sensor(object):
 			self.step2 = 0.0
 			self.steptan = 0.0
 
-
+			self.cputemp = [0,100,"CPU temperature",self.deg_sym + "c"]
 			self.infoa = [0,100,"CPU Percent","%"]
 			self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory", "b"]
 			self.infoc = [0,100000,"Bytes Sent", "b"]
@@ -138,14 +138,11 @@ class Sensor(object):
 
 
 		if configure.amg8833: # and not configure.simulate:
-			self.amg_info = [0,80,"IR [amg]",self.deg_sym + "c"]
+			self.amg_info = [0,80,"IR Thermal",self.deg_sym + "c"]
 
 
 		if configure.ir_thermo:
-			i2c = io.I2C(board.SCL, board.SDA, frequency=100000)
-			self.mlx = adafruit_mlx90614.MLX90614(i2c)
-			self.ir_thermo_ambient = [0,80,"IR ambient [mlx]",self.deg_sym + "c"]
-			self.ir_thermo_object = [0,80,"IR object [mlx]",self.deg_sym + "c"]
+			self.irthermo_info = [0,65,"Thermometer (IR)",self.deg_sym + "c"]
 
 		if configure.envirophat: # and not configure.simulate:
 
@@ -203,7 +200,7 @@ class Sensor(object):
 			#return sensorlist
 
 		#print("retrieving sensor data")
-		if configure.bme and self.bme.get_sensor_data():
+		if configure.bme and self.bme.get_sensor_data():# and not configure.simulate:
 
 			sense_data = [self.bme.data.temperature]
 			sense_data2 = [self.bme.data.pressure]
@@ -218,9 +215,10 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4]
 
 			#print(sensorlist)
+			configure.max_sensors[0] = len(sensorlist)
 			#return sensorlist
 
-		if configure.sensehat:
+		if configure.sensehat:# and not configure.simulate:
 			sense_data = [sense.get_temperature()]
 			sense_data2 = [sense.get_pressure()]
 			sense_data3 = [sense.get_humidity()]
@@ -244,21 +242,13 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 
+			#return sensorlist
 
-		if configure.ir_thermo:
-			ambient = [self.mlx.ambient_temperature]
-			objectir = [self.mlx.object_temperature]
-
-			item1 = ambient + self.ir_thermo_ambient
-			item2 = objectir + self.ir_thermo_object
-
-			sensorlist += [item1, item2]
-
-		if configure.amg8833:
+		if configure.amg8833:# and not configure.simulate:
 			sense_data = amg.pixels
 			item1 = sense_data + self.amg_info
 
-		if configure.envirophat:
+		if configure.envirophat:# and not configure.simulate:
 			self.rgb = light.rgb()
 			self.analog_values = analog.read_all()
 			self.mag_values = motion.magnetometer()
@@ -287,6 +277,9 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 		if configure.system_vitals:
+			#res = os.popen("vcgencmd measure_temp").readline()
+			#t = float(res.replace("temp=","").replace("'C\n",""))
+			systemtemp = [float(40)]
 			dummyload = [float(psutil.cpu_percent())]
 			dummyload2 = [float(psutil.virtual_memory().available) * 0.0000001]
 			dummyload3 = [float(psutil.net_io_counters().bytes_sent) * 0.00001]
@@ -296,6 +289,7 @@ class Sensor(object):
 			dummyload7 = [float(self.cos_gen()*100)]
 			dummyload8 = [float(self.sin2_gen()*100)]
 
+			item0 = systemtemp + self.cputemp
 			item1 = dummyload + self.infoa
 			item2 = dummyload2 + self.infob
 			item3 = dummyload3 + self.infoc
@@ -305,9 +299,7 @@ class Sensor(object):
 			item7 = dummyload7 + self.infog
 			item8 = dummyload8 + self.infoh
 
-			sensorlist += [item1, item2, item3, item4, item5,item6, item7, item8]
-			configure.max_sensors[0] = len(sensorlist)
-
+			sensorlist += [item0, item1, item2, item3, item4, item5,item6, item7, item8]
 		return sensorlist
 
 class MLX90614():

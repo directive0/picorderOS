@@ -88,8 +88,6 @@ def resetleds():
 
 
 
-
-
 # # The following set of functions are for activating each LED individually.
 # # I figured it was easier than having different functions for different combinations.
 # # This way you can just manually set them as you please.
@@ -130,6 +128,17 @@ class ripple(object):
 		pass
 
 	def cycle(self):
+
+		testbin = '0b10001100'
+
+		#	0		0		0		0		0		0		0		0
+		#	a		b		d		g		pwr		a1		b1		d1
+
+		#140
+		#74
+		#41
+		#26
+
 
 		screen_on()
 		if configure.leds[0]:

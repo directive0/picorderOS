@@ -12,7 +12,7 @@ class preferences(object):
 	#determines device ("pc", "tr108", "tr109")
 	def __init__(self):
 		self.version = "v0.01"
-		self.author = "Developed by Chris Barrett"
+		self.author = "written by directive0"
 
 		# holds the global state of the program (allows secondary modules to quit the program should we require it)
 		self.status = "startup"
@@ -37,18 +37,18 @@ class preferences(object):
 		self.leds = [True]
 		self.neopixel = [False]
 
-		# flag controls auto ranging of graphs
+		# controls auto ranging of graphs
 		self.auto = [True]
 
 		# chooses SPI display (0 for nokia 5110, 1 for st7735)
-		self.display = "1"
+		self.display = "0"
 
+		# holds theme state for UI
 		self.theme = [0]
 
-		# enables thermal cam support
-		self.tcam = False
-
-		self.max_sensors = [9]
+		# sets the number of max sensors for user configuration
+		# (is automatically set by the sensor module at startup)
+		self.max_sensors = [0]
 
 		# Toggles individual sensor support
 		self.bme = False
@@ -64,18 +64,22 @@ class preferences(object):
 		self.sensor3 = [2]
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
 
-		# this flag can be used to signal to the rest of the program that then
+		# this flag can be used to signal to the rest of the program that the
 		# sensor arrangement has been altered, allowing the program to adjust
 		# background elements if needed.
 		self.sensorschanged = [False]
 
 
+		# sets data logging mode.
 		self.logdata = [False]
+
+		# used to control refresh speed.
 		self.samplerate = [0]
 		self.displayinterval = [0]
 
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []
+
 		self.last_status = ["startup"]
 
 configure = preferences()
