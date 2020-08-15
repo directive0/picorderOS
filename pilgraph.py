@@ -15,7 +15,7 @@ from PIL import ImageDraw
 class graphlist(object):
 
 	# the following is constructor code to give each object a list suitable for storing all our graph data.
-	def __init__(self, sourcerange, graphcoords, graphspan, cycle = 10, colour = 0, width = 1):
+	def __init__(self, sourcerange, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
 		self.new = True
 		self.cycle = cycle
 		self.tock = timer()
