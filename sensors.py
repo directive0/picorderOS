@@ -85,36 +85,6 @@ class Sensor(object):
 			self.infoh = [-100,100,"Sine Wave2", ""]
 			sensorcount += 8
 
-			if configure.logdata[0]:
-				self.filehandler = datalog()
-
-
-
-
-		if configure.bme: # and not configure.simulate:
-
-			self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
-
-			# These oversampling settings can be tweaked to
-			# change the balance between accuracy and noise in
-			# the data.
-
-			self.bme.set_humidity_oversample(bme680.OS_2X)
-			self.bme.set_pressure_oversample(bme680.OS_4X)
-			self.bme.set_temperature_oversample(bme680.OS_8X)
-			self.bme.set_filter(bme680.FILTER_SIZE_3)
-
-
-			#		self.sensor_name = "BME680"
-			self.deg_sym = '\xB0'
-			self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
-			self.temp_info = [-40,85,"Temperature (BME)",self.deg_sym + "c"]
-			self.humidity_info = [0,100,"Relative Humidity (BME)", "%"]
-			self.pressure_info = [300,1100,"Barometric Pressure (BME)","hPa"]
-			self.VOC_info = [300,1100,"Air Quality (BME)","hPa"]
-
-
-
 		if configure.sensehat:
 			# instantiate a sensehat object,
 			self.sense = SenseHat()
@@ -137,13 +107,6 @@ class Sensor(object):
 			#self.filehandler = datalog()
 
 
-		if configure.amg8833: # and not configure.simulate:
-			self.amg_info = [0,80,"IR Thermal",self.deg_sym + "c"]
-
-
-		if configure.ir_thermo:
-			self.irthermo_info = [0,65,"Thermometer (IR)",self.deg_sym + "c"]
-
 		if configure.envirophat: # and not configure.simulate:
 
 			self.rgb = light.rgb()
@@ -152,7 +115,7 @@ class Sensor(object):
 			self.acc_values = [round(x, 2) for x in motion.accelerometer()]
 
 			self.temp_info = [0,65,"Thermometer (EP)",self.deg_sym + "c"]
-			self.humidity_info = [20,80,"Hygrometer (EP)", "%"]
+			self.humidity_info = [20,80,"Light (EP)", "lm"]
 			self.pressure_info = [260,1260,"Barometer (EP)","hPa"]
 			self.magnet_infox = [-500,500,"Magnetomer X (EP)","G"]
 			self.magnet_infoy = [-500,500,"Magnetomer Y (EP)","G"]
@@ -162,6 +125,36 @@ class Sensor(object):
 			self.accelerometer_infoz = [-500,500,"Accelerometer Z (EP)","g"]
 			configure.max_sensors[0] = 9
 			#self.filehandler = datalog()
+
+
+		if configure.amg8833: # and not configure.simulate:
+			self.amg_info = [0,80,"IR Thermal",self.deg_sym + "c"]
+
+
+		if configure.ir_thermo:
+			self.irthermo_info = [0,65,"Thermometer (IR)",self.deg_sym + "c"]
+
+		if configure.bme: # and not configure.simulate:
+
+			self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
+
+			# These oversampling settings can be tweaked to
+			# change the balance between accuracy and noise in
+			# the data.
+
+			self.bme.set_humidity_oversample(bme680.OS_2X)
+			self.bme.set_pressure_oversample(bme680.OS_4X)
+			self.bme.set_temperature_oversample(bme680.OS_8X)
+			self.bme.set_filter(bme680.FILTER_SIZE_3)
+
+
+			#		self.sensor_name = "BME680"
+			self.deg_sym = '\xB0'
+			self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
+			self.temp_info = [-40,85,"Temperature (BME)",self.deg_sym + "c"]
+			self.humidity_info = [0,100,"Relative Humidity (BME)", "%"]
+			self.pressure_info = [300,1100,"Barometric Pressure (BME)","hPa"]
+			self.VOC_info = [300,1100,"Air Quality (BME)","hPa"]
 
 
 		configure.sensor_info = self.get()
