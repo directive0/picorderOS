@@ -165,7 +165,7 @@ class Sensor(object):
 			self.temp_info = [-40,85,"Temperature (BME)",self.deg_sym + "c"]
 			self.humidity_info = [0,100,"Relative Humidity (BME)", "%"]
 			self.pressure_info = [300,1100,"Barometric Pressure (BME)","hPa"]
-			self.VOC_info = [300,1100,"Air Quality (BME)","hPa"]
+			self.VOC_info = [300,1100,"Air Quality (BME)","KOhm"]
 
 
 		configure.sensor_info = self.get()
@@ -204,12 +204,12 @@ class Sensor(object):
 			#return sensorlist
 
 		#print("retrieving sensor data")
-		if configure.bme and self.bme.get_sensor_data():# and not configure.simulate:
+		if configure.bme:
 
 			sense_data = [self.bme.temperature]
 			sense_data2 = [self.bme.pressure]
 			sense_data3 = [self.bme.humidity]
-			sense_data4 = [self.bme.gas]
+			sense_data4 = [self.bme.gas / 1000]
 
 			item1 = sense_data + self.temp_info
 			item2 = sense_data2 + self.pressure_info
