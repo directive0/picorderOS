@@ -10,12 +10,23 @@ import time
 print("Loading Unified Sensor Module")
 
 if configure.bme:
-	import bme680
+	#import bme680
+
+	#Using adafruit circuitpython.
+	import board
+	from busio import I2C
+	import adafruit_bme680
+
+	# Create library object using our Bus I2C port
+	i2c = I2C(board.SCL, board.SDA)
+
+
 
 if configure.sensehat:
 	# instantiates and defines paramteres for the sensehat
 
 	from sense_hat import SenseHat
+
 	# instantiate a sensehat object,
 	sense = SenseHat()
 
@@ -136,21 +147,21 @@ class Sensor(object):
 
 		if configure.bme: # and not configure.simulate:
 
-			self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
+			#self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
+			#
+			# # These oversampling settings can be tweaked to
+			# # change the balance between accuracy and noise in
+			# # the data.
+			#
+			# self.bme.set_humidity_oversample(bme680.OS_2X)
+			# self.bme.set_pressure_oversample(bme680.OS_4X)
+			# self.bme.set_temperature_oversample(bme680.OS_8X)
+			# self.bme.set_filter(bme680.FILTER_SIZE_3)
 
-			# These oversampling settings can be tweaked to
-			# change the balance between accuracy and noise in
-			# the data.
-
-			self.bme.set_humidity_oversample(bme680.OS_2X)
-			self.bme.set_pressure_oversample(bme680.OS_4X)
-			self.bme.set_temperature_oversample(bme680.OS_8X)
-			self.bme.set_filter(bme680.FILTER_SIZE_3)
-
+			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
 
 			#		self.sensor_name = "BME680"
 			self.deg_sym = '\xB0'
-			self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
 			self.temp_info = [-40,85,"Temperature (BME)",self.deg_sym + "c"]
 			self.humidity_info = [0,100,"Relative Humidity (BME)", "%"]
 			self.pressure_info = [300,1100,"Barometric Pressure (BME)","hPa"]
@@ -195,10 +206,10 @@ class Sensor(object):
 		#print("retrieving sensor data")
 		if configure.bme and self.bme.get_sensor_data():# and not configure.simulate:
 
-			sense_data = [self.bme.data.temperature]
-			sense_data2 = [self.bme.data.pressure]
-			sense_data3 = [self.bme.data.humidity]
-			sense_data4 = [self.bme.data.gas_resistance]
+			sense_data = [self.bme.temperature]
+			sense_data2 = [self.bme.pressure]
+			sense_data3 = [self.bme.humidity]
+			sense_data4 = [self.bme.gas]
 
 			item1 = sense_data + self.temp_info
 			item2 = sense_data2 + self.pressure_info
