@@ -19,7 +19,7 @@ class preferences(object):
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
-		self.pc = False
+		self.pc = True
 
 
 		# These two bits determine the target device (Original picorder or new version)
@@ -55,7 +55,7 @@ class preferences(object):
 		self.amg8833 = False
 		self.ir_thermo = False
 		self.sensehat = False
-		self.envirophat = True
+		self.envirophat = False
 		self.system_vitals = True
 
 		#selects the three sensor targets to plot

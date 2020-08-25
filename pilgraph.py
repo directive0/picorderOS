@@ -68,23 +68,8 @@ class graphlist(object):
 	# the following appends data to the list.
 
 	def update(self, data):
-		#grabs a simple 15 wide tuple for our values
+		# grabs a tuple to hold our values
 		self.buff = self.grabdlist()
-
-		if self.new:
-			for i in range(self.spanx):
-				# we load new data from the caller
-				self.cleandata = data
-
-				#append it to our list of clean data
-				self.buff.append(self.cleandata)
-
-				#pop the oldest value off
-				# may remove this
-				self.buff.pop(0)
-				self.tock.logtime()
-			self.new = False
-
 
 
 		# if the time elapsed has reached the set interval then collect data
@@ -100,6 +85,22 @@ class graphlist(object):
 			# may remove this
 			self.buff.pop(0)
 			self.tock.logtime()
+
+
+		# if self.new:
+		# 	for i in range(self.spanx):
+		# 		# we load new data from the caller
+		# 		self.cleandata = data
+		#
+		# 		#append it to our list of clean data
+		# 		self.buff.append(self.cleandata)
+		#
+		# 		#pop the oldest value off
+		# 		# may remove this
+		# 		self.buff.pop(0)
+		# 		self.tock.logtime()
+		# 	self.new = False
+		#
 
 
 	# the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.
