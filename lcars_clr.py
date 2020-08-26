@@ -85,6 +85,7 @@ class LabelObj(object):
 		size = self.font.getsize(self.string)
 		self.push(x-size[0],y,draw)
 
+	# Draws the label onto the provided draw buffer.
 	def push(self,locx,locy,draw):
 		self.draw = draw
 		self.draw.text((locx, locy), self.string, font = self.font, fill= self.colour)
@@ -213,7 +214,7 @@ class SettingsFrame(object):
 
 
 		self.title = LabelObj("Settings",titlefont)
-		self.itemlabel = LabelObj(self.pages[self.selection][0],titlefont,colour = lcars_peach)
+		self.itemlabel = LabelObj("Item Label",titlefont,colour = lcars_peach)
 		self.A_Label = LabelObj("Next",font,colour = lcars_blue)
 		self.B_Label = LabelObj("Enter",font, colour = lcars_blue)
 		self.C_Label = LabelObj("Exit",font, colour = lcars_blue)
@@ -250,7 +251,7 @@ class SettingsFrame(object):
 
 
 		#draw the option item heading
-
+		self.itemlabel.string = str(self.pages[self.selection][0])
 		self.itemlabel.push(self.titlex,self.titley+20,draw)
 
 
@@ -350,14 +351,14 @@ class MultiFrame(object):
 
 		self.C_Label = LabelObj("c_string",font, colour = lcars_pinker)
 
-		self.focus_Label = LabelObj("test",bigfont, colour = lcars_orange)
+		self.focus_Label = LabelObj("test",bigfont, colour = lcars_orpeach)
 		self.focus_high_Label = LabelObj("test",font, colour = lcars_peach)
 		self.focus_low_Label = LabelObj("test",font, colour = lcars_bluer)
-		self.focus_mean_Label = LabelObj("test",font, colour = lcars_orpeach)
+		self.focus_mean_Label = LabelObj("test",font, colour = lcars_pinker)
 
-		self.title = LabelObj("Multi-Frame",titlefont)
+		self.title = LabelObj("Multi-Graph",titlefont)
 
-	# this function updates the graph for the screen
+	# updates the graph for the screen
 	def graphs(self):
 
 		self.C_Graph.update(self.C_Data)
@@ -369,18 +370,12 @@ class MultiFrame(object):
 		self.A_Graph.update(self.A_Data)
 		self.A_Graph.render(self.draw)
 
-	# this function takes a value and sheds the second digit after the decimal place
-	def arrangelabel(self,data):
-		datareturn = format(float(data), '.0f')
+	# takes a value and sheds the second digit after the decimal place
+	def arrangelabel(self,data,range = ".0f"):
+		datareturn = format(float(data), range)
 		return datareturn
 
-	def datatext(self):
-		pass
-
-	def focus(self,sensors):
-		pass
-
-	# this function defines the labels for the screen
+	# defines the labels for the screen
 	def labels(self,sensors):
 
 		# depending on which number the "selection" variable takes on.
@@ -406,7 +401,7 @@ class MultiFrame(object):
 			self.C_Label.string = c_string
 			self.C_Label.r_align(156,self.labely,self.draw)
 
-		# current selection displays more details
+		# displays more details for whatever sensor is in focus
 		if self.selection != 0:
 
 			this = self.selection - 1
@@ -414,21 +409,21 @@ class MultiFrame(object):
 			this_bundle = self.Graphs[this]
 
 			raw = str(sensors[configure.sensors[this][0]][0])
-			adjusted = self.arrangelabel(raw)
+			adjusted = self.arrangelabel(raw, '.2f')
 			self.focus_Label.string = adjusted
 			self.focus_Label.r_align(156,self.titley,self.draw)
 
-			self.focus_high_Label.string = "high " + self.arrangelabel(str(this_bundle.get_high()))
+			self.focus_high_Label.string = "max " + self.arrangelabel(str(this_bundle.get_high()), '.1f')
 			self.focus_high_Label.push(23,self.labely,self.draw)
 
-			self.focus_low_Label.string = "low " + self.arrangelabel(str(this_bundle.get_low()))
+			self.focus_low_Label.string = "min " + self.arrangelabel(str(this_bundle.get_low()), '.1f')
 			self.focus_low_Label.center(self.labely,23,135,self.draw)
 
-			self.focus_mean_Label.string = "mean " + self.arrangelabel(str(this_bundle.get_average()))
+			self.focus_mean_Label.string = "x- " + self.arrangelabel(str(this_bundle.get_average()), '.1f')
 			self.focus_mean_Label.r_align(156,self.labely,self.draw)
 
 
-	#push the image frame and contents to the draw object.
+	# push the image frame and contents to the draw object.
 	def push(self,sensors,draw):
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
@@ -444,7 +439,7 @@ class MultiFrame(object):
 			this = self.selection - 1
 			self.title.string = configure.sensor_info[configure.sensors[this][0]][3]
 		else:
-			self.title.string = "Multi-Frame"
+			self.title.string = "Multi-Graph"
 
 		self.title.push(self.titlex,self.titley,draw)
 
@@ -476,17 +471,19 @@ class MultiFrame(object):
 
 		self.labels(sensors)
 
-		# returns mode_a so we will stay on this screen
-		# should change it button pressed.
+		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
 
+		# get current input event
 		keys = self.input.read()
-		# if a key is registering as pressed.
+
+		# if a key is registering as pressed increment or rollover the selection variable.
 		if keys[0]:
 			self.selection += 1
 			if self.selection > 3:
 				self.selection = 0
 
+		# if this input is held down initiate a special input.
 		if self.input.holding[0]:
 			configure.last_status[0] = "mode_a"
 			status = "settings"

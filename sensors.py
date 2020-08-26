@@ -88,7 +88,7 @@ class Sensor(object):
 			self.step2 = 0.0
 			self.steptan = 0.0
 
-			self.cputemp = [0,100,"CPU temperature",self.deg_sym + "c"]
+			self.cputemp = [0,100,"CPU Temp",self.deg_sym + "c"]
 			self.infoa = [0,100,"CPU Percent","%"]
 			self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory", "b"]
 			self.infoc = [0,100000,"Bytes Sent", "b"]
@@ -97,7 +97,7 @@ class Sensor(object):
 			self.infof = [-500,500,"Tangent Wave", ""]
 			self.infog = [-100,100,"Cos Wave", ""]
 			self.infoh = [-100,100,"Sine Wave2", ""]
-			sensorcount += 8
+			#sensorcount += 8
 
 		if configure.sensehat:
 			# instantiate a sensehat object,
@@ -117,7 +117,7 @@ class Sensor(object):
 			self.accelerometer_infox = [-500,500,"Accelerometer X (SH)","g"]
 			self.accelerometer_infoy = [-500,500,"Accelerometer Y (SH)","g"]
 			self.accelerometer_infoz = [-500,500,"Accelerometer Z (SH)","g"]
-			configure.max_sensors[0] = 9
+			#sensorcount + = 9
 			#self.filehandler = datalog()
 
 
@@ -137,38 +137,25 @@ class Sensor(object):
 			self.accelerometer_infox = [-500,500,"Accelerometer X (EP)","g"]
 			self.accelerometer_infoy = [-500,500,"Accelerometer Y (EP)","g"]
 			self.accelerometer_infoz = [-500,500,"Accelerometer Z (EP)","g"]
-			configure.max_sensors[0] = 9
+			#configure.max_sensors[0] = 9
 			#self.filehandler = datalog()
 
 
-		if configure.amg8833: # and not configure.simulate:
-			self.amg_info = [0,80,"IR Thermal",self.deg_sym + "c"]
+		if configure.amg8833:
+			self.amg_info = [0,80,"IR Thermal Array",self.deg_sym + "c"]
 
 
 		if configure.ir_thermo:
 			self.irthermo_info = [0,65,"Thermometer (IR)",self.deg_sym + "c"]
 
-		if configure.bme: # and not configure.simulate:
-
-			#self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
-			#
-			# # These oversampling settings can be tweaked to
-			# # change the balance between accuracy and noise in
-			# # the data.
-			#
-			# self.bme.set_humidity_oversample(bme680.OS_2X)
-			# self.bme.set_pressure_oversample(bme680.OS_4X)
-			# self.bme.set_temperature_oversample(bme680.OS_8X)
-			# self.bme.set_filter(bme680.FILTER_SIZE_3)
+		if configure.bme:
 
 			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
 
-			#		self.sensor_name = "BME680"
-			self.deg_sym = '\xB0'
-			self.temp_info = [-40,85,"Temperature (BME)",self.deg_sym + "c"]
-			self.humidity_info = [0,100,"Relative Humidity (BME)", "%"]
-			self.pressure_info = [300,1100,"Barometric Pressure (BME)","hPa"]
-			self.VOC_info = [300,1100,"Air Quality (BME)","KOhm"]
+			self.temp_info = [-40,85,"Thermometer (BME)",self.deg_sym + "c"]
+			self.humidity_info = [0,100,"Hygrometer (BME)", "%"]
+			self.pressure_info = [300,1100,"Barometer (BME)","hPa"]
+			self.VOC_info = [300,1100,"VOC(BME)","KOhm"]
 
 
 		configure.sensor_info = self.get()
