@@ -9,6 +9,9 @@ import time
 # the following is a sensor module for use with the PicorderOS
 print("Loading Unified Sensor Module")
 
+if not configure.pc:
+	import os
+
 if configure.bme:
 	#import bme680
 
@@ -201,9 +204,6 @@ class Sensor(object):
 		sensorlist = []
 
 
-			#return sensorlist
-
-		#print("retrieving sensor data")
 		if configure.bme:
 
 			sense_data = [self.bme.temperature]
@@ -217,10 +217,6 @@ class Sensor(object):
 			item4 = sense_data4 + self.VOC_info
 
 			sensorlist += [item1, item2, item3, item4]
-
-			#print(sensorlist)
-			configure.max_sensors[0] = len(sensorlist)
-			#return sensorlist
 
 		if configure.sensehat:# and not configure.simulate:
 			sense_data = [sense.get_temperature()]
@@ -246,13 +242,12 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 
-			#return sensorlist
 
-		if configure.amg8833:# and not configure.simulate:
+		if configure.amg8833:
 			sense_data = amg.pixels
 			item1 = sense_data + self.amg_info
 
-		if configure.envirophat:# and not configure.simulate:
+		if configure.envirophat:
 			self.rgb = light.rgb()
 			self.analog_values = analog.read_all()
 			self.mag_values = motion.magnetometer()
@@ -281,9 +276,14 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 		if configure.system_vitals:
-			#res = os.popen("vcgencmd measure_temp").readline()
-			#t = float(res.replace("temp=","").replace("'C\n",""))
-			systemtemp = [float(40)]
+
+			if not configure.pc:
+				res = os.popen("vcgencmd measure_temp").readline()
+				t = float(res.replace("temp=","").replace("'C\n",""))
+			else:
+				t = float(0)
+
+			systemtemp = [t]
 			dummyload = [float(psutil.cpu_percent())]
 			dummyload2 = [float(psutil.virtual_memory().available) * 0.0000001]
 			dummyload3 = [float(psutil.net_io_counters().bytes_sent) * 0.00001]
@@ -304,6 +304,7 @@ class Sensor(object):
 			item8 = dummyload8 + self.infoh
 
 			sensorlist += [item0, item1, item2, item3, item4, item5,item6, item7, item8]
+		configure.max_sensors[0] = len(sensorlist)
 		return sensorlist
 
 class MLX90614():

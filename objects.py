@@ -19,7 +19,7 @@ class preferences(object):
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
-		self.pc = False
+		self.pc = True
 
 
 		# These two bits determine the target device (Original picorder or new version)
@@ -28,20 +28,20 @@ class preferences(object):
 		self.tr109 = True
 
 		# testing this setting to switch between Pygame controls and gpio ones
-		self.input_kb = False
+		self.input_kb = True
 		self.input_gpio = False
-		self.input_cap = True
+		self.input_cap = False
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
-		self.leds = [True]
+		self.leds = [False]
 		self.neopixel = [False]
 
 		# controls auto ranging of graphs
 		self.auto = [True]
 
 		# chooses SPI display (0 for nokia 5110, 1 for st7735)
-		self.display = "0"
+		self.display = "1"
 
 		# holds theme state for UI
 		self.theme = [0]
@@ -55,7 +55,7 @@ class preferences(object):
 		self.amg8833 = False
 		self.ir_thermo = False
 		self.sensehat = False
-		self.envirophat = True
+		self.envirophat = False
 		self.system_vitals = True
 
 		#selects the three sensor targets to plot
