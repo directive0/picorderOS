@@ -7,7 +7,7 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
-
+import numpy
 
 
 
@@ -131,7 +131,7 @@ class graphlist(object):
 
 		for i in range(self.spanx):
 			if self.auto == True:
-				scaledata = self.translate(datalist[i], self.newrange, self.targetrange)
+				scaledata = numpy.interp(datalist[i],self.newrange,self.targetrange)#self.translate(datalist[i], self.newrange, self.targetrange)
 			else:
 				scaledata = self.translate(datalist[i], self.sourcerange, self.targetrange)
 

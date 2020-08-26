@@ -62,6 +62,8 @@ lcars_bluer = (153,153,255)
 lcars_orpeach = (255,153,102)
 lcars_pinker = (204,102,153)
 
+theme1 =  [lcars_orange,lcars_blue,lcars_pinker]
+
 fore_col = 0
 back_col = 1
 
@@ -337,11 +339,11 @@ class MultiFrame(object):
 
 		self.divider = 47
 
-		self.A_Graph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_orange, width = 1)
+		self.A_Graph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[0], width = 1)
 
-		self.B_Graph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_blue, width = 1)
+		self.B_Graph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[1], width = 1)
 
-		self.C_Graph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_pinker, width = 1)
+		self.C_Graph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[2], width = 1)
 
 		self.Graphs = [self.A_Graph, self.B_Graph, self.C_Graph]
 
@@ -356,7 +358,7 @@ class MultiFrame(object):
 		self.focus_low_Label = LabelObj("test",font, colour = lcars_bluer)
 		self.focus_mean_Label = LabelObj("test",font, colour = lcars_pinker)
 
-		self.title = LabelObj("Multi-Graph",titlefont)
+		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
 	# updates the graph for the screen
 	def graphs(self):
