@@ -11,7 +11,7 @@ from PIL import ImageDraw
 
 
 
-# The following class is used to prepare sensordata for display on the graph.
+# The following class is used to prepare sensordata for display on the graph and draw it to the screen.
 class graphlist(object):
 
 	# the following is constructor code to give each object a list suitable for storing all our graph data.
@@ -27,6 +27,10 @@ class graphlist(object):
 		self.width = width
 		self.dotw = 6
 		self.doth = 6
+
+		self.datahigh = 0
+		self.datalow = 0
+		self.newrange = (self.datalow,self.datahigh)
 
 		# collect data for translating sensor readings into pixel locations
 		self.sourcerange = sourcerange
@@ -58,6 +62,17 @@ class graphlist(object):
 	# the following function returns the data list.
 	def grabdlist(self):
 		return self.dlist
+
+	# Returns the average of the current dataset
+	def get_average(self):
+		average = sum(self.buff) / len(self.buff)
+		return average
+
+	def get_high(self):
+		return max(self.buff)
+
+	def get_low(self):
+		return min(self.buff)
 
 	# this function calculates the approximate time scale of the graph
 	def giveperiod(self):
@@ -109,10 +124,10 @@ class graphlist(object):
 		self.jump = 1
 		self.newlist = []
 
-		if self.auto == True:
-			self.datahigh = max(self.dlist)
-			self.datalow = min(self.dlist)
-			self.newrange = (self.datalow,self.datahigh)
+
+		self.datahigh = max(self.dlist)
+		self.datalow = min(self.dlist)
+		self.newrange = (self.datalow,self.datahigh)
 
 		for i in range(self.spanx):
 			if self.auto == True:
