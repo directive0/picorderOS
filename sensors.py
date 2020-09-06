@@ -165,7 +165,12 @@ class Sensor(object):
 
 
 		if configure.bme:
+			import busio
+			import board
+			import adafruit_amg88xx
 
+			i2c = busio.I2C(board.SCL, board.SDA)
+			amg = adafruit_amg88xx.AMG88XX(i2c)
 			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
 
 			self.temp_info = [-40,85,"Thermometer (BME)",self.deg_sym + "c"]
