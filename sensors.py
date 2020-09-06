@@ -296,6 +296,7 @@ class Sensor(object):
 			dummyload7 = [float(self.cos_gen()*100)]
 			dummyload8 = [float(self.sin2_gen()*100)]
 
+			item0 = systemtemp + self.cputemp
 			item1 = dummyload + self.infoa
 			item2 = dummyload2 + self.infob
 			item3 = dummyload3 + self.infoc
