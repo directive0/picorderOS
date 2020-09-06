@@ -598,15 +598,17 @@ class Graph_Screen(object):
 		labels = [self.a_label,self.b_label,self.c_label]
 
 
+
+		interx= (22)
+		intery= (21)
+
+
+		## Interval timer to control refresh
 		#intervaltime = float(self.drawinterval.timelapsed())
 		#persec = 60 / intervaltime
 		#lapse = format(persec, '.2f')
 		#self.drawinterval.logtime()
 		#intervaltext = (lapse + ' sps')
-		interx= (22)
-		intery= (21)
-
-
 		#self.intervallabel.update(intervaltext,30,interx,intery,titleFont,white)
 		#self.intervallabelshadow.update(intervaltext, 30, interx + 2, intery + 2 ,titleFont,(100,100,100))
 
@@ -644,11 +646,9 @@ class Graph_Screen(object):
 			self.b_label.draw(self.surface)
 			self.c_label.draw(self.surface)
 
-		# this checks if we are viewing a sensor individually and graphing it
-		# alone.
+		# this checks if we are viewing a sensor individually and graphing it alone.
 		if self.selection != 0:
-			# we make a variable carrying the index of the currently selected
-			# item.
+			# we make a variable carrying the index of the currently selected item.
 			this = self.selection - 1
 
 			# we collect its default colour based off our theme

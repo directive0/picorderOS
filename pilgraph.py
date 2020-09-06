@@ -7,11 +7,11 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
+import numpy
 
 
 
-
-# The following class is used to prepare sensordata for display on the graph.
+# The following class is used to prepare sensordata for display on the graph and draw it to the screen.
 class graphlist(object):
 
 	# the following is constructor code to give each object a list suitable for storing all our graph data.
@@ -28,6 +28,10 @@ class graphlist(object):
 		self.dotw = 6
 		self.doth = 6
 
+		self.datahigh = 0
+		self.datalow = 0
+		self.newrange = (self.datalow,self.datahigh)
+
 		# collect data for translating sensor readings into pixel locations
 		self.sourcerange = sourcerange
 		self.low,self.high = self.sourcerange
@@ -41,7 +45,7 @@ class graphlist(object):
 
 
 
-		self.targetrange = (self.y,(self.y + self.spany))
+		self.targetrange = ((self.y + self.spany), self.y)
 
 		# seeds a list with the coordinates for 0 to give us a list that we can put our scaled graph values in
 		for i in range(self.spanx):
@@ -58,6 +62,17 @@ class graphlist(object):
 	# the following function returns the data list.
 	def grabdlist(self):
 		return self.dlist
+
+	# Returns the average of the current dataset
+	def get_average(self):
+		average = sum(self.buff) / len(self.buff)
+		return average
+
+	def get_high(self):
+		return max(self.buff)
+
+	def get_low(self):
+		return min(self.buff)
 
 	# this function calculates the approximate time scale of the graph
 	def giveperiod(self):
@@ -110,14 +125,14 @@ class graphlist(object):
 		self.jump = 1
 		self.newlist = []
 
-		if self.auto == True:
-			self.datahigh = max(self.dlist)
-			self.datalow = min(self.dlist)
-			self.newrange = (self.datalow,self.datahigh)
+
+		self.datahigh = max(self.dlist)
+		self.datalow = min(self.dlist)
+		self.newrange = (self.datalow,self.datahigh)
 
 		for i in range(self.spanx):
 			if self.auto == True:
-				scaledata = self.translate(datalist[i], self.newrange, self.targetrange)
+				scaledata = numpy.interp(datalist[i],self.newrange,self.targetrange)#self.translate(datalist[i], self.newrange, self.targetrange)
 			else:
 				scaledata = self.translate(datalist[i], self.sourcerange, self.targetrange)
 

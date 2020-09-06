@@ -9,6 +9,9 @@ import time
 # the following is a sensor module for use with the PicorderOS
 print("Loading Unified Sensor Module")
 
+if not configure.pc:
+	import os
+
 if configure.bme:
 	#import bme680
 
@@ -85,7 +88,7 @@ class Sensor(object):
 			self.step2 = 0.0
 			self.steptan = 0.0
 
-
+			self.cputemp = [0,100,"CPU Temp",self.deg_sym + "c"]
 			self.infoa = [0,100,"CPU Percent","%"]
 			self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory", "b"]
 			self.infoc = [0,100000,"Bytes Sent", "b"]
@@ -94,7 +97,7 @@ class Sensor(object):
 			self.infof = [-500,500,"Tangent Wave", ""]
 			self.infog = [-100,100,"Cos Wave", ""]
 			self.infoh = [-100,100,"Sine Wave2", ""]
-			sensorcount += 8
+			#sensorcount += 8
 
 			if configure.logdata[0]:
 				self.filehandler = datalog()
@@ -144,7 +147,7 @@ class Sensor(object):
 			self.accelerometer_infox = [-500,500,"Accelerometer X (SH)","g"]
 			self.accelerometer_infoy = [-500,500,"Accelerometer Y (SH)","g"]
 			self.accelerometer_infoz = [-500,500,"Accelerometer Z (SH)","g"]
-			configure.max_sensors[0] = 9
+			#sensorcount + = 9
 			#self.filehandler = datalog()
 
 
@@ -174,38 +177,26 @@ class Sensor(object):
 			self.accelerometer_infox = [-500,500,"Accelerometer X (EP)","g"]
 			self.accelerometer_infoy = [-500,500,"Accelerometer Y (EP)","g"]
 			self.accelerometer_infoz = [-500,500,"Accelerometer Z (EP)","g"]
-			configure.max_sensors[0] = 9
+			#configure.max_sensors[0] = 9
 			#self.filehandler = datalog()
 
 
-		configure.sensor_info = self.get()
+		if configure.amg8833:
+			self.amg_info = [0,80,"IR Thermal Array",self.deg_sym + "c"]
 
 		self.sensor_data = []
 		for i in range(configure.max_sensors[0]):
 			self.sensor_data.append()
 
 
-		if configure.bme: # and not configure.simulate:
-
-			#self.bme = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
-			#
-			# # These oversampling settings can be tweaked to
-			# # change the balance between accuracy and noise in
-			# # the data.
-			#
-			# self.bme.set_humidity_oversample(bme680.OS_2X)
-			# self.bme.set_pressure_oversample(bme680.OS_4X)
-			# self.bme.set_temperature_oversample(bme680.OS_8X)
-			# self.bme.set_filter(bme680.FILTER_SIZE_3)
+		if configure.bme:
 
 			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
 
-			#		self.sensor_name = "BME680"
-			self.deg_sym = '\xB0'
-			self.temp_info = [-40,85,"Temperature (BME)",self.deg_sym + "c"]
-			self.humidity_info = [0,100,"Relative Humidity (BME)", "%"]
-			self.pressure_info = [300,1100,"Barometric Pressure (BME)","hPa"]
-			self.VOC_info = [300,1100,"Air Quality (BME)","KOhm"]
+			self.temp_info = [-40,85,"Thermometer (BME)",self.deg_sym + "c"]
+			self.humidity_info = [0,100,"Hygrometer (BME)", "%"]
+			self.pressure_info = [300,1100,"Barometer (BME)","hPa"]
+			self.VOC_info = [300000,1100000,"VOC(BME)","KOhm"]
 
 
 		configure.sensor_info = self.get()
@@ -241,9 +232,6 @@ class Sensor(object):
 		sensorlist = []
 
 
-			#return sensorlist
-
-		#print("retrieving sensor data")
 		if configure.bme:
 
 			sense_data = [self.bme.temperature]
@@ -258,10 +246,7 @@ class Sensor(object):
 
 			sensorlist += [item1, item2, item3, item4]
 
-			#print(sensorlist)
-			#return sensorlist
-
-		if configure.sensehat:
+		if configure.sensehat:# and not configure.simulate:
 			sense_data = [sense.get_temperature()]
 			sense_data2 = [sense.get_pressure()]
 			sense_data3 = [sense.get_humidity()]
@@ -285,15 +270,6 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 
-
-		if configure.ir_thermo:
-			ambient = [self.mlx.ambient_temperature]
-			objectir = [self.mlx.object_temperature]
-
-			item1 = ambient + self.ir_thermo_ambient
-			item2 = objectir + self.ir_thermo_object
-
-			sensorlist += [item1, item2]
 
 		if configure.amg8833:
 			sense_data = amg.pixels
@@ -328,6 +304,14 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 		if configure.system_vitals:
+
+			if not configure.pc:
+				res = os.popen("vcgencmd measure_temp").readline()
+				t = float(res.replace("temp=","").replace("'C\n",""))
+			else:
+				t = float(0)
+
+			systemtemp = [t]
 			dummyload = [float(psutil.cpu_percent())]
 			dummyload2 = [float(psutil.virtual_memory().available) * 0.0000001]
 			dummyload3 = [float(psutil.net_io_counters().bytes_sent) * 0.00001]
@@ -346,9 +330,8 @@ class Sensor(object):
 			item7 = dummyload7 + self.infog
 			item8 = dummyload8 + self.infoh
 
-			sensorlist += [item1, item2, item3, item4, item5,item6, item7, item8]
-			configure.max_sensors[0] = len(sensorlist)
-
+			sensorlist += [item0, item1, item2, item3, item4, item5,item6, item7, item8]
+		configure.max_sensors[0] = len(sensorlist)
 		return sensorlist
 
 class MLX90614():

@@ -62,30 +62,34 @@ lcars_bluer = (153,153,255)
 lcars_orpeach = (255,153,102)
 lcars_pinker = (204,102,153)
 
+theme1 =  [lcars_orange,lcars_blue,lcars_pinker]
+
 fore_col = 0
 back_col = 1
 
 # Controls text objects drawn to the LCD
 class LabelObj(object):
-	def __init__(self,string,font,draw, colour = lcars_blue):
+	def __init__(self,string,font, colour = lcars_blue):
 		self.font = font
-		self.draw = draw
+		#self.draw = draw
 		self.string = string
 		self.colour = colour
 
-	def center(self,y,x,w):
+	def center(self,y,x,w,draw):
 		size = self.font.getsize(self.string)
 		xmid = x + w/2
 		#ymid = y + h/2
 		textposx = xmid - (size[0]/2)
 		#textposy = ymid - (size[1]/2) + self.scaler
-		self.push(textposx,y)
+		self.push(textposx,y,draw)
 
-	def r_align(self,x,y):
+	def r_align(self,x,y,draw):
 		size = self.font.getsize(self.string)
-		self.push(x-size[0],y)
+		self.push(x-size[0],y,draw)
 
-	def push(self,locx,locy):
+	# Draws the label onto the provided draw buffer.
+	def push(self,locx,locy,draw):
+		self.draw = draw
 		self.draw.text((locx, locy), self.string, font = self.font, fill= self.colour)
 
 	def getsize(self):
@@ -210,6 +214,14 @@ class SettingsFrame(object):
 		self.divider = 47
 		self.labely = 102
 
+
+		self.title = LabelObj("Settings",titlefont)
+		self.itemlabel = LabelObj("Item Label",titlefont,colour = lcars_peach)
+		self.A_Label = LabelObj("Next",font,colour = lcars_blue)
+		self.B_Label = LabelObj("Enter",font, colour = lcars_blue)
+		self.C_Label = LabelObj("Exit",font, colour = lcars_blue)
+
+		self.item = LabelObj("No Data",bigfont,colour = lcars_pink)
 		# device needs to show multiple settings
 		# first the sensor palette configuration
 
@@ -236,38 +248,36 @@ class SettingsFrame(object):
 	def push(self, sensor, draw):
 
 		#draw the frame heading
-		self.title = LabelObj("Settings",titlefont,draw)
-		self.title.push(self.titlex,self.titley)
+
+		self.title.push(self.titlex,self.titley,draw)
 
 
 		#draw the option item heading
-		self.itemlabel = LabelObj(self.pages[self.selection][0],titlefont,draw,colour = lcars_peach)
-		self.itemlabel.push(self.titlex,self.titley+20)
+		self.itemlabel.string = str(self.pages[self.selection][0])
+		self.itemlabel.push(self.titlex,self.titley+20,draw)
 
 
-		self.A_Label = LabelObj("Next",font,draw,colour = lcars_blue)
-		self.A_Label.push(23,self.labely)
 
-		self.B_Label = LabelObj("Enter",font,draw, colour = lcars_blue)
-		self.B_Label.center(self.labely,23,135)
+		self.A_Label.push(23,self.labely,draw)
 
-		self.C_DataLabel = LabelObj("Exit",font,draw, colour = lcars_blue)
-		self.C_DataLabel.r_align(156,self.labely)
+
+		self.B_Label.center(self.labely,23,135,draw)
+
+
+		self.C_Label.r_align(156,self.labely,draw)
 
 
 		#draw the 3 graph parameter items
 		if self.selection == 0 or self.selection == 1 or self.selection == 2:
-			test = configure.sensor_info[self.pages[self.selection][1][0]][3]
-			self.item = LabelObj(str(test),bigfont,draw,colour = lcars_pink)
-			self.item.push(self.titlex,self.titley+40)
+
+			self.item.string = str(configure.sensor_info[self.pages[self.selection][1][0]][3])
+			self.item.push(self.titlex,self.titley+40,draw)
 		else:
 
 			if isinstance(self.pages[self.selection][1][0], bool):
-				test = str(self.pages[self.selection][1][0])
-				self.item = LabelObj(str(test),bigfont,draw,colour = lcars_pink)
-				self.item.push(self.titlex,self.titley+40)
-		# returns mode_a so we will stay on this screen
-		# hould change it button pressed.
+				self.item.string = str(self.pages[self.selection][1][0])
+				self.item.push(self.titlex,self.titley+40,draw)
+
 		status  = "settings"
 
 		keys = self.input.read()
@@ -298,58 +308,59 @@ class MultiFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 
+
 		self.marginleft = 23
 		self.marginright= 133
 
 		# sets the background image for the display
 		self.back = Image.open('assets/lcarsframe.png')
 
+		# sets the currently selected sensor to focus on
 		self.selection = 0
 
+		# grabs the input object for the interface
 		self.input = Inputs()
 
+		# ties the auto state to the global object
 		self.auto = configure.auto[0]
+
+		# creates and interval timer for screen refresh.
 		self.interval = timer()
 		self.interval.logtime()
-		#self.draw = draw
+
+		# Sets the coordinates of onscreen labels.
 		self.titlex = 23
 		self.titley = 6
 		self.labely = 102
 
 		self.graphcycle = 0
+
 		self.decimal = 1
 
 		self.divider = 47
 
-		#self.A_Label = LabelObj("default",titlefont,self.draw, colour = lcars_orange)
+		self.A_Graph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[0], width = 1)
 
-		# graphlist((lower,upperrange),(x1,y1),(span),cycle?)
-		self.A_Graph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_orange, width = 1)
-		#A_Graph.auto
+		self.B_Graph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[1], width = 1)
 
-		self.B_Graph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_blue, width = 1)
-		#B_Graph.auto
+		self.C_Graph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[2], width = 1)
 
-		self.C_Graph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, colour = lcars_pinker, width = 1)
-		#C_Graph.auto
+		self.Graphs = [self.A_Graph, self.B_Graph, self.C_Graph]
 
-		#self.cam = ThermalGrid(23,24,135,71,surface)
-		#print(self.C_Graph.giveperiod())
+		self.A_Label = LabelObj("a_string",font,colour = lcars_orange)
 
-	def definetitle(self):
-		self.string = "MULTI-GRAPH"
+		self.B_Label = LabelObj("b_string",font, colour = lcars_blue)
 
-	#  draws the title and sets the appropriate top bar length to fill the gap.
-	def layout(self):
-		self.title = LabelObj(self.string,titlefont,self.draw)
-		self.titlesizex, self.titlesizey = self.title.getsize()
-		self.barlength = (79 - (4+ self.titlesizex)) + 2
+		self.C_Label = LabelObj("c_string",font, colour = lcars_pinker)
 
-	# this function grabs the sensor values and puts them in an object for us to use.
-	def sense(self):
-		pass
+		self.focus_Label = LabelObj("test",bigfont, colour = lcars_orpeach)
+		self.focus_high_Label = LabelObj("test",font, colour = lcars_peach)
+		self.focus_low_Label = LabelObj("test",font, colour = lcars_bluer)
+		self.focus_mean_Label = LabelObj("test",font, colour = lcars_pinker)
 
-	# this function updates the graph for the screen
+		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
+
+	# updates the graph for the screen
 	def graphs(self):
 
 		self.C_Graph.update(self.C_Data)
@@ -361,62 +372,79 @@ class MultiFrame(object):
 		self.A_Graph.update(self.A_Data)
 		self.A_Graph.render(self.draw)
 
-	# this function takes a value and sheds the second digit after the decimal place
-	def arrangelabel(self,data):
-		datareturn = format(float(data), '.0f')
+	# takes a value and sheds the second digit after the decimal place
+	def arrangelabel(self,data,range = ".0f"):
+		datareturn = format(float(data), range)
 		return datareturn
 
-	def datatext(self):
-		pass
-
-
-	# this function defines the labels for the screen
+	# defines the labels for the screen
 	def labels(self,sensors):
 
 		# depending on which number the "selection" variable takes on.
-
-		if self.selection == 0 or self.selection == 1:
+		if self.selection == 0:
 			raw_a = str(self.A_Data)
 			adjusted_a = self.arrangelabel(raw_a)
 			a_string = adjusted_a + sensors[configure.sensor1[0]][4]
 
-			self.A_Label = LabelObj(a_string,font,self.draw,colour = lcars_orange)
-			self.A_Label.push(23,self.labely)
-
-		if self.selection == 0 or self.selection == 2:
 			raw_b = str(self.B_Data)
 			adjusted_b = self.arrangelabel(raw_b)
 			b_string = adjusted_b + " " + sensors[configure.sensor2[0]][4]
 
-			self.B_Label = LabelObj(b_string,font,self.draw, colour = lcars_blue)
-			self.B_Label.center(self.labely,23,135)
-			#self.baroLabel.push(57,100)
-
-		if self.selection == 0 or self.selection == 3:
 			raw_c = str(self.C_Data)
 			adjusted_c = self.arrangelabel(raw_c)
 			c_string = adjusted_c + " " + sensors[configure.sensor3[0]][4]
 
-			self.C_DataLabel = LabelObj(c_string,font,self.draw, colour = lcars_pinker)
-			#self.C_DataLabel.push(117,100)
-			self.C_DataLabel.r_align(156,self.labely)
+			self.A_Label.string = a_string
+			self.A_Label.push(23,self.labely,self.draw)
 
-	#push the image frame and contents to the draw object.
+			self.B_Label.string = b_string
+			self.B_Label.center(self.labely,23,135,self.draw)
+
+			self.C_Label.string = c_string
+			self.C_Label.r_align(156,self.labely,self.draw)
+
+		# displays more details for whatever sensor is in focus
+		if self.selection != 0:
+
+			this = self.selection - 1
+
+			this_bundle = self.Graphs[this]
+
+			raw = str(sensors[configure.sensors[this][0]][0])
+			adjusted = self.arrangelabel(raw, '.2f')
+			self.focus_Label.string = adjusted
+			self.focus_Label.r_align(156,self.titley,self.draw)
+
+			self.focus_high_Label.string = "max " + self.arrangelabel(str(this_bundle.get_high()), '.1f')
+			self.focus_high_Label.push(23,self.labely,self.draw)
+
+			self.focus_low_Label.string = "min " + self.arrangelabel(str(this_bundle.get_low()), '.1f')
+			self.focus_low_Label.center(self.labely,23,135,self.draw)
+
+			self.focus_mean_Label.string = "x- " + self.arrangelabel(str(this_bundle.get_average()), '.1f')
+			self.focus_mean_Label.r_align(156,self.labely,self.draw)
+
+
+	# push the image frame and contents to the draw object.
 	def push(self,sensors,draw):
+		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
+		# Grabs the current sensor reading
 		self.A_Data = sensors[configure.sensor1[0]][0]
 		self.B_Data = sensors[configure.sensor2[0]][0]
 		self.C_Data = sensors[configure.sensor3[0]][0]
 
-		#Top Bar - Needs to be scaled based on title string size.
-		#self.draw.rectangle((2,0,self.barlength,6), fill="black")
-		self.definetitle()
-		self.layout()
-		self.title.push(self.titlex,self.titley)
 
-		self.sense()
-		#self.graphs()
+		# Draws the Title
+		if self.selection != 0:
+			this = self.selection - 1
+			self.title.string = configure.sensor_info[configure.sensors[this][0]][3]
+		else:
+			self.title.string = "Multi-Graph"
+
+		self.title.push(self.titlex,self.titley,draw)
+
 
 		# turns each channel on individually
 		if self.selection == 0:
@@ -429,31 +457,35 @@ class MultiFrame(object):
 			self.A_Graph.update(self.A_Data)
 			self.A_Graph.render(self.draw)
 
+
+		self.A_Graph.update(self.A_Data)
+		self.B_Graph.update(self.B_Data)
+		self.C_Graph.update(self.C_Data)
+
 		if self.selection == 1:
-			self.A_Graph.update(self.A_Data)
 			self.A_Graph.render(self.draw)
 
 		if self.selection == 2:
-			self.B_Graph.update(self.B_Data)
 			self.B_Graph.render(self.draw)
 
 		if self.selection == 3:
-			self.C_Graph.update(self.C_Data)
 			self.C_Graph.render(self.draw)
 
 		self.labels(sensors)
 
-		# returns mode_a so we will stay on this screen
-		# should change it button pressed.
+		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
 
+		# get current input event
 		keys = self.input.read()
-		# if a key is registering as pressed.
+
+		# if a key is registering as pressed increment or rollover the selection variable.
 		if keys[0]:
 			self.selection += 1
 			if self.selection > 3:
 				self.selection = 0
 
+		# if this input is held down initiate a special input.
 		if self.input.holding[0]:
 			configure.last_status[0] = "mode_a"
 			status = "settings"
@@ -481,7 +513,7 @@ class ThermalFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 		self.t_grid = ThermalGrid(23,24,133,71)
-		self.t_grid_full = ThermalGrid(23,9,133,106)
+		self.t_grid_full = ThermalGrid(23,8,133,109)
 		self.titlex = 23
 		self.titley = 6
 
@@ -495,7 +527,14 @@ class ThermalFrame(object):
 		self.timed = timer()
 		self.timed.logtime()
 		self.interval = .1
-		pass
+
+		self.title = LabelObj("Thermal Array",titlefont)
+
+		self.A_Label = LabelObj("No Data",font,colour = lcars_blue)
+		self.B_Label = LabelObj("No Data",font, colour = lcars_pinker)
+		self.C_Label = LabelObj("No Data",font, colour = lcars_orange)
+
+
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
 		datareturn = format(float(data), '.0f')
@@ -509,25 +548,25 @@ class ThermalFrame(object):
 			adjusted_a = self.arrangelabel(raw_a)
 			a_string = "Low: " + adjusted_a
 
-			self.A_Label = LabelObj(a_string,font,self.draw,colour = lcars_blue)
-			self.A_Label.push(23,self.labely)
+			self.A_Label.string = a_string
+			self.A_Label.push(23,self.labely,self.draw)
 
 		if self.selection == 0 or self.selection == 2:
 			raw_b = str(self.high)
 			adjusted_b = self.arrangelabel(raw_b)
-			b_string = "High: " + adjusted_b
+			self.B_Label.string = "High: " + adjusted_b
 
-			self.B_Label = LabelObj(b_string,font,self.draw, colour = lcars_pinker)
-			self.B_Label.center(self.labely,23,135)
+
+			self.B_Label.center(self.labely,23,135, self.draw)
 			#self.baroLabel.push(57,100)
 
 		if self.selection == 0 or self.selection == 3:
 			raw_c = str(self.average)
 			adjusted_c = self.arrangelabel(raw_c)
-			c_string = "Avg: " + adjusted_c
+			self.C_Label.string = "Avg: " + adjusted_c
 
-			self.C_DataLabel = LabelObj(c_string,font,self.draw, colour = lcars_orange)
-			self.C_DataLabel.r_align(156,self.labely)
+
+			self.C_Label.r_align(156,self.labely,self.draw)
 
 	def push(self, sensor, draw):
 
@@ -536,8 +575,8 @@ class ThermalFrame(object):
 		self.labels()
 
 		# Draw title
-		self.title = LabelObj("Thermal Array",titlefont,draw)
-		self.title.push(self.titlex,self.titley)
+
+		self.title.push(self.titlex,self.titley, self.draw)
 
 
 		# Draw ThermalGrid object
