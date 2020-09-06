@@ -101,32 +101,32 @@ def Main():
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			while(status == "mode_a"):
 
-				if timeit.timelapsed() > interval:
-					data = sensors.get()
+				#if timeit.timelapsed() > interval:
+				data = sensors.get()
 
-					# the following is only run if the tr108 flag is set
-					if configure.tr108:
+				# the following is only run if the tr108 flag is set
+				if configure.tr108:
 
-						status = PyScreen.graph_screen(data)
+					status = PyScreen.graph_screen(data)
 
-						if not configure.pc:
-							leda_on()
-							ledb_off()
-							ledc_off()
-							if configure.moire:
-								moire.animate()
+					if not configure.pc:
+						leda_on()
+						ledb_off()
+						ledc_off()
+						if configure.moire:
+							moire.animate()
 
-					if configure.tr109:
-						if configure.display == "0":
-							status = dotscreen.push(data)
-						if configure.display == "1":
-							status = colourscreen.graph_screen(data)
-						if configure.leds[0] and not configure.pc:
-							lights.cycle()
+				if configure.tr109:
+					if configure.display == "0":
+						status = dotscreen.push(data)
+					if configure.display == "1":
+						status = colourscreen.graph_screen(data)
+					if configure.leds[0] and not configure.pc:
+						lights.cycle()
 
 
 
-					timeit.logtime()
+					#timeit.logtime()
 
 			while(status == "mode_b"):
 

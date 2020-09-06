@@ -155,7 +155,7 @@ class Sensor(object):
 			self.temp_info = [-40,85,"Thermometer (BME)",self.deg_sym + "c"]
 			self.humidity_info = [0,100,"Hygrometer (BME)", "%"]
 			self.pressure_info = [300,1100,"Barometer (BME)","hPa"]
-			self.VOC_info = [300,1100,"VOC(BME)","KOhm"]
+			self.VOC_info = [300000,1100000,"VOC(BME)","KOhm"]
 
 
 		configure.sensor_info = self.get()

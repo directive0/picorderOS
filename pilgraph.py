@@ -45,7 +45,7 @@ class graphlist(object):
 
 
 
-		self.targetrange = (self.y,(self.y + self.spany))
+		self.targetrange = ((self.y + self.spany), self.y)
 
 		# seeds a list with the coordinates for 0 to give us a list that we can put our scaled graph values in
 		for i in range(self.spanx):
