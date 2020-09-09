@@ -14,9 +14,6 @@ class preferences(object):
 		self.version = "v0.01"
 		self.author = "written by directive0"
 
-		# holds the global state of the program (allows secondary modules to quit the program should we require it)
-		self.status = "startup"
-
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
 		self.pc = True
@@ -80,7 +77,11 @@ class preferences(object):
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []
 
+
+		# holds the global state of the program (allows secondary modules to quit the program should we require it)
+		self.status = ["startup"]
 		self.last_status = ["startup"]
+
 
 configure = preferences()
 

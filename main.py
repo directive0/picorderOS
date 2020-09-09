@@ -48,7 +48,6 @@ if configure.tr109:
 
 # the following function is our main object, it contains all the flow for our program.
 def Main():
-	status = configure.status
 
 
 	# From out here in the loop we should instantiate the objects that are common to whatever display configuration we want to use.
@@ -57,7 +56,7 @@ def Main():
 	ledtime = timer()
 
 	# I think this sets the delay between draws.
-	interval = 0
+	interval = 0.5
 
 
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
@@ -79,8 +78,9 @@ def Main():
 		lights = ripple()
 
 	print("Main Loop Starting")
-	# The following while loop catches ctrl-c exceptions. I use this structure so that status changes will loop back around and have a chance to activate different functions. It gets a little weird going forward, bear with me.
-	while status != "quit":
+	# The following while loop catches ctrl-c exceptions. I use this structure so that configure.status[0] changes will loop back around and have a chance to activate different functions. It gets a little weird going forward, bear with me.
+	while configure.status[0] != "quit":
+		#print(configure.status[0])
 
 		# try allows us to capture a keyboard interrupt and assign behaviours.
 		try:
@@ -89,17 +89,17 @@ def Main():
 			# Create a timer object to time things.
 			start_time = time.time()
 
-			while status == "startup":
-				status = "mode_a"
+			if configure.status[0] == "startup":
+				configure.status[0] = "mode_a"
 
 				if configure.tr108:
-					status = PyScreen.startup_screen(start_time)
+					configure.status[0] = PyScreen.startup_screen(start_time)
 
-			if status == "ready":
-				status = "mode_a"
+			if configure.status[0] == "ready":
+				configure.status[0] = "mode_a"
 
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
-			while(status == "mode_a"):
+			if (configure.status[0] == "mode_a"):
 
 				#if timeit.timelapsed() > interval:
 				data = sensors.get()
@@ -107,7 +107,7 @@ def Main():
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
 
-					status = PyScreen.graph_screen(data)
+					configure.status[0] = PyScreen.graph_screen(data)
 
 					if not configure.pc:
 						leda_on()
@@ -117,24 +117,25 @@ def Main():
 							moire.animate()
 
 				if configure.tr109:
-					if configure.display == "0":
-						status = dotscreen.push(data)
-					if configure.display == "1":
-						status = colourscreen.graph_screen(data)
-					if configure.leds[0] and not configure.pc:
-						lights.cycle()
+					if timeit.timelapsed() > interval:
+						if configure.display == "0":
+							configure.status[0] = dotscreen.push(data)
+						if configure.display == "1":
+							configure.status[0] = colourscreen.graph_screen(data)
+						if configure.leds[0] and not configure.pc:
+							lights.cycle()
 
 
 
 					#timeit.logtime()
 
-			while(status == "mode_b"):
+			if (configure.status[0] == "mode_b"):
 
 				if timeit.timelapsed() > interval:
 					data = sensors.get()
 
 					if configure.tr108:
-						status = PyScreen.slider_screen(data)
+						configure.status[0] = PyScreen.slider_screen(data)
 						if not configure.pc:
 							leda_off()
 							ledb_on()
@@ -146,16 +147,16 @@ def Main():
 							lights.cycle()
 
 						if configure.display == "0":
-							status = dotscreen.push(data)
+							configure.status[0] = dotscreen.push(data)
 						if configure.display == "1":
-							status = colourscreen.thermal_screen(data)
+							configure.status[0] = colourscreen.thermal_screen(data)
 
 					timeit.logtime()
 
-			while (status == "settings"):
-				#print(status)
+			if (configure.status[0] == "settings"):
+				#print(configure.status[0])
 				if configure.tr108:
-					status = PyScreen.settings()
+					configure.status[0] = PyScreen.settings()
 					if not configure.pc:
 						leda_off()
 						ledb_off()
@@ -163,14 +164,22 @@ def Main():
 
 				if configure.tr109:
 					if configure.display == "0":
-						status = dotscreen.push(data)
+						configure.status[0] = dotscreen.push(data)
 					if configure.display == "1":
-						status = colourscreen.settings(data)
+						configure.status[0] = colourscreen.settings(data)
 
+			# Handles the poweroff screen
+			if (configure.status[0] == "poweroff"):
+
+				if configure.tr109:
+					if configure.display == "0":
+						configure.status[0] = dotscreen.push()
+					if configure.display == "1":
+						configure.status[0] = colourscreen.powerdown()
 
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
 		except KeyboardInterrupt:
-			status = "quit"
+			configure.status[0] = "quit"
 	print("Quit Encountered")
 	print("Main Loop Shutting Down")
 

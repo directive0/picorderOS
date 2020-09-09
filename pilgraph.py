@@ -8,8 +8,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 
 import numpy
-
-
+from array import *
 
 # The following class is used to prepare sensordata for display on the graph and draw it to the screen.
 class graphlist(object):
@@ -20,8 +19,8 @@ class graphlist(object):
 		self.cycle = cycle
 		self.tock = timer()
 		self.tock.logtime()
-		self.glist = []
-		self.dlist = []
+		self.glist = array('f', [])
+		self.dlist = array('f', [])
 		self.colour = colour
 		self.auto = True
 		self.width = width
@@ -101,21 +100,6 @@ class graphlist(object):
 			self.buff.pop(0)
 			self.tock.logtime()
 
-
-		# if self.new:
-		# 	for i in range(self.spanx):
-		# 		# we load new data from the caller
-		# 		self.cleandata = data
-		#
-		# 		#append it to our list of clean data
-		# 		self.buff.append(self.cleandata)
-		#
-		# 		#pop the oldest value off
-		# 		# may remove this
-		# 		self.buff.pop(0)
-		# 		self.tock.logtime()
-		# 	self.new = False
-		#
 
 
 	# the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.

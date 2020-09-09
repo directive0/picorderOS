@@ -87,15 +87,15 @@ class Sensor(object):
 			self.step2 = 0.0
 			self.steptan = 0.0
 
-			self.cputemp = [0,100,"CPU Temp",self.deg_sym + "c"]
-			self.infoa = [0,100,"CPU Percent","%"]
-			self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory", "b"]
-			self.infoc = [0,100000,"Bytes Sent", "b"]
-			self.infod = [0,100000,"Bytes Received", "b"]
-			self.infoe = [-100,100,"Sine Wave", ""]
-			self.infof = [-500,500,"Tangent Wave", ""]
-			self.infog = [-100,100,"Cos Wave", ""]
-			self.infoh = [-100,100,"Sine Wave2", ""]
+			self.cputemp = [0,100,"CPU Temp",self.deg_sym + "c","Raspberry Pi"]
+			self.infoa = [0,100,"CPU Percent","%","Raspberry Pi"]
+			self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory", "b","Raspberry Pi"]
+			self.infoc = [0,100000,"Bytes Sent", "b","Raspberry Pi"]
+			self.infod = [0,100000,"Bytes Received", "b","Raspberry Pi"]
+			self.infoe = [-100,100,"Sine Wave", "","Raspberry Pi"]
+			self.infof = [-500,500,"Tangent Wave", "","Raspberry Pi"]
+			self.infog = [-100,100,"Cos Wave", "","Raspberry Pi"]
+			self.infoh = [-100,100,"Sine Wave2", "","Raspberry Pi"]
 			#sensorcount += 8
 
 			if configure.logdata[0]:
@@ -113,14 +113,14 @@ class Sensor(object):
 			# activates low light conditions to not blind the user.
 			self.sense.low_light = True
 			self.temp_info = [0,65,"Thermometer (SH)",self.deg_sym + "c"]
-			self.humidity_info = [20,80,"Hygrometer (SH)", "%"]
-			self.pressure_info = [260,1260,"Barometer (SH)","hPa"]
-			self.magnet_infox = [-500,500,"Magnetomer X (SH)","G"]
-			self.magnet_infoy = [-500,500,"Magnetomer Y (SH)","G"]
-			self.magnet_infoz = [-500,500,"Magnetomer Z (SH)","G"]
-			self.accelerometer_infox = [-500,500,"Accelerometer X (SH)","g"]
-			self.accelerometer_infoy = [-500,500,"Accelerometer Y (SH)","g"]
-			self.accelerometer_infoz = [-500,500,"Accelerometer Z (SH)","g"]
+			self.humidity_info = [20,80,"Hygrometer", "%", "SenseHat"]
+			self.pressure_info = [260,1260,"Barometer","hPa", "SenseHat"]
+			self.magnet_infox = [-500,500,"Magnet X","G", "SenseHat"]
+			self.magnet_infoy = [-500,500,"Magnet Y","G", "SenseHat"]
+			self.magnet_infoz = [-500,500,"Magnet Z","G", "SenseHat"]
+			self.accelerometer_infox = [-500,500,"Accel X","g", "SenseHat"]
+			self.accelerometer_infoy = [-500,500,"Accel Y","g", "SenseHat"]
+			self.accelerometer_infoz = [-500,500,"Accel Z","g", "SenseHat"]
 			#sensorcount + = 9
 			#self.filehandler = datalog()
 
@@ -142,12 +142,12 @@ class Sensor(object):
 			self.mag_values = motion.magnetometer()
 			self.acc_values = [round(x, 2) for x in motion.accelerometer()]
 
-			self.temp_info = [0,65,"Thermometer (EP)",self.deg_sym + "c","Envirophat"]
-			self.humidity_info = [20,80,"Hygrometer (EP)", "%","Envirophat"]
-			self.pressure_info = [260,1260,"Barometer (EP)","hPa","Envirophat"]
-			self.magnet_infox = [-500,500,"Magnetomer X (EP)","G","Envirophat"]
-			self.magnet_infoy = [-500,500,"Magnetomer Y (EP)","G","Envirophat"]
-			self.magnet_infoz = [-500,500,"Magnetomer Z (EP)","G","Envirophat"]
+			self.temp_info = [0,65,"Thermometer",self.deg_sym + "c","Envirophat"]
+			self.humidity_info = [20,80,"Hygrometer", "%","Envirophat"]
+			self.pressure_info = [260,1260,"Barometer","hPa","Envirophat"]
+			self.magnet_infox = [-500,500,"Magnetomer X","G","Envirophat"]
+			self.magnet_infoy = [-500,500,"Magnetomer Y","G","Envirophat"]
+			self.magnet_infoz = [-500,500,"Magnetomer Z","G","Envirophat"]
 			self.accelerometer_infox = [-500,500,"Accelerometer X (EP)","g","Envirophat"]
 			self.accelerometer_infoy = [-500,500,"Accelerometer Y (EP)","g","Envirophat"]
 			self.accelerometer_infoz = [-500,500,"Accelerometer Z (EP)","g","Envirophat"]
@@ -168,11 +168,10 @@ class Sensor(object):
 			i2c = I2C(board.SCL, board.SDA)
 			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
 
-			self.temp_info = [-40,85,"Thermometer (BME)",self.deg_sym + "c"]
-			self.humidity_info = [0,100,"Hygrometer (BME)", "%"]
-			self.pressure_info = [300,1100,"Barometer (BME)","hPa"]
-			self.VOC_info = [300000,1100000,"VOC(BME)","KOhm"]
-
+			self.temp_info = [-40,85,"Thermometer",self.deg_sym + "c", "BME680"]
+			self.humidity_info = [0,100,"Hygrometer", "%", "BME680"]
+			self.pressure_info = [300,1100,"Barometer","hPa", "BME680"]
+			self.VOC_info = [300000,1100000,"VOC","KOhm", "BME680"]
 
 		configure.sensor_info = self.get()
 
@@ -243,8 +242,6 @@ class Sensor(object):
 			item8 = sense_data8 + self.accelerometer_infoy
 			item9 = sense_data9 + self.accelerometer_infoz
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
-
-
 
 		if configure.amg8833:
 			sense_data = amg.pixels

@@ -186,11 +186,13 @@ class SelectableLabel(LabelObj):
 class SettingsFrame(object):
 	def __init__(self,input):
 
-		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto], ["LEDs", configure.leds]]
+		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto], ["LEDs", configure.leds],["Power Off","poweroff"]]
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
+
+		self.status_raised = False
 
 		# Sets the x and y span of the graph
 		self.gspanx = 133
@@ -242,7 +244,13 @@ class SettingsFrame(object):
 			if oper[0] > configure.max_sensors[0]-1:
 				oper[0] = 0
 
-		return oper[0]
+		elif isinstance(oper, str):
+			configure.last_status[0] = configure.status[0]
+			self.status_raised = True
+			configure.status[0] = oper
+
+
+		return oper
 
 
 	def push(self, sensor, draw):
@@ -278,7 +286,9 @@ class SettingsFrame(object):
 				self.item.string = str(self.pages[self.selection][1][0])
 				self.item.push(self.titlex,self.titley+40,draw)
 
-		status  = "settings"
+
+		status = "settings"
+
 
 		keys = self.input.read()
 
@@ -288,12 +298,105 @@ class SettingsFrame(object):
 				self.selection = 0
 
 		if keys[1]:
-			self.toggle(self.pages[self.selection][1])
+			state = self.toggle(self.pages[self.selection][1])
+
+			if self.status_raised:
+				status = state
 
 		if keys[2]:
 			status = configure.last_status[0]
 
+		print("global: ", configure.status[0]," local: ", status)
 		return status
+
+class PowerDown(object):
+	def __init__(self,input):
+
+		# Sets the topleft origin of the graph
+		self.graphx = 23
+		self.graphy = 24
+
+		self.status_raised = False
+
+		# Sets the x and y span of the graph
+		self.gspanx = 133
+		self.gspany = 71
+
+		self.selection = 0
+
+		self.input = Inputs()
+
+		self.auto = configure.auto[0]
+		self.interval = timer()
+		self.interval.logtime()
+		#self.draw = draw
+		self.titlex = 25
+		self.titley = 6
+		self.labely = 102
+
+		self.graphcycle = 0
+		self.decimal = 1
+
+		self.divider = 47
+		self.labely = 102
+
+
+		self.title = LabelObj("CAUTION",bigfont, colour = lcars_red)
+		self.itemlabel = LabelObj("Item Label",titlefont,colour = lcars_orange)
+		self.A_Label = LabelObj("Yes",font,colour = lcars_blue)
+		self.B_Label = LabelObj("Enter",font, colour = lcars_blue)
+		self.C_Label = LabelObj("No",font, colour = lcars_blue)
+
+		self.item = LabelObj("No Data",bigfont,colour = lcars_orpeach)
+		# device needs to show multiple settings
+		# first the sensor palette configuration
+
+
+	def push(self, draw):
+
+		#draw the frame heading
+
+		self.title.center(self.titley,self.titlex,135,draw)
+
+
+		#draw the option item heading
+		#self.itemlabel.string = str(self.pages[self.selection][0])
+	#	self.itemlabel.push(self.titlex,self.titley+20,draw)
+
+
+
+		self.A_Label.push(23,self.labely,draw)
+
+
+		#self.B_Label.center(self.labely,23,135,draw)
+
+
+		self.C_Label.r_align(156,self.labely,draw)
+
+
+		#draw the 3 graph parameter items
+
+		self.item.string = "Power Down?"
+		self.item.center(self.titley+40, self.titlex, 135,draw)
+
+
+		status = "poweroff"
+
+
+		keys = self.input.read()
+
+		if keys[0]:
+			pass
+
+		if keys[1]:
+			pass
+
+		if keys[2]:
+			status = configure.last_status[0]
+
+		print("global: ", configure.status[0]," local: ", status)
+		return status
+
 
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
@@ -623,7 +726,7 @@ class ColourScreen(object):
 
 		# instantiates an image and uses it in a draw object.
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
-
+		self.blankimage = Image.open('assets/lcarsframeblank.png')
 
 		self.status = "mode_a"
 
@@ -633,13 +736,13 @@ class ColourScreen(object):
 		self.multi_frame = MultiFrame(self.input)
 		self.settings_frame = SettingsFrame(self.input)
 		self.thermal_frame = ThermalFrame(self.input)
+		self.powerdown_frame = PowerDown(self.input)
 
 	def graph_screen(self,sensors):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(sensors,self.draw)
 		self.pixdrw()
-
 		return self.status
 
 	def thermal_screen(self,sensors):
@@ -650,9 +753,16 @@ class ColourScreen(object):
 		return self.status
 
 	def settings(self,sensors):
-		self.newimage = self.image.copy()
+		self.newimage = self.blankimage.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.settings_frame.push(sensors,self.draw)
+		self.pixdrw()
+		return self.status
+
+	def powerdown(self):
+		self.newimage = self.blankimage.copy()
+		self.draw = ImageDraw.Draw(self.newimage)
+		self.status = self.powerdown_frame.push(self.draw)
 		self.pixdrw()
 		return self.status
 
