@@ -1,11 +1,7 @@
 #!/usr/bin/python
 
-# PicorderOS Alpha --------------------------------- June 2019
+# PicorderOS Alpha --------------------------------- September 2020
 # Created by Chris Barrett ------------------------- directive0
-#
-# Intended Goals:
-# Support three display modes (B/W LCD, Colour LCD, Pygame for tr108)
-# Support multiple sensor options across all platforms (BME680, AMG8833, sensehat)
 
 print("PicorderOS - Alpha")
 print("Loading Components")
