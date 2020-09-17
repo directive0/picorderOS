@@ -347,7 +347,7 @@ def startUp(surface,timeSinceStart):
 
 	#waits for 2 seconds to elapse before returning the state that will take us to the sensor readout
 	if (timenow - timeSinceStart) < 2:
-	 return "startup"
+	 return "mode_a"
 	else:
 	 return "ready"
 
