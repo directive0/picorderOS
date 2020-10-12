@@ -150,7 +150,7 @@ def Main():
 					timeit.logtime()
 
 			if (configure.status[0] == "settings"):
-				#print(configure.status[0])
+				print(configure.status[0])
 				if configure.tr108:
 					configure.status[0] = PyScreen.settings()
 					if not configure.pc:
@@ -173,7 +173,7 @@ def Main():
 					if configure.display == "1":
 						configure.status[0] = colourscreen.powerdown()
 
-			if configure.status[0] == "shutdown":
+			if (configure.status[0] == "shutdown"):
 				resetleds()
 				cleangpio()
 				os.system("sudo shutdown -h now")

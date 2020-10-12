@@ -3,10 +3,13 @@ print("Loading Unified Indicator Module")
 # new Changes
 # will need to support a reed switch and more inputs.
 
-# External module import
-import RPi.GPIO as GPIO
-
 from objects import *
+
+# External module import
+if not configure.pc:
+	import RPi.GPIO as GPIO
+
+
 
 
 PIN_DATA  = 16
