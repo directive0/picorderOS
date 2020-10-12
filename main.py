@@ -176,7 +176,7 @@ def Main():
 			if configure.status[0] == "shutdown":
 				resetleds()
 				cleangpio()
-            	os.system("sudo shutdown -h now")
+				os.system("sudo shutdown -h now")
 
 
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
