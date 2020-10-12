@@ -173,6 +173,12 @@ def Main():
 					if configure.display == "1":
 						configure.status[0] = colourscreen.powerdown()
 
+			if configure.status[0] == "shutdown":
+				resetleds()
+				cleangpio()
+            	os.system("sudo shutdown -h now")
+
+
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
 		except KeyboardInterrupt:
 			configure.status[0] = "quit"

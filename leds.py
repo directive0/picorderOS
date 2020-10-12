@@ -148,16 +148,16 @@ class ripple(object):
 				self.beat = 0
 
 			if self.beat == 0:
-				shiftout(128)
+				shiftout(140)
 
 			if self.beat == 1:
-				shiftout(64)
+				shiftout(74)
 
 			if self.beat == 2:
-				shiftout(32)
+				shiftout(41)
 
 			if self.beat == 3:
-				shiftout(16)
+				shiftout(26)
 		else:
 			print("leds shutting down")
 			resetleds()

@@ -244,8 +244,10 @@ class SettingsFrame(object):
 			if oper[0] > configure.max_sensors[0]-1:
 				oper[0] = 0
 
+		# if parameter supplied is a string
 		elif isinstance(oper, str):
-			configure.last_status[0] = configure.status[0]
+			# if parameter supplied is a string
+			#configure.last_status[0] = configure.status[0]
 			self.status_raised = True
 			configure.status[0] = oper
 
@@ -392,7 +394,7 @@ class PowerDown(object):
 			pass
 
 		if keys[2]:
-			status = configure.last_status[0]
+			status = "settings"
 
 		print("global: ", configure.status[0]," local: ", status)
 		return status
