@@ -174,6 +174,7 @@ def Main():
 						configure.status[0] = colourscreen.powerdown()
 
 			if configure.status[0] == "shutdown":
+				print("Shut Down!")
 				resetleds()
 				cleangpio()
 				os.system("sudo shutdown -h now")

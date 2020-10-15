@@ -124,7 +124,7 @@ def screen_off():
 class ripple(object):
 	def __init__(self):
 		self.beat = 0
-
+		self.disabled = False
 		pass
 
 	def cycle(self):

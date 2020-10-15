@@ -388,7 +388,7 @@ class PowerDown(object):
 		keys = self.input.read()
 
 		if keys[0]:
-			pass
+			status = "shutdown"
 
 		if keys[1]:
 			pass
