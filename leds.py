@@ -158,7 +158,4 @@ class ripple(object):
 			if self.beat == 3:
 				shiftout(26)
 		else:
-			print("leds shutting down")
-			resetleds()
 			shiftout(0)
-			#screen_off()
