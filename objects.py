@@ -32,6 +32,7 @@ class preferences(object):
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
 		self.leds = [False]
+		self.sleep = [False]
 		self.neopixel = [False]
 
 		# controls auto ranging of graphs

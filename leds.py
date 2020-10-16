@@ -82,12 +82,12 @@ def resetleds():
 		GPIO.output(led2, GPIO.LOW)
 		GPIO.output(led3, GPIO.LOW)
 
-	if configure.tr109:
-		GPIO.output(led1, GPIO.LOW)
-		GPIO.output(led2, GPIO.LOW)
-		GPIO.output(led3, GPIO.LOW)
-		GPIO.output(led4, GPIO.LOW)
-		GPIO.output(sc_led, GPIO.LOW)
+	# if configure.tr109:
+	# 	GPIO.output(led1, GPIO.LOW)
+	# 	GPIO.output(led2, GPIO.LOW)
+	# 	GPIO.output(led3, GPIO.LOW)
+	# 	GPIO.output(led4, GPIO.LOW)
+	# 	GPIO.output(sc_led, GPIO.LOW)
 
 
 
@@ -131,9 +131,6 @@ class ripple(object):
 		pass
 
 	def cycle(self):
-
-		testbin = '0b10001100'
-
 		#	0		0		0		0		0		0		0		0
 		#	a		b		d		g		pwr		a1		b1		d1
 
@@ -142,9 +139,8 @@ class ripple(object):
 		#41
 		#26
 
-
 		screen_on()
-		if configure.leds[0]:
+		if configure.sleep[0]:
 			self.beat += 1
 
 			if self.beat > 3:
@@ -165,4 +161,4 @@ class ripple(object):
 			print("leds shutting down")
 			resetleds()
 			shiftout(0)
-			screen_off()
+			#screen_off()

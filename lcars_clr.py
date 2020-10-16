@@ -37,20 +37,12 @@ SPI_DEVICE = 0
 TRANSITION = [False]
 
 
-# Hardware SPI usage:
-#disp = LCD.PCD8544(DC, RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=4000000))
-
 if configure.pc:
 	device = pyscreen(width = 160, height = 128, mode = "RGB")
 else:
 	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
 	device = st7735(serial, width = 160, height = 128, mode = "RGB")
-# Initialize library.
-#disp.begin(contrast=50)
 
-# Clear display.
-#disp.clear()
-#disp.display()
 
 # The following are for LCARS colours from LCARScom.net
 lcars_orange = (255,153,0)
@@ -186,7 +178,7 @@ class SelectableLabel(LabelObj):
 class SettingsFrame(object):
 	def __init__(self,input):
 
-		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto], ["LEDs", configure.leds],["Power Off","poweroff"]]
+		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto], ["LEDs", configure.sleep],["Power Off","poweroff"]]
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23

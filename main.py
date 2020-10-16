@@ -45,7 +45,6 @@ if configure.tr109:
 # the following function is our main object, it contains all the flow for our program.
 def Main():
 
-
 	# From out here in the loop we should instantiate the objects that are common to whatever display configuration we want to use.
 	sensors = Sensor()
 	timeit = timer()
