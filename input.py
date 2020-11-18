@@ -224,6 +224,7 @@ class Inputs(object):
 			# 		self.buttonlist[i] = False
 			# 		self.down[i] = True
 			for i in range(3):
+				print("i =", i, " ", GPIO.input(pins[i]))
 				# if the button has not been registered as pressed
 				if GPIO.input(pins[i]):  # button pressed
 					if not self.waspressed[i]:
