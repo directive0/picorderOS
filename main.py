@@ -27,8 +27,8 @@ else:
 if configure.tr108:
 	# Load the TR-108 display modules
 	from tos_display import *
-	if configure.sensehat:
-		from sensehat import *
+#	if configure.sensehat:
+#		from sensehat import *
 
 
 # for the new TR-109 there are two display modes supported.
