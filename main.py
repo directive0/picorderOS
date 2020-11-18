@@ -149,7 +149,7 @@ def Main():
 					timeit.logtime()
 
 			if (configure.status[0] == "settings"):
-				print(configure.status[0])
+				#print(configure.status[0])
 				if configure.tr108:
 					configure.status[0] = PyScreen.settings()
 					if not configure.pc:
