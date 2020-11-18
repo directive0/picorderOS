@@ -522,7 +522,7 @@ class Graph_Screen(object):
 		self.drawinterval = timer()
 
 		# Sample rate controller
-		self.senseinterval = 10
+		self.senseinterval = 0
 
 		# Pygame drawing surface.
 		self.surface = surface
@@ -811,7 +811,8 @@ class Screen(object):
 			self.surface = pygame.display.set_mode(screenSize)
 		else:
 			# on the picorder use this option (Fullscreen).
-			self.surface = pygame.display.set_mode(screenSize, pygame.FULLSCREEN)
+			flags = pygame.FULLSCREEN | pygame.SCALED
+			self.surface = pygame.display.set_mode(screenSize, flags)
 			pygame.event.set_blocked(pygame.MOUSEMOTION)
 			pygame.mouse.set_visible(False)
 
