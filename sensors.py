@@ -41,6 +41,10 @@ if configure.sensehat:
 	# activates low light conditions to not blind the user.
 	sense.low_light = True
 
+    sense.clear()  # no arguments defaults to off
+    self.ticks = 0
+    self.onoff = 1
+
 if configure.amg8833: # and not configure.simulate:
 	import busio
 	import board
@@ -221,6 +225,23 @@ class Sensor(object):
 			sensorlist += [item1, item2, item3, item4]
 
 		if configure.sensehat:# and not configure.simulate:
+
+	        if configure.moire:
+	            for x in range(8):
+	                for y in range(8):
+						# it's this cool plasma effect from demoscene I stole from
+						# somewhere.
+	                    cx = x + 0.5*math.sin(self.ticks/5.0)
+	                    cy = y + 0.5*math.cos(self.ticks/3.0)
+	                    v = math.sin(math.sqrt(1.0*(math.pow(cx, 2.0)+math.pow(cy, 2.0))+1.0)+self.ticks)
+	              		#v = v + math.sin(x*10.0+self.ticks)
+	                    v = (v + 1.0)/2.0
+	                    v = int(v*255.0)
+	                    sense.set_pixel(x,y,v,v,v)
+	            self.ticks = self.ticks+1
+	        else:
+	            clearled()
+
 			sense_data = [sense.get_temperature()]
 			sense_data2 = [sense.get_pressure()]
 			sense_data3 = [sense.get_humidity()]
