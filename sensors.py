@@ -38,12 +38,7 @@ if configure.sensehat:
 	# Sets the IMU Configuration.
 	sense.set_imu_config(True,False,False)
 
-	# activates low light conditions to not blind the user.
-	sense.low_light = True
 
-	sense.clear()  # no arguments defaults to off
-	self.ticks = 0
-	self.onoff = 1
 
 if configure.amg8833: # and not configure.simulate:
 	import busio
@@ -108,6 +103,10 @@ class Sensor(object):
 
 
 		if configure.sensehat:
+			self.ticks = 0
+			self.onoff = 1
+			# activates low light conditions to not blind the user.
+			sense.low_light = True
 			# instantiate a sensehat object,
 			self.sense = SenseHat()
 			# Initially clears the LEDs once loaded
@@ -240,7 +239,8 @@ class Sensor(object):
 						sense.set_pixel(x,y,v,v,v)
 				self.ticks = self.ticks+1
 			else:
-				clearled()
+				sense.clear()  # no arguments defaults to off
+
 
 			sense_data = [sense.get_temperature()]
 			sense_data2 = [sense.get_pressure()]
