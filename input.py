@@ -226,7 +226,7 @@ class Inputs(object):
 			for i in range(3):
 				print("i =", i, " ", GPIO.input(pins[i]))
 				# if the button has not been registered as pressed
-				if GPIO.input(pins[i]):  # button pressed
+				if not GPIO.input(pins[i]):  # button pressed
 					if not self.waspressed[i]:
 						self.waspressed[i] = True
 						self.holdtimers[i].logtime()
@@ -235,7 +235,7 @@ class Inputs(object):
 						if self.holdtimers[i].timelapsed() > self.thresh_hold:
 							self.holding[i] = True
 
-				if not GPIO.input(pins[i]):
+				if GPIO.input(pins[i]):
 					self.holding[i] = False
 					if self.waspressed[i]:
 						self.buttonlist[i] = True
