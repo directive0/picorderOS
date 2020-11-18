@@ -53,21 +53,21 @@ if configure.tr108:
 	GPIO.setup(led3, GPIO.OUT) # LED pin set as output
 
 # loads the pin configurations and modes for the tr-109 (many switches)
-if configure.tr109:
-# Pin Definitons:
-	led1 = 16 #19 # Broadcom pin 19
-	led2 = 20 #6 # Broadcom pin 13
-	led3 = 6 #20
-	led4 = 19 #16
-	sc_led = 15
-
-	# Pin Setup:
-	GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
-	GPIO.setup(led1, GPIO.OUT) # LED pin set as output
-	GPIO.setup(led2, GPIO.OUT) # LED pin set as output
-	GPIO.setup(led3, GPIO.OUT) # LED pin set as output
-	GPIO.setup(led4, GPIO.OUT) # LED pin set as output
-	GPIO.setup(sc_led, GPIO.OUT)
+# if configure.tr109:
+# # Pin Definitons:
+# 	#led1 = 16 #19 # Broadcom pin 19
+# 	#led2 = 20 #6 # Broadcom pin 13
+# 	#led3 = 6 #20
+# 	#led4 = 19 #16
+# 	#sc_led = 15
+#
+# 	# Pin Setup:
+# 	GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
+# 	GPIO.setup(led1, GPIO.OUT) # LED pin set as output
+# 	GPIO.setup(led2, GPIO.OUT) # LED pin set as output
+# 	GPIO.setup(led3, GPIO.OUT) # LED pin set as output
+# 	GPIO.setup(led4, GPIO.OUT) # LED pin set as output
+# 	GPIO.setup(sc_led, GPIO.OUT)
 
 
 # a function to clear the gpio
@@ -76,7 +76,8 @@ def cleangpio():
 
 # a function to clear the LEDs
 def resetleds():
-	shiftout(0)
+	if configure.tr109:
+		shiftout(0)
 	if configure.tr108:
 		GPIO.output(led1, GPIO.LOW)
 		GPIO.output(led2, GPIO.LOW)
