@@ -41,9 +41,9 @@ if configure.sensehat:
 	# activates low light conditions to not blind the user.
 	sense.low_light = True
 
-    sense.clear()  # no arguments defaults to off
-    self.ticks = 0
-    self.onoff = 1
+	sense.clear()  # no arguments defaults to off
+	self.ticks = 0
+	self.onoff = 1
 
 if configure.amg8833: # and not configure.simulate:
 	import busio
