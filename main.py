@@ -6,6 +6,9 @@
 print("PicorderOS - Alpha")
 print("Loading Components")
 
+import os
+os.environ['SDL_AUDIODRIVER'] = 'dsp'
+
 from objects import *
 from sensors import *
 
