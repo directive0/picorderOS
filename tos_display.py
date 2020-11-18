@@ -680,7 +680,7 @@ class Graph_Screen(object):
 
 		# The following code handles inputs and button presses.
 		keys = self.input.read()
-
+		print("keys reading as: ", keys)
 		# if a key is registering as pressed.
 		if keys[0]:
 			self.selection += 1
