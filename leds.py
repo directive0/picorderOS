@@ -140,7 +140,7 @@ class ripple(object):
 		#26
 
 		screen_on()
-		if configure.sleep[0]:
+		if configure.sleep[0] and configure.tr109:
 			self.beat += 1
 
 			if self.beat > 3:

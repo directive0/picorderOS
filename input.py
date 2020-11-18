@@ -213,19 +213,39 @@ class Inputs(object):
 			# 		self.down[2] = True
 
 		if configure.input_gpio:
+			# for i in range(3):
+			# 	if (not self.fired[i]) and (not GPIO.input(pins[i])):  # Fire button pressed
+			# 		self.fired[i] = True
+			# 		#print("Button ", i, " registered!")
+			# 		self.buttonlist[i] = True
+			# 	#device.emit(uinput.KEY_LEFTCTRL, 1) # Press Left Ctrl key
+			# 	if self.fired[i] and GPIO.input(pins[i]):  # Fire button released
+			# 		self.fired[i] = False
+			# 		self.buttonlist[i] = False
+			# 		self.down[i] = True
 			for i in range(3):
-				if (not self.fired[i]) and (not GPIO.input(pins[i])):  # Fire button pressed
-					self.fired[i] = True
-					#print("Button ", i, " registered!")
-					self.buttonlist[i] = True
-				#device.emit(uinput.KEY_LEFTCTRL, 1) # Press Left Ctrl key
-				if self.fired[i] and GPIO.input(pins[i]):  # Fire button released
-					self.fired[i] = False
-					self.buttonlist[i] = False
-					self.down[i] = True
+				# if the button has not been registered as pressed
+				if GPIO.input(pins[i]):  # button pressed
+					if not self.waspressed[i]:
+						self.waspressed[i] = True
+						self.holdtimers[i].logtime()
+					else:
+
+						if self.holdtimers[i].timelapsed() > self.thresh_hold:
+							self.holding[i] = True
+
+				if not GPIO.input(pins[i]):
+					self.holding[i] = False
+					if self.waspressed[i]:
+						self.buttonlist[i] = True
+						self.waspressed[i] = False
+					else:
+						self.buttonlist[i] = False
+
+
 
 		if configure.input_cap:
-			# instatiates a capacitive button object
+			# Reads the touched capacitive elements
 			touched = mpr121.touched_pins
 
 			# runs a loop to check each possible button
