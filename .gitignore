@@ -2,4 +2,4 @@
 *.DS_Store
 *.pyc
 *.csv
-/__pycach__/*
+/__pycache__/*
