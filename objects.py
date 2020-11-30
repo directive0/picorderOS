@@ -27,7 +27,8 @@ class preferences(object):
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = True
 		self.input_gpio = False
-		self.input_cap = False
+		self.input_cap_mpr121 = False
+		self.input_cap1208 = False
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]

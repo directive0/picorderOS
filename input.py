@@ -54,7 +54,7 @@ if configure.input_gpio:
 	GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)  #Square Button for GPIO22
 
 # set up requirements for capacitive buttons using an mpr121
-if configure.input_cap:
+if configure.input_cap_mpr121:
 	# if using the capacitive touch board from adafruit we import that library
 	import adafruit_mpr121
 	import busio
@@ -70,6 +70,14 @@ if configure.input_cap:
 		test = adafruit_mpr121.MPR121_Channel(mpr121,i)
 		test.threshold = threshold
 		test.release_threshold = release_threshold
+
+if configure.input_cap1208:
+
+	import cap1xxx
+	cap1208 = cap1xxx.Cap1208()
+
+
+
 # the input class handles all the requirements for handling user directed inputs
 class Inputs(object):
 
@@ -193,24 +201,6 @@ class Inputs(object):
 					self.waspressed[2] = False
 				else:
 					self.buttonlist[2] = False
-			#
-			# if key[pygame.K_DOWN] and not self.bwaspressed:
-			# 		self.buttonlist[1] = True
-			# 		self.bwaspressed = True
-			#
-			# if not key[pygame.K_DOWN] and self.bwaspressed:
-			# 		self.bwaspressed = False
-			# 		self.buttonlist[1] = False
-			# 		self.down[1] = True
-			#
-			# if key[pygame.K_RIGHT] and not self.cwaspressed:
-			# 		self.buttonlist[2] = True
-			# 		self.cwaspressed = True
-			#
-			# if not key[pygame.K_RIGHT] and self.cwaspressed:
-			# 		self.cwaspressed = False
-			# 		self.buttonlist[2] = False
-			# 		self.down[2] = True
 
 		if configure.input_gpio:
 			# for i in range(3):
@@ -241,10 +231,14 @@ class Inputs(object):
 						self.waspressed[i] = False
 					else:
 						self.buttonlist[i] = False
+			reading = thiscap.get_input_status()[0]
+	        print(reading)
+	        if reading == "release" or reading == "press":
+	            thiscap.clear_interrupt()
+#       elif reading == "press":
+                print("WE GOT ONE!!!!!!")
 
-
-
-		if configure.input_cap:
+		if configure.input_cap_mpr121:
 			# Reads the touched capacitive elements
 			touched = mpr121.touched_pins
 
@@ -268,7 +262,8 @@ class Inputs(object):
 					else:
 						self.buttonlist[i] = False
 
-
+		if configure.input_cap1208:
+			pass
 		#print(self.buttonlist)
 		return self.buttonlist
 
