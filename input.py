@@ -231,12 +231,7 @@ class Inputs(object):
 						self.waspressed[i] = False
 					else:
 						self.buttonlist[i] = False
-			reading = thiscap.get_input_status()[0]
-	        print(reading)
-	        if reading == "release" or reading == "press":
-	            thiscap.clear_interrupt()
-#       elif reading == "press":
-                print("WE GOT ONE!!!!!!")
+
 
 		if configure.input_cap_mpr121:
 			# Reads the touched capacitive elements
@@ -263,7 +258,12 @@ class Inputs(object):
 						self.buttonlist[i] = False
 
 		if configure.input_cap1208:
-			pass
+			reading = thiscap.get_input_status()[0]
+			print(reading)
+			if reading == "release" or reading == "press":
+				thiscap.clear_interrupt()
+#       elif reading == "press":
+				print("WE GOT ONE!!!!!!")
 		#print(self.buttonlist)
 		return self.buttonlist
 
