@@ -261,7 +261,7 @@ class Inputs(object):
 			reading = thiscap.get_input_status()[0]
 			print(reading)
 			if reading == "release" or reading == "press":
-				thiscap.clear_interrupt()
+				cap1208.clear_interrupt()
 #       elif reading == "press":
 				print("WE GOT ONE!!!!!!")
 		#print(self.buttonlist)
