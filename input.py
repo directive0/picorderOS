@@ -258,7 +258,7 @@ class Inputs(object):
 						self.buttonlist[i] = False
 
 		if configure.input_cap1208:
-			reading = thiscap.get_input_status()[0]
+			reading = cap1208.get_input_status()[0]
 			print(reading)
 			if reading == "release" or reading == "press":
 				cap1208.clear_interrupt()
