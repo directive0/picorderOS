@@ -91,9 +91,18 @@ if configure.input_cap_mpr121:
 		test.release_threshold = release_threshold
 
 if configure.input_cap1208:
+	# setup for ugeek test rig.
+	import RPi.GPIO as GPIO
+
+	GPIO.setmode(GPIO.BCM)
+
+	interrupt_pin = 0
+
+	GPIO.setup(interrupt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
 
 	import cap1xxx
-	cap1208 = cap1xxx.Cap1208()
+	cap1208 = cap1xxx.Cap1208(alert_pin = 0)
 
 
 
@@ -222,29 +231,17 @@ class Inputs(object):
 					self.buttonlist[2] = False
 
 		if configure.input_gpio:
-			# for i in range(3):
-			# 	if (not self.fired[i]) and (not GPIO.input(pins[i])):  # Fire button pressed
-			# 		self.fired[i] = True
-			# 		#print("Button ", i, " registered!")
-			# 		self.buttonlist[i] = True
-			# 	#device.emit(uinput.KEY_LEFTCTRL, 1) # Press Left Ctrl key
-			# 	if self.fired[i] and GPIO.input(pins[i]):  # Fire button released
-			# 		self.fired[i] = False
-			# 		self.buttonlist[i] = False
-			# 		self.down[i] = True
+
 			for i in range(3):
-				#print("i =", i, " ", GPIO.input(pins[i]))
+
 				# if the button has not been registered as pressed
 				if GPIO.input(pins[i]) == 0:  # button pressed
 					if not self.waspressed[i]:
 						self.waspressed[i] = True
-						#self.holdtimers[i].logtime()
-					#else:
-						#if self.holdtimers[i].timelapsed() > self.thresh_hold:
-							#self.holding[i] = True
+
 
 				if GPIO.input(pins[i]) == 1:
-					#self.holding[i] = False
+
 					if self.waspressed[i]:
 						self.buttonlist[i] = True
 						self.waspressed[i] = False
@@ -258,6 +255,7 @@ class Inputs(object):
 
 			# runs a loop to check each possible button
 			for i in range(len(touched)):
+
 				# if the button has not been registered as pressed
 				if touched[i]:  # button pressed
 					if not self.waspressed[i]:
@@ -293,3 +291,8 @@ class Inputs(object):
 		key = pygame.key.get_pressed()
 
 		return key
+
+
+
+def captest():
+	print(cap1208.get_input_status()[0])
