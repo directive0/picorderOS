@@ -33,7 +33,7 @@ class preferences(object):
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
 		self.leds = [False]
-		self.sleep = [True]
+		self.sleep = [False]
 		self.neopixel = [False]
 
 		# controls auto ranging of graphs
@@ -83,6 +83,10 @@ class preferences(object):
 		# holds the global state of the program (allows secondary modules to quit the program should we require it)
 		self.status = ["startup"]
 		self.last_status = ["startup"]
+
+		# holds the physical status of the devices
+		self.dr_open = False
+		self.dr_closed = False
 
 
 configure = preferences()
@@ -179,3 +183,6 @@ class timer(object):
 		#print("timelapse passed")
 		#print(self.timeLapse)
 		return self.timeLapse
+
+	def stoplapsed(self):
+		self.timelapsed()

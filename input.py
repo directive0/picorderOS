@@ -30,9 +30,14 @@ threshold = 3
 release_threshold = 2
 
 
-# if tr108 set up pins
+# if tr108 set up pins for buttons
 if configure.tr108:
 	pins = [5,6,13]
+
+if configure.tr109:
+	#pwr,hall1,hall2
+	pins = [5,17,26]
+
 
 
 import time
@@ -43,15 +48,29 @@ if configure.input_kb:
 
 # set up requirements for GPIO based inputs
 if configure.input_gpio:
+
 	# setup for ugeek test rig.
 	import RPi.GPIO as GPIO
 
 	GPIO.setmode(GPIO.BCM)
-	# Up, Down, left, right, fire
 
-	GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)  #X Button for GPIO5
-	GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)  #Trigon Button for GPIO24
-	GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)  #Square Button for GPIO22
+	if configure.tr108:
+		# setup our 3 control buttons
+		GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+	if configure.tr109:
+		# setup our 3 control buttons
+		GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+	# To add:
+	# GPIO Battery Low
+	# GPIO Hall 1
+	# GPIO Hall 2
+
+
 
 # set up requirements for capacitive buttons using an mpr121
 if configure.input_cap_mpr121:

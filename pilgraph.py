@@ -35,14 +35,12 @@ class graphlist(object):
 		self.sourcerange = sourcerange
 		self.low,self.high = self.sourcerange
 
-		#collect data for where the graph should be drawn to screen.
+		# collect data for where the graph should be drawn to screen.
 		self.x, self.y = graphcoords
 		self.spanx,self.spany = graphspan
 
 		self.newx,self.newy = graphcoords
 		self.newspanx,self.newspany = graphspan
-
-
 
 		self.targetrange = ((self.y + self.spany), self.y)
 
@@ -147,12 +145,14 @@ class graphlist(object):
 	def render(self, draw, auto = True, dot = True):
 
 		self.auto = configure.auto[0]
+
 		#preps the list by adding the X coordinate to every sensor value
 		cords = self.graphprep(self.buff)
 
-		#print(cords[-1])
-
+		# draws the line graph
 		draw.line(cords,self.colour,self.width)
+
+
 		if dot:
 			x1 = cords[-1][0] - (self.dotw/2)
 			y1 = cords[-1][1] - (self.doth/2)

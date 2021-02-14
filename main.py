@@ -22,7 +22,6 @@ if not configure.pc:
 	#from sensors import *
 else:
 	# otherwise load up the demonstration and dummy modules that emulate sensors and pass GPIO signals without requiring any real GPIO.
-	#from getcpu import *
 	from gpiodummy import *
 
 
@@ -53,7 +52,7 @@ def Main():
 	timeit = timer()
 	ledtime = timer()
 
-	# I think this sets the delay between draws.
+	# I this *can* be used to set the delay between draws, but it is not supported yet.
 	interval = 0.5
 
 
@@ -76,9 +75,9 @@ def Main():
 		lights = ripple()
 
 	print("Main Loop Starting")
-	# The following while loop catches ctrl-c exceptions. I use this structure so that configure.status[0] changes will loop back around and have a chance to activate different functions. It gets a little weird going forward, bear with me.
+	# The following while loop catches ctrl-c exceptions.
 	while configure.status[0] != "quit":
-		#print(configure.status[0])
+
 
 		# try allows us to capture a keyboard interrupt and assign behaviours.
 		try:
@@ -116,6 +115,7 @@ def Main():
 
 				if configure.tr109:
 					if timeit.timelapsed() > interval:
+						# add a hook for hall effect
 						if configure.display == "0":
 							configure.status[0] = dotscreen.push(data)
 						if configure.display == "1":

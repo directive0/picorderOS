@@ -367,9 +367,6 @@ class MultiFrame(object):
 		self.titlesizex, self.titlesizey = self.title.getsize()
 		self.barlength = (79 - (4+ self.titlesizex)) + 2
 
-	# this function grabs the sensor values and puts them in an object for us to use.
-	def sense(self):
-		pass
 
 	# this function updates the graph for the screen
 	def graphs(self):
@@ -427,6 +424,7 @@ class MultiFrame(object):
 	def push(self,sensors,draw):
 		self.draw = draw
 
+		# grab the sensor reading of the current sensors (may have changed since last draw)
 		self.A_Data = sensors[configure.sensor1[0]][0]
 		self.B_Data = sensors[configure.sensor2[0]][0]
 		self.C_Data = sensors[configure.sensor3[0]][0]
@@ -437,10 +435,8 @@ class MultiFrame(object):
 		self.layout()
 		self.title.push(self.titlex,self.titley)
 
-		self.sense()
-		#self.graphs()
 
-		# turns each channel on individually
+		# selection 0 shows all graphs at once
 		if self.selection == 0:
 			self.C_Graph.update(self.C_Data)
 			self.C_Graph.render(self.draw)
@@ -627,11 +623,16 @@ class ColourScreen(object):
 		self.thermal_frame = ThermalFrame(self.input)
 
 	def graph_screen(self,sensors):
+		# generate a new background
 		self.newimage = self.image.copy()
-		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.multi_frame.push(sensors,self.draw)
-		self.pixdrw()
 
+		# generate a new draw space
+		self.draw = ImageDraw.Draw(self.newimage)
+
+		# generate graphs
+		self.status = self.multi_frame.push(sensors,self.draw)
+
+		self.pixdrw()
 		return self.status
 
 	def thermal_screen(self,sensors):
