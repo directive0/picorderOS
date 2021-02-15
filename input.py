@@ -299,4 +299,8 @@ def captest():
 	# If the alert pin is raised
 	if cap1208._interrupt_status():
 		print(cap1208.get_input_status())
+		for i in range(cap1208.get_input_status())
+			if i = "press":
+				print(i)
+
 		cap1208.clear_interrupt()
