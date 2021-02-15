@@ -295,4 +295,8 @@ class Inputs(object):
 
 
 def captest():
-	print(cap1208.get_input_status()[0])
+
+	# If the alert pin is raised
+	if cap1208._interrupt_status():
+		print(cap1208.get_input_status())
+		cap1208.clear_interrupt()
