@@ -159,7 +159,3 @@ class graphlist(object):
 			x2 = cords[-1][0] + (self.dotw/2)
 			y2 = cords[-1][1] + (self.doth/2)
 			draw.ellipse([x1,y1,x2,y2],self.colour)
-		#for i in range(self.spanx):
-			#curx,cury = cords[i]
-			#draw.chord(cords[i-1],curx,cury,0)
-			#draw.point(cords[i],0)

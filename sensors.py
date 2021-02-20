@@ -22,8 +22,6 @@ if configure.bme:
 
 
 
-
-
 if configure.sensehat:
 	# instantiates and defines paramteres for the sensehat
 
@@ -80,6 +78,9 @@ class Sensor(object):
 
 
 		# add individual sensor module parameters below.
+		#0				1			2		3		4
+		#info = (lower range, upper range, unit, symbol)
+
 
 		if configure.system_vitals:
 			self.step = 0.0
@@ -128,8 +129,6 @@ class Sensor(object):
 			self.accelerometer_infox = [-500,500,"Accel X","g", "SenseHat"]
 			self.accelerometer_infoy = [-500,500,"Accel Y","g", "SenseHat"]
 			self.accelerometer_infoz = [-500,500,"Accel Z","g", "SenseHat"]
-			#sensorcount + = 9
-			#self.filehandler = datalog()
 
 
 		if configure.amg8833: # and not configure.simulate:
@@ -158,8 +157,6 @@ class Sensor(object):
 			self.accelerometer_infox = [-500,500,"Accelerometer X (EP)","g","Envirophat"]
 			self.accelerometer_infoy = [-500,500,"Accelerometer Y (EP)","g","Envirophat"]
 			self.accelerometer_infoz = [-500,500,"Accelerometer Z (EP)","g","Envirophat"]
-			#configure.max_sensors[0] = 9
-			#self.filehandler = datalog()
 
 
 		if configure.amg8833:
@@ -181,11 +178,6 @@ class Sensor(object):
 			self.VOC_info = [300000,1100000,"VOC","KOhm", "BME680"]
 
 		configure.sensor_info = self.get()
-
-
-#		sensordata = pd.DataFrame.append(self.get())#, columns=[self.get(),"min","max","desc","symbol"])
-#		print(sensordata)
-		#= self.get()
 
 	def sin_gen(self):
 		wavestep = math.sin(self.step)
