@@ -293,14 +293,20 @@ class Inputs(object):
 		return key
 
 
-
+# a simple function to test and develop the cap1208 interface.
+# (I used this for debugging my PCB)
 def captest():
 
 	# If the alert pin is raised
 	if cap1208._interrupt_status():
-		print(cap1208.get_input_status())
-		for i in range(cap1208.get_input_status()):
-			if cap1208.get_input_status()[i] = "press":
+
+		# check each item in the event lists
+		channels = cap1208.get_input_status()
+
+		for i in range(len(channels)):
+
+			# if the item has been pressed show us what channel it is
+			if channels[i] == "press":
 				print(i)
 
 		cap1208.clear_interrupt()
