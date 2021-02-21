@@ -203,7 +203,7 @@ class Sensor(object):
 
 	def get(self):
 		sensorlist = []
-
+		timestamp = [time.time()]
 
 		if configure.bme:
 
@@ -212,10 +212,10 @@ class Sensor(object):
 			sense_data3 = [self.bme.humidity]
 			sense_data4 = [self.bme.gas / 1000]
 
-			item1 = sense_data + self.temp_info
-			item2 = sense_data2 + self.pressure_info
-			item3 = sense_data3 + self.humidity_info
-			item4 = sense_data4 + self.VOC_info
+			item1 = sense_data + self.temp_info + timestamp
+			item2 = sense_data2 + self.pressure_info + timestamp
+			item3 = sense_data3 + self.humidity_info + timestamp
+			item4 = sense_data4 + self.VOC_info + timestamp
 
 			sensorlist += [item1, item2, item3, item4]
 
@@ -248,21 +248,21 @@ class Sensor(object):
 			sense_data8 = [sense.get_accelerometer_raw()["y"]]
 			sense_data9 = [sense.get_accelerometer_raw()["z"]]
 
-			item1 = sense_data + self.temp_info
-			item2 = sense_data2 + self.pressure_info
-			item3 = sense_data3 + self.humidity_info
+			item1 = sense_data + self.temp_info + timestamp
+			item2 = sense_data2 + self.pressure_info + timestamp
+			item3 = sense_data3 + self.humidity_info + timestamp
 
-			item4 = sense_data4 + self.magnet_infox
-			item5 = sense_data5 + self.magnet_infoy
-			item6 = sense_data6 + self.magnet_infoz
-			item7 = sense_data7 + self.accelerometer_infox
-			item8 = sense_data8 + self.accelerometer_infoy
-			item9 = sense_data9 + self.accelerometer_infoz
+			item4 = sense_data4 + self.magnet_infox + timestamp
+			item5 = sense_data5 + self.magnet_infoy + timestamp
+			item6 = sense_data6 + self.magnet_infoz + timestamp
+			item7 = sense_data7 + self.accelerometer_infox + timestamp
+			item8 = sense_data8 + self.accelerometer_infoy + timestamp
+			item9 = sense_data9 + self.accelerometer_infoz + timestamp
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 		if configure.amg8833:
 			sense_data = amg.pixels
-			item1 = sense_data + self.amg_info
+			item1 = sense_data + self.amg_info + timestamp
 
 		if configure.envirophat:
 			self.rgb = light.rgb()
@@ -280,16 +280,16 @@ class Sensor(object):
 			sense_data8 = [self.acc_values[1]]
 			sense_data9 = [self.acc_values[2]]
 
-			item1 = sense_data + self.temp_info
-			item2 = sense_data2 + self.pressure_info
-			item3 = sense_data3 + self.humidity_info
+			item1 = sense_data + self.temp_info + timestamp
+			item2 = sense_data2 + self.pressure_info + timestamp
+			item3 = sense_data3 + self.humidity_info + timestamp
 
-			item4 = sense_data4 + self.magnet_infox
-			item5 = sense_data5 + self.magnet_infoy
-			item6 = sense_data6 + self.magnet_infoz
-			item7 = sense_data7 + self.accelerometer_infox
-			item8 = sense_data8 + self.accelerometer_infoy
-			item9 = sense_data9 + self.accelerometer_infoz
+			item4 = sense_data4 + self.magnet_infox + timestamp
+			item5 = sense_data5 + self.magnet_infoy + timestamp
+			item6 = sense_data6 + self.magnet_infoz + timestamp
+			item7 = sense_data7 + self.accelerometer_infox + timestamp
+			item8 = sense_data8 + self.accelerometer_infoy + timestamp
+			item9 = sense_data9 + self.accelerometer_infoz + timestamp
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 		if configure.system_vitals:
@@ -310,15 +310,15 @@ class Sensor(object):
 			dummyload7 = [float(self.cos_gen()*100)]
 			dummyload8 = [float(self.sin2_gen()*100)]
 
-			item0 = systemtemp + self.cputemp
-			item1 = dummyload + self.infoa
-			item2 = dummyload2 + self.infob
-			item3 = dummyload3 + self.infoc
-			item4 = dummyload4 + self.infod
-			item5 = dummyload5 + self.infoe
-			item6 = dummyload6 + self.infof
-			item7 = dummyload7 + self.infog
-			item8 = dummyload8 + self.infoh
+			item0 = systemtemp + self.cputemp + timestamp
+			item1 = dummyload + self.infoa + timestamp
+			item2 = dummyload2 + self.infob + timestamp
+			item3 = dummyload3 + self.infoc + timestamp
+			item4 = dummyload4 + self.infod + timestamp
+			item5 = dummyload5 + self.infoe + timestamp
+			item6 = dummyload6 + self.infof + timestamp
+			item7 = dummyload7 + self.infog + timestamp
+			item8 = dummyload8 + self.infoh + timestamp
 
 			sensorlist += [item0, item1, item2, item3, item4, item5,item6, item7, item8]
 		configure.max_sensors[0] = len(sensorlist)

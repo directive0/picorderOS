@@ -1,11 +1,14 @@
 print("Loading Picorder Library Access and Retrieval System Module")
 from objects import *
 
-#	DataCore aims to provide a single surface for retrieving data for
-#	display in any of the different Picorder screen modes.
+#	PLARS (Picorder Library Access and Retrieval System) aims to provide a
+#	single surface for retrieving data for display in any of the different
+#	Picorder screen modes.
 
-#	TO DO
+#	TO DO:
 #	Create and open CSV storage file
+#	Log data
+#	Write back to disk
 #
 
 import os.path
@@ -27,7 +30,7 @@ class PLARS(object):
 		if path.exists(self.file_path):
 			self.df = pd.read_csv(self.file_path)
 		else:
-			self.df = pd.DataFrame([columns=['value','min','max','desc','sym','dev','timestamp'])
+			self.df = pd.DataFrame([columns=['value','min','max','dsc','sym','dev','timestamp'])
 			self.df.to_csv(self.file_path)
 
 	# gets the latest CSV file
@@ -35,20 +38,29 @@ class PLARS(object):
 		self.df = pd.read_csv(self.file_path)
 
 	# appends a new set of data to the CSV file.
-	def append_core(self, data):
-		 df.to_csv(self.file_path, mode='a', header=False)
+	def append_to_core(self, data):
+		 data.to_csv(self.file_path, mode='a', header=False)
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
+
+		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
+
+		self.append_to_core(newdata)
+		pass
+
+	def get_all_for_sensor(self,dsc,dev):
+		sensor_data = self.df[(self.df['dsc'] == dsc) & self.df['dev'] == dev]
+		pass
+
+	def index_by_time(self):
+		self.df.sort_values(by=['timestamp'])
+
+	# return a selection of most recent data from specific sensor defined by key
+	# seperated by a comma
+	def get_recent(self, num = 5, dsc, dev):
 		self.get_core()
-		self.append_core()
-		pass
 
-	# return a number of most recent data from specific sensor
-	def get_recent(self, num = 5, key):
-		#load csv file as dataframe
-
-		pass
 
 	# return a number of data from a specific sensor at a specific time interval
 	def get_timed(self, num = 5, key, interval = 0):
