@@ -96,14 +96,6 @@ class Sensor(object):
 			self.infof = [-500,500,"Tangent Wave", "","Raspberry Pi"]
 			self.infog = [-100,100,"Cos Wave", "","Raspberry Pi"]
 			self.infoh = [-100,100,"Sine Wave2", "","Raspberry Pi"]
-			#sensorcount += 8
-
-			self.vitalslist = []
-			for i in range(self.spanx):
-				self.vitalslist.append(self.low)
-
-			if configure.logdata[0]:
-				self.filehandler = datalog()
 
 
 
