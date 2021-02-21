@@ -52,7 +52,7 @@ if configure.tr108:
 	GPIO.setup(led2, GPIO.OUT) # LED pin set as output
 	GPIO.setup(led3, GPIO.OUT) # LED pin set as output
 
-loads the pin configurations and modes for the tr-109 (many switches)
+#loads the pin configurations and modes for the tr-109 (many switches)
 if configure.tr109:
 # Pin Definitons:
 	led1 = 16 #19 # Broadcom pin 19
