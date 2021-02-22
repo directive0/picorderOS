@@ -33,6 +33,7 @@ class PLARS(object):
 		if path.exists(self.file_path):
 			self.df = pd.read_csv(self.file_path)
 		else:
+			os.mkdir("data")
 			self.df = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 			self.df.to_csv(self.file_path)
 

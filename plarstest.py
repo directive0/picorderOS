@@ -9,3 +9,5 @@ testplars = PLARS()
 sensordata = Sensor()
 
 testplars.update(sensordata)
+
+print(testplars.emrg())
