@@ -72,4 +72,5 @@ class PLARS(object):
 
 	# dump all data to CSV
 	def emrg(self):
-		pass
+		self.get_core()
+		return self.df
