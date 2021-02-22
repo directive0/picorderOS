@@ -8,6 +8,6 @@ testplars = PLARS()
 
 sensordata = Sensor()
 
-testplars.update(sensordata)
+testplars.update(sensordata.get())
 
 print(testplars.emrg())
