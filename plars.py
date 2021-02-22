@@ -33,7 +33,8 @@ class PLARS(object):
 		if path.exists(self.file_path):
 			self.df = pd.read_csv(self.file_path)
 		else:
-			os.mkdir("data")
+			if not path.exists("data"):
+				os.mkdir("data")
 			self.df = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 			self.df.to_csv(self.file_path)
 
@@ -46,7 +47,7 @@ class PLARS(object):
 
 	# appends a new set of data to the CSV file.
 	def append_to_core(self, data):
-		 data.to_csv(self.file_path, mode='a', header=False, index=false)
+		 data.to_csv(self.file_path, mode='a', header=False, index =false)
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
