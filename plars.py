@@ -43,11 +43,11 @@ class PLARS(object):
 
 	# gets the latest CSV file
 	def get_core(self):
-		self.df = pd.read_csv(self.file_path, index_col = 0)
+		self.df = pd.read_csv(self.file_path)
 
 	# appends a new set of data to the CSV file.
 	def append_to_core(self, data):
-		 data.to_csv(self.file_path, mode='a', header=False, index=False)
+		 data.to_csv(self.file_path, mode='a', header=False)
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
