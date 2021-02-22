@@ -53,9 +53,8 @@ class PLARS(object):
 	def update(self,data):
 
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
-
+		print(newdata)
 		self.append_to_core(newdata)
-		pass
 
 	def get_all_for_sensor(self,dsc,dev):
 		sensor_data = self.df[(self.df['dsc'] == dsc) & self.df['dev'] == dev]
