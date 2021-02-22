@@ -37,6 +37,9 @@ class PLARS(object):
 			self.df = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 			self.df.to_csv(self.file_path)
 
+		# Set floating point display to raw, instead of exponent
+		pd.set_option('display.float_format', '{:.7f}'.format)
+
 	# gets the latest CSV file
 	def get_core(self):
 		self.df = pd.read_csv(self.file_path)
