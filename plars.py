@@ -43,7 +43,7 @@ class PLARS(object):
 
 	# gets the latest CSV file
 	def get_core(self):
-		self.df = pd.read_csv(self.file_path)
+		self.df = pd.read_csv(self.file_path, index=False)
 
 	# appends a new set of data to the CSV file.
 	def append_to_core(self, data):
