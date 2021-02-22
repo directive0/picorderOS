@@ -5,8 +5,11 @@ from objects import *
 #	single surface for retrieving data for display in any of the different
 #	Picorder screen modes.
 
+
+
 #	TO DO:
-#	Create and open CSV storage file
+#	Create test script
+#	Create and open CSV storage file if one does not already exist.
 #	Log data
 #	Write back to disk
 #
@@ -30,7 +33,7 @@ class PLARS(object):
 		if path.exists(self.file_path):
 			self.df = pd.read_csv(self.file_path)
 		else:
-			self.df = pd.DataFrame([columns=['value','min','max','dsc','sym','dev','timestamp'])
+			self.df = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 			self.df.to_csv(self.file_path)
 
 	# gets the latest CSV file
@@ -58,12 +61,12 @@ class PLARS(object):
 
 	# return a selection of most recent data from specific sensor defined by key
 	# seperated by a comma
-	def get_recent(self, num = 5, dsc, dev):
+	def get_recent(self, dsc, dev, num = 5):
 		self.get_core()
 
 
 	# return a number of data from a specific sensor at a specific time interval
-	def get_timed(self, num = 5, key, interval = 0):
+	def get_timed(self, key, interval = 0, num = 5):
 		#load csv file as dataframe
 		pass
 
