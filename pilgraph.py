@@ -14,7 +14,7 @@ from array import *
 class graphlist(object):
 
 	# the following is constructor code to give each object a list suitable for storing all our graph data.
-	def __init__(self, sourcerange, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
+	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
 		self.new = True
 		self.cycle = cycle
 		self.tock = timer()
@@ -31,9 +31,8 @@ class graphlist(object):
 		self.datalow = 0
 		self.newrange = (self.datalow,self.datahigh)
 
-		# collect data for translating sensor readings into pixel locations
-		self.sourcerange = sourcerange
-		self.low,self.high = self.sourcerange
+		# stores the graph identifier
+		self.ident = ident
 
 		# collect data for where the graph should be drawn to screen.
 		self.x, self.y = graphcoords
@@ -105,42 +104,35 @@ class graphlist(object):
 	def graphprep(self,datalist):
 		self.linepoint = self.x
 		self.jump = 1
-		self.newlist = []
+		self.newlist = array('f', [])
 
 
+		# get the range of the data.
 		self.datahigh = max(self.dlist)
 		self.datalow = min(self.dlist)
 		self.newrange = (self.datalow,self.datahigh)
 
+		# grabs the currently selected sensors range data
+		sourcelow = configure.sensors[self.ident][1]
+		sourcehigh = configure.sensors[self.ident][2]
+		self.sourcerange = [sourcelow,sourcehigh]
+
+		# for each vertical bar in the graph size
 		for i in range(self.spanx):
+			# if auto scaling is on
 			if self.auto == True:
-				scaledata = numpy.interp(datalist[i],self.newrange,self.targetrange)#self.translate(datalist[i], self.newrange, self.targetrange)
+				# take the sensor value received and map it against the on screen limits
+				scaledata = numpy.interp(datalist[i],self.newrange,self.targetrange)
 			else:
-				scaledata = self.translate(datalist[i], self.sourcerange, self.targetrange)
+				# use the sensors stated limits as the range.
+				scaledata = numpy.interp(datalist[i],self.sourcerange,self.targetrange)
+
 
 			self.newlist.append((self.linepoint,scaledata))
+
 			self.linepoint = self.linepoint + self.jump
 
 		return self.newlist
-
-	# the following function maps a value from the target range onto the desination range
-	def translate(self,value,source,target):
-		# Figure out how 'wide' each range is
-
-		leftMax,leftMin = source
-		rightMin,rightMax = target
-
-		leftSpan = leftMax - leftMin
-		rightSpan = rightMax - rightMin
-
-		# Convert the left range into a 0-1 range (float)
-		if leftSpan == 0:
-			return rightMin + rightSpan / 2
-
-		valueScaled = float(value - leftMin) / float(leftSpan)
-
-		# Convert the 0-1 range into a value in the right range.
-		return rightMin + (valueScaled * rightSpan)
 
 	def render(self, draw, auto = True, dot = True):
 

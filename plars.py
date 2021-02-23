@@ -12,6 +12,7 @@ from objects import *
 #		All data of a certain sensor
 #		All data of a certain time scale
 #			Data at set intervals (last day, last hour, last minute)
+# 	Incorporate short term memory
 
 import os.path
 from os import path
