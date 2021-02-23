@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import time
-print("Loading Globals Objects")
+print("Loading Global Objects")
 # This module contains generally useful objects that the entire program may call on.
 
 # This variable is used to pass information to things like progress notifications
@@ -57,7 +57,7 @@ class preferences(object):
 		self.envirophat = False
 		self.system_vitals = True
 
-		#selects the three sensor targets to plot
+		# An integer determines which sensor in the dataset to plot
 		self.sensor1 = [0]
 		self.sensor2 = [1]
 		self.sensor3 = [2]

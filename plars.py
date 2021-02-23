@@ -8,11 +8,10 @@ from objects import *
 
 
 #	TO DO:
-#	Create test script
-#	Create and open CSV storage file if one does not already exist.
-#	Log data
-#	Write back to disk
-#
+#	pull from saved data
+#		All data of a certain sensor
+#		All data of a certain time scale
+#			Data at set intervals (last day, last hour, last minute)
 
 import os.path
 from os import path
