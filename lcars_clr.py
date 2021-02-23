@@ -542,21 +542,17 @@ class MultiFrame(object):
 		self.title.push(self.titlex,self.titley,draw)
 
 
-		# turns each channel on individually
-		if self.selection == 0:
-			self.C_Graph.update(self.C_Data)
-			self.C_Graph.render(self.draw)
-
-			self.B_Graph.update(self.B_Data)
-			self.B_Graph.render(self.draw)
-
-			self.A_Graph.update(self.A_Data)
-			self.A_Graph.render(self.draw)
-
-
+		# Updates the graphs with the new data.
 		self.A_Graph.update(self.A_Data)
 		self.B_Graph.update(self.B_Data)
 		self.C_Graph.update(self.C_Data)
+
+		# turns each channel on individually
+		if self.selection == 0:
+			self.C_Graph.render(self.draw)
+			self.B_Graph.render(self.draw)
+			self.A_Graph.render(self.draw)
+
 
 		if self.selection == 1:
 			self.A_Graph.render(self.draw)
@@ -732,6 +728,7 @@ class ColourScreen(object):
 		self.powerdown_frame = PowerDown(self.input)
 
 	def graph_screen(self,sensors):
+		# passes the draw class a new image everytime.
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(sensors,self.draw)

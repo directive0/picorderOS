@@ -14,6 +14,7 @@ from array import *
 class graphlist(object):
 
 	# the following is constructor code to give each object a list suitable for storing all our graph data.
+	# sourcerange:
 	def __init__(self, sourcerange, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
 		self.new = True
 		self.cycle = cycle
@@ -44,18 +45,18 @@ class graphlist(object):
 
 		self.targetrange = ((self.y + self.spany), self.y)
 
-		# seeds a list with the coordinates for 0 to give us a list that we can put our scaled graph values in
+		# seeds a list with the coordinates for 0 to give us a list that we
+		# can put our scaled graph values in
 		for i in range(self.spanx):
 			self.glist.append(self.y + self.spany)
 
 		# seeds a list with sourcerange zero so we can put our sensor readings into it.
+		# dlist is the list where we store the raw sensor values with no scaling
 		for i in range(self.spanx):
 			self.dlist.append(self.low)
 
 
-	# the following function returns the graph list.
-	def grabglist(self):
-		return self.glist
+
 	# the following function returns the data list.
 	def grabdlist(self):
 		return self.dlist
@@ -81,7 +82,7 @@ class graphlist(object):
 
 	def update(self, data):
 		# grabs a tuple to hold our values
-		self.buff = self.grabdlist()
+		self.buff = self.glist
 
 
 		# if the time elapsed has reached the set interval then collect data
@@ -103,8 +104,13 @@ class graphlist(object):
 	# the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.
 	# if the auto flad is set then the class will autoscale the graph so that the highest and lowest currently displayed values are presented.
 	def graphprep(self,datalist):
+		# starts at x
 		self.linepoint = self.x
+
+		# moves one pixel at a time.
 		self.jump = 1
+
+
 		self.newlist = []
 
 
@@ -114,33 +120,16 @@ class graphlist(object):
 
 		for i in range(self.spanx):
 			if self.auto == True:
-				scaledata = numpy.interp(datalist[i],self.newrange,self.targetrange)#self.translate(datalist[i], self.newrange, self.targetrange)
+				scaledata = numpy.interp(datalist[i],self.newrange,self.targetrange)
 			else:
-				scaledata = self.translate(datalist[i], self.sourcerange, self.targetrange)
+				scaledata = numpy.interp(datalist[i],self.sourcerange,self.targetrange)
 
 			self.newlist.append((self.linepoint,scaledata))
 			self.linepoint = self.linepoint + self.jump
 
 		return self.newlist
 
-	# the following function maps a value from the target range onto the desination range
-	def translate(self,value,source,target):
-		# Figure out how 'wide' each range is
 
-		leftMax,leftMin = source
-		rightMin,rightMax = target
-
-		leftSpan = leftMax - leftMin
-		rightSpan = rightMax - rightMin
-
-		# Convert the left range into a 0-1 range (float)
-		if leftSpan == 0:
-			return rightMin + rightSpan / 2
-
-		valueScaled = float(value - leftMin) / float(leftSpan)
-
-		# Convert the 0-1 range into a value in the right range.
-		return rightMin + (valueScaled * rightSpan)
 
 	def render(self, draw, auto = True, dot = True):
 
