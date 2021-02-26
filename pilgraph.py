@@ -55,6 +55,7 @@ class graphlist(object):
 	# the following function returns the graph list.
 	def grabglist(self):
 		return self.glist
+
 	# the following function returns the data list.
 	def grabdlist(self):
 		return self.dlist
@@ -64,6 +65,7 @@ class graphlist(object):
 		average = sum(self.buff) / len(self.buff)
 		return average
 
+	# returns the highest
 	def get_high(self):
 		return max(self.buff)
 
@@ -79,8 +81,8 @@ class graphlist(object):
 	# the following appends data to the list.
 
 	def update(self, data):
-		# grabs a tuple to hold our values
-		self.buff = self.grabdlist()
+		# grabs the datalist
+		self.buff = self.dlist
 
 
 		# if the time elapsed has reached the set interval then collect data
@@ -99,8 +101,11 @@ class graphlist(object):
 
 
 
-	# the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.
-	# if the auto flad is set then the class will autoscale the graph so that the highest and lowest currently displayed values are presented.
+	# the following pairs the list of values with coordinates on the X axis.
+	# The supplied variables are the starting X coordinates and spacing between each point.
+	# if the auto flag is set then the class will autoscale the graph so that
+	# the highest and lowest currently displayed values are presented.
+	# takes in a list/array with length => span
 	def graphprep(self,datalist):
 		self.linepoint = self.x
 		self.jump = 1
@@ -127,9 +132,10 @@ class graphlist(object):
 				# use the sensors stated limits as the range.
 				scaledata = numpy.interp(datalist[i],self.sourcerange,self.targetrange)
 
-
+			# append the current x position, with this new scaled data as the y positioning into the buffer
 			self.newlist.append((self.linepoint,scaledata))
 
+			# increment the cursor
 			self.linepoint = self.linepoint + self.jump
 
 		return self.newlist

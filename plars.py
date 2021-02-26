@@ -15,9 +15,10 @@ from objects import *
 # 	Incorporate short term memory
 
 import os.path
-from os import path
 import numpy
+from array import *
 import pandas as pd
+
 
 
 
@@ -26,8 +27,11 @@ import pandas as pd
 class PLARS(object):
 
 	def __init__(self):
-		# PLARS opens a data frame at program start up.
+
+		# PLARS opens a data frame at initialization.
 		# If the csv file exists it opens it, otherwise creates it.
+		# self.df is the dataframe for the class
+
 		self.file_path = "data/datacore.csv"
 
 		if path.exists(self.file_path):
@@ -51,22 +55,23 @@ class PLARS(object):
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
-
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 		print(newdata)
 		self.append_to_core(newdata)
 
-	def get_all_for_sensor(self,dsc,dev):
+	# returns the last "num"ber of sensor readings, filtered by description and device
+	def get_sensor(self,dsc,dev,num):
 		sensor_data = self.df[(self.df['dsc'] == dsc) & self.df['dev'] == dev]
-		pass
+		return sensor_data.tail(num)
 
 	def index_by_time(self):
 		self.df.sort_values(by=['timestamp'])
 
-	# return a selection of most recent data from specific sensor defined by key
-	# seperated by a comma
-	def get_recent(self, dsc, dev, num = 5):
+	# return a "num"ber of most recent data from specific sensor (dsc,dev)
+	def get_recent(self, dsc, dev, num):
 		self.get_core()
+		self.index_by_time()
+		self.get_sensor(dsc,dev,num)
 
 
 	# return a number of data from a specific sensor at a specific time interval
@@ -74,7 +79,7 @@ class PLARS(object):
 		#load csv file as dataframe
 		pass
 
-	# dump all data to CSV
+	# returns the entire datacore
 	def emrg(self):
 		self.get_core()
 		return self.df

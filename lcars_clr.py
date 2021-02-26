@@ -455,17 +455,7 @@ class RecallFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-	# updates the graph for the screen
-	def graphs(self):
 
-		self.C_Graph.update(self.C_Data)
-		self.C_Graph.render(self.draw)
-
-		self.B_Graph.update(self.B_Data)
-		self.B_Graph.render(self.draw)
-
-		self.A_Graph.update(self.A_Data)
-		self.A_Graph.render(self.draw)
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".0f"):
@@ -657,6 +647,8 @@ class MultiFrame(object):
 		self.focus_mean_Label = LabelObj("test",font, colour = lcars_pinker)
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
+
+
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".0f"):
