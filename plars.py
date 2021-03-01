@@ -16,6 +16,7 @@ from objects import *
 
 import os
 import numpy
+import datetime
 from array import *
 import pandas as pd
 
@@ -53,7 +54,7 @@ class PLARS(object):
 	def get_core(self):
 		self.df = pd.read_csv(self.file_path)
 
-	# appends a new set of data to the CSV file.
+	#pends a new set of data to the CSV file.
 	def append_to_core(self, data):
 		 data.to_csv(self.file_path, mode='a', header=False)
 
@@ -66,7 +67,6 @@ class PLARS(object):
 	# returns all sensor data in the core for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
 		self.get_core()
-		#sensor_data = self.df[(self.df['dsc'] == dsc) & self.df['dev'] == dev]
 		result = self.df.loc[self.df['dsc'] == dsc]
 		result2 = result.loc[self.df['dev'] == dev]
 		return result2
@@ -86,7 +86,8 @@ class PLARS(object):
 		self.get_core()
 		self.index_by_time()
 		untrimmed_data = self.get_sensor(dsc,dev)
-		return untrimmed_data
+		trimmed_data = untrimmed_data.tail(num)
+		return trimmed_data['value'].tolist()
 
 
 
@@ -99,3 +100,6 @@ class PLARS(object):
 	def emrg(self):
 		self.get_core()
 		return self.df
+
+	def convert_epoch(self, time):
+		return datetime.datetime.fromtimestamp(time)

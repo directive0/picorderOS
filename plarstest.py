@@ -6,8 +6,8 @@ import time
 # create a PLARS object
 testplars = PLARS()
 
-sensordata = Sensor()
+#sensordata = Sensor()
 
-testplars.update(sensordata.get())
+#testplars.update(sensordata.get())
 
-print(testplars.emrg())
+testplars.get_recent("Thermometer", "BME680", 10)
