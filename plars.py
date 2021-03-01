@@ -60,7 +60,7 @@ class PLARS(object):
 		self.append_to_core(newdata)
 
 	# returns all sensor data in the core for the specific sensor (dsc,dev)
-	def get_all_for_sensor(self,dsc,dev):
+	def get_sensor(self,dsc,dev):
 		self.get_core()
 		sensor_data = self.df[(self.df['dsc'] == dsc) & self.df['dev'] == dev]
 		return sensor_data
@@ -68,13 +68,19 @@ class PLARS(object):
 	def index_by_time(self):
 		self.df.sort_values(by=['timestamp'])
 
-	# return a selection of most recent data from specific sensor defined by key
+	# return a list of n most recent data from specific sensor defined by key
 	# seperated by a comma
+	# update the buffer from disk
+	# organize it by time.
+	# get only the sensor data required
+	# trim it to length.
+	# return only the sensor values in a list.
 	def get_recent(self, dsc, dev, num = 5):
-
 		self.get_core()
 		self.index_by_time()
-		self.get_sensor(dsc,dev,num)
+		untrimmed_data = self.get_sensor(dsc,dev)
+		
+
 
 
 	# return a number of data from a specific sensor at a specific time interval
