@@ -10,4 +10,4 @@ testplars = PLARS()
 
 #testplars.update(sensordata.get())
 
-testplars.get_recent("Thermometer", "BME680", 10)
+print(testplars.get_recent("Thermometer", "BME680", 10))
