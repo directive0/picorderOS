@@ -16,7 +16,9 @@ from objects import *
 
 import os
 import numpy
+from array import *
 import pandas as pd
+
 
 
 
@@ -25,8 +27,11 @@ import pandas as pd
 class PLARS(object):
 
 	def __init__(self):
-		# PLARS opens a data frame at program start up.
+
+		# PLARS opens a data frame at initialization.
 		# If the csv file exists it opens it, otherwise creates it.
+		# self.df is the dataframe for the class
+
 		self.file_path = "data/datacore.csv"
 
 		if os.path.exists(self.file_path):
@@ -50,7 +55,6 @@ class PLARS(object):
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
-
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 		print(newdata)
 		self.append_to_core(newdata)
@@ -69,6 +73,8 @@ class PLARS(object):
 	def get_recent(self, dsc, dev, num = 5):
 
 		self.get_core()
+		self.index_by_time()
+		self.get_sensor(dsc,dev,num)
 
 
 	# return a number of data from a specific sensor at a specific time interval
@@ -76,7 +82,7 @@ class PLARS(object):
 		#load csv file as dataframe
 		pass
 
-	# dump all data to CSV
+	# returns the entire datacore
 	def emrg(self):
 		self.get_core()
 		return self.df
