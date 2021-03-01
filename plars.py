@@ -45,6 +45,10 @@ class PLARS(object):
 		# Set floating point display to raw, instead of exponent
 		pd.set_option('display.float_format', '{:.7f}'.format)
 
+	# provide status of database (how many entries, how many devices, size, length)
+	def status(self):
+		pass
+
 	# gets the latest CSV file
 	def get_core(self):
 		self.df = pd.read_csv(self.file_path)
@@ -70,16 +74,17 @@ class PLARS(object):
 
 	# return a list of n most recent data from specific sensor defined by key
 	# seperated by a comma
+
 	# update the buffer from disk
 	# organize it by time.
-	# get only the sensor data required
+	# get only n number of sensor data required
 	# trim it to length.
 	# return only the sensor values in a list.
 	def get_recent(self, dsc, dev, num = 5):
 		self.get_core()
 		self.index_by_time()
 		untrimmed_data = self.get_sensor(dsc,dev)
-		
+		return untrimmed_data
 
 
 
