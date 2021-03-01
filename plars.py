@@ -14,8 +14,7 @@ from objects import *
 #			Data at set intervals (last day, last hour, last minute)
 # 	Incorporate short term memory
 
-import os.path
-from os import path
+import os
 import numpy
 import pandas as pd
 
@@ -30,10 +29,10 @@ class PLARS(object):
 		# If the csv file exists it opens it, otherwise creates it.
 		self.file_path = "data/datacore.csv"
 
-		if path.exists(self.file_path):
+		if os.path.exists(self.file_path):
 			self.df = pd.read_csv(self.file_path)
 		else:
-			if not path.exists("data"):
+			if not os.path.exists("data"):
 				os.mkdir("data")
 			self.df = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 			self.df.to_csv(self.file_path)
@@ -56,9 +55,11 @@ class PLARS(object):
 		print(newdata)
 		self.append_to_core(newdata)
 
+	# returns all sensor data in the core for the specific sensor (dsc,dev)
 	def get_all_for_sensor(self,dsc,dev):
+		self.get_core()
 		sensor_data = self.df[(self.df['dsc'] == dsc) & self.df['dev'] == dev]
-		pass
+		return sensor_data
 
 	def index_by_time(self):
 		self.df.sort_values(by=['timestamp'])
@@ -66,6 +67,7 @@ class PLARS(object):
 	# return a selection of most recent data from specific sensor defined by key
 	# seperated by a comma
 	def get_recent(self, dsc, dev, num = 5):
+
 		self.get_core()
 
 
