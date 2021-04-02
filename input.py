@@ -35,10 +35,13 @@ if configure.tr108:
 	pins = [5,6,13]
 
 if configure.tr109:
+	import RPi.GPIO as GPIO
+
 	#pwr,hall1,hall2
 	pins = [5,17,26]
-
-
+	hallpin2 = 26
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setup(hallpin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 import time
 
@@ -62,6 +65,8 @@ if configure.input_gpio:
 
 	if configure.tr109:
 		# setup our 3 control buttons
+
+
 		GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -97,8 +102,8 @@ if configure.input_cap1208:
 	GPIO.setmode(GPIO.BCM)
 
 	interrupt_pin = 0
-
 	GPIO.setup(interrupt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+	GPIO.add_event_detect(interrupt_pin, GPIO.RISING)
 
 
 	import cap1xxx
@@ -171,6 +176,11 @@ class Inputs(object):
 		pass
 
 	def read(self):
+
+		print(GPIO.input(hallpin2))
+
+
+
 		if configure.input_kb:
 
 			key = self.keypress()

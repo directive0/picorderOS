@@ -1,6 +1,8 @@
 print("Loading Picorder Library Access and Retrieval System Module")
 from objects import *
 
+import json
+
 #	PLARS (Picorder Library Access and Retrieval System) aims to provide a
 #	single surface for retrieving data for display in any of the different
 #	Picorder screen modes.
@@ -13,6 +15,7 @@ from objects import *
 #		All data of a certain time scale
 #			Data at set intervals (last day, last hour, last minute)
 # 	Incorporate short term memory
+# 	JSON api
 
 import os
 import numpy
@@ -61,7 +64,6 @@ class PLARS(object):
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
-		print(newdata)
 		self.append_to_core(newdata)
 
 	# returns all sensor data in the core for the specific sensor (dsc,dev)
@@ -76,19 +78,17 @@ class PLARS(object):
 
 	# return a list of n most recent data from specific sensor defined by key
 	# seperated by a comma
-
-	# update the buffer from disk
-	# organize it by time.
-	# get only n number of sensor data required
-	# trim it to length.
-	# return only the sensor values in a list.
 	def get_recent(self, dsc, dev, num = 5):
+		# update the buffer from disk
 		self.get_core()
+		# organize it by time.
 		self.index_by_time()
+		# get a dataframe of just the requested sensor
 		untrimmed_data = self.get_sensor(dsc,dev)
+		# trim it to length (num).
 		trimmed_data = untrimmed_data.tail(num)
+		# return a list of the values
 		return trimmed_data['value'].tolist()
-
 
 
 	# return a number of data from a specific sensor at a specific time interval
@@ -103,3 +103,7 @@ class PLARS(object):
 
 	def convert_epoch(self, time):
 		return datetime.datetime.fromtimestamp(time)
+
+	# request accepts a JSON object and returns a JSON response
+	def request(self, request):
+		pass

@@ -13,13 +13,20 @@ if not configure.pc:
 
 
 PIN_DATA  = 16
-PIN_LATCH = 20
-PIN_CLOCK = 6
+PIN_LATCH = 6
+PIN_CLOCK = 20
+PIN_DATA2 = 17
+PIN_LATCH2 = 22
+PIN_CLOCK2 = 27
+PINS = [[PIN_DATA,PIN_LATCH,PIN_CLOCK],[PIN_DATA2,PIN_LATCH2,PIN_CLOCK2]]
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_DATA,  GPIO.OUT)
 GPIO.setup(PIN_LATCH, GPIO.OUT)
 GPIO.setup(PIN_CLOCK, GPIO.OUT)
+GPIO.setup(PIN_DATA2,  GPIO.OUT)
+GPIO.setup(PIN_LATCH2, GPIO.OUT)
+GPIO.setup(PIN_CLOCK2, GPIO.OUT)
 
 
 if configure.neopixel:
@@ -32,13 +39,13 @@ if configure.neopixel:
 	gamma = 4
 
 # delivers data to the shift register
-def shiftout(byte):
-	GPIO.output(PIN_LATCH, 0)
+def shiftout(byte,board = 0):
+	GPIO.output(PINS[board][1], 0)
 	for x in range(8):
-		GPIO.output(PIN_DATA, (byte >> x) & 1)
-		GPIO.output(PIN_CLOCK, 1)
-		GPIO.output(PIN_CLOCK, 0)
-	GPIO.output(PIN_LATCH, 1)
+		GPIO.output(PINS[board][0], (byte >> x) & 1)
+		GPIO.output(PINS[board][2], 1)
+		GPIO.output(PINS[board][2], 0)
+	GPIO.output(PINS[board][1], 1)
 
 # loads the pin configurations and modes for the tr-108  (3 leds)
 if configure.tr108:
@@ -72,12 +79,14 @@ if configure.tr109:
 
 # a function to clear the gpio
 def cleangpio():
+	resetleds()
 	GPIO.cleanup() # cleanup all GPIO
 
 # a function to clear the LEDs
 def resetleds():
 	if configure.tr109:
 		shiftout(0)
+		shiftout(0, board = 1)
 	if configure.tr108:
 		GPIO.output(led1, GPIO.LOW)
 		GPIO.output(led2, GPIO.LOW)
@@ -149,14 +158,19 @@ class ripple(object):
 
 			if self.beat == 0:
 				shiftout(140)
+				shiftout(140,board = 1)
 
 			if self.beat == 1:
 				shiftout(74)
+				shiftout(74,board = 1)
 
 			if self.beat == 2:
 				shiftout(41)
+				shiftout(41, board = 1)
 
 			if self.beat == 3:
 				shiftout(26)
+				shiftout(26, board = 1)
 		else:
 			shiftout(0)
+			shiftout(0,board =1)
