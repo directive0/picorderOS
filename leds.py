@@ -1,7 +1,7 @@
 #!/usr/bin/python
 print("Loading Unified Indicator Module")
-# new Changes
-# will need to support a reed switch and more inputs.
+# Provides a surface for control over the LEDs connected via GPIO. For the tr-tr108
+# LEDs are controlled directly from GPIO, for the tr109 a shift register is used
 
 from objects import *
 
@@ -9,15 +9,15 @@ from objects import *
 if not configure.pc:
 	import RPi.GPIO as GPIO
 
-
-
-
+# the following constants are for the pin addresses of the shift register
+# the tr109 supports two shift registers, and so two sets of pin addresses
 PIN_DATA  = 16
 PIN_LATCH = 6
 PIN_CLOCK = 20
 PIN_DATA2 = 17
 PIN_LATCH2 = 22
 PIN_CLOCK2 = 27
+
 PINS = [[PIN_DATA,PIN_LATCH,PIN_CLOCK],[PIN_DATA2,PIN_LATCH2,PIN_CLOCK2]]
 
 GPIO.setmode(GPIO.BCM)
@@ -134,43 +134,70 @@ def ledd_off():
 def screen_off():
 	GPIO.output(sc_led, GPIO.LOW)
 
+# The following class drives the ripple animation for the tr-109.
 class ripple(object):
+	
 	def __init__(self):
 		self.beat = 0
 		self.disabled = False
+		self.statuswas = False
+		self.lights = True
 		pass
 
 	def cycle(self):
+
+		# because the tr-109 uses a shift register to drive its indicator LEDs
+		# each frame of LED animations is represented by a byte, with the LEDs
+		# being arranged as follows:
+
 		#	0		0		0		0		0		0		0		0
 		#	a		b		d		g		pwr		a1		b1		d1
 
+		# the basic ripple animation is as follows.
 		#140
 		#74
 		#41
 		#26
 
-		screen_on()
-		if configure.sleep[0] and configure.tr109:
-			self.beat += 1
+		# if sleep detection is active:
+		if configure.sleep[0]:
+			#check if the door is open.
+			if configure.dr_open[0]:
+				# if it wasn't open last time.
+				if self.statuswas == configure.dr_open[0]:
+					# turn on our screen
+					screen_on()
+				# engage the lights
+				self.lights = True
+				self.statuswas = configure.dr_open[0]
+			else:
+				screen_off()
+				self.lights = False
 
-			if self.beat > 3:
-				self.beat = 0
 
-			if self.beat == 0:
-				shiftout(140)
-				shiftout(140,board = 1)
+	# if lights are engaged this block of code will run the animation, or else
+	# turn them off.
+	if self.lights:
+		self.beat += 1
 
-			if self.beat == 1:
-				shiftout(74)
-				shiftout(74,board = 1)
+		if self.beat > 3:
+			self.beat = 0
 
-			if self.beat == 2:
-				shiftout(41)
-				shiftout(41, board = 1)
+		if self.beat == 0:
+			shiftout(140)
+			shiftout(140,board = 1)
 
-			if self.beat == 3:
-				shiftout(26)
-				shiftout(26, board = 1)
-		else:
-			shiftout(0)
-			shiftout(0,board =1)
+		if self.beat == 1:
+			shiftout(74)
+			shiftout(74,board = 1)
+
+		if self.beat == 2:
+			shiftout(41)
+			shiftout(41, board = 1)
+
+		if self.beat == 3:
+			shiftout(26)
+			shiftout(26, board = 1)
+	else:
+		shiftout(0)
+		shiftout(0,board =1)

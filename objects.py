@@ -33,8 +33,10 @@ class preferences(object):
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
 		self.leds = [False]
+
+		# If sleep is True the lights will respond to hall effect sensors
 		self.sleep = [False]
-		self.neopixel = [False]
+
 
 		# controls auto ranging of graphs
 		self.auto = [True]

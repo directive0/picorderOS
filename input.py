@@ -35,10 +35,12 @@ if configure.tr108:
 	pins = [5,6,13]
 
 if configure.tr109:
-	import RPi.GPIO as GPIO
 
-	#pwr,hall1,hall2
+	# by default the tr-109 uses gpio for hinge close
+	import RPi.GPIO as GPIO
 	pins = [5,17,26]
+
+	hallpin1 = None
 	hallpin2 = 26
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(hallpin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -103,7 +105,7 @@ if configure.input_cap1208:
 
 	interrupt_pin = 0
 	GPIO.setup(interrupt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-	GPIO.add_event_detect(interrupt_pin, GPIO.RISING)
+	GPIO.add_event_detect(interrupt_pin, GPIO.BOTH)
 
 
 	import cap1xxx
@@ -159,6 +161,7 @@ class Inputs(object):
 		self.bfire = False
 		self.cfire = False
 
+
 	def is_down(self, i):
 		if self.down[i]:
 			self.down[i] = False
@@ -178,6 +181,8 @@ class Inputs(object):
 	def read(self):
 
 		print(GPIO.input(hallpin2))
+
+		if hallpin2 = 0:
 
 
 
