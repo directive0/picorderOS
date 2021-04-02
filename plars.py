@@ -22,7 +22,7 @@ import numpy
 import datetime
 from array import *
 import pandas as pd
-
+import json
 
 
 
@@ -77,7 +77,13 @@ class PLARS(object):
 		self.df.sort_values(by=['timestamp'])
 
 	# return a list of n most recent data from specific sensor defined by key
-	# seperated by a comma
+	# seperated by a comma"?:
+
+	# update the buffer from disk
+	# organize it by time.
+	# get only n number of sensor data required
+	# trim it to length.
+	# return only the sensor values in a list.
 	def get_recent(self, dsc, dev, num = 5):
 		# update the buffer from disk
 		self.get_core()
@@ -90,6 +96,10 @@ class PLARS(object):
 		# return a list of the values
 		return trimmed_data['value'].tolist()
 
+
+	def request(self, json):
+		json.
+		pass
 
 	# return a number of data from a specific sensor at a specific time interval
 	def get_timed(self, key, interval = 0, num = 5):
