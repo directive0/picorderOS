@@ -182,7 +182,10 @@ class Inputs(object):
 
 		print(GPIO.input(hallpin2))
 
-		if hallpin2 = 0:
+		if hallpin2 == 0:
+			configure.dr_open = True
+		else:
+			configure.dr_open = False
 
 
 
