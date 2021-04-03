@@ -29,15 +29,6 @@ GPIO.setup(PIN_LATCH2, GPIO.OUT)
 GPIO.setup(PIN_CLOCK2, GPIO.OUT)
 
 
-if configure.neopixel:
-#	import board
-#	import neopixel
-	pwr = 0
-	alpha = 1
-	beta = 2
-	delta = 3
-	gamma = 4
-
 # delivers data to the shift register
 def shiftout(byte,board = 0):
 	GPIO.output(PINS[board][1], 0)
@@ -136,7 +127,7 @@ def screen_off():
 
 # The following class drives the ripple animation for the tr-109.
 class ripple(object):
-	
+
 	def __init__(self):
 		self.beat = 0
 		self.disabled = False
