@@ -166,29 +166,29 @@ class ripple(object):
 				self.lights = False
 
 
-	# if lights are engaged this block of code will run the animation, or else
-	# turn them off.
-	if self.lights:
-		self.beat += 1
+		# if lights are engaged this block of code will run the animation, or else
+		# turn them off.
+		if self.lights:
+			self.beat += 1
 
-		if self.beat > 3:
-			self.beat = 0
+			if self.beat > 3:
+				self.beat = 0
 
-		if self.beat == 0:
-			shiftout(140)
-			shiftout(140,board = 1)
+			if self.beat == 0:
+				shiftout(140)
+				shiftout(140,board = 1)
 
-		if self.beat == 1:
-			shiftout(74)
-			shiftout(74,board = 1)
+			if self.beat == 1:
+				shiftout(74)
+				shiftout(74,board = 1)
 
-		if self.beat == 2:
-			shiftout(41)
-			shiftout(41, board = 1)
+			if self.beat == 2:
+				shiftout(41)
+				shiftout(41, board = 1)
 
-		if self.beat == 3:
-			shiftout(26)
-			shiftout(26, board = 1)
-	else:
-		shiftout(0)
-		shiftout(0,board =1)
+			if self.beat == 3:
+				shiftout(26)
+				shiftout(26, board = 1)
+		else:
+			shiftout(0)
+			shiftout(0,board =1)
