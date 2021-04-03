@@ -87,8 +87,8 @@ class preferences(object):
 		self.last_status = ["startup"]
 
 		# holds the physical status of the devices
-		self.dr_open = False
-		self.dr_closed = False
+		self.dr_open = [False]
+		self.dr_closed = [False]
 
 
 configure = preferences()
