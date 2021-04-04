@@ -99,7 +99,8 @@ def Main():
 
 				#if timeit.timelapsed() > interval:
 				data = sensors.get()
-
+				plars.update(data)
+				
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
 
