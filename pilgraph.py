@@ -149,7 +149,7 @@ class graph_area(object):
 			print("linepoint:", self.linepoint)
 			print("scaledata:", scaledata)
 			# append the current x position, with this new scaled data as the y positioning into the buffer
-			self.newlist.append(self.linepoint,scaledata)
+			self.newlist.append((self.linepoint,scaledata))
 
 			# increment the cursor
 			self.linepoint = self.linepoint + self.jump
