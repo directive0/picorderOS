@@ -134,6 +134,7 @@ class graph_area(object):
 		sourcehigh = configure.sensors[self.ident][2]
 		self.sourcerange = [sourcelow,sourcehigh]
 
+
 		# for each vertical bar in the graph size
 		for i in range(self.spanx):
 			# if auto scaling is on
@@ -156,8 +157,10 @@ class graph_area(object):
 
 		self.auto = configure.auto[0]
 
+		dsc = configure.sensor_info[self.sensors[self.ident]][3]
+		dsc = configure.sensor_info[self.sensors[self.ident]][5]
 		#preps the list by adding the X coordinate to every sensor value
-		cords = self.graphprep(self.buff)
+		cords = self.graphprep(plars.get_recent(dsc,dev,num = self.spanx))
 
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
