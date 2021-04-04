@@ -21,7 +21,7 @@ from PIL import ImageDraw
 
 import numpy
 from array import *
-
+from plars import *
 
 class graph_area(object):
 
