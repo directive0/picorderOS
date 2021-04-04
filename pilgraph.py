@@ -146,6 +146,7 @@ class graph_area(object):
 				# use the sensors stated limits as the range.
 				scaledata = numpy.interp(datalist[i],self.sourcerange,self.targetrange)
 
+			print("linepoint:", linepoint)
 			print("scaledata:", scaledata)
 			# append the current x position, with this new scaled data as the y positioning into the buffer
 			self.newlist.append((self.linepoint,scaledata))
