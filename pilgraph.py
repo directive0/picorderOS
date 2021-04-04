@@ -136,7 +136,6 @@ class graph_area(object):
 
 		sourcehigh = configure.sensor_info[configure.sensors[self.ident][0]][2]
 		self.sourcerange = [sourcelow,sourcehigh]
-		print("sourcerange", self.sourcerange)
 
 		# for each vertical bar in the graph size
 		for i in range(self.spanx):
@@ -150,8 +149,6 @@ class graph_area(object):
 					# use the sensors stated limits as the range.
 					scaledata = numpy.interp(datalist[i],self.sourcerange,self.targetrange)
 
-				print("linepoint:", self.linepoint)
-				print("scaledata:", scaledata)
 				# append the current x position, with this new scaled data as the y positioning into the buffer
 				self.newlist.append((self.linepoint,scaledata))
 			else:
