@@ -121,7 +121,7 @@ class graph_area(object):
 	def graphprep(self,datalist):
 		self.linepoint = self.x
 		self.jump = 1
-		self.newlist = array('f', [])
+		self.newlist = [] #array('f', [])
 
 
 		# get the range of the data.
