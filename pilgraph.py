@@ -150,7 +150,7 @@ class graph_area(object):
 					scaledata = float(numpy.interp(datalist[i],self.sourcerange,self.targetrange))
 
 				# append the current x position, with this new scaled data as the y positioning into the buffer
-				self.newlist.append((self.linepoint,scaledata))
+				self.newlist.append([self.linepoint,scaledata])
 			else:
 				scaledata = float(numpy.interp(sourcelow,self.sourcerange,self.targetrange))
 				self.newlist.append([self.linepoint,scaledata])
