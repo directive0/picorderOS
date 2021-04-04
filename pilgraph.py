@@ -157,8 +157,8 @@ class graph_area(object):
 
 		self.auto = configure.auto[0]
 
-		dsc = configure.sensor_info[self.sensors[self.ident]][3]
-		dsc = configure.sensor_info[self.sensors[self.ident]][5]
+		dsc = configure.sensor_info[configure.sensors[self.ident]][3]
+		dsc = configure.sensor_info[configure.sensors[self.ident]][5]
 		#preps the list by adding the X coordinate to every sensor value
 		cords = self.graphprep(plars.get_recent(dsc,dev,num = self.spanx))
 
