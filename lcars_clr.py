@@ -391,198 +391,6 @@ class PowerDown(object):
 		return status
 
 
-# Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
-class RecallFrame(object):
-
-	def __init__(self,input):
-		# Sets the topleft origin of the graph
-		self.graphx = 23
-		self.graphy = 24
-
-		# Sets the x and y span of the graph
-		self.gspanx = 133
-		self.gspany = 71
-
-
-		self.marginleft = 23
-		self.marginright= 133
-
-		# sets the background image for the display
-		self.back = Image.open('assets/lcarsframe.png')
-
-		# sets the currently selected sensor to focus on
-		self.selection = 0
-
-		# grabs the input object for the interface
-		self.input = Inputs()
-
-		# ties the auto state to the global object
-		self.auto = configure.auto[0]
-
-		# creates and interval timer for screen refresh.
-		self.interval = timer()
-		self.interval.logtime()
-
-		# Sets the coordinates of onscreen labels.
-		self.titlex = 23
-		self.titley = 6
-		self.labely = 102
-
-		self.graphcycle = 0
-
-		self.decimal = 1
-
-		self.divider = 47
-
-		self.A_Graph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[0], width = 1)
-
-		self.B_Graph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[1], width = 1)
-
-		self.C_Graph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[2], width = 1)
-
-		self.Graphs = [self.A_Graph, self.B_Graph, self.C_Graph]
-
-		self.A_Label = LabelObj("a_string",font,colour = lcars_orange)
-
-		self.B_Label = LabelObj("b_string",font, colour = lcars_blue)
-
-		self.C_Label = LabelObj("c_string",font, colour = lcars_pinker)
-
-		self.focus_Label = LabelObj("test",bigfont, colour = lcars_orpeach)
-		self.focus_high_Label = LabelObj("test",font, colour = lcars_peach)
-		self.focus_low_Label = LabelObj("test",font, colour = lcars_bluer)
-		self.focus_mean_Label = LabelObj("test",font, colour = lcars_pinker)
-
-		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
-
-
-
-	# takes a value and sheds the second digit after the decimal place
-	def arrangelabel(self,data,range = ".0f"):
-		datareturn = format(float(data), range)
-		return datareturn
-
-	# defines the labels for the screen
-	def labels(self,sensors):
-
-		# depending on which number the "selection" variable takes on.
-		if self.selection == 0:
-			raw_a = str(self.A_Data)
-			adjusted_a = self.arrangelabel(raw_a)
-			a_string = adjusted_a + sensors[configure.sensor1[0]][4]
-
-			raw_b = str(self.B_Data)
-			adjusted_b = self.arrangelabel(raw_b)
-			b_string = adjusted_b + " " + sensors[configure.sensor2[0]][4]
-
-			raw_c = str(self.C_Data)
-			adjusted_c = self.arrangelabel(raw_c)
-			c_string = adjusted_c + " " + sensors[configure.sensor3[0]][4]
-
-			self.A_Label.string = a_string
-			self.A_Label.push(23,self.labely,self.draw)
-
-			self.B_Label.string = b_string
-			self.B_Label.center(self.labely,23,135,self.draw)
-
-			self.C_Label.string = c_string
-			self.C_Label.r_align(156,self.labely,self.draw)
-
-		# displays more details for whatever sensor is in focus
-		if self.selection != 0:
-
-			this = self.selection - 1
-
-			this_bundle = self.Graphs[this]
-
-			raw = str(sensors[configure.sensors[this][0]][0])
-			adjusted = self.arrangelabel(raw, '.2f')
-			self.focus_Label.string = adjusted
-			self.focus_Label.r_align(156,self.titley,self.draw)
-
-			self.focus_high_Label.string = "max " + self.arrangelabel(str(this_bundle.get_high()), '.1f')
-			self.focus_high_Label.push(23,self.labely,self.draw)
-
-			self.focus_low_Label.string = "min " + self.arrangelabel(str(this_bundle.get_low()), '.1f')
-			self.focus_low_Label.center(self.labely,23,135,self.draw)
-
-			self.focus_mean_Label.string = "x- " + self.arrangelabel(str(this_bundle.get_average()), '.1f')
-			self.focus_mean_Label.r_align(156,self.labely,self.draw)
-
-
-	# push the image frame and contents to the draw object.
-	def push(self,sensors,draw):
-		# passes the current bitmap buffer to the object incase someone else needs it.
-		self.draw = draw
-
-		# Grabs the current sensor reading
-		self.A_Data = sensors[configure.sensor1[0]][0]
-		self.B_Data = sensors[configure.sensor2[0]][0]
-		self.C_Data = sensors[configure.sensor3[0]][0]
-
-
-		# Draws the Title
-		if self.selection != 0:
-			this = self.selection - 1
-			self.title.string = configure.sensor_info[configure.sensors[this][0]][3]
-		else:
-			self.title.string = "Multi-Graph"
-
-		self.title.push(self.titlex,self.titley,draw)
-
-
-		# turns each channel on individually
-		if self.selection == 0:
-			self.C_Graph.update(self.C_Data)
-			self.C_Graph.render(self.draw)
-
-			self.B_Graph.update(self.B_Data)
-			self.B_Graph.render(self.draw)
-
-			self.A_Graph.update(self.A_Data)
-			self.A_Graph.render(self.draw)
-
-
-		self.A_Graph.update(self.A_Data)
-		self.B_Graph.update(self.B_Data)
-		self.C_Graph.update(self.C_Data)
-
-		if self.selection == 1:
-			self.A_Graph.render(self.draw)
-
-		if self.selection == 2:
-			self.B_Graph.render(self.draw)
-
-		if self.selection == 3:
-			self.C_Graph.render(self.draw)
-
-		self.labels(sensors)
-
-		# returns mode_a to the main loop unless something causes state change
-		status  = "mode_a"
-
-		# get current input event
-		keys = self.input.read()
-
-		# if a key is registering as pressed increment or rollover the selection variable.
-		if keys[0]:
-			self.selection += 1
-			if self.selection > 3:
-				self.selection = 0
-
-		# if this input is held down initiate a special input.
-		if self.input.holding[0]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
-
-		if keys[1]:
-			status =  "mode_b"
-
-		if keys[2]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
-
-		return status
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
@@ -627,11 +435,12 @@ class MultiFrame(object):
 
 		self.divider = 47
 
-		self.A_Graph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[0], width = 1)
+		# create our graph_screen
+		self.A_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[0], width = 1)
 
-		self.B_Graph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[1], width = 1)
+		self.B_Graph = graph_area(1,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[1], width = 1)
 
-		self.C_Graph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[2], width = 1)
+		self.C_Graph = graph_area(2,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[2], width = 1)
 
 		self.Graphs = [self.A_Graph, self.B_Graph, self.C_Graph]
 
@@ -726,19 +535,11 @@ class MultiFrame(object):
 
 		# turns each channel on individually
 		if self.selection == 0:
-			self.C_Graph.update(self.C_Data)
+
 			self.C_Graph.render(self.draw)
-
-			self.B_Graph.update(self.B_Data)
 			self.B_Graph.render(self.draw)
-
-			self.A_Graph.update(self.A_Data)
 			self.A_Graph.render(self.draw)
 
-
-		self.A_Graph.update(self.A_Data)
-		self.B_Graph.update(self.B_Data)
-		self.C_Graph.update(self.C_Data)
 
 		if self.selection == 1:
 			self.A_Graph.render(self.draw)
