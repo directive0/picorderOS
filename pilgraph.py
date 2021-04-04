@@ -120,10 +120,10 @@ class graph_area(object):
 	# takes in a list/array with length => span
 	def graphprep(self,datalist):
 
-		print('list length: ', len(datalist), ' ', "spanx: ", self.spanx)
+		print(datalist)
 		self.linepoint = self.x
 		self.jump = 1
-		self.newlist = [] #array('f', [])
+		self.newlist = array('f', [])
 
 
 		# get the range of the data.
@@ -144,15 +144,16 @@ class graph_area(object):
 				if self.auto == True:
 					# take the sensor value received and map it against the on screen limits
 
-					scaledata = numpy.interp(datalist[i],self.newrange,self.targetrange)
+					scaledata = float(numpy.interp(datalist[i],self.newrange,self.targetrange))
 				else:
 					# use the sensors stated limits as the range.
-					scaledata = numpy.interp(datalist[i],self.sourcerange,self.targetrange)
+					scaledata = float(numpy.interp(datalist[i],self.sourcerange,self.targetrange))
 
 				# append the current x position, with this new scaled data as the y positioning into the buffer
 				self.newlist.append((self.linepoint,scaledata))
 			else:
-				self.newlist.append((self.linepoint,sourcelow))
+				scaledata = float(numpy.interp(sourcelow,self.sourcerange,self.targetrange))
+				self.newlist.append((self.linepoint,scaledata))
 
 
 				# increment the cursor
