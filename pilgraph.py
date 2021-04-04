@@ -119,6 +119,8 @@ class graph_area(object):
 	# the highest and lowest currently displayed values are presented.
 	# takes in a list/array with length => span
 	def graphprep(self,datalist):
+
+		print('list length: ', len(datalist), ' ', "spanx: ", self.spanx)
 		self.linepoint = self.x
 		self.jump = 1
 		self.newlist = [] #array('f', [])
