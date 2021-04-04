@@ -123,7 +123,7 @@ class graph_area(object):
 		print(datalist)
 		self.linepoint = self.x
 		self.jump = 1
-		self.newlist = array('f', [])
+		self.newlist = []
 
 
 		# get the range of the data.
