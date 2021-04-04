@@ -130,9 +130,9 @@ class graph_area(object):
 		self.newrange = (self.datalow,self.datahigh)
 
 		# grabs the currently selected sensors range data
-		sourcelow = configure.sensors[self.ident][1]
+		sourcelow = configure.sensor_info[configure.sensors[self.ident][0]][1]
 		print("sourcelow", sourcelow)
-		sourcehigh = configure.sensors[self.ident][2]
+		sourcehigh = configure.sensor_info[configure.sensors[self.ident][0]][2]
 		self.sourcerange = [sourcelow,sourcehigh]
 
 
