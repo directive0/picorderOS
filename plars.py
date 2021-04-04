@@ -97,10 +97,6 @@ class PLARS(object):
 		return trimmed_data['value'].tolist()
 
 
-	def request(self, json):
-		json.
-		pass
-
 	# return a number of data from a specific sensor at a specific time interval
 	def get_timed(self, key, interval = 0, num = 5):
 		#load csv file as dataframe
@@ -114,6 +110,8 @@ class PLARS(object):
 	def convert_epoch(self, time):
 		return datetime.datetime.fromtimestamp(time)
 
-	# request accepts a JSON object and returns a JSON response
+	# request accepts a JSON object and returns a JSON response. Obviously not working yet.
 	def request(self, request):
 		pass
+
+plars = PLARS()

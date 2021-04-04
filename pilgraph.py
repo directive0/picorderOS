@@ -1,6 +1,18 @@
 print("Loading Python IL Module")
 
-# PILgraph is here because both the black and white and colour screens need it.
+
+# PILgraph provides an object (graphlist) that will draw a new graph each frame.
+# It was written to contain memory of the previous sensor readings, but this
+# feature is no longer necessary.
+
+# To do:
+# - request from PLARS the N most recent values for the sensor assigned to this identifier
+
+
+
+# it is initialized with:
+# - a graph identifier so it knows which sensor to grab data for
+# -
 
 from objects import *
 from PIL import Image
@@ -10,10 +22,10 @@ from PIL import ImageDraw
 import numpy
 from array import *
 
-# The following class is used to prepare sensordata for display on the graph and draw it to the screen.
+
 class graphlist(object):
 
-	# the following is constructor code to give each object a list suitable for storing all our graph data.
+
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
 		self.new = True
 		self.cycle = cycle
@@ -31,7 +43,7 @@ class graphlist(object):
 		self.datalow = 0
 		self.newrange = (self.datalow,self.datahigh)
 
-		# stores the graph identifier
+		# stores the graph identifier, there are three on the multiframe
 		self.ident = ident
 
 		# collect data for where the graph should be drawn to screen.
@@ -49,7 +61,7 @@ class graphlist(object):
 
 		# seeds a list with sourcerange zero so we can put our sensor readings into it.
 		for i in range(self.spanx):
-			self.dlist.append(self.low)
+			self.dlist.append(self.datalow)
 
 
 	# the following function returns the graph list.

@@ -165,6 +165,8 @@ class ripple(object):
 				screen_off()
 				self.lights = False
 				self.statuswas = configure.dr_open[0]
+		else:
+			screen_on()
 
 
 		# if lights are engaged this block of code will run the animation, or else
