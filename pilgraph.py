@@ -141,20 +141,26 @@ class graph_area(object):
 		# for each vertical bar in the graph size
 		for i in range(self.spanx):
 			# if auto scaling is on
-			if self.auto == True:
-				# take the sensor value received and map it against the on screen limits
-				scaledata = numpy.interp(datalist[i],self.newrange,self.targetrange)
+			if i < len(datalist):
+				if self.auto == True:
+					# take the sensor value received and map it against the on screen limits
+
+					scaledata = numpy.interp(datalist[i],self.newrange,self.targetrange)
+				else:
+					# use the sensors stated limits as the range.
+					scaledata = numpy.interp(datalist[i],self.sourcerange,self.targetrange)
+
+				print("linepoint:", self.linepoint)
+				print("scaledata:", scaledata)
+				# append the current x position, with this new scaled data as the y positioning into the buffer
+				self.newlist.append((self.linepoint,scaledata))
 			else:
-				# use the sensors stated limits as the range.
-				scaledata = numpy.interp(datalist[i],self.sourcerange,self.targetrange)
+				self.newlist.append((self.linepoint,sourcelow))
 
-			print("linepoint:", self.linepoint)
-			print("scaledata:", scaledata)
-			# append the current x position, with this new scaled data as the y positioning into the buffer
-			self.newlist.append((self.linepoint,scaledata))
 
-			# increment the cursor
-			self.linepoint = self.linepoint + self.jump
+				# increment the cursor
+				self.linepoint = self.linepoint + self.jump
+
 
 		return self.newlist
 
