@@ -71,7 +71,8 @@ class PLARS(object):
 	def update(self,data):
 
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
-
+		print(newdata)
+		print(self.df)
 		self.df.append(newdata)
 		#self.append_to_core(newdata)
 
