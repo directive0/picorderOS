@@ -64,15 +64,16 @@ class PLARS(object):
 
 	#pends a new set of data to the CSV file.
 	def append_to_core(self, data):
-		pass
-		#data.to_csv(self.file_path, mode='a', header=False)
+		data.to_csv(self.file_path, mode='a', header=False)
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
 
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 		self.df = self.df.append(newdata, ignore_index=True)
-		#self.append_to_core(newdata)
+
+		if self.timer.timelapsed() < self.interval:
+			self.df.to_csv(self.file_path)
 
 
 	# returns all sensor data in the core for the specific sensor (dsc,dev)

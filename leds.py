@@ -155,7 +155,7 @@ class ripple(object):
 			#check if the door is open.
 			if configure.dr_open[0]:
 				# if it wasn't open last time.
-				if self.statuswas == configure.dr_open[0]:
+				if self.statuswas != configure.dr_open[0]:
 					# turn on our screen
 					screen_on()
 				# engage the lights
