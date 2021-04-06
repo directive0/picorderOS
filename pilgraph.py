@@ -124,17 +124,23 @@ class graph_area(object):
 		self.jump = 1
 		self.newlist = []
 
-
-		# get the range of the data.
-		self.datahigh = max(datalist)
-		self.datalow = min(datalist)
-		self.newrange = (self.datalow,self.datahigh)
-
 		# grabs the currently selected sensors range data
 		sourcelow = configure.sensor_info[configure.sensors[self.ident][0]][1]
 
 		sourcehigh = configure.sensor_info[configure.sensors[self.ident][0]][2]
 		self.sourcerange = [sourcelow,sourcehigh]
+
+		# get the range of the data.
+		if len(datalist) > 0:
+			self.datahigh = max(datalist)
+			self.datalow = min(datalist)
+		else:
+			self.datahigh = sourcehigh
+			self.datalow = sourcelow
+
+		self.newrange = (self.datalow,self.datahigh)
+
+
 
 		# for each vertical bar in the graph size
 		for i in range(self.spanx):

@@ -58,7 +58,7 @@ class PLARS(object):
 
 	# gets the latest CSV file
 	def get_core(self):
-		print(self.df)
+
 		#self.df = pd.read_csv(self.file_path)
 		return self.df
 
@@ -69,7 +69,7 @@ class PLARS(object):
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
-		print(data)
+
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 		self.df.append(newdata)
@@ -78,7 +78,7 @@ class PLARS(object):
 
 	# returns all sensor data in the core for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
-		self.get_core()
+		#self.get_core()
 		result = self.df.loc[self.df['dsc'] == dsc]
 		result2 = result.loc[self.df['dev'] == dev]
 		return result2
