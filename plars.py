@@ -73,7 +73,9 @@ class PLARS(object):
 		#newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 		for item in data:
-			self.df.append(item)
+			df_length = len(self.df)
+			self.df.loc[df_length] = data
+
 		#self.append_to_core(newdata)
 
 
