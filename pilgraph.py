@@ -169,9 +169,8 @@ class graph_area(object):
 		dev = configure.sensor_info[configure.sensors[self.ident][0]][5]
 
 		#preps the list by adding the X coordinate to every sensor value
-		print(plars.get_recent(dsc,dev,num = self.spanx))
 		cords = self.graphprep(plars.get_recent(dsc,dev,num = self.spanx))
-		print(cords)
+
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
 
