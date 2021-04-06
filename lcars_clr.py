@@ -299,7 +299,7 @@ class SettingsFrame(object):
 		if keys[2]:
 			status = configure.last_status[0]
 
-		#print("global: ", configure.status[0]," local: ", status)
+
 		return status
 
 class PowerDown(object):
@@ -387,7 +387,7 @@ class PowerDown(object):
 		if keys[2]:
 			status = "settings"
 
-		#print("global: ", configure.status[0]," local: ", status)
+
 		return status
 
 

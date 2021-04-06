@@ -292,12 +292,12 @@ class Inputs(object):
 
 		if configure.input_cap1208:
 			reading = cap1208.get_input_status()[0]
-			print(reading)
+
 			if reading == "release" or reading == "press":
 				cap1208.clear_interrupt()
 #       elif reading == "press":
-				print("WE GOT ONE!!!!!!")
-		#print(self.buttonlist)
+
+
 		return self.buttonlist
 
 
