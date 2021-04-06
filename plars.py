@@ -69,9 +69,11 @@ class PLARS(object):
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
-
+		print(data)
 		#newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
-		self.df.append(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
+
+		for item in data:
+			self.df.append(item)
 		#self.append_to_core(newdata)
 
 
