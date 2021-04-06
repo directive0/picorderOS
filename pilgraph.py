@@ -126,8 +126,8 @@ class graph_area(object):
 
 
 		# get the range of the data.
-		self.datahigh = max(self.dlist)
-		self.datalow = min(self.dlist)
+		self.datahigh = max(datalist)
+		self.datalow = min(datalist)
 		self.newrange = (self.datalow,self.datahigh)
 
 		# grabs the currently selected sensors range data
