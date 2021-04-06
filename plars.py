@@ -49,22 +49,31 @@ class PLARS(object):
 		# Set floating point display to raw, instead of exponent
 		pd.set_option('display.float_format', '{:.7f}'.format)
 
+		self.interval = 15
+		self.timer = timer()
+
 	# provide status of database (how many entries, how many devices, size, length)
 	def status(self):
 		pass
 
 	# gets the latest CSV file
 	def get_core(self):
-		self.df = pd.read_csv(self.file_path)
+
+		#self.df = pd.read_csv(self.file_path)
+		return self.df
 
 	#pends a new set of data to the CSV file.
 	def append_to_core(self, data):
-		 data.to_csv(self.file_path, mode='a', header=False)
+
+		# data.to_csv(self.file_path, mode='a', header=False)
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
-		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
-		self.append_to_core(newdata)
+
+		#newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
+		self.df.append(data)
+		#self.append_to_core(newdata)
+
 
 	# returns all sensor data in the core for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
@@ -77,13 +86,6 @@ class PLARS(object):
 		self.df.sort_values(by=['timestamp'])
 
 	# return a list of n most recent data from specific sensor defined by key
-	# seperated by a comma"?:
-
-	# update the buffer from disk
-	# organize it by time.
-	# get only n number of sensor data required
-	# trim it to length.
-	# return only the sensor values in a list.
 	def get_recent(self, dsc, dev, num = 5):
 		# update the buffer from disk
 		self.get_core()

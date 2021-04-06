@@ -284,6 +284,7 @@ class Sensor(object):
 			item9 = sense_data9 + self.accelerometer_infoz + timestamp
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
+		# provides the basic definitions for the system vitals sensor readouts
 		if configure.system_vitals:
 
 			if not configure.pc:

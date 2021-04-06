@@ -170,7 +170,7 @@ class timer(object):
 		self.timeInit = time.time()
 		self.logtime()
 
-	# The following funtion returns the last logged value.
+	# The following funtion returns the first logged value. When the timer was first started.
 	def timestart(self):
 		return self.timeInit
 
