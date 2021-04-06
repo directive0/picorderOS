@@ -73,6 +73,8 @@ class PLARS(object):
 		self.df = self.df.append(newdata, ignore_index=True)
 
 		if self.timer.timelapsed() < self.interval:
+			print("logging values")
+			self.timer.logtime()
 			self.df.to_csv(self.file_path)
 
 
