@@ -58,7 +58,7 @@ class PLARS(object):
 
 	# gets the latest CSV file
 	def get_core(self):
-
+		print(self.df)
 		#self.df = pd.read_csv(self.file_path)
 		return self.df
 
