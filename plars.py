@@ -64,8 +64,8 @@ class PLARS(object):
 
 	#pends a new set of data to the CSV file.
 	def append_to_core(self, data):
-
-		# data.to_csv(self.file_path, mode='a', header=False)
+		pass
+		#data.to_csv(self.file_path, mode='a', header=False)
 
 	# updates the data storage file with the most recent sensor fragments
 	def update(self,data):
