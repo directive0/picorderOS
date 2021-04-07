@@ -100,6 +100,7 @@ class PLARS(object):
 
 	def trimbuffer(self):
 		# should take the buffer in memory and trim some of it
+		pass
 
 	# return a number of data from a specific sensor at a specific time interval
 	def get_timed(self, key, interval = 0, num = 5):
