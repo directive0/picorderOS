@@ -72,7 +72,7 @@ class preferences(object):
 
 
 		# sets data logging mode.
-		self.logdata = [False]
+		self.logtime = [20] 
 
 		# used to control refresh speed.
 		self.samplerate = [0]

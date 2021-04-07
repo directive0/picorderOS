@@ -59,8 +59,8 @@ class PLARS(object):
 	# gets the latest CSV file
 	def get_core(self):
 
-		#self.df = pd.read_csv(self.file_path)
-		return self.df
+		datacore = pd.read_csv(self.file_path)
+		return datacore
 
 	#pends a new set of data to the CSV file.
 	def append_to_core(self, data):
@@ -73,9 +73,8 @@ class PLARS(object):
 		self.df = self.df.append(newdata, ignore_index=True)
 
 		if self.timer.timelapsed() < self.interval:
-			print("logging values")
-			self.timer.logtime()
 			self.df.to_csv(self.file_path)
+			self.timer.logtime()
 
 
 	# returns all sensor data in the core for the specific sensor (dsc,dev)
@@ -90,8 +89,6 @@ class PLARS(object):
 
 	# return a list of n most recent data from specific sensor defined by key
 	def get_recent(self, dsc, dev, num = 5):
-		# update the buffer from disk
-		self.get_core()
 		# organize it by time.
 		self.index_by_time()
 		# get a dataframe of just the requested sensor
@@ -101,6 +98,8 @@ class PLARS(object):
 		# return a list of the values
 		return trimmed_data['value'].tolist()
 
+	def trimbuffer(self):
+		# should take the buffer in memory and trim some of it
 
 	# return a number of data from a specific sensor at a specific time interval
 	def get_timed(self, key, interval = 0, num = 5):
