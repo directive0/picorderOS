@@ -39,7 +39,8 @@ class PLARS(object):
 		self.file_path = "data/datacore.csv"
 
 		if os.path.exists(self.file_path):
-			self.df = pd.read_csv(self.file_path)
+			if configure.datalog:
+				self.df = pd.read_csv(self.file_path)
 		else:
 			if not os.path.exists("data"):
 				os.mkdir("data")
@@ -49,7 +50,6 @@ class PLARS(object):
 		# Set floating point display to raw, instead of exponent
 		pd.set_option('display.float_format', '{:.7f}'.format)
 
-		self.interval = 15
 		self.timer = timer()
 
 	# provide status of database (how many entries, how many devices, size, length)
@@ -72,7 +72,7 @@ class PLARS(object):
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 		self.df = self.df.append(newdata, ignore_index=True)
 
-		if self.timer.timelapsed() < self.interval:
+		if self.timer.timelapsed() < configure.logtime[0] and configure.datalog[0]:
 			self.df.to_csv(self.file_path)
 			self.timer.logtime()
 
