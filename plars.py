@@ -63,7 +63,7 @@ class PLARS(object):
 
 	def merge_with_core(self):
 		# open the csv
-		core = get_core()
+		core = self.get_core()
 		copydf = self.df.copy()
 		newcore = pd.concat([core,copydf]).drop_duplicates().reset_index(drop=True)
 		newcore.index_by_time()
