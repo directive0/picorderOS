@@ -62,6 +62,7 @@ class PLARS(object):
 		return datacore
 
 	def merge_with_core(self):
+		print("PLARS - merging to core")
 		# open the csv
 		core = self.get_core()
 		copydf = self.df.copy()
