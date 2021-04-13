@@ -66,7 +66,7 @@ class PLARS(object):
 		core = self.get_core()
 		copydf = self.df.copy()
 		newcore = pd.concat([core,copydf]).drop_duplicates().reset_index(drop=True)
-		newcore.index_by_time()
+		newcore = self.index_by_time(newcore)
 		newcore.to_csv(self.file_path)
 
 	#pends a new set of data to the CSV file.
