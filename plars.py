@@ -81,7 +81,7 @@ class PLARS(object):
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 		self.df = self.df.append(newdata, ignore_index=True)
 
-		if self.timer.timelapsed() < configure.logtime[0] and configure.datalog[0]:
+		if self.timer.timelapsed() > configure.logtime[0] and configure.datalog[0]:
 			self.merge_with_core()
 			self.timer.logtime()
 
