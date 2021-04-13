@@ -58,22 +58,30 @@ class PLARS(object):
 
 	# gets the latest CSV file
 	def get_core(self):
-
 		datacore = pd.read_csv(self.file_path)
 		return datacore
+
+	def merge_with_core(self):
+		# open the csv
+		core = get_core()
+		copydf = self.df.copy()
+		newcore = pd.concat([core,copydf]).drop_duplicates().reset_index(drop=True)
+		newcore.index_by_time()
+		newcore.to_csv(self.file_path)
 
 	#pends a new set of data to the CSV file.
 	def append_to_core(self, data):
 		data.to_csv(self.file_path, mode='a', header=False)
 
-	# updates the data storage file with the most recent sensor fragments
+	# updates the data storage file with the most recent sensor values from each
+	# initialized sensor
 	def update(self,data):
 
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 		self.df = self.df.append(newdata, ignore_index=True)
 
 		if self.timer.timelapsed() < configure.logtime[0] and configure.datalog[0]:
-			self.df.to_csv(self.file_path)
+			self.merge_with_core()
 			self.timer.logtime()
 
 
@@ -84,13 +92,14 @@ class PLARS(object):
 		result2 = result.loc[self.df['dev'] == dev]
 		return result2
 
-	def index_by_time(self):
-		self.df.sort_values(by=['timestamp'])
+	def index_by_time(self,df):
+		df.sort_values(by=['timestamp'])
+		return df
 
 	# return a list of n most recent data from specific sensor defined by key
 	def get_recent(self, dsc, dev, num = 5):
 		# organize it by time.
-		self.index_by_time()
+		self.index_by_time(self.df)
 		# get a dataframe of just the requested sensor
 		untrimmed_data = self.get_sensor(dsc,dev)
 		# trim it to length (num).
