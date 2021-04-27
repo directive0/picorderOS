@@ -90,9 +90,9 @@ class PLARS(object):
 	def get_sensor(self,dsc,dev):
 		#self.get_core()
 
-		#result = self.df.loc[self.df['dsc'] == dsc]
+		result = self.df.loc[self.df['dsc'] == dsc]
 
-		result2 = self.df.loc[self.df['dev'] == dev, self.df['dsc'] == dsc]
+		result2 = result.loc[self.df['dev'] == dev]
 		return result2
 
 	def index_by_time(self,df):
