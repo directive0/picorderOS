@@ -89,8 +89,10 @@ class PLARS(object):
 	# returns all sensor data in the core for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
 		#self.get_core()
-		result = self.df.loc[self.df['dsc'] == dsc]
-		result2 = result.loc[self.df['dev'] == dev]
+
+		#result = self.df.loc[self.df['dsc'] == dsc]
+
+		result2 = self.df.loc[self.df['dev'] == dev, self.df['dsc'] == dsc]
 		return result2
 
 	def index_by_time(self,df):
