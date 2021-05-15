@@ -11,6 +11,8 @@ if not configure.pc:
 
 # the following constants are for the pin addresses of the shift register
 # the tr109 supports two shift registers, and so two sets of pin addresses
+# prototype unit 00 and 01 have different pin assignments for latch and clock
+# so these values may need to be swapped
 PIN_DATA  = 16
 PIN_LATCH = 6
 PIN_CLOCK = 20
@@ -18,8 +20,10 @@ PIN_DATA2 = 17
 PIN_LATCH2 = 22
 PIN_CLOCK2 = 27
 
+# a list of the pin data, for loop purposes.
 PINS = [[PIN_DATA,PIN_LATCH,PIN_CLOCK],[PIN_DATA2,PIN_LATCH2,PIN_CLOCK2]]
 
+# set the mode of the shift register pins
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_DATA,  GPIO.OUT)
 GPIO.setup(PIN_LATCH, GPIO.OUT)

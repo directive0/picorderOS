@@ -1,9 +1,6 @@
 from objects import *
 import time
 
-# Todo:
-# - Add possibility for multiple varied sensor loadouts.
-# - merge with getcpu
 
 
 # the following is a sensor module for use with the PicorderOS
