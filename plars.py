@@ -4,17 +4,30 @@ from objects import *
 import json
 
 #	PLARS (Picorder Library Access and Retrieval System) aims to provide a
-#	single surface for retrieving data for display in any of the different
-#	Picorder screen modes.
+#	single surface for storing and retrieving data for display in any of the
+#	different Picorder screen modes.
 
 
 
 #	TO DO:
+
+
 #	pull from saved data
-#		All data of a certain sensor
 #		All data of a certain time scale
 #			Data at set intervals (last day, last hour, last minute)
-# 	Incorporate short term memory
+
+
+# 	Incorporate short term memory and long term recall
+#		need to define how buffer works
+#		does it constantly update for all dsc/dev?
+#		is it created upon request?
+#		arbitrarily asigned by PLARS and pulled from archive if outside?
+
+#	EMRG
+#		when called immidiately save all data to local storage and remote
+#		archive.
+
+
 # 	JSON api
 
 import os
@@ -25,9 +38,6 @@ import pandas as pd
 import json
 
 
-
-
-# Create a class that acts as the surface for all interactions with the data core
 class PLARS(object):
 
 	def __init__(self):
@@ -37,6 +47,7 @@ class PLARS(object):
 		# self.df is the dataframe for the class
 
 		self.file_path = "data/datacore.csv"
+
 
 		if os.path.exists(self.file_path):
 			if configure.datalog:
@@ -81,10 +92,10 @@ class PLARS(object):
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 		self.df = self.df.append(newdata, ignore_index=True)
 
+
 		if self.timer.timelapsed() > configure.logtime[0] and configure.datalog[0]:
 			self.merge_with_core()
 			self.timer.logtime()
-
 
 	# returns all sensor data in the core for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
@@ -110,6 +121,10 @@ class PLARS(object):
 		# return a list of the values
 		return trimmed_data['value'].tolist()
 
+	# creates a smaller buffer for screen draws
+	def set_quickbuffer(self,dsc,dev,len):
+		pass
+
 	def trimbuffer(self):
 		# should take the buffer in memory and trim some of it
 		pass
@@ -129,6 +144,11 @@ class PLARS(object):
 
 	# request accepts a JSON object and returns a JSON response. Obviously not working yet.
 	def request(self, request):
+		pass
+
+class Buffer(object):
+
+	def __init__(self):
 		pass
 
 plars = PLARS()

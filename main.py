@@ -23,6 +23,8 @@ else:
 	# otherwise load up the demonstration and dummy modules that emulate sensors and pass GPIO signals without requiring any real GPIO.
 	from gpiodummy import *
 
+if configure.audio:
+	from audio import *
 
 # The following are only loaded in TR-108 mode
 if configure.tr108:
@@ -100,7 +102,7 @@ def Main():
 				#if timeit.timelapsed() > interval:
 				data = sensors.get()
 				plars.update(data)
-				
+
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
 

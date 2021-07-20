@@ -38,8 +38,8 @@ if configure.tr109:
 
 	# by default the tr-109 uses gpio for hinge close
 	import RPi.GPIO as GPIO
-	pins = [5,17,26]
 
+	# hallpin 1 was disabled as sensor board rev 2 accidentaly used it to drive
 	hallpin1 = None
 	hallpin2 = 26
 	GPIO.setmode(GPIO.BCM)
@@ -291,6 +291,11 @@ class Inputs(object):
 						self.buttonlist[i] = False
 
 		if configure.input_cap1208:
+
+			#checks to see if alert pin is high
+
+				#if high return the event list of currently released buttons
+
 			reading = cap1208.get_input_status()[0]
 
 			if reading == "release" or reading == "press":

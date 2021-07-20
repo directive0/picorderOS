@@ -2,9 +2,11 @@ from object import *
 import simpleaudio as sa
 
 
-scan_sound = sa.WaveObject.from_wave_file("assets/scanning.mp3")
+scansound = sa.WaveObject.from_wave_file("assets/scanning.mp3")
+clicksound = sa.WaveObject.from_wave_file("assets/scanning.mp3")
 
-sounds = [scan_sound]
+
+sounds = [scansound, clicksound]
 # the audio object will serve as the primary mechanism by which all sounds
 # are loaded and deployed.
 
@@ -16,3 +18,7 @@ class Audio(object):
         pass
 
     def play(self,item):
+        sounds[item].play()
+
+    def clock(self):
+        pass

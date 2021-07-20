@@ -24,6 +24,9 @@ class preferences(object):
 		self.tr108 = False
 		self.tr109 = True
 
+		# toggles audio.
+		self.sfx = True
+
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = True
 		self.input_gpio = False
