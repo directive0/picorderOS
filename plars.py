@@ -36,6 +36,7 @@ class PLARS(object):
 		# If the csv file exists it opens it, otherwise creates it.
 		# self.df is the dataframe for the class
 
+		# create buffer
 		self.file_path = "data/datacore.csv"
 
 		if os.path.exists(self.file_path):
@@ -47,8 +48,14 @@ class PLARS(object):
 			self.df = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 			self.df.to_csv(self.file_path)
 
+
 		# Set floating point display to raw, instead of exponent
 		pd.set_option('display.float_format', '{:.7f}'.format)
+
+		#create a buffer object to hold screen data
+		self.buffer_size = 15
+		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
+
 
 		self.timer = timer()
 
@@ -73,6 +80,10 @@ class PLARS(object):
 	#pends a new set of data to the CSV file.
 	def append_to_core(self, data):
 		data.to_csv(self.file_path, mode='a', header=False)
+
+	# sets the size of the standard screen buffer
+	def set_buffer(self,size):
+		self.buffer_size = size
 
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor
@@ -131,4 +142,5 @@ class PLARS(object):
 	def request(self, request):
 		pass
 
+# Creates a plars database object as soon as it is loaded.
 plars = PLARS()

@@ -714,6 +714,8 @@ class ColourScreen(object):
 		self.thermal_frame = ThermalFrame(self.input)
 		self.powerdown_frame = PowerDown(self.input)
 
+		plars.set_buffer(self.multi_frame.gspanx)
+
 	def graph_screen(self,sensors):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)

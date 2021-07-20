@@ -48,6 +48,8 @@ def Main():
 
 	# From out here in the loop we should instantiate the objects that are common to whatever display configuration we want to use.
 	sensors = Sensor()
+
+
 	timeit = timer()
 	ledtime = timer()
 
@@ -66,6 +68,8 @@ def Main():
 			dotscreen = NokiaScreen()
 		if configure.display == "1":
 			colourscreen = ColourScreen()
+			#set screen buffer size
+			plars.set_buffer(colourscreen.get_size())
 
 	timeit.logtime()
 	ledtime.logtime()
@@ -97,10 +101,10 @@ def Main():
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			if (configure.status[0] == "mode_a"):
 
-				#if timeit.timelapsed() > interval:
+				#get the sensor data and hand it to PLARS
 				data = sensors.get()
 				plars.update(data)
-				
+
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
 
