@@ -13,34 +13,28 @@ if not configure.pc:
 # the tr109 supports two shift registers, and so two sets of pin addresses
 # prototype unit 00 and 01 have different pin assignments for latch and clock
 # so these values may need to be swapped
+
+# Main board shift register pins
 PIN_DATA  = 16
 PIN_LATCH = 6
 PIN_CLOCK = 20
-PIN_DATA2 = 17
-PIN_LATCH2 = 22
-PIN_CLOCK2 = 27
 
-# a list of the pin data, for loop purposes.
+# Sensor board shift register pins
+PIN_DATA2 = 19
+PIN_LATCH2 = 21
+PIN_CLOCK2 = 26
+
+# a list of the shift register pin data, for loop purposes (main board, sensor board).
 PINS = [[PIN_DATA,PIN_LATCH,PIN_CLOCK],[PIN_DATA2,PIN_LATCH2,PIN_CLOCK2]]
 
 # set the mode of the shift register pins
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(PIN_DATA,  GPIO.OUT)
+GPIO.setup(PIN_DATA, GPIO.OUT)
 GPIO.setup(PIN_LATCH, GPIO.OUT)
 GPIO.setup(PIN_CLOCK, GPIO.OUT)
-GPIO.setup(PIN_DATA2,  GPIO.OUT)
+GPIO.setup(PIN_DATA2, GPIO.OUT)
 GPIO.setup(PIN_LATCH2, GPIO.OUT)
 GPIO.setup(PIN_CLOCK2, GPIO.OUT)
-
-
-# delivers data to the shift register
-def shiftout(byte,board = 0):
-	GPIO.output(PINS[board][1], 0)
-	for x in range(8):
-		GPIO.output(PINS[board][0], (byte >> x) & 1)
-		GPIO.output(PINS[board][2], 1)
-		GPIO.output(PINS[board][2], 0)
-	GPIO.output(PINS[board][1], 1)
 
 # loads the pin configurations and modes for the tr-108  (3 leds)
 if configure.tr108:
@@ -54,7 +48,7 @@ if configure.tr108:
 	GPIO.setup(led2, GPIO.OUT) # LED pin set as output
 	GPIO.setup(led3, GPIO.OUT) # LED pin set as output
 
-#loads the pin configurations and modes for the tr-109 (many switches)
+# loads the pin configurations and modes for the tr-109 (shift register based)
 if configure.tr109:
 # Pin Definitons:
 	led1 = 16 #19 # Broadcom pin 19
@@ -64,12 +58,40 @@ if configure.tr109:
 	sc_led = 15
 
 	# Pin Setup:
-	GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
-	GPIO.setup(led1, GPIO.OUT) # LED pin set as output
-	GPIO.setup(led2, GPIO.OUT) # LED pin set as output
-	GPIO.setup(led3, GPIO.OUT) # LED pin set as output
-	GPIO.setup(led4, GPIO.OUT) # LED pin set as output
-	GPIO.setup(sc_led, GPIO.OUT)
+	# Set broadcom pin mode
+	GPIO.setmode(GPIO.BCM)
+
+	# Assign the
+	GPIO.setup(PIN_DATA,  GPIO.OUT)
+    GPIO.setup(PIN_LATCH, GPIO.OUT)
+    GPIO.setup(PIN_CLOCK, GPIO.OUT)
+
+    GPIO.setup(PIN_DATA2,  GPIO.OUT)
+    GPIO.setup(PIN_LATCH2, GPIO.OUT)
+    GPIO.setup(PIN_CLOCK2, GPIO.OUT)
+
+    GPIO.setup(sc_led, GPIO.OUT)
+
+
+# delivers data to the shift register
+# can use alternate set of shift pins using the "board" argument
+def shiftout(byte,board = 0):
+
+		# brings the latch low
+        GPIO.output(PINS[board][1], 0)
+
+        for x in range(8):
+                #Assigns logic to the pin based on the bit x
+                GPIO.output(PINS[board][0], (byte >> x) & 1)
+
+                # toggle the clock, first set the pin because it fails if I don't
+                GPIO.setup(PINS[board][2], GPIO.OUT)
+                GPIO.output(PINS[board][2], 1)
+                GPIO.output(PINS[board][2], 0)
+
+        GPIO.output(PINS[board][1], 1)
+
+
 
 
 # a function to clear the gpio
@@ -79,20 +101,16 @@ def cleangpio():
 
 # a function to clear the LEDs
 def resetleds():
+
 	if configure.tr109:
 		shiftout(0)
 		shiftout(0, board = 1)
+
 	if configure.tr108:
 		GPIO.output(led1, GPIO.LOW)
 		GPIO.output(led2, GPIO.LOW)
 		GPIO.output(led3, GPIO.LOW)
 
-	# if configure.tr109:
-	# 	GPIO.output(led1, GPIO.LOW)
-	# 	GPIO.output(led2, GPIO.LOW)
-	# 	GPIO.output(led3, GPIO.LOW)
-	# 	GPIO.output(led4, GPIO.LOW)
-	# 	GPIO.output(sc_led, GPIO.LOW)
 
 
 
@@ -129,7 +147,7 @@ def ledd_off():
 def screen_off():
 	GPIO.output(sc_led, GPIO.LOW)
 
-# The following class drives the ripple animation for the tr-109.
+# The following class drives the ABGD ripple animation for the tr-109.
 class ripple(object):
 
 	def __init__(self):
@@ -137,7 +155,7 @@ class ripple(object):
 		self.disabled = False
 		self.statuswas = False
 		self.lights = True
-		pass
+
 
 	def cycle(self):
 
@@ -176,7 +194,7 @@ class ripple(object):
 		# if lights are engaged this block of code will run the animation, or else
 		# turn them off.
 		if self.lights:
-			self.beat += 1
+
 
 			if self.beat > 3:
 				self.beat = 0
@@ -196,6 +214,18 @@ class ripple(object):
 			if self.beat == 3:
 				shiftout(26)
 				shiftout(26, board = 1)
+
+			self.beat += 1
+
 		else:
 			shiftout(0)
 			shiftout(0,board =1)
+
+
+def ripple_async():
+	pass
+
+	# start the ripple routine
+	# have a state variables
+	# received commands asynchronously "start" "stop"
+	# quit when asked.

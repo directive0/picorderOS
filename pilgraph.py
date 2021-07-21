@@ -50,9 +50,7 @@ class graph_area(object):
 		self.x, self.y = graphcoords
 		self.spanx,self.spany = graphspan
 
-		self.newx,self.newy = graphcoords
-		self.newspanx,self.newspany = graphspan
-
+		# defines the vertical limits of the screen based on the area provided
 		self.targetrange = ((self.y + self.spany), self.y)
 
 		# seeds a list with the coordinates for 0 to give us a list that we can put our scaled graph values in
@@ -114,14 +112,18 @@ class graph_area(object):
 
 
 	# the following pairs the list of values with coordinates on the X axis.
-	# The supplied variables are the starting X coordinates and spacing between each point.
+
 	# if the auto flag is set then the class will autoscale the graph so that
 	# the highest and lowest currently displayed values are presented.
 	# takes in a list/array with length => span
 	def graphprep(self,datalist):
 
+		# The starting X coordinate
 		self.linepoint = self.x
+
+		# Spacing between each point.
 		self.jump = 1
+
 		self.newlist = []
 
 		# grabs the currently selected sensors range data
@@ -144,11 +146,13 @@ class graph_area(object):
 
 		# for each vertical bar in the graph size
 		for i in range(self.spanx):
-			# if auto scaling is on
+
+			# if the cursor has data to write
 			if i < len(datalist):
+
+				# if auto scaling is on
 				if self.auto == True:
 					# take the sensor value received and map it against the on screen limits
-
 					scaledata = abs(numpy.interp(datalist[i],self.newrange,self.targetrange))
 				else:
 					# use the sensors stated limits as the range.
@@ -157,11 +161,12 @@ class graph_area(object):
 				# append the current x position, with this new scaled data as the y positioning into the buffer
 				self.newlist.append((self.linepoint,scaledata))
 			else:
+				# write intensity as scaled zero
 				scaledata = abs(numpy.interp(sourcelow,self.sourcerange,self.targetrange))
 				self.newlist.append((self.linepoint,scaledata))
 
 
-				# increment the cursor
+			# increment the cursor
 			self.linepoint = self.linepoint + self.jump
 
 
@@ -170,6 +175,15 @@ class graph_area(object):
 	def render(self, draw, auto = True, dot = True):
 
 		self.auto = configure.auto[0]
+
+		# for PLARS we reduce the common identifier of our currently selected sensor
+		# by using its description (dsc) and device (dev): eg
+		# BME680 has a thermometer and hygrometer,
+		# therefore the thermometer's dsc is "thermometer" and the device is 'BME680'
+		# the hygrometer's dsc is "hygrometer" and the the device is "BME680"
+
+		# so every time through the loop PILgraph will pull the latest sensor
+		# settings.
 
 		dsc = configure.sensor_info[configure.sensors[self.ident][0]][3]
 		dev = configure.sensor_info[configure.sensors[self.ident][0]][5]

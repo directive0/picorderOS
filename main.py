@@ -23,6 +23,8 @@ else:
 	# otherwise load up the demonstration and dummy modules that emulate sensors and pass GPIO signals without requiring any real GPIO.
 	from gpiodummy import *
 
+if configure.audio:
+	from audio import *
 
 # The following are only loaded in TR-108 mode
 if configure.tr108:
@@ -69,7 +71,7 @@ def Main():
 		if configure.display == "1":
 			colourscreen = ColourScreen()
 			#set screen buffer size
-			plars.set_buffer(colourscreen.get_size())
+			plars.set_buffer(len(configure.sensor_info),colourscreen.get_size())
 
 	timeit.logtime()
 	ledtime.logtime()
@@ -80,7 +82,6 @@ def Main():
 	print("Main Loop Starting")
 	# The following while loop catches ctrl-c exceptions.
 	while configure.status[0] != "quit":
-
 
 		# try allows us to capture a keyboard interrupt and assign behaviours.
 		try:
