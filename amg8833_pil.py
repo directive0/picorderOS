@@ -28,7 +28,7 @@ cool = Color("blue")
 hot = Color("red")
 colrange = list(cool.range_to(hot, 256))
 
-rotate = True
+rotate = False
 from objects import *
 
 import sensors
