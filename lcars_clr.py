@@ -457,7 +457,8 @@ class MultiFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-
+	def get_y(self):
+		return self.gspany - self.graphy
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".0f"):
@@ -715,6 +716,9 @@ class ColourScreen(object):
 		self.powerdown_frame = PowerDown(self.input)
 
 		plars.set_buffer(self.multi_frame.gspanx)
+
+	def get_size(self):
+		return self.multi_frame.get_y()
 
 	def graph_screen(self,sensors):
 		self.newimage = self.image.copy()

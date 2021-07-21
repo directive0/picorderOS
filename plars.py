@@ -44,7 +44,8 @@ class PLARS(object):
 
 		# PLARS opens a data frame at initialization.
 		# If the csv file exists it opens it, otherwise creates it.
-		# self.df is the dataframe for the class
+		# self.core is used to refer to the archive on disk
+		# self.buffer is created as a truncated dataframe for drawing to screen.
 
 		# create buffer
 		self.file_path = "data/datacore.csv"
