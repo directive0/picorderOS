@@ -159,7 +159,7 @@ class Sensor(object):
 		if configure.bme:
 			# Create library object using our Bus I2C port
 			i2c = I2C(board.SCL, board.SDA)
-			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
+			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, address=0x76, debug=False)
 
 			self.temp_info = [-40,85,"Thermometer",self.deg_sym + "c", "BME680"]
 			self.humidity_info = [0,100,"Hygrometer", "%", "BME680"]
