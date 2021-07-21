@@ -95,6 +95,8 @@ class PLARS(object):
 
 	# sets the size of the standard screen buffer
 	def set_buffer(self,size):
+
+		print("buffer size set to: ", size)
 		self.buffer_size = size
 
 	# updates the data storage file with the most recent sensor values from each
