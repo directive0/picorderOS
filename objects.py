@@ -18,14 +18,14 @@ class preferences(object):
 		# Machine vitals are substituted and Luma screens use emulator
 		self.pc = True
 
+		# enables sound effect playback
+		self.audio = False
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
 		self.tr108 = False
 		self.tr109 = True
 
-		# toggles audio.
-		self.sfx = True
 
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = True

@@ -70,6 +70,7 @@ def Main():
 			dotscreen = NokiaScreen()
 		if configure.display == "1":
 			colourscreen = ColourScreen()
+
 			#set screen buffer size
 			plars.set_buffer(len(configure.sensor_info),colourscreen.get_size())
 

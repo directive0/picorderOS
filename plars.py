@@ -132,9 +132,6 @@ class PLARS(object):
 		# return a list of the values
 		return trimmed_data['value'].tolist()
 
-	# creates a smaller buffer for screen draws
-	def set_quickbuffer(self,dsc,dev,len):
-		pass
 
 	def trimbuffer(self):
 		# should take the buffer in memory and trim some of it
