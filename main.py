@@ -72,7 +72,7 @@ def Main():
 			colourscreen = ColourScreen()
 
 			#set screen buffer size
-			plars.set_buffer(len(colourscreen.get_size())/configure.sensor_info)
+			plars.set_buffer(colourscreen.get_size()/len(configure.sensor_info))
 
 	timeit.logtime()
 	ledtime.logtime()
