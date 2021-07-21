@@ -99,6 +99,7 @@ class PLARS(object):
 		print("buffer size set to: ", size)
 		self.buffer_size = size
 
+
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor
 	def update(self,data):
