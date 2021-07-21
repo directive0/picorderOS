@@ -28,7 +28,7 @@ cool = Color("blue")
 hot = Color("red")
 colrange = list(cool.range_to(hot, 256))
 
-rotate = True
+rotate = False
 flip = True
 from objects import *
 
@@ -203,6 +203,7 @@ class ThermalGrid(object):
 
 		if rotate:
 			self.data = list(reversed(list(zip(*self.data))))
+
 		if flip:
 			self.data = list(zip(*self.data[::-1]))
 
