@@ -53,19 +53,19 @@ class PLARS(object):
 
 		if os.path.exists(self.file_path):
 			if configure.datalog:
-				self.df = pd.read_csv(self.file_path)
+				self.core = pd.read_csv(self.file_path)
 		else:
 			if not os.path.exists("data"):
 				os.mkdir("data")
-			self.df = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
-			self.df.to_csv(self.file_path)
+			self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
+			self.core.to_csv(self.file_path)
 
 
 		# Set floating point display to raw, instead of exponent
 		pd.set_option('display.float_format', '{:.7f}'.format)
 
 		#create a buffer object to hold screen data
-		self.buffer_size = 15
+		self.buffer_size =
 		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 
@@ -95,10 +95,8 @@ class PLARS(object):
 
 	# sets the size of the standard screen buffer
 	def set_buffer(self,size):
-
 		print("buffer size set to: ", size)
 		self.buffer_size = size
-
 
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor
@@ -107,16 +105,14 @@ class PLARS(object):
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 		self.df = self.df.append(newdata, ignore_index=True)
 
-
 		if self.timer.timelapsed() > configure.logtime[0] and configure.datalog[0]:
 			self.merge_with_core()
 			self.timer.logtime()
 
-	# returns all sensor data in the core for the specific sensor (dsc,dev)
+	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
-		#self.get_core()
 
-		result = self.df.loc[self.df['dsc'] == dsc]
+		result = self.buffer.loc[self.df['dsc'] == dsc]
 
 		result2 = result.loc[self.df['dev'] == dev]
 		return result2
@@ -126,9 +122,9 @@ class PLARS(object):
 		return df
 
 	# return a list of n most recent data from specific sensor defined by key
-	def get_recent(self, dsc, dev, num = 5):
+	def recall(self, dsc, dev, num = 5):
 		# organize it by time.
-		self.index_by_time(self.df)
+		self.index_by_time(self.core)
 		# get a dataframe of just the requested sensor
 		untrimmed_data = self.get_sensor(dsc,dev)
 		# trim it to length (num).
@@ -139,7 +135,26 @@ class PLARS(object):
 
 	def trimbuffer(self):
 		# should take the buffer in memory and trim some of it
-		pass
+
+		# get buffer size to determine how many rows to remove from the end
+		currentsize = len(self.buffer)
+		targetsize = self.buffer_size
+
+		# determine difference between buffer and target size
+		length = currentsize - targetsize
+
+		# if buffer is larger than target
+		if length < 0:
+
+			# make a new dataframe of the most recent data to keep using
+			newbuffer = self.buffer.head(length)
+
+			# slice off the rows outside the buffer and backup to disk
+			tocore = self.buffer.tail(length)
+			self.append_to_core(tocore)
+
+			# replace existing buffer with new trimmed buffer
+			self.buffer = newbuffer
 
 	# return a number of data from a specific sensor at a specific time interval
 	def get_timed(self, key, interval = 0, num = 5):
