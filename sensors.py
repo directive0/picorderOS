@@ -285,8 +285,7 @@ class Sensor(object):
 		if configure.system_vitals:
 
 			if not configure.pc:
-				res = os.popen("vcgencmd measure_temp").readline()
-				t = float(res.replace("temp=","").replace("'C\n",""))
+				t = float(os.popen("cat /sys/class/thermal/thermal_zone0/temp").readline())
 			else:
 				t = float(0)
 
