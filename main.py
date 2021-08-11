@@ -45,13 +45,14 @@ if configure.tr109:
 	if configure.display == "0":
 		from lcars_bw import *
 
-# the following function is our main object, it contains all the flow for our program.
+# the following function is our main loop, it contains all the flow for our program.
 def Main():
 
-	# From out here in the loop we should instantiate the objects that are common to whatever display configuration we want to use.
+	# Instatiate a sensor object
 	sensors = Sensor()
 
 
+	# interval timers for flow control
 	timeit = timer()
 	ledtime = timer()
 
@@ -61,7 +62,7 @@ def Main():
 
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
 	if configure.tr108:
-		PyScreen = Screen(buttons)
+		PyScreen = Screen()
 #		if not configure.pc:
 #			moire = led_display()
 
@@ -72,7 +73,9 @@ def Main():
 			colourscreen = ColourScreen()
 
 
-			#set screen buffer size
+			#	set screen buffer size by taking the number of samples on the y
+			#	scale of a standard graph in the colourscreen, multiplied by the
+			#	number of sensors currently initialized.
 			plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0]))
 
 	timeit.logtime()
@@ -82,7 +85,8 @@ def Main():
 		lights = ripple()
 
 	print("Main Loop Starting")
-	# The following while loop catches ctrl-c exceptions.
+
+	# Main loop. Break when status is "quit".
 	while configure.status[0] != "quit":
 
 		# try allows us to capture a keyboard interrupt and assign behaviours.
@@ -117,22 +121,16 @@ def Main():
 						leda_on()
 						ledb_off()
 						ledc_off()
-#						if configure.moire:
-#							moire.animate()
 
 				if configure.tr109:
 					if timeit.timelapsed() > interval:
-						# add a hook for hall effect
+
 						if configure.display == "0":
 							configure.status[0] = dotscreen.push(data)
 						if configure.display == "1":
 							configure.status[0] = colourscreen.graph_screen(data)
 						if configure.leds[0] and not configure.pc:
 							lights.cycle()
-
-
-
-					#timeit.logtime()
 
 			if (configure.status[0] == "mode_b"):
 
@@ -145,7 +143,6 @@ def Main():
 							leda_off()
 							ledb_on()
 							ledc_off()
-
 
 					if configure.tr109:
 						if configure.leds[0]:
@@ -198,6 +195,7 @@ def Main():
 	# The following calls are for cleanup and just turn "off" any GPIO
 	resetleds()
 	cleangpio()
+	plars.shutdown()
 	#print("Quit reached")
 
 

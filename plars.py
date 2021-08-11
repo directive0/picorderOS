@@ -65,7 +65,7 @@ class PLARS(object):
 		pd.set_option('display.float_format', '{:.7f}'.format)
 
 		#create a buffer object to hold screen data
-		self.buffer_size =
+		self.buffer_size = 15
 		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 
@@ -74,6 +74,9 @@ class PLARS(object):
 	# provide status of database (how many entries, how many devices, size, length)
 	def status(self):
 		pass
+
+	def shutdown(self):
+		self.append_to_core(self.buffer)
 
 	# gets the latest CSV file
 	def get_core(self):
@@ -102,12 +105,15 @@ class PLARS(object):
 	# initialized sensor
 	def update(self,data):
 
+		# creates a new dataframe for the new information to add to the buffer
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
-		self.df = self.df.append(newdata, ignore_index=True)
 
-		if self.timer.timelapsed() > configure.logtime[0] and configure.datalog[0]:
-			self.merge_with_core()
-			self.timer.logtime()
+		# appends the new data to the buffer
+		self.buffer = self.buffer.append(newdata, ignore_index=True)
+
+		# if interval has elapsed trim the main buffer and dump old data to core.
+		if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
+			self.trimbuffer()
 
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
@@ -147,7 +153,7 @@ class PLARS(object):
 		if length < 0:
 
 			# make a new dataframe of the most recent data to keep using
-			newbuffer = self.buffer.head(length)
+			newbuffer = self.buffer.head(-length)
 
 			# slice off the rows outside the buffer and backup to disk
 			tocore = self.buffer.tail(length)
@@ -161,7 +167,6 @@ class PLARS(object):
 		#load csv file as dataframe
 		pass
 
-	# returns the entire datacore
 	def emrg(self):
 		self.get_core()
 		return self.df
@@ -173,10 +178,6 @@ class PLARS(object):
 	def request(self, request):
 		pass
 
-class Buffer(object):
-
-	def __init__(self):
-		pass
 
 # Creates a plars database object as soon as it is loaded.
 plars = PLARS()
