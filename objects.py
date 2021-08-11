@@ -9,9 +9,9 @@ global_notify = "PicorderOS is not active"
 
 class preferences(object):
 
-	#determines device ("pc", "tr108", "tr109")
+	# Initializes the parameters for the program.
 	def __init__(self):
-		self.version = "v0.01"
+		self.version = "v0.02"
 		self.author = "written by directive0"
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.
@@ -32,6 +32,9 @@ class preferences(object):
 		self.input_gpio = False
 		self.input_cap_mpr121 = False
 		self.input_cap1208 = False
+
+		# contains the current button state (0 is unpressed, 1 is pressed)
+		self.events = [0,0,0,0,0,0,0,0]
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
@@ -93,6 +96,31 @@ class preferences(object):
 		# holds the physical status of the devices
 		self.dr_open = [False]
 		self.dr_closed = [False]
+
+
+		# GPIO Pin Assignments (BCM)
+
+		# the tr109 supports two shift registers, and so two sets of pin addresses
+		# prototype unit 00 and 01 have different pin assignments for latch and clock
+		# so these values may need to be swapped
+
+		# Main board shift register pins
+		self.PIN_DATA  = 16
+		self.PIN_LATCH = 6
+		self.PIN_CLOCK = 20
+
+		# Sensor board shift register pins
+		self.PIN_DATA2 = 19
+		self.PIN_LATCH2 = 21
+		self.PIN_CLOCK2 = 26
+
+
+		# Hall Effect Sensors pins, for door open/close.
+		self.HALLPIN1 = 12
+		self.HALLPIN2 = 4
+
+		# CAP1208 Alert pins
+		self.ALERTPIN = 0
 
 
 configure = preferences()

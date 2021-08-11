@@ -40,9 +40,12 @@ if configure.tr109:
 	import RPi.GPIO as GPIO
 
 	# hallpin 1 was disabled as sensor board rev 2 accidentaly used it to drive
-	hallpin1 = None
-	hallpin2 = 26
+	hallpin1 = configure.HALLPIN1
+	hallpin2 = configure.HALLPIN2
+	alertpin = configure.ALERTPIN
+
 	GPIO.setmode(GPIO.BCM)
+	GPIO.setup(hallpin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	GPIO.setup(hallpin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 import time
@@ -185,7 +188,19 @@ class Inputs(object):
 		else:
 			configure.dr_open[0] = False
 
+		if configure.input_cap1208:
 
+			#checks to see if alert pin is high
+
+				#if high return the event list of currently released buttons
+
+			reading = cap1208.get_input_status()[0]
+
+			if reading == "release" or reading == "press":
+				cap1208.clear_interrupt()
+
+
+		return self.buttonlist
 
 		if configure.input_kb:
 
@@ -290,20 +305,7 @@ class Inputs(object):
 					else:
 						self.buttonlist[i] = False
 
-		if configure.input_cap1208:
 
-			#checks to see if alert pin is high
-
-				#if high return the event list of currently released buttons
-
-			reading = cap1208.get_input_status()[0]
-
-			if reading == "release" or reading == "press":
-				cap1208.clear_interrupt()
-#       elif reading == "press":
-
-
-		return self.buttonlist
 
 
 	def keypress(self):
@@ -314,9 +316,33 @@ class Inputs(object):
 		return key
 
 
-# a simple function to test and develop the cap1208 interface.
-# (I used this for debugging my PCB)
+
+
+# Some functions to test the various inputs. Call them in a while loop from the repl to test.
+
+
+def halltest():
+
+	if GPIO.input(hallpin1) == 1:
+		print("hallpin1 open")
+	else:
+		print("hallpin1 closed")
+
+
+	if GPIO.input(hallpin2) == 1:
+		print("hallpin2 open")
+	else:
+		print("hallpin2 closed")
+
+
+
+
 def captest():
+
+	if GPIO.input(configure.ALERTPIN) == 1:
+		print("hallpin1 open")
+	else:
+		print("hallpin1 closed")
 
 	# If the alert pin is raised
 	if cap1208._interrupt_status():
@@ -331,3 +357,11 @@ def captest():
 				print(i)
 
 		cap1208.clear_interrupt()
+
+
+def testall():
+	inputs = Inputs()
+
+	while True:
+		halltest()
+		print(inputs.read())

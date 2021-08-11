@@ -9,23 +9,11 @@ from objects import *
 if not configure.pc:
 	import RPi.GPIO as GPIO
 
-# the following constants are for the pin addresses of the shift register
-# the tr109 supports two shift registers, and so two sets of pin addresses
-# prototype unit 00 and 01 have different pin assignments for latch and clock
-# so these values may need to be swapped
 
-# Main board shift register pins
-PIN_DATA  = 16
-PIN_LATCH = 6
-PIN_CLOCK = 20
-
-# Sensor board shift register pins
-PIN_DATA2 = 19
-PIN_LATCH2 = 21
-PIN_CLOCK2 = 26
 
 # a list of the shift register pin data, for loop purposes (main board, sensor board).
-PINS = [[PIN_DATA,PIN_LATCH,PIN_CLOCK],[PIN_DATA2,PIN_LATCH2,PIN_CLOCK2]]
+# Pulls the pin assignments from the objects.py configuration object.
+PINS = [[configure.PIN_DATA,configure.PIN_LATCH,configure.PIN_CLOCK],[configure.PIN_DATA2,configure.PIN_LATCH2,configure.PIN_CLOCK2]]
 
 # set the mode of the shift register pins
 GPIO.setmode(GPIO.BCM)
