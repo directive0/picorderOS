@@ -194,7 +194,7 @@ class Inputs(object):
 
 				#if high return the event list of currently released buttons
 
-			reading = cap1208.get_input_status()[0]
+			reading = cap1208.get_input_status()
 
 			if reading == "release" or reading == "press":
 				cap1208.clear_interrupt()
