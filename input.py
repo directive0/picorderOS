@@ -340,9 +340,9 @@ def halltest():
 def captest():
 
 	if GPIO.input(configure.ALERTPIN) == 1:
-		print("hallpin1 open")
+		print("ALERT HIGH")
 	else:
-		print("hallpin1 closed")
+		print("ALERT LOW")
 
 	# If the alert pin is raised
 	if cap1208._interrupt_status():
@@ -363,5 +363,11 @@ def testall():
 	inputs = Inputs()
 
 	while True:
+
+		if GPIO.input(configure.ALERTPIN) == 1:
+			print("ALERT HIGH")
+		else:
+			print("ALERT LOW")
+			
 		halltest()
 		print(inputs.read())
