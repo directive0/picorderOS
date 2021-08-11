@@ -183,7 +183,7 @@ class Inputs(object):
 
 	def read(self):
 
-		if GPIO.input(hallpin2) == 1:
+		if GPIO.input(hallpin1) == 1:
 			configure.dr_open[0] = True
 		else:
 			configure.dr_open[0] = False
