@@ -17,12 +17,12 @@ PINS = [[configure.PIN_DATA,configure.PIN_LATCH,configure.PIN_CLOCK],[configure.
 
 # set the mode of the shift register pins
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(PIN_DATA, GPIO.OUT)
-GPIO.setup(PIN_LATCH, GPIO.OUT)
-GPIO.setup(PIN_CLOCK, GPIO.OUT)
-GPIO.setup(PIN_DATA2, GPIO.OUT)
-GPIO.setup(PIN_LATCH2, GPIO.OUT)
-GPIO.setup(PIN_CLOCK2, GPIO.OUT)
+GPIO.setup(configure.PIN_DATA, GPIO.OUT)
+GPIO.setup(configure.PIN_LATCH, GPIO.OUT)
+GPIO.setup(configure.PIN_CLOCK, GPIO.OUT)
+GPIO.setup(configure.PIN_DATA2, GPIO.OUT)
+GPIO.setup(configure.PIN_LATCH2, GPIO.OUT)
+GPIO.setup(configure.PIN_CLOCK2, GPIO.OUT)
 
 # loads the pin configurations and modes for the tr-108  (3 leds)
 if configure.tr108:
@@ -50,13 +50,13 @@ if configure.tr109:
 	GPIO.setmode(GPIO.BCM)
 
 	# Assign the
-	GPIO.setup(PIN_DATA, GPIO.OUT)
-	GPIO.setup(PIN_LATCH, GPIO.OUT)
-	GPIO.setup(PIN_CLOCK, GPIO.OUT)
+	GPIO.setup(configure.PIN_DATA, GPIO.OUT)
+	GPIO.setup(configure.PIN_LATCH, GPIO.OUT)
+	GPIO.setup(configure.PIN_CLOCK, GPIO.OUT)
 
-	GPIO.setup(PIN_DATA2, GPIO.OUT)
-	GPIO.setup(PIN_LATCH2, GPIO.OUT)
-	GPIO.setup(PIN_CLOCK2, GPIO.OUT)
+	GPIO.setup(configure.PIN_DATA2, GPIO.OUT)
+	GPIO.setup(configure.PIN_LATCH2, GPIO.OUT)
+	GPIO.setup(configure.PIN_CLOCK2, GPIO.OUT)
 
 	GPIO.setup(sc_led, GPIO.OUT)
 
