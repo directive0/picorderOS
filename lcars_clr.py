@@ -556,26 +556,26 @@ class MultiFrame(object):
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
 
-		# get current input event
-		keys = self.input.read()
-
-		# if a key is registering as pressed increment or rollover the selection variable.
-		if keys[0]:
-			self.selection += 1
-			if self.selection > 3:
-				self.selection = 0
-
-		# if this input is held down initiate a special input.
-		if self.input.holding[0]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
-
-		if keys[1]:
-			status =  "mode_b"
-
-		if keys[2]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
+		# # get current input event
+		# keys = self.input.read()
+		#
+		# # if a key is registering as pressed increment or rollover the selection variable.
+		# if keys[0]:
+		# 	self.selection += 1
+		# 	if self.selection > 3:
+		# 		self.selection = 0
+		#
+		# # if this input is held down initiate a special input.
+		# if self.input.holding[0]:
+		# 	configure.last_status[0] = "mode_a"
+		# 	status = "settings"
+		#
+		# if keys[1]:
+		# 	status =  "mode_b"
+		#
+		# if keys[2]:
+		# 	configure.last_status[0] = "mode_a"
+		# 	status = "settings"
 
 		return status
 # governs the screen drawing of the entire program. Everything flows through Screen.
@@ -678,22 +678,22 @@ class ThermalFrame(object):
 
 		status  = "mode_b"
 
-		keys = self.input.read()
-
-
-
-		# ------------- Input handling -------------- #
-		if keys[0]:
-			status  = "mode_a"
-
-		if keys[1]:
-			self.selection += 1
-			if self.selection > 1:
-				self.selection = 0
-
-		if keys[2]:
-			status = "settings"
-			configure.last_status[0] = "mode_b"
+		# keys = self.input.read()
+		#
+		#
+		#
+		# # ------------- Input handling -------------- #
+		# if keys[0]:
+		# 	status  = "mode_a"
+		#
+		# if keys[1]:
+		# 	self.selection += 1
+		# 	if self.selection > 1:
+		# 		self.selection = 0
+		#
+		# if keys[2]:
+		# 	status = "settings"
+		# 	configure.last_status[0] = "mode_b"
 
 		return status
 
