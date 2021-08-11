@@ -367,7 +367,8 @@ def testall():
 		if GPIO.input(configure.ALERTPIN) == 1:
 			print("ALERT HIGH")
 		else:
-			print("ALERT LOW")
-			
+			print("ALERT LOW<<<<<<<<<<<<<<<<")
+			cap1208.clear_interrupt()
+
 		halltest()
 		print(inputs.read())
