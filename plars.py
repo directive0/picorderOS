@@ -87,7 +87,7 @@ class PLARS(object):
 		print("PLARS - merging to core")
 		# open the csv
 		core = self.get_core()
-		copydf = self.df.copy()
+		copydf = self.buffer.copy()
 		newcore = pd.concat([core,copydf]).drop_duplicates().reset_index(drop=True)
 		newcore = self.index_by_time(newcore)
 		newcore.to_csv(self.file_path,index=False)
