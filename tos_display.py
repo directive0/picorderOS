@@ -798,7 +798,7 @@ class Slider_Screen(object):
 # A basic screen object. Is given parameters and displays them on a number of preset panels
 class Screen(object):
 
-	def __init__(self, debounce):
+	def __init__(self):
 		screenSize = resolution
 
 		# I forget, probably colour depth?
