@@ -128,7 +128,7 @@ class PLARS(object):
 		return df
 
 	# return a list of n most recent data from specific sensor defined by key
-	def recall(self, dsc, dev, num = 5):
+	def get_recent(self, dsc, dev, num = 5):
 		# organize it by time.
 		self.index_by_time(self.core)
 		# get a dataframe of just the requested sensor
