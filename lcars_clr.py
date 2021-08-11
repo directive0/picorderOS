@@ -557,7 +557,7 @@ class MultiFrame(object):
 		status  = "mode_a"
 
 		# # get current input event
-		# keys = self.input.read()
+		keys = self.input.read()
 		#
 		# # if a key is registering as pressed increment or rollover the selection variable.
 		# if keys[0]:
@@ -678,7 +678,7 @@ class ThermalFrame(object):
 
 		status  = "mode_b"
 
-		# keys = self.input.read()
+		keys = self.input.read()
 		#
 		#
 		#
