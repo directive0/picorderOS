@@ -200,7 +200,7 @@ class Inputs(object):
 				cap1208.clear_interrupt()
 
 
-		return self.buttonlist
+		return reading
 
 		if configure.input_kb:
 
