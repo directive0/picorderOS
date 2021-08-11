@@ -118,9 +118,9 @@ class PLARS(object):
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
 
-		result = self.buffer.loc[self.df['dsc'] == dsc]
+		result = self.buffer.loc[self.buffer['dsc'] == dsc]
 
-		result2 = result.loc[self.df['dev'] == dev]
+		result2 = result.loc[self.buffer['dev'] == dev]
 		return result2
 
 	def index_by_time(self,df):
