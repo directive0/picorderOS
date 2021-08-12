@@ -16,7 +16,7 @@ class preferences(object):
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
-		self.pc = True
+		self.pc = False
 
 		# enables sound effect playback
 		self.audio = False
@@ -28,20 +28,23 @@ class preferences(object):
 
 
 		# testing this setting to switch between Pygame controls and gpio ones
-		self.input_kb = True
+		self.input_kb = False
 		self.input_gpio = False
 		self.input_cap_mpr121 = False
-		self.input_cap1208 = False
+
+		# CAP1208 and sensitivity settings
+		self.input_cap1208 = True
+		self.CAPSENSITIVITY = 0b01111111
 
 		# contains the current button state (0 is unpressed, 1 is pressed)
 		self.events = [0,0,0,0,0,0,0,0]
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.moire = [False]
-		self.leds = [False]
+		self.leds = [True]
 
 		# If sleep is True the lights will respond to hall effect sensors
-		self.sleep = [False]
+		self.sleep = [True]
 
 
 		# controls auto ranging of graphs
@@ -58,12 +61,17 @@ class preferences(object):
 		self.max_sensors = [0]
 
 		# Toggles individual sensor support
-		self.bme = False
-		self.amg8833 = False
-		self.ir_thermo = False
-		self.sensehat = False
-		self.envirophat = False
 		self.system_vitals = True
+		self.bme = True
+		self.amg8833 = True
+
+		# TR108 uses this sensehat
+		self.sensehat = False
+
+		# Experimental unsupported sensors
+		self.ir_thermo = False
+		self.envirophat = False
+
 
 		# An integer determines which sensor in the dataset to plot
 		self.sensor1 = [0]
