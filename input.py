@@ -368,9 +368,9 @@ def testall():
 		if GPIO.input(configure.ALERTPIN) == 1:
 			pass
 		else:
-			for input in inputs.read():
+			for iteration, input in enumerat(inputs.read()):
 				if input == "press":
-					print(input, " pressed!")
+					print(iteration, "pressed!")
 			cap1208.clear_interrupt()
 
 		#halltest()
