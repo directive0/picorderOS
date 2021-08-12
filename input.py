@@ -24,7 +24,7 @@ from objects import *
 # geo, met, bio, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
 
 # stores the number of buttons to be queried
-buttons = 15
+buttons = 8
 
 threshold = 3
 release_threshold = 2
@@ -202,12 +202,12 @@ class Inputs(object):
 
 				# collect the event list from the chip
 				reading = cap1208.get_input_status()
-
+				print("reading: ",reading)
 				# for each item in that event list
 				for iteration, input in enumerate(reading):
 
 					# if an item is pressed
-					if input == "press":
+					if input == "press" or input == "release":
 						# mark it in the pressed list
 						self.pressed[iteration] = True
 					else:
@@ -218,7 +218,7 @@ class Inputs(object):
 				cap1208.clear_interrupt()
 
 				# return the pressed data
-				print(self.pressed)
+				print("result: ",self.pressed)
 				return self.pressed
 
 			else:
