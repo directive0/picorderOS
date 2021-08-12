@@ -113,6 +113,7 @@ if configure.input_cap1208:
 
 	import cap1xxx
 	cap1208 = cap1xxx.Cap1208(alert_pin = 0)
+	cap1208._write_byte(R_SENSITIVITY, 0b01111000)
 
 
 
