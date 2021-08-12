@@ -141,14 +141,17 @@ class Inputs(object):
 
 		# waspressed stores information about previous state
 		self.waspressed = []
+
 		self.clear = []
 		self.pressed = []
+		self.lasttime = []
 
 		# this list stores the final state of all buttons to allow the program to check for multiple button presses for hidden features
 		self.buttonlist = []
 
 		# prepares these lists for the script
 		for i in range(buttons):
+			self.lasttime.append("none")
 			self.clear.append(False)
 			self.pressed.append(False)
 			self.fired.append(False)
@@ -206,6 +209,13 @@ class Inputs(object):
 				# for each item in that event list
 				for iteration, input in enumerate(reading):
 
+					if input == "release":
+						if self.pressed[iteration] == True:
+							self.pressed[iteration] = False
+						else:
+							self.pressed[iteration] = True
+
+
 					# if an item is pressed
 					if input == "press":
 						# mark it in the pressed list
@@ -213,6 +223,8 @@ class Inputs(object):
 					else:
 						# else mark it not pressed
 						self.pressed[iteration] = False
+
+
 
 				#clear Alert pin
 				cap1208.clear_interrupt()
