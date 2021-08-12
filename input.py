@@ -223,7 +223,8 @@ class Inputs(object):
 							else:
 								self.pressed[iteration] = True
 						# else mark it not pressed
-						self.pressed[iteration] = False
+						else:
+							self.pressed[iteration] = False
 
 
 
