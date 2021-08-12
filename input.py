@@ -141,7 +141,7 @@ class Inputs(object):
 
 		# waspressed stores information about previous state
 		self.waspressed = []
-
+		self.clear = []
 		self.pressed = []
 
 		# this list stores the final state of all buttons to allow the program to check for multiple button presses for hidden features
