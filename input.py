@@ -369,7 +369,7 @@ def testall():
 			print("ALERT HIGH")
 		else:
 			print("ALERT LOW<<<<<<<<<<<<<<<<")
+			print(inputs.read())
 			cap1208.clear_interrupt()
 
-		halltest()
-		print(inputs.read())
+		#halltest()
