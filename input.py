@@ -142,11 +142,15 @@ class Inputs(object):
 		# waspressed stores information about previous state
 		self.waspressed = []
 
+		self.pressed = []
+
 		# this list stores the final state of all buttons to allow the program to check for multiple button presses for hidden features
 		self.buttonlist = []
 
 		# prepares these lists for the script
 		for i in range(buttons):
+			self.clear.append(False)
+			self.pressed.append(False)
 			self.fired.append(False)
 			self.buttonlist.append(False)
 			self.down.append(False)
@@ -191,17 +195,32 @@ class Inputs(object):
 
 		if configure.input_cap1208:
 
-			#checks to see if alert pin is high
+			# if the alert pin is brought high
+			if GPIO.input(configure.ALERTPIN) == 1:
 
-				#if high return the event list of currently released buttons
+				# collect the event list from the chip
+				reading = cap1208.get_input_status()
 
-			reading = cap1208.get_input_status()
+				# for each item in that event list
+				for iteration, input in enumerate(inputs.read()):
 
-			if reading == "release" or reading == "press":
+					# if an item is pressed
+					if input == "press":
+						# mark it in the pressed list
+						self.pressed[iteration] = True
+					else:
+						# else mark it not pressed
+						self.pressed[iteration] = False
+
+				#clear Alert pin
 				cap1208.clear_interrupt()
 
+				# return the pressed data
+				return self.pressed
 
-		return reading
+			else:
+				# otherwise just return a line of negatives.
+				return self.clear
 
 		if configure.input_kb:
 
