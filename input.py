@@ -218,6 +218,7 @@ class Inputs(object):
 				cap1208.clear_interrupt()
 
 				# return the pressed data
+				print(self.pressed)
 				return self.pressed
 
 			else:
