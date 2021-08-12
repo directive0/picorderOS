@@ -78,7 +78,7 @@ class graph_area(object):
 
 	# returns the highest
 	def get_high(self):
-		return max(self.bu	ff)
+		return max(self.buff)
 
 	def get_low(self):
 		return min(self.buff)
