@@ -198,6 +198,8 @@ class Inputs(object):
 			# if the alert pin is brought high
 			if GPIO.input(configure.ALERTPIN) == 1:
 
+				print("buttonpress!")
+
 				# collect the event list from the chip
 				reading = cap1208.get_input_status()
 
