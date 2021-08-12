@@ -38,7 +38,7 @@ class graph_area(object):
 		self.width = width
 		self.dotw = 6
 		self.doth = 6
-		self.buff = []
+		self.buff = array('f', [])
 
 		self.datahigh = 0
 		self.datalow = 0
@@ -61,6 +61,7 @@ class graph_area(object):
 		# seeds a list with sourcerange zero so we can put our sensor readings into it.
 		for i in range(self.spanx):
 			self.dlist.append(self.datalow)
+			self.buff.append(self.datalow)
 
 
 	# the following function returns the graph list.
