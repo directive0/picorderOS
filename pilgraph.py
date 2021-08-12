@@ -38,6 +38,7 @@ class graph_area(object):
 		self.width = width
 		self.dotw = 6
 		self.doth = 6
+		self.buff = []
 
 		self.datahigh = 0
 		self.datalow = 0
@@ -77,7 +78,7 @@ class graph_area(object):
 
 	# returns the highest
 	def get_high(self):
-		return max(self.buff)
+		return max(self.bu	ff)
 
 	def get_low(self):
 		return min(self.buff)
