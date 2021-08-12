@@ -207,7 +207,7 @@ class Inputs(object):
 				for iteration, input in enumerate(reading):
 
 					# if an item is pressed
-					if input == "press" or input == "release":
+					if input == "press":
 						# mark it in the pressed list
 						self.pressed[iteration] = True
 					else:
