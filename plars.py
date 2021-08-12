@@ -142,6 +142,8 @@ class PLARS(object):
 	def trimbuffer(self):
 		# should take the buffer in memory and trim some of it
 
+		print("Trimming the buffer!")
+
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
 		targetsize = self.buffer_size

@@ -201,11 +201,11 @@ class Inputs(object):
 			# if the alert pin is brought LOW
 			if GPIO.input(configure.ALERTPIN) == 0:
 
-				print("buttonpress!")
+
 
 				# collect the event list from the chip
 				reading = cap1208.get_input_status()
-				print("reading: ",reading)
+
 				# for each item in that event list
 				for iteration, input in enumerate(reading):
 
@@ -232,7 +232,6 @@ class Inputs(object):
 				cap1208.clear_interrupt()
 
 				# return the pressed data
-				print("result: ",self.pressed)
 				return self.pressed
 
 			else:
