@@ -34,7 +34,7 @@ class preferences(object):
 
 		# CAP1208 and sensitivity settings
 		self.input_cap1208 = True
-		self.CAPSENSITIVITY = 0b01111111
+		self.CAPSENSITIVITY = 50
 
 		# contains the current button state (0 is unpressed, 1 is pressed)
 		self.events = [0,0,0,0,0,0,0,0]
