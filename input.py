@@ -204,7 +204,7 @@ class Inputs(object):
 				reading = cap1208.get_input_status()
 
 				# for each item in that event list
-				for iteration, input in enumerate(inputs.read()):
+				for iteration, input in enumerate(reading):
 
 					# if an item is pressed
 					if input == "press":
