@@ -371,7 +371,6 @@ def testall():
 			for input in inputs.read():
 				if input == "press":
 					print(input, " pressed!")
-				print()
 			cap1208.clear_interrupt()
 
 		#halltest()
