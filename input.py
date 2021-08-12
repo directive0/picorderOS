@@ -195,8 +195,8 @@ class Inputs(object):
 
 		if configure.input_cap1208:
 
-			# if the alert pin is brought high
-			if GPIO.input(configure.ALERTPIN) == 1:
+			# if the alert pin is brought LOW
+			if GPIO.input(configure.ALERTPIN) == 0:
 
 				print("buttonpress!")
 
