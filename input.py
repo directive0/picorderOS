@@ -209,11 +209,7 @@ class Inputs(object):
 				# for each item in that event list
 				for iteration, input in enumerate(reading):
 
-					if input == "release":
-						if self.pressed[iteration] == True:
-							self.pressed[iteration] = False
-						else:
-							self.pressed[iteration] = True
+
 
 
 					# if an item is pressed
@@ -221,6 +217,11 @@ class Inputs(object):
 						# mark it in the pressed list
 						self.pressed[iteration] = True
 					else:
+						if input == "release":
+							if self.pressed[iteration] == True:
+								self.pressed[iteration] = False
+							else:
+								self.pressed[iteration] = True
 						# else mark it not pressed
 						self.pressed[iteration] = False
 
