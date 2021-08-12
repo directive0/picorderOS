@@ -369,7 +369,7 @@ def testall():
 			pass
 		else:
 			for input in inputs.read():
-				if input = "press":
+				if input == "press":
 					print(input, " pressed!")
 				print()
 			cap1208.clear_interrupt()
