@@ -7,7 +7,10 @@ from objects import *
 import time
 
 #loads parameters for configurations
-timer = configure.LED_TIMER
+interval = configure.LED_TIMER
+timer = Timer()
+
+
 
 # External module import
 if not configure.pc:
@@ -216,6 +219,10 @@ class ripple(object):
 
 def ripple_async(in_q):
 	thread_rip = ripple()
+
+	if timer.timelapsed() > interval:
+		thread_rip.cycle()
+		timer.logtime()
 
 
 	pass
