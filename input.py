@@ -172,7 +172,7 @@ class Inputs(object):
 		self.bfire = False
 		self.cfire = False
 
-		configure.eventlist = self.clear
+		configure.eventlist[0] = self.clear
 
 	def is_down(self, i):
 		if self.down[i]:
