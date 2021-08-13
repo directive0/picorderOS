@@ -203,7 +203,7 @@ class Inputs(object):
 			# if the alert pin is brought LOW
 			if GPIO.input(configure.ALERTPIN) == 0:
 
-
+				print("touch received")
 
 				# collect the event list from the chip
 				reading = cap1208.get_input_status()
@@ -242,6 +242,7 @@ class Inputs(object):
 
 			else:
 				# otherwise just return a line of negatives.
+				print(self.clear)
 				configure.eventlist = self.clear
 				return self.clear
 

@@ -558,7 +558,7 @@ class MultiFrame(object):
 
 		# # get current input event
 		keys = configure.eventlist
-
+		print("received events:", configure.eventlist)
 		# if a key is registering as pressed increment or rollover the selection variable.
 		if keys[0]:
 			self.selection += 1
