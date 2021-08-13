@@ -155,7 +155,7 @@ class PLARS(object):
 		print("Difference: ", length)
 
 		# if buffer is larger than target
-		if length < 0:
+		if length > 0:
 
 			# make a new dataframe of the most recent data to keep using
 			newbuffer = self.buffer.head(-length)
