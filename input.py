@@ -233,7 +233,7 @@ class Inputs(object):
 				#clear Alert pin
 				cap1208.clear_interrupt()
 
-				configure.eventlist = self.pressed
+				configure.eventlist[0] = self.pressed
 
 				if not configure.eventready[0]:
 					configure.eventready[0] = True
@@ -242,8 +242,8 @@ class Inputs(object):
 
 			else:
 				# otherwise just return a line of negatives.
-				
-				configure.eventlist = self.clear
+
+				configure.eventlist[0] = self.clear
 				return self.clear
 
 		if configure.input_kb:

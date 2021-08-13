@@ -36,7 +36,7 @@ class preferences(object):
 		self.input_cap1208 = True
 		self.CAPSENSITIVITY = 50
 
-		self.eventlist = []
+		self.eventlist = [[]]
 		self.eventready = [False]
 
 		# contains the current button state (0 is unpressed, 1 is pressed)
