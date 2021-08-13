@@ -41,7 +41,7 @@ class preferences(object):
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.leds = [True]
-		self.LED_TIMER = 40
+		self.LED_TIMER = 0.2
 
 		self.moire = [False]
 
