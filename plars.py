@@ -152,7 +152,7 @@ class PLARS(object):
 
 		# determine difference between buffer and target size
 		length = currentsize - targetsize
-		print("Difference: ", difference)
+		print("Difference: ", length)
 
 		# if buffer is larger than target
 		if length < 0:
