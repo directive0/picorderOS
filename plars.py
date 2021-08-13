@@ -159,9 +159,11 @@ class PLARS(object):
 
 			# make a new dataframe of the most recent data to keep using
 			newbuffer = self.buffer.head(-length)
+			print("Newbuffer size is: ", len(newbuffer))
 
 			# slice off the rows outside the buffer and backup to disk
 			tocore = self.buffer.tail(length)
+			print("ToCore size is: ", len(tocore))
 			self.append_to_core(tocore)
 
 			# replace existing buffer with new trimmed buffer
