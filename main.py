@@ -7,8 +7,8 @@ print("PicorderOS - Alpha")
 print("Loading Components")
 
 import os
-import queue
-import threading
+from queue import Queue
+from threading import Thread
 
 os.environ['SDL_AUDIODRIVER'] = 'dsp'
 
@@ -85,7 +85,10 @@ def Main():
 	ledtime.logtime()
 
 	if configure.leds[0]:
-		lights = ripple()
+
+		# seperate thread for LED lighting.
+		ledthread = Thread(target = ripple_async, args = ())
+		ledthread.start()
 
 	print("Main Loop Starting")
 
@@ -132,10 +135,10 @@ def Main():
 							configure.status[0] = dotscreen.push(data)
 						if configure.display == "1":
 							configure.status[0] = colourscreen.graph_screen(data)
-						if configure.leds[0] and not configure.pc:
-							lights.cycle()
+						#if configure.leds[0] and not configure.pc:
+							#lights.cycle()
 
-			if (configure.status[0] == "mode_b"):
+			if configure.status[0] == "mode_b":
 
 				if timeit.timelapsed() > interval:
 					data = sensors.get()
@@ -148,8 +151,8 @@ def Main():
 							ledc_off()
 
 					if configure.tr109:
-						if configure.leds[0]:
-							lights.cycle()
+						# if configure.leds[0]:
+						# 	lights.cycle()
 
 						if configure.display == "0":
 							configure.status[0] = dotscreen.push(data)

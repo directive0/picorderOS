@@ -216,17 +216,20 @@ class ripple(object):
 			shiftout(0)
 			shiftout(0,board =1)
 
-
+# function to handle lights as a seperate thread.
 def ripple_async():
+
 	thread_rip = ripple()
 
 	while True:
-		print(timer.timelapsed())
 
 		if timer.timelapsed() > interval:
 			thread_rip.cycle()
 			timer.logtime()
 
+			# sentinel signal to kill.
+			if configure.status[0] == "quit":
+				break
 
 	# start the ripple routine
 	# have a state variables
