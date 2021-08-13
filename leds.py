@@ -8,7 +8,7 @@ import time
 
 #loads parameters for configurations
 interval = configure.LED_TIMER
-timer = Timer()
+timer = timer()
 
 
 
