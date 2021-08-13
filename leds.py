@@ -4,6 +4,10 @@ print("Loading Unified Indicator Module")
 # LEDs are controlled directly from GPIO, for the tr109 a shift register is used
 
 from objects import *
+import time
+
+#loads parameters for configurations
+timer = configure.LED_TIMER
 
 # External module import
 if not configure.pc:
@@ -210,7 +214,10 @@ class ripple(object):
 			shiftout(0,board =1)
 
 
-def ripple_async():
+def ripple_async(in_q):
+	thread_rip = ripple()
+
+
 	pass
 
 	# start the ripple routine

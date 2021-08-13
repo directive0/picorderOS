@@ -40,8 +40,11 @@ class preferences(object):
 		self.events = [0,0,0,0,0,0,0,0]
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
-		self.moire = [False]
 		self.leds = [True]
+		self.LED_TIMER = 40
+
+		self.moire = [False]
+
 
 		# If sleep is True the lights will respond to hall effect sensors
 		self.sleep = [True]
@@ -87,7 +90,7 @@ class preferences(object):
 
 		# sets data logging mode.
 		self.datalog = [True]
-		self.logtime = [600]
+		self.logtime = [60]
 
 		# used to control refresh speed.
 		self.samplerate = [0]
