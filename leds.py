@@ -220,11 +220,12 @@ class ripple(object):
 def ripple_async(in_q):
 	thread_rip = ripple()
 
-	print(timer.timelapsed())
-	print(interval)
-	if timer.timelapsed() > interval:
-		thread_rip.cycle()
-		timer.logtime()
+	while true:
+		print(timer.timelapsed())
+		print(interval)
+		if timer.timelapsed() > interval:
+			thread_rip.cycle()
+			timer.logtime()
 
 
 	pass
