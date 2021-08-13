@@ -282,7 +282,7 @@ class SettingsFrame(object):
 		status = "settings"
 
 
-		keys = self.input.read()
+		keys = configure.eventlist
 
 		if keys[0]:
 			self.selection = self.selection + 1
@@ -376,7 +376,7 @@ class PowerDown(object):
 		status = "poweroff"
 
 
-		keys = self.input.read()
+		keys = configure.eventlist
 
 		if keys[0]:
 			status = "shutdown"
@@ -557,7 +557,7 @@ class MultiFrame(object):
 		status  = "mode_a"
 
 		# # get current input event
-		keys = self.input.read()
+		keys = configure.eventlist
 
 		# if a key is registering as pressed increment or rollover the selection variable.
 		if keys[0]:
