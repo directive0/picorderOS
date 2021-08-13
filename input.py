@@ -172,6 +172,7 @@ class Inputs(object):
 		self.bfire = False
 		self.cfire = False
 
+		configure.eventlist = self.clear
 
 	def is_down(self, i):
 		if self.down[i]:
@@ -195,6 +196,7 @@ class Inputs(object):
 			configure.dr_open[0] = True
 		else:
 			configure.dr_open[0] = False
+
 
 		if configure.input_cap1208:
 
@@ -231,11 +233,16 @@ class Inputs(object):
 				#clear Alert pin
 				cap1208.clear_interrupt()
 
+				configure.eventlist = self.pressed
+
+				if not configure.eventready[0]:
+					configure.eventready[0] = True
 				# return the pressed data
 				return self.pressed
 
 			else:
 				# otherwise just return a line of negatives.
+				configure.eventlist = self.clear
 				return self.clear
 
 		if configure.input_kb:
@@ -353,59 +360,8 @@ class Inputs(object):
 
 
 
+def threadedinput():
+	input = Inputs()
 
-# Some functions to test the various inputs. Call them in a while loop from the repl to test.
-
-
-def halltest():
-
-	if GPIO.input(hallpin1) == 1:
-		print("hallpin1 open")
-	else:
-		print("hallpin1 closed")
-
-
-	if GPIO.input(hallpin2) == 1:
-		print("hallpin2 open")
-	else:
-		print("hallpin2 closed")
-
-
-
-
-def captest():
-
-	if GPIO.input(configure.ALERTPIN) == 1:
-		print("ALERT HIGH")
-	else:
-		print("ALERT LOW")
-
-	# If the alert pin is raised
-	if cap1208._interrupt_status():
-
-		# check each item in the event lists
-		channels = cap1208.get_input_status()
-
-		for i in range(len(channels)):
-
-			# if the item has been pressed show us what channel it is
-			if channels[i] == "press":
-				print(i)
-
-		cap1208.clear_interrupt()
-
-
-def testall():
-	inputs = Inputs()
-
-	while True:
-
-		if GPIO.input(configure.ALERTPIN) == 1:
-			pass
-		else:
-			for iteration, input in enumerate(inputs.read()):
-				if input == "press":
-					print(iteration, "pressed!")
-			cap1208.clear_interrupt()
-
-		#halltest()
+	while not configure.status == "quit":
+		input.read()

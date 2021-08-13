@@ -114,6 +114,7 @@ class PLARS(object):
 		# if interval has elapsed trim the main buffer and dump old data to core.
 		if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
 			self.trimbuffer()
+			self.timer.logtime()
 
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):

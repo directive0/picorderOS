@@ -85,10 +85,14 @@ def Main():
 	ledtime.logtime()
 
 	if configure.leds[0]:
-
 		# seperate thread for LED lighting.
-		ledthread = Thread(target = ripple_async, args = ())
-		ledthread.start()
+		led_thread = Thread(target = ripple_async, args = ())
+		led_thread.start()
+
+
+	#start the event monitor
+	input_thread = Thread(target = threadedinput, args = ())
+	input_thread.start()
 
 	print("Main Loop Starting")
 
