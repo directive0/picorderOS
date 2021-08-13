@@ -201,7 +201,7 @@ class Inputs(object):
 		if configure.input_cap1208:
 
 			# if the alert pin is brought LOW
-			if GPIO.input(configure.ALERTPIN) == 0:
+			if GPIO.input(configure.ALERTPIN) == 0 and not configure.eventready[0]:
 
 				print("touch received")
 

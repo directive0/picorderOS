@@ -557,20 +557,22 @@ class MultiFrame(object):
 		status  = "mode_a"
 
 		# # get current input event
-		keys = configure.eventlist
-		print("received events:", configure.eventlist)
-		# if a key is registering as pressed increment or rollover the selection variable.
-		if keys[0]:
-			self.selection += 1
-			if self.selection > 3:
-				self.selection = 0
+		if configure.eventready[0]:
+			keys = configure.eventlist
+			print("received events:", configure.eventlist)
+			# if a key is registering as pressed increment or rollover the selection variable.
+			if keys[0]:
+				self.selection += 1
+				if self.selection > 3:
+					self.selection = 0
 
-		if keys[1]:
-			status =  "mode_b"
+			if keys[1]:
+				status =  "mode_b"
 
-		if keys[2]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
+			if keys[2]:
+				configure.last_status[0] = "mode_a"
+				status = "settings"
+			configure.eventready[0] = False
 
 		return status
 # governs the screen drawing of the entire program. Everything flows through Screen.
