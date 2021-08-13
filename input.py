@@ -242,7 +242,7 @@ class Inputs(object):
 
 			else:
 				# otherwise just return a line of negatives.
-				print(self.clear)
+				
 				configure.eventlist = self.clear
 				return self.clear
 
