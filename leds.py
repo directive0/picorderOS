@@ -217,18 +217,16 @@ class ripple(object):
 			shiftout(0,board =1)
 
 
-def ripple_async(in_q):
+def ripple_async():
 	thread_rip = ripple()
 
 	while True:
 		print(timer.timelapsed())
-		print(interval)
+
 		if timer.timelapsed() > interval:
 			thread_rip.cycle()
 			timer.logtime()
 
-
-	pass
 
 	# start the ripple routine
 	# have a state variables
