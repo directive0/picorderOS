@@ -19,8 +19,6 @@ from PIL import ImageDraw
 from pilgraph import *
 from amg8833_pil import *
 
-#load the module that handles input_kb
-from input import *
 
 
 # Load default font.
@@ -176,7 +174,7 @@ class SelectableLabel(LabelObj):
 
 
 class SettingsFrame(object):
-	def __init__(self,input):
+	def __init__(self):
 
 		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto], ["LEDs", configure.sleep],["Power Off","poweroff"]]
 
@@ -191,8 +189,6 @@ class SettingsFrame(object):
 		self.gspany = 71
 
 		self.selection = 0
-
-		self.input = Inputs()
 
 		self.auto = configure.auto[0]
 		self.interval = timer()
@@ -303,7 +299,7 @@ class SettingsFrame(object):
 		return status
 
 class PowerDown(object):
-	def __init__(self,input):
+	def __init__(self):
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
@@ -317,7 +313,6 @@ class PowerDown(object):
 
 		self.selection = 0
 
-		self.input = Inputs()
 
 		self.auto = configure.auto[0]
 		self.interval = timer()
@@ -395,7 +390,7 @@ class PowerDown(object):
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
 
-	def __init__(self,input):
+	def __init__(self):
 		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
@@ -413,9 +408,6 @@ class MultiFrame(object):
 
 		# sets the currently selected sensor to focus on
 		self.selection = 0
-
-		# grabs the input object for the interface
-		self.input = Inputs()
 
 		# ties the auto state to the global object
 		self.auto = configure.auto[0]
@@ -457,8 +449,8 @@ class MultiFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-	def get_y(self):
-		return self.gspany - self.graphy
+	def get_x(self):
+		return self.gspanx - self.graphx
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".0f"):
@@ -556,7 +548,6 @@ class MultiFrame(object):
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
 
-		# # get current input event
 		if configure.eventready[0]:
 			keys = configure.eventlist[0]
 			print("received events:", configure.eventlist)
@@ -580,9 +571,8 @@ class MultiFrame(object):
 # Screen monitors button presses and passes flags for interface updates to the draw object.
 
 class ThermalFrame(object):
-	def __init__(self,input):
+	def __init__(self):
 		# Sets the topleft origin of the graph
-		self.input = input
 		self.graphx = 23
 		self.graphy = 24
 
@@ -675,8 +665,7 @@ class ThermalFrame(object):
 
 		status  = "mode_b"
 
-		keys = self.input.read()
-
+		keys = configure.eventlist[0]
 
 
 		# ------------- Input handling -------------- #
@@ -704,18 +693,14 @@ class ColourScreen(object):
 
 		self.status = "mode_a"
 
-		# Creates a local reference for our input object.
-		self.input = Inputs()
+		self.multi_frame = MultiFrame()
+		self.settings_frame = SettingsFrame()
+		self.thermal_frame = ThermalFrame()
+		self.powerdown_frame = PowerDown()
 
-		self.multi_frame = MultiFrame(self.input)
-		self.settings_frame = SettingsFrame(self.input)
-		self.thermal_frame = ThermalFrame(self.input)
-		self.powerdown_frame = PowerDown(self.input)
-
-		plars.set_buffer(self.multi_frame.gspanx)
 
 	def get_size(self):
-		return self.multi_frame.get_y()
+		return self.multi_frame.get_x()
 
 	def graph_screen(self,sensors):
 		self.newimage = self.image.copy()
