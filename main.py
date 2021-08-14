@@ -15,6 +15,7 @@ os.environ['SDL_AUDIODRIVER'] = 'dsp'
 from objects import *
 from sensors import *
 from plars import *
+from input import *
 
 # This part loads the appropriate modules depending on which preference flags are set.
 
