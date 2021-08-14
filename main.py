@@ -80,7 +80,7 @@ def Main():
 			#	scale of a standard graph in the colourscreen, multiplied by the
 			#	number of sensors currently initialized.
 			print("get_size = ",colourscreen.get_size())
-			print("sensor length = ",len(configure.sensor_info[0])
+			print("sensor length = ",len(configure.sensor_info[0]))
 			plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0]))
 
 	timeit.logtime()
