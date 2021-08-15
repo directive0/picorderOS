@@ -211,15 +211,14 @@ class Inputs(object):
 				# for each item in that event list
 				for iteration, input in enumerate(reading):
 
-
-
-
 					# if an item is pressed
 					if input == "press":
+						print("Press item recognized")
 						# mark it in the pressed list
 						self.pressed[iteration] = True
 					else:
 						if input == "release":
+							print("Release item recognized")
 							if self.pressed[iteration] == True:
 								self.pressed[iteration] = False
 							else:
@@ -235,8 +234,8 @@ class Inputs(object):
 
 				configure.eventlist[0] = self.pressed
 
-				if not configure.eventready[0]:
-					configure.eventready[0] = True
+
+				configure.eventready[0] = True
 				# return the pressed data
 				return self.pressed
 
@@ -244,6 +243,7 @@ class Inputs(object):
 				# otherwise just return a line of negatives.
 
 				configure.eventlist[0] = self.clear
+				configure.eventready[0] = False
 				return self.clear
 
 		if configure.input_kb:
