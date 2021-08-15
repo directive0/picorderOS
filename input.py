@@ -236,8 +236,6 @@ class Inputs(object):
 
 				configure.eventlist[0] = self.pressed
 
-
-				configure.eventready[0] = True
 				# return the pressed data
 				return self.pressed
 
@@ -245,7 +243,6 @@ class Inputs(object):
 				# otherwise just return a line of negatives.
 
 				configure.eventlist[0] = self.clear
-				configure.eventready[0] = False
 				return self.clear
 
 		if configure.input_kb:
