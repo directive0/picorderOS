@@ -241,8 +241,6 @@ class Inputs(object):
 
 			else:
 				# otherwise just return a line of negatives.
-
-				configure.eventlist[0] = self.clear
 				return self.clear
 
 		if configure.input_kb:
