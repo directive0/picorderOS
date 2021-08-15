@@ -550,7 +550,7 @@ class MultiFrame(object):
 
 		print("eventready = ", configure.eventready[0])
 		if configure.eventready[0]:
-			keys = configure.eventlist[0]
+			keys = configure.eventlist
 			print("received events:", configure.eventlist)
 			# if a key is registering as pressed increment or rollover the selection variable.
 			if keys[0]:
