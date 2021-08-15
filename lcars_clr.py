@@ -277,24 +277,24 @@ class SettingsFrame(object):
 
 		status = "settings"
 
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
 
-		keys = configure.eventlist
+			if keys[0]:
+				self.selection = self.selection + 1
+				if self.selection > (len(self.pages) - 1):
+					self.selection = 0
 
-		if keys[0]:
-			self.selection = self.selection + 1
-			if self.selection > (len(self.pages) - 1):
-				self.selection = 0
+			if keys[1]:
+				state = self.toggle(self.pages[self.selection][1])
 
-		if keys[1]:
-			state = self.toggle(self.pages[self.selection][1])
+				if self.status_raised:
+					status = state
+					self.status_raised = False
 
-			if self.status_raised:
-				status = state
-				self.status_raised = False
-
-		if keys[2]:
-			status = configure.last_status[0]
-
+			if keys[2]:
+				status = configure.last_status[0]
+			configure.eventready[0] = False
 
 		return status
 
@@ -550,7 +550,7 @@ class MultiFrame(object):
 
 		print("eventready = ", configure.eventready[0])
 		if configure.eventready[0]:
-			keys = configure.eventlist
+			keys = configure.eventlist[0]
 			print("received events:", configure.eventlist)
 			# if a key is registering as pressed increment or rollover the selection variable.
 			if keys[0]:
@@ -665,22 +665,23 @@ class ThermalFrame(object):
 
 
 		status  = "mode_b"
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
 
-		keys = configure.eventlist[0]
 
+			# ------------- Input handling -------------- #
+			if keys[0]:
+				status  = "mode_a"
 
-		# ------------- Input handling -------------- #
-		if keys[0]:
-			status  = "mode_a"
+			if keys[1]:
+				self.selection += 1
+				if self.selection > 1:
+					self.selection = 0
 
-		if keys[1]:
-			self.selection += 1
-			if self.selection > 1:
-				self.selection = 0
-
-		if keys[2]:
-			status = "settings"
-			configure.last_status[0] = "mode_b"
+			if keys[2]:
+				status = "settings"
+				configure.last_status[0] = "mode_b"
+			configure.eventready[0] = False
 
 		return status
 
