@@ -201,7 +201,7 @@ class Inputs(object):
 		if configure.input_cap1208:
 
 			# if the alert pin is brought LOW
-			if GPIO.input(configure.ALERTPIN) == 0 and not configure.eventready[0]:
+			if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
 
 				print("touch received")
 
@@ -216,12 +216,14 @@ class Inputs(object):
 						print("Press item recognized")
 						# mark it in the pressed list
 						self.pressed[iteration] = True
+						configure.eventready[0] = True
 					else:
 						if input == "release":
 							print("Release item recognized")
 							if self.pressed[iteration] == True:
 								self.pressed[iteration] = False
 							else:
+								configure.eventready[0] = True
 								self.pressed[iteration] = True
 						# else mark it not pressed
 						else:

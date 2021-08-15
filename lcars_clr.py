@@ -548,7 +548,7 @@ class MultiFrame(object):
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
 
-		print("eventready= ", configure.eventready[0])
+		print("eventready = ", configure.eventready[0])
 		if configure.eventready[0]:
 			keys = configure.eventlist[0]
 			print("received events:", configure.eventlist)
