@@ -511,9 +511,9 @@ class MultiFrame(object):
 		self.draw = draw
 
 		# Grabs the current sensor reading
-		self.A_Data = sensors[configure.sensor1[0]][0]
-		self.B_Data = sensors[configure.sensor2[0]][0]
-		self.C_Data = sensors[configure.sensor3[0]][0]
+		self.A_Data = configure.sensor_data[0][configure.sensor1[0]][0]
+		self.B_Data = configure.sensor_data[0][configure.sensor2[0]][0]
+		self.C_Data = configure.sensor_data[0][configure.sensor3[0]][0]
 
 
 		# Draws the Title

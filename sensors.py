@@ -368,3 +368,18 @@ class MLX90614():
 	def get_obj_temp(self):
 		data = self.read_reg(self.MLX90614_TOBJ1)
 		return self.data_to_temp(data)
+
+def sensor_thread():
+	sensors = Sensor()
+	timer = timer()
+
+	while not configure.status == "quit":
+
+		if configure.samplerate < timer.timelapsed():
+
+			timer.logtime()
+
+			#get the sensor data and hand it to PLARS
+			data = sensors.get()
+			plars.update(data)
+			configure.sensor_data[0] = data

@@ -97,6 +97,10 @@ def Main():
 	input_thread = Thread(target = threadedinput, args = ())
 	input_thread.start()
 
+	#start the sensor loop
+	sensor_thread = Thread(target = sensor_thread, args = ())
+	sensor_thread.start()
+
 	print("Main Loop Starting")
 
 	# Main loop. Break when status is "quit".
@@ -121,9 +125,8 @@ def Main():
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			if (configure.status[0] == "mode_a"):
 
-				#get the sensor data and hand it to PLARS
-				data = sensors.get()
-				plars.update(data)
+				#Deprecated. need to remove from main and screen modules
+				data = []
 
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
