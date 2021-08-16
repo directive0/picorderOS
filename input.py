@@ -357,7 +357,7 @@ class Inputs(object):
 
 
 
-def threadedinput():
+def threaded_input():
 	input = Inputs()
 
 	while not configure.status == "quit":

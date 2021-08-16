@@ -94,11 +94,11 @@ def Main():
 
 
 	#start the event monitor
-	input_thread = Thread(target = threadedinput, args = ())
+	input_thread = Thread(target = threaded_input, args = ())
 	input_thread.start()
 
 	#start the sensor loop
-	sensor_thread = Thread(target = sensor_thread, args = ())
+	sensor_thread = Thread(target = threaded_sensor, args = ())
 	sensor_thread.start()
 
 	print("Main Loop Starting")

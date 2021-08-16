@@ -369,7 +369,7 @@ class MLX90614():
 		data = self.read_reg(self.MLX90614_TOBJ1)
 		return self.data_to_temp(data)
 
-def sensor_thread():
+def threaded_sensor():
 	sensors = Sensor()
 	timer = timer()
 
