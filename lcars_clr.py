@@ -486,11 +486,14 @@ class MultiFrame(object):
 		# displays more details for whatever sensor is in focus
 		if self.selection != 0:
 
+			carousel = [self.A_Data,self.B_Data,self.C_Data]
+
 			this = self.selection - 1
 
 			this_bundle = self.Graphs[this]
 
-			raw = str(sensors[configure.sensors[this][0]][0])
+			raw = str(carousel[this])
+
 			adjusted = self.arrangelabel(raw, '.2f')
 			self.focus_Label.string = adjusted
 			self.focus_Label.r_align(156,self.titley,self.draw)
