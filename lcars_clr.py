@@ -509,7 +509,7 @@ class MultiFrame(object):
 	def push(self,sensors,draw):
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
-
+		print(configure.sensor_data)
 		# Grabs the current sensor reading
 		self.A_Data = configure.sensor_data[configure.sensor1[0]][0]
 		self.B_Data = configure.sensor_data[configure.sensor2[0]][0]
