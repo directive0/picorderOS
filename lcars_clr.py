@@ -513,16 +513,16 @@ class MultiFrame(object):
 		senseslice =[0,0,0]
 
 		for i in range(3):
-			print("i =", i)
+
 			dsc = configure.sensor_info[configure.sensors[i][0]][3]
 			dev = configure.sensor_info[configure.sensors[i][0]][5]
 
-			print("dsc,dev = ", dsc, "/", dev)
+
 			item = plars.get_recent(dsc,dev,num = 1)
-			print("item = ", item)
+
 			senseslice[i] = item[0]
 
-		print("senseslice = ", senseslice)
+
 
 		# Grabs the current sensor reading
 		self.A_Data = senseslice[0]#configure.sensor_data[configure.sensor1[0]][0]
@@ -562,10 +562,10 @@ class MultiFrame(object):
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
 
-		print("eventready = ", configure.eventready[0])
+
 		if configure.eventready[0]:
 			keys = configure.eventlist[0]
-			print("received events:", configure.eventlist)
+
 			# if a key is registering as pressed increment or rollover the selection variable.
 			if keys[0]:
 				self.selection += 1
