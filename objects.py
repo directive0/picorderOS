@@ -101,7 +101,7 @@ class preferences(object):
 
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []
-		self.sensor_data = [[]]
+		self.sensor_data = []
 
 		# holds the global state of the program (allows secondary modules to quit the program should we require it)
 		self.status = ["startup"]
