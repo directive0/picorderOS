@@ -373,10 +373,10 @@ def threaded_sensor():
 	while not configure.status == "quit":
 
 		if configure.samplerate[0] < timed.timelapsed() or start:
-
+			"updating sensors"
 			timed.logtime()
 			start = False
 			#get the sensor data and hand it to PLARS
 			data = sensors.get()
 			plars.update(data)
-			configure.sensor_data = data
+			configure.sensor_data[0] = data
