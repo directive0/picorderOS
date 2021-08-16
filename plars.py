@@ -140,7 +140,7 @@ class PLARS(object):
 		return trimmed_data['value'].tolist()
 
 
-	def trimbuffer(self):
+	def trimbuffer(self, save = True):
 		# should take the buffer in memory and trim some of it
 
 		print("Trimming the buffer!")

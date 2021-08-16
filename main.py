@@ -82,7 +82,7 @@ def Main():
 			#	number of sensors currently initialized.
 			print("get_size = ",colourscreen.get_size())
 			print("sensor length = ",len(configure.sensor_info[0]))
-			plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*4)
+			plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*2)
 
 	timeit.logtime()
 	ledtime.logtime()
