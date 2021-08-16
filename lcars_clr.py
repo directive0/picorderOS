@@ -515,7 +515,7 @@ class MultiFrame(object):
 		for i in range(3):
 			dsc = configure.sensor_info[configure.sensors[i][0]][3]
 			dev = configure.sensor_info[configure.sensors[i][0]][5]
-			item = plars.get_recent(dsc,dev,num = self.spanx)
+			item = plars.get_recent(dsc,dev,num = 1)
 			senselice.append(item)
 
 		print("senselice = ", senselice)
