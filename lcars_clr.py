@@ -18,8 +18,8 @@ from PIL import ImageDraw
 # load the module that draws graphs
 from pilgraph import *
 from amg8833_pil import *
-
-
+from plars import *
+from objects import *
 
 # Load default font.
 font = ImageFont.truetype("assets/babs.otf",13)
@@ -510,10 +510,21 @@ class MultiFrame(object):
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 		print(configure.sensor_data[0])
+
+		senseslice =[]
+
+		for i in range(3):
+			dsc = configure.sensor_info[configure.sensors[i][0]][3]
+			dev = configure.sensor_info[configure.sensors[i][0]][5]
+			item = plars.get_recent(dsc,dev,num = self.spanx)
+			senselice.append(item)
+
+		print("senselice = ", senselice)
+
 		# Grabs the current sensor reading
-		self.A_Data = configure.sensor_data[configure.sensor1[0]][0]
-		self.B_Data = configure.sensor_data[configure.sensor2[0]][0]
-		self.C_Data = configure.sensor_data[configure.sensor3[0]][0]
+		self.A_Data = senselice[0][0]#configure.sensor_data[configure.sensor1[0]][0]
+		self.B_Data = senselice[1][0]#configure.sensor_data[configure.sensor2[0]][0]
+		self.C_Data = senselice[2][0]#configure.sensor_data[configure.sensor3[0]][0]
 
 
 		# Draws the Title
