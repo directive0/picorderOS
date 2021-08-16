@@ -379,4 +379,4 @@ def threaded_sensor():
 			#get the sensor data and hand it to PLARS
 			data = sensors.get()
 			plars.update(data)
-			configure.sensor_data[0] = data
+			configure.sensor_data = data
