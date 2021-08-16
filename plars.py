@@ -147,6 +147,7 @@ class PLARS(object):
 
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
+
 		targetsize = self.buffer_size
 
 
@@ -158,7 +159,7 @@ class PLARS(object):
 		if length > 0:
 
 			# make a new dataframe of the most recent data to keep using
-			newbuffer = self.buffer.head(-length
+			newbuffer = self.buffer.head(-length)
 
 			# slice off the rows outside the buffer and backup to disk
 			tocore = self.buffer.tail(length)
