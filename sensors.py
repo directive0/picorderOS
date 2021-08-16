@@ -151,10 +151,6 @@ class Sensor(object):
 		if configure.amg8833:
 			self.amg_info = [0,80,"IR Thermal Array",self.deg_sym + "c"]
 
-		self.sensor_data = []
-		for i in range(configure.max_sensors[0]):
-			self.sensor_data.append()
-
 
 		if configure.bme:
 			# Create library object using our Bus I2C port
@@ -372,13 +368,14 @@ class MLX90614():
 def threaded_sensor():
 	sensors = Sensor()
 	timer = timer()
+	start = True
 
 	while not configure.status == "quit":
 
-		if configure.samplerate < timer.timelapsed():
+		if configure.samplerate < timer.timelapsed() or start:
 
 			timer.logtime()
-
+			start = False
 			#get the sensor data and hand it to PLARS
 			data = sensors.get()
 			plars.update(data)
