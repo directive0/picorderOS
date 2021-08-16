@@ -372,7 +372,7 @@ def threaded_sensor():
 
 	while not configure.status == "quit":
 
-		if configure.samplerate < timed.timelapsed() or start:
+		if configure.samplerate[0] < timed.timelapsed() or start:
 
 			timed.logtime()
 			start = False
