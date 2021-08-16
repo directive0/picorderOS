@@ -516,9 +516,9 @@ class MultiFrame(object):
 			dsc = configure.sensor_info[configure.sensors[i][0]][3]
 			dev = configure.sensor_info[configure.sensors[i][0]][5]
 			item = plars.get_recent(dsc,dev,num = 1)
-			senselice.append(item)
+			senseslice.append(item)
 
-		print("senselice = ", senselice)
+		print("senseslice = ", senseslice)
 
 		# Grabs the current sensor reading
 		self.A_Data = senselice[0][0]#configure.sensor_data[configure.sensor1[0]][0]
