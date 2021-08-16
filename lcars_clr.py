@@ -520,7 +520,7 @@ class MultiFrame(object):
 			print("dsc,dev = ", dsc, "/", dev)
 			item = plars.get_recent(dsc,dev,num = 1)
 			print("item = ", item)
-			senseslice[i] = item
+			senseslice[i] = item[0]
 
 		print("senseslice = ", senseslice)
 
