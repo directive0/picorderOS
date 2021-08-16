@@ -379,4 +379,4 @@ def threaded_sensor():
 			data = sensors.get()
 			print("got sensor data, adding to global objects")
 			plars.update(data)
-			configure.sensor_data[0] = data
+#			configure.sensor_data[0] = data
