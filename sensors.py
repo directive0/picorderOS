@@ -308,6 +308,7 @@ class Sensor(object):
 			sensorlist += [item0, item1, item2, item3, item4, item5,item6, item7, item8]
 		configure.max_sensors[0] = len(sensorlist)
 
+		plars.update(sensorlist)
 		return sensorlist
 
 class MLX90614():
@@ -377,6 +378,5 @@ def threaded_sensor():
 			start = False
 			#get the sensor data and hand it to PLARS
 			data = sensors.get()
-			print("sensor data collected: ",data)
-			plars.update(data)
+
 #			configure.sensor_data[0] = data
