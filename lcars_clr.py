@@ -521,9 +521,9 @@ class MultiFrame(object):
 		print("senseslice = ", senseslice)
 
 		# Grabs the current sensor reading
-		self.A_Data = senseslice[0][0]#configure.sensor_data[configure.sensor1[0]][0]
-		self.B_Data = senseslice[1][0]#configure.sensor_data[configure.sensor2[0]][0]
-		self.C_Data = senseslice[2][0]#configure.sensor_data[configure.sensor3[0]][0]
+		self.A_Data = senseslice[0]#configure.sensor_data[configure.sensor1[0]][0]
+		self.B_Data = senseslice[1]#configure.sensor_data[configure.sensor2[0]][0]
+		self.C_Data = senseslice[2]#configure.sensor_data[configure.sensor3[0]][0]
 
 
 		# Draws the Title
