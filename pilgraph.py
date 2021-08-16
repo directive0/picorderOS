@@ -192,7 +192,7 @@ class graph_area(object):
 
 		#preps the list by adding the X coordinate to every sensor value
 		cords = self.graphprep(plars.get_recent(dsc,dev,num = self.spanx))
-		self.buffer = cords
+		self.buff = cords
 
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
