@@ -119,10 +119,13 @@ class PLARS(object):
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
 
-		result = self.buffer.loc[self.buffer['dsc'] == dsc]
+		try:
+			result = self.buffer.loc[self.buffer['dsc'] == dsc]
 
-		result2 = result.loc[self.buffer['dev'] == dev]
-		return result2
+			result2 = result.loc[self.buffer['dev'] == dev]
+			return result2
+		except:
+			pass
 
 	def index_by_time(self,df):
 		df.sort_values(by=['timestamp'])
@@ -130,15 +133,18 @@ class PLARS(object):
 
 	# return a list of n most recent data from specific sensor defined by key
 	def get_recent(self, dsc, dev, num = 5):
-		# organize it by time.
-		self.index_by_time(self.core)
-		# get a dataframe of just the requested sensor
-		untrimmed_data = self.get_sensor(dsc,dev)
-		# trim it to length (num).
-		trimmed_data = untrimmed_data.tail(num)
-		# return a list of the values
-		return trimmed_data['value'].tolist()
 
+		try:
+			# organize it by time.
+			self.index_by_time(self.buffer)
+			# get a dataframe of just the requested sensor
+			untrimmed_data = self.get_sensor(dsc,dev)
+			# trim it to length (num).
+			trimmed_data = untrimmed_data.tail(num)
+			# return a list of the values
+			return trimmed_data['value'].tolist()
+		except:
+			pass
 
 	def trimbuffer(self, save = True):
 		# should take the buffer in memory and trim some of it
