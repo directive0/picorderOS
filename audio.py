@@ -22,3 +22,10 @@ class Audio(object):
 
     def clock(self):
         pass
+
+
+def threaded_audio():
+    timed = timer()
+    start = True
+
+    
