@@ -52,7 +52,19 @@ if configure.tr109:
 # the following function is our main loop, it contains all the flow for our program.
 def Main():
 
+	if configure.leds[0]:
+		# seperate thread for LED lighting.
+		led_thread = Thread(target = ripple_async, args = ())
+		led_thread.start()
 
+
+	#start the event monitor
+	input_thread = Thread(target = threaded_input, args = ())
+	input_thread.start()
+
+	#start the sensor loop
+	sensor_thread = Thread(target = threaded_sensor, args = ())
+	sensor_thread.start()
 
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
 	if configure.tr108:
@@ -76,19 +88,7 @@ def Main():
 
 
 
-	if configure.leds[0]:
-		# seperate thread for LED lighting.
-		led_thread = Thread(target = ripple_async, args = ())
-		led_thread.start()
 
-
-	#start the event monitor
-	input_thread = Thread(target = threaded_input, args = ())
-	input_thread.start()
-
-	#start the sensor loop
-	sensor_thread = Thread(target = threaded_sensor, args = ())
-	sensor_thread.start()
 
 	print("Main Loop Starting")
 
@@ -111,13 +111,11 @@ def Main():
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			if (configure.status[0] == "mode_a"):
 
-				#Deprecated. need to remove from main and screen modules
-				data = []
 
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
 
-					configure.status[0] = PyScreen.graph_screen(data)
+					configure.status[0] = PyScreen.graph_screen()
 
 					if not configure.pc:
 						leda_on()
@@ -129,7 +127,7 @@ def Main():
 					if configure.display == "0":
 						configure.status[0] = dotscreen.push(data)
 					if configure.display == "1":
-						configure.status[0] = colourscreen.graph_screen(data)
+						configure.status[0] = colourscreen.graph_screen()
 
 
 			if configure.status[0] == "mode_b":
@@ -138,7 +136,7 @@ def Main():
 
 				if configure.tr108:
 
-					configure.status[0] = PyScreen.slider_screen(data)
+					configure.status[0] = PyScreen.slider_screen()
 					if not configure.pc:
 						leda_off()
 						ledb_on()
