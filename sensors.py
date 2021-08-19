@@ -162,7 +162,7 @@ class Sensor(object):
 			self.pressure_info = [300,1100,"Barometer","hPa", "BME680"]
 			self.VOC_info = [300000,1100000,"VOC","KOhm", "BME680"]
 
-		configure.sensor_info = self.get()
+		configure.sensor_info[0] = self.get()
 
 	def sin_gen(self):
 		wavestep = math.sin(self.step)
@@ -349,6 +349,7 @@ class MLX90614():
 				#"Rate limiting" - sleeping to prevent problems with sensor
 				#when requesting data too quickly
 				sleep(self.comm_sleep_amount)
+
 		#By this time, we made a couple requests and the sensor didn't respond
 		#(judging by the fact we haven't returned from this function yet)
 		#So let's just re-raise the last IOError we got
