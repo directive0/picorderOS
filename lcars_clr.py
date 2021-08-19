@@ -458,7 +458,7 @@ class MultiFrame(object):
 		return datareturn
 
 	# defines the labels for the screen
-	def labels(self,sensors):
+	def labels(self):
 
 		# depending on which number the "selection" variable takes on.
 		if self.selection == 0:
@@ -509,7 +509,7 @@ class MultiFrame(object):
 
 
 	# push the image frame and contents to the draw object.
-	def push(self,sensors,draw):
+	def push(self,draw):
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
@@ -559,7 +559,7 @@ class MultiFrame(object):
 		if self.selection == 3:
 			self.C_Graph.render(self.draw)
 
-		self.labels(sensors)
+		self.labels()
 
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
@@ -720,24 +720,24 @@ class ColourScreen(object):
 	def get_size(self):
 		return self.multi_frame.get_x()
 
-	def graph_screen(self,sensors):
+	def graph_screen(self):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.multi_frame.push(sensors,self.draw)
+		self.status = self.multi_frame.push(self.draw)
 		self.pixdrw()
 		return self.status
 
-	def thermal_screen(self,sensors):
+	def thermal_screen(self):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.thermal_frame.push(sensors,self.draw)
+		self.status = self.thermal_frame.push(self.draw)
 		self.pixdrw()
 		return self.status
 
-	def settings(self,sensors):
+	def settings(self):
 		self.newimage = self.blankimage.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.settings_frame.push(sensors,self.draw)
+		self.status = self.settings_frame.push(self.draw)
 		self.pixdrw()
 		return self.status
 
