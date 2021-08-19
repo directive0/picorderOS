@@ -96,7 +96,7 @@ class preferences(object):
 		self.logtime = [60]
 
 		# used to control refresh speed.
-		self.samplerate = [1]
+		self.samplerate = [0]
 		self.displayinterval = [0]
 
 		# holds sensor data (issued by the sensor module at init)
