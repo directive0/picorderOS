@@ -85,19 +85,12 @@ class preferences(object):
 		self.sensor3 = [2]
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
 
-		# this flag can be used to signal to the rest of the program that the
-		# sensor arrangement has been altered, allowing the program to adjust
-		# background elements if needed.
-		self.sensorschanged = [False]
-
-
 		# sets data logging mode.
-		self.datalog = [True]
+		self.datalog = [False]
 		self.logtime = [60]
 
 		# used to control refresh speed.
-		self.samplerate = [0
-		]
+		self.samplerate = [0]
 		self.displayinterval = [0]
 
 		# holds sensor data (issued by the sensor module at init)
