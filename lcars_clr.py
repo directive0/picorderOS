@@ -241,7 +241,7 @@ class SettingsFrame(object):
 		return oper
 
 
-	def push(self, sensor, draw):
+	def push(self, draw):
 
 		#draw the frame heading
 
@@ -652,7 +652,7 @@ class ThermalFrame(object):
 
 			self.C_Label.r_align(156,self.labely,self.draw)
 
-	def push(self, sensor, draw):
+	def push(self, draw):
 
 		self.draw = draw
 
