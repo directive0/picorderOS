@@ -132,8 +132,6 @@ def Main():
 
 			if configure.status[0] == "mode_b":
 
-				data = sensors.get()
-
 				if configure.tr108:
 
 					configure.status[0] = PyScreen.slider_screen()
