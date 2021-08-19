@@ -145,7 +145,7 @@ def Main():
 					if configure.display == "0":
 						configure.status[0] = dotscreen.push(data)
 					if configure.display == "1":
-						configure.status[0] = colourscreen.thermal_screen(data)
+						configure.status[0] = colourscreen.thermal_screen()
 
 
 			if (configure.status[0] == "settings"):
@@ -159,9 +159,9 @@ def Main():
 
 				if configure.tr109:
 					if configure.display == "0":
-						configure.status[0] = dotscreen.push(data)
+						configure.status[0] = dotscreen.push()
 					if configure.display == "1":
-						configure.status[0] = colourscreen.settings(data)
+						configure.status[0] = colourscreen.settings()
 
 			# Handles the poweroff screen
 			if (configure.status[0] == "poweroff"):
