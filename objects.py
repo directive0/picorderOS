@@ -79,7 +79,7 @@ class preferences(object):
 		self.envirophat = False
 
 		# flag to command the main loop
-		self.sensor_ready = False
+		self.sensor_ready = [False]
 
 		# An integer determines which sensor in the dataset to plot
 		self.sensor1 = [0]
