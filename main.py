@@ -58,10 +58,10 @@ def Main():
 
 	# interval timers for flow control
 	timeit = timer()
-	ledtime = timer()
+
 
 	# I this *can* be used to set the delay between draws, but it is not supported yet.
-	interval = 0.5
+	interval = 0
 
 
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
@@ -85,7 +85,7 @@ def Main():
 			plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*2)
 
 	timeit.logtime()
-	ledtime.logtime()
+
 
 	if configure.leds[0]:
 		# seperate thread for LED lighting.

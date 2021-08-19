@@ -125,7 +125,7 @@ class PLARS(object):
 			result2 = result.loc[self.buffer['dev'] == dev]
 			return result2
 		except:
-			pass
+			print("result returned= ", result2)
 
 	def index_by_time(self,df):
 		df.sort_values(by=['timestamp'])
