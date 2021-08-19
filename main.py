@@ -79,12 +79,8 @@ def Main():
 			colourscreen = ColourScreen()
 
 
-			#	set screen buffer size by taking the number of samples on the y
-			#	scale of a standard graph in the colourscreen, multiplied by the
-			#	number of sensors currently initialized.
-			print("get_size = ",colourscreen.get_size())
-			print("sensor length = ",len(configure.sensor_info[0]))
-			plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*2)
+			if configure.sensor_ready[0]:
+				plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*2)
 
 
 

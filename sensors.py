@@ -368,16 +368,17 @@ class MLX90614():
 		return self.data_to_temp(data)
 
 def threaded_sensor():
+
 	sensors = Sensor()
+	sensors.get()
+	configure.sensor_ready[0] = True
+
 	timed = timer()
-	start = True
+
 
 	while not configure.status == "quit":
 
-		if configure.samplerate[0] < timed.timelapsed() or start:
+		if configure.samplerate[0] < timed.timelapsed():
 			timed.logtime()
 			start = False
-			#get the sensor data and hand it to PLARS
 			data = sensors.get()
-
-#			configure.sensor_data[0] = data
