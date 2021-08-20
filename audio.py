@@ -1,4 +1,4 @@
-from object import *
+from objects import *
 import simpleaudio as sa
 
 
