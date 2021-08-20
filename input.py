@@ -193,8 +193,7 @@ class Inputs(object):
 
 	def read(self):
 
-		print("door status/opening = ", self.door_was_closed, "/", configure.dr_opening[0])
-		# top hall sensor
+		# top hall sensor, 1 = door open
 		if GPIO.input(hallpin1) == 1:
 			if self.door_was_closed == True:
 				self.door_was_closed = False
@@ -205,6 +204,13 @@ class Inputs(object):
 			self.door_was_closed = True
 			configure.dr_open[0] = False
 
+		# lower hall, 0 = door open
+		if GPIO.input(hallpin2) == 1:
+			if self.door_was_open == True:
+				self.door_was_open = False
+				configure.dr_closing[0] = True
+		else:
+			self.door_was_open = True
 
 
 
@@ -223,13 +229,11 @@ class Inputs(object):
 
 					# if an item is pressed
 					if input == "press":
-						print("Press item recognized")
 						# mark it in the pressed list
 						self.pressed[iteration] = True
 						configure.eventready[0] = True
 					else:
 						if input == "release":
-							print("Release item recognized")
 							if self.pressed[iteration] == True:
 								self.pressed[iteration] = False
 							else:
