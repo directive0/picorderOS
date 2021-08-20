@@ -51,6 +51,7 @@ if configure.tr109:
 
 # the following function is our main loop, it contains all the flow for our program.
 def Main():
+	
 	#start the sensor loop
 	sensor_thread = Thread(target = threaded_sensor, args = ())
 	sensor_thread.start()
