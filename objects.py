@@ -19,7 +19,7 @@ class preferences(object):
 		self.pc = False
 
 		# enables sound effect playback
-		self.audio = False
+		self.audio = [True]
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!

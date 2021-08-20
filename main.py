@@ -66,6 +66,10 @@ def Main():
 	sensor_thread = Thread(target = threaded_sensor, args = ())
 	sensor_thread.start()
 
+	if configure.audio[0]:
+		audio_thread = Thread(target = threaded_audio, args = ())
+		audio_thread.start()
+
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
 	if configure.tr108:
 
