@@ -147,6 +147,8 @@ class Inputs(object):
 
 		# this list stores the final state of all buttons to allow the program to check for multiple button presses for hidden features
 		self.buttonlist = []
+		self.door_was_open = False
+		self.door_was_closed = False
 
 		# prepares these lists for the script
 		for i in range(buttons):
@@ -191,10 +193,18 @@ class Inputs(object):
 
 	def read(self):
 
+		# top hall sensor
 		if GPIO.input(hallpin1) == 1:
+			if not self.door_was_closed:
+				self.door_was_closed = False
+				configure.dr_opening[0] = True
+
 			configure.dr_open[0] = True
 		else:
+			self.door_was_closed = True
 			configure.dr_open[0] = False
+
+
 
 
 		if configure.input_cap1208:

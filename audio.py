@@ -17,9 +17,16 @@ def threaded_audio():
     start = True
     was_open = False
     warble = scansound.play()
+    click = clicksound.play()
+
+    click.stop()
 
     while not configure.status[0] == "quit":
         if configure.audio[0]:
+
+            if configure.dr_opening[0]:
+                click = clicksound.play()
+                configure.dr_opening[0] = False
 
             if configure.dr_open[0]:
                 if not warble.is_playing():
