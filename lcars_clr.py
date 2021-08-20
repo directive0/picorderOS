@@ -371,16 +371,20 @@ class PowerDown(object):
 		status = "poweroff"
 
 
-		keys = configure.eventlist
+		if configure.eventready[0]:
 
-		if keys[0]:
-			status = "shutdown"
+			keys = configure.eventlist[0]
 
-		if keys[1]:
-			pass
+			if keys[0]:
+				status = "shutdown"
 
-		if keys[2]:
-			status = "settings"
+			if keys[1]:
+				pass
+
+			if keys[2]:
+				status = "settings"
+
+			configure.eventready[0] = False
 
 
 		return status
@@ -580,6 +584,7 @@ class MultiFrame(object):
 			if keys[2]:
 				configure.last_status[0] = "mode_a"
 				status = "settings"
+
 			configure.eventready[0] = False
 
 		return status
@@ -697,6 +702,7 @@ class ThermalFrame(object):
 			if keys[2]:
 				status = "settings"
 				configure.last_status[0] = "mode_b"
+				
 			configure.eventready[0] = False
 
 		return status
