@@ -51,6 +51,9 @@ if configure.tr109:
 
 # the following function is our main loop, it contains all the flow for our program.
 def Main():
+	#start the sensor loop
+	sensor_thread = Thread(target = threaded_sensor, args = ())
+	sensor_thread.start()
 
 	if configure.leds[0]:
 		# seperate thread for LED lighting.
@@ -62,9 +65,7 @@ def Main():
 	input_thread = Thread(target = threaded_input, args = ())
 	input_thread.start()
 
-	#start the sensor loop
-	sensor_thread = Thread(target = threaded_sensor, args = ())
-	sensor_thread.start()
+
 
 	if configure.audio[0]:
 		audio_thread = Thread(target = threaded_audio, args = ())
