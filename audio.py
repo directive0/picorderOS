@@ -18,14 +18,12 @@ def threaded_audio():
     was_open = False
     warble = sa.play_buffer(scansounds, 2, 2, 44100)
 
-    while not configure.status[0] == "quit"
-    if configure.audio[0]:
+    while not configure.status[0] == "quit":
+        if configure.audio[0]:
 
-
-
-        if configure.dr_open[0]:
-            if not warble.is_playing():
-                warble = sa.play_buffer(scansounds, 2, 2, 44100)
-        else:
-            if warble.is_playing():
-                warble.stop()
+            if configure.dr_open[0]:
+                if not warble.is_playing():
+                    warble = sa.play_buffer(scansounds, 2, 2, 44100)
+            else:
+                if warble.is_playing():
+                    warble.stop()
