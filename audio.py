@@ -20,6 +20,7 @@ def threaded_audio():
     click = clicksound.play()
 
     click.stop()
+    warble.stop()
 
     while not configure.status[0] == "quit":
         if configure.audio[0]:
