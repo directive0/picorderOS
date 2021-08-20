@@ -193,7 +193,7 @@ class Inputs(object):
 
 	def read(self):
 
-		print("door status/opening = ", self.door_was_closed, "/", self.dr_opening)
+		print("door status/opening = ", self.door_was_closed, "/", configure.dr_opening[0])
 		# top hall sensor
 		if GPIO.input(hallpin1) == 1:
 			if not self.door_was_closed:
