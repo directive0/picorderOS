@@ -1,4 +1,3 @@
-\
 print("Loading Unified Input Module")
 # This script retrieves and packages all input events that might be useful to the program
 # The input object checks the configuration object and returns an array of button inputs.
@@ -24,7 +23,7 @@ from objects import *
 # geo, met, bio, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
 
 # stores the number of buttons to be queried
-buttons = 15
+buttons = 8
 
 threshold = 3
 release_threshold = 2
@@ -35,10 +34,18 @@ if configure.tr108:
 	pins = [5,6,13]
 
 if configure.tr109:
-	#pwr,hall1,hall2
-	pins = [5,17,26]
 
+	# by default the tr-109 uses gpio for hinge close
+	import RPi.GPIO as GPIO
 
+	# hallpin 1 was disabled as sensor board rev 2 accidentaly used it to drive
+	hallpin1 = configure.HALLPIN1
+	hallpin2 = configure.HALLPIN2
+	alertpin = configure.ALERTPIN
+
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setup(hallpin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+	GPIO.setup(hallpin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 import time
 
@@ -62,6 +69,8 @@ if configure.input_gpio:
 
 	if configure.tr109:
 		# setup our 3 control buttons
+
+
 		GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -97,12 +106,13 @@ if configure.input_cap1208:
 	GPIO.setmode(GPIO.BCM)
 
 	interrupt_pin = 0
-
 	GPIO.setup(interrupt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+	GPIO.add_event_detect(interrupt_pin, GPIO.BOTH)
 
 
 	import cap1xxx
 	cap1208 = cap1xxx.Cap1208(alert_pin = 0)
+	cap1208._write_byte(0x1F, configure.CAPSENSITIVITY)
 
 
 
@@ -131,11 +141,20 @@ class Inputs(object):
 		# waspressed stores information about previous state
 		self.waspressed = []
 
+		self.clear = []
+		self.pressed = []
+		self.lasttime = []
+
 		# this list stores the final state of all buttons to allow the program to check for multiple button presses for hidden features
 		self.buttonlist = []
+		self.door_was_open = False
+		self.door_was_closed = False
 
 		# prepares these lists for the script
 		for i in range(buttons):
+			self.lasttime.append("none")
+			self.clear.append(False)
+			self.pressed.append(False)
 			self.fired.append(False)
 			self.buttonlist.append(False)
 			self.down.append(False)
@@ -154,6 +173,8 @@ class Inputs(object):
 		self.bfire = False
 		self.cfire = False
 
+		configure.eventlist[0] = self.clear
+
 	def is_down(self, i):
 		if self.down[i]:
 			self.down[i] = False
@@ -171,6 +192,71 @@ class Inputs(object):
 		pass
 
 	def read(self):
+
+		# top hall sensor, 1 = door open
+		if GPIO.input(hallpin1) == 1:
+			if self.door_was_closed == True:
+				self.door_was_closed = False
+				configure.dr_opening[0] = True
+
+			configure.dr_open[0] = True
+		else:
+			self.door_was_closed = True
+			configure.dr_open[0] = False
+
+		# lower hall, 0 = door open
+		if GPIO.input(hallpin2) == 1:
+			if self.door_was_open == True:
+				self.door_was_open = False
+				configure.dr_closing[0] = True
+		else:
+			self.door_was_open = True
+
+
+
+		if configure.input_cap1208:
+
+			# if the alert pin is brought LOW
+			if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
+
+				print("touch received")
+
+				# collect the event list from the chip
+				reading = cap1208.get_input_status()
+
+				# for each item in that event list
+				for iteration, input in enumerate(reading):
+
+					# if an item is pressed
+					if input == "press":
+						# mark it in the pressed list
+						self.pressed[iteration] = True
+						configure.eventready[0] = True
+					else:
+						if input == "release":
+							if self.pressed[iteration] == True:
+								self.pressed[iteration] = False
+							else:
+								configure.eventready[0] = True
+								self.pressed[iteration] = True
+						# else mark it not pressed
+						else:
+							self.pressed[iteration] = False
+
+
+
+				#clear Alert pin
+				cap1208.clear_interrupt()
+
+				configure.eventlist[0] = self.pressed
+
+				# return the pressed data
+				return self.pressed
+
+			else:
+				# otherwise just return a line of negatives.
+				return self.clear
+
 		if configure.input_kb:
 
 			key = self.keypress()
@@ -274,15 +360,7 @@ class Inputs(object):
 					else:
 						self.buttonlist[i] = False
 
-		if configure.input_cap1208:
-			reading = cap1208.get_input_status()[0]
-			print(reading)
-			if reading == "release" or reading == "press":
-				cap1208.clear_interrupt()
-#       elif reading == "press":
-				print("WE GOT ONE!!!!!!")
-		#print(self.buttonlist)
-		return self.buttonlist
+
 
 
 	def keypress(self):
@@ -293,20 +371,9 @@ class Inputs(object):
 		return key
 
 
-# a simple function to test and develop the cap1208 interface.
-# (I used this for debugging my PCB)
-def captest():
 
-	# If the alert pin is raised
-	if cap1208._interrupt_status():
+def threaded_input():
+	input = Inputs()
 
-		# check each item in the event lists
-		channels = cap1208.get_input_status()
-
-		for i in range(len(channels)):
-
-			# if the item has been pressed show us what channel it is
-			if channels[i] == "press":
-				print(i)
-
-		cap1208.clear_interrupt()
+	while not configure.status == "quit":
+		input.read()

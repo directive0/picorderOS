@@ -7,10 +7,15 @@ print("PicorderOS - Alpha")
 print("Loading Components")
 
 import os
+from queue import Queue
+from threading import Thread
+
 os.environ['SDL_AUDIODRIVER'] = 'dsp'
 
 from objects import *
 from sensors import *
+from plars import *
+from input import *
 
 # This part loads the appropriate modules depending on which preference flags are set.
 
@@ -22,6 +27,8 @@ else:
 	# otherwise load up the demonstration and dummy modules that emulate sensors and pass GPIO signals without requiring any real GPIO.
 	from gpiodummy import *
 
+if configure.audio:
+	from audio import *
 
 # The following are only loaded in TR-108 mode
 if configure.tr108:
@@ -42,48 +49,58 @@ if configure.tr109:
 	if configure.display == "0":
 		from lcars_bw import *
 
-# the following function is our main object, it contains all the flow for our program.
+# the following function is our main loop, it contains all the flow for our program.
 def Main():
+	
+	#start the sensor loop
+	sensor_thread = Thread(target = threaded_sensor, args = ())
+	sensor_thread.start()
 
-	# From out here in the loop we should instantiate the objects that are common to whatever display configuration we want to use.
-	sensors = Sensor()
-	timeit = timer()
-	ledtime = timer()
+	if configure.leds[0]:
+		# seperate thread for LED lighting.
+		led_thread = Thread(target = ripple_async, args = ())
+		led_thread.start()
 
-	# I this *can* be used to set the delay between draws, but it is not supported yet.
-	interval = 0.5
 
+	#start the event monitor
+	input_thread = Thread(target = threaded_input, args = ())
+	input_thread.start()
+
+
+
+	if configure.audio[0]:
+		audio_thread = Thread(target = threaded_audio, args = ())
+		audio_thread.start()
 
 	# Instantiate a screen object to draw data to screen. Right now for testing they all have different names but each display object should use the same named methods for simplicity sake.
 	if configure.tr108:
-		PyScreen = Screen(buttons)
-#		if not configure.pc:
-#			moire = led_display()
+
+		PyScreen = Screen()
 
 	if configure.tr109:
+
 		if configure.display == "0":
 			dotscreen = NokiaScreen()
 		if configure.display == "1":
 			colourscreen = ColourScreen()
 
-	timeit.logtime()
-	ledtime.logtime()
 
-	if configure.leds[0]:
-		lights = ripple()
+			if configure.sensor_ready[0]:
+				plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*2)
+
+
+
+
 
 	print("Main Loop Starting")
-	# The following while loop catches ctrl-c exceptions.
-	while configure.status[0] != "quit":
 
+	# Main loop. Break when status is "quit".
+	while configure.status[0] != "quit":
 
 		# try allows us to capture a keyboard interrupt and assign behaviours.
 		try:
+
 			# Runs the startup animation played when you first boot the program.
-
-			# Create a timer object to time things.
-			start_time = time.time()
-
 			if configure.status[0] == "startup":
 				configure.status[0] = "mode_a"
 
@@ -96,61 +113,45 @@ def Main():
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			if (configure.status[0] == "mode_a"):
 
-				#if timeit.timelapsed() > interval:
-				data = sensors.get()
 
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
 
-					configure.status[0] = PyScreen.graph_screen(data)
+					configure.status[0] = PyScreen.graph_screen()
 
 					if not configure.pc:
 						leda_on()
 						ledb_off()
 						ledc_off()
-#						if configure.moire:
-#							moire.animate()
 
 				if configure.tr109:
-					if timeit.timelapsed() > interval:
-						# add a hook for hall effect
-						if configure.display == "0":
-							configure.status[0] = dotscreen.push(data)
-						if configure.display == "1":
-							configure.status[0] = colourscreen.graph_screen(data)
-						if configure.leds[0] and not configure.pc:
-							lights.cycle()
+
+					if configure.display == "0":
+						configure.status[0] = dotscreen.push(data)
+					if configure.display == "1":
+						configure.status[0] = colourscreen.graph_screen()
 
 
+			if configure.status[0] == "mode_b":
 
-					#timeit.logtime()
+				if configure.tr108:
 
-			if (configure.status[0] == "mode_b"):
+					configure.status[0] = PyScreen.slider_screen()
+					if not configure.pc:
+						leda_off()
+						ledb_on()
+						ledc_off()
 
-				if timeit.timelapsed() > interval:
-					data = sensors.get()
+				if configure.tr109:
 
-					if configure.tr108:
-						configure.status[0] = PyScreen.slider_screen(data)
-						if not configure.pc:
-							leda_off()
-							ledb_on()
-							ledc_off()
+					if configure.display == "0":
+						configure.status[0] = dotscreen.push(data)
+					if configure.display == "1":
+						configure.status[0] = colourscreen.thermal_screen()
 
-
-					if configure.tr109:
-						if configure.leds[0]:
-							lights.cycle()
-
-						if configure.display == "0":
-							configure.status[0] = dotscreen.push(data)
-						if configure.display == "1":
-							configure.status[0] = colourscreen.thermal_screen(data)
-
-					timeit.logtime()
 
 			if (configure.status[0] == "settings"):
-				#print(configure.status[0])
+
 				if configure.tr108:
 					configure.status[0] = PyScreen.settings()
 					if not configure.pc:
@@ -160,9 +161,9 @@ def Main():
 
 				if configure.tr109:
 					if configure.display == "0":
-						configure.status[0] = dotscreen.push(data)
+						configure.status[0] = dotscreen.push()
 					if configure.display == "1":
-						configure.status[0] = colourscreen.settings(data)
+						configure.status[0] = colourscreen.settings()
 
 			# Handles the poweroff screen
 			if (configure.status[0] == "poweroff"):
@@ -175,6 +176,7 @@ def Main():
 
 			if configure.status[0] == "shutdown":
 				print("Shut Down!")
+				configure.status[0] = "quit"
 				resetleds()
 				cleangpio()
 				os.system("sudo shutdown -h now")
@@ -189,6 +191,7 @@ def Main():
 	# The following calls are for cleanup and just turn "off" any GPIO
 	resetleds()
 	cleangpio()
+	plars.shutdown()
 	#print("Quit reached")
 
 

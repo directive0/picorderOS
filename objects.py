@@ -9,32 +9,49 @@ global_notify = "PicorderOS is not active"
 
 class preferences(object):
 
-	#determines device ("pc", "tr108", "tr109")
+	# Initializes the parameters for the program.
 	def __init__(self):
-		self.version = "v0.01"
+		self.version = "v0.02"
 		self.author = "written by directive0"
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
-		self.pc = True
+		self.pc = False
 
+		# enables sound effect playback
+		self.audio = [True]
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
 		self.tr108 = False
 		self.tr109 = True
 
+
 		# testing this setting to switch between Pygame controls and gpio ones
-		self.input_kb = True
+		self.input_kb = False
 		self.input_gpio = False
 		self.input_cap_mpr121 = False
-		self.input_cap1208 = False
+
+		# CAP1208 and sensitivity settings
+		self.input_cap1208 = True
+		self.CAPSENSITIVITY = 50
+
+		self.eventlist = [[]]
+		self.eventready = [False]
+
+		# contains the current button state (0 is unpressed, 1 is pressed)
+		self.events = [0,0,0,0,0,0,0,0]
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
+		self.leds = [True]
+		self.LED_TIMER = 0.2
+
 		self.moire = [False]
-		self.leds = [False]
-		self.sleep = [False]
-		self.neopixel = [False]
+
+
+		# If sleep is True the lights will respond to hall effect sensors
+		self.sleep = [True]
+
 
 		# controls auto ranging of graphs
 		self.auto = [True]
@@ -50,12 +67,19 @@ class preferences(object):
 		self.max_sensors = [0]
 
 		# Toggles individual sensor support
-		self.bme = False
-		self.amg8833 = False
-		self.ir_thermo = False
-		self.sensehat = False
-		self.envirophat = False
 		self.system_vitals = True
+		self.bme = True
+		self.amg8833 = True
+
+		# TR108 uses this sensehat
+		self.sensehat = False
+
+		# Experimental unsupported sensors
+		self.ir_thermo = False
+		self.envirophat = False
+
+		# flag to command the main loop
+		self.sensor_ready = [False]
 
 		# An integer determines which sensor in the dataset to plot
 		self.sensor1 = [0]
@@ -63,14 +87,9 @@ class preferences(object):
 		self.sensor3 = [2]
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
 
-		# this flag can be used to signal to the rest of the program that the
-		# sensor arrangement has been altered, allowing the program to adjust
-		# background elements if needed.
-		self.sensorschanged = [False]
-
-
 		# sets data logging mode.
-		self.logdata = [False]
+		self.datalog = [False]
+		self.logtime = [60]
 
 		# used to control refresh speed.
 		self.samplerate = [0]
@@ -78,15 +97,41 @@ class preferences(object):
 
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []
-
+		self.sensor_data = []
 
 		# holds the global state of the program (allows secondary modules to quit the program should we require it)
 		self.status = ["startup"]
 		self.last_status = ["startup"]
 
 		# holds the physical status of the devices
-		self.dr_open = False
-		self.dr_closed = False
+		self.dr_open = [False]
+		self.dr_closed = [False]
+		self.dr_opening = [False]
+		self.dr_closing = [False]
+		
+		# GPIO Pin Assignments (BCM)
+
+		# the tr109 supports two shift registers, and so two sets of pin addresses
+		# prototype unit 00 and 01 have different pin assignments for latch and clock
+		# so these values may need to be swapped
+
+		# Main board shift register pins
+		self.PIN_DATA  = 16
+		self.PIN_LATCH = 6
+		self.PIN_CLOCK = 20
+
+		# Sensor board shift register pins
+		self.PIN_DATA2 = 19
+		self.PIN_LATCH2 = 21
+		self.PIN_CLOCK2 = 26
+
+
+		# Hall Effect Sensors pins, for door open/close.
+		self.HALLPIN1 = 12
+		self.HALLPIN2 = 4
+
+		# CAP1208 Alert pins
+		self.ALERTPIN = 0
 
 
 configure = preferences()
@@ -168,7 +213,7 @@ class timer(object):
 		self.timeInit = time.time()
 		self.logtime()
 
-	# The following funtion returns the last logged value.
+	# The following funtion returns the first logged value. When the timer was first started.
 	def timestart(self):
 		return self.timeInit
 

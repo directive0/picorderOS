@@ -1,9 +1,6 @@
 from objects import *
 import time
-
-# Todo:
-# - Add possibility for multiple varied sensor loadouts.
-# - merge with getcpu
+from plars import *
 
 
 # the following is a sensor module for use with the PicorderOS
@@ -154,15 +151,11 @@ class Sensor(object):
 		if configure.amg8833:
 			self.amg_info = [0,80,"IR Thermal Array",self.deg_sym + "c"]
 
-		self.sensor_data = []
-		for i in range(configure.max_sensors[0]):
-			self.sensor_data.append()
-
 
 		if configure.bme:
 			# Create library object using our Bus I2C port
 			i2c = I2C(board.SCL, board.SDA)
-			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
+			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, address=0x76, debug=False)
 
 			self.temp_info = [-40,85,"Thermometer",self.deg_sym + "c", "BME680"]
 			self.humidity_info = [0,100,"Hygrometer", "%", "BME680"]
@@ -284,11 +277,11 @@ class Sensor(object):
 			item9 = sense_data9 + self.accelerometer_infoz + timestamp
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
+		# provides the basic definitions for the system vitals sensor readouts
 		if configure.system_vitals:
 
 			if not configure.pc:
-				res = os.popen("vcgencmd measure_temp").readline()
-				t = float(res.replace("temp=","").replace("'C\n",""))
+				t = float(os.popen("cat /sys/class/thermal/thermal_zone0/temp").readline())
 			else:
 				t = float(0)
 
@@ -314,6 +307,8 @@ class Sensor(object):
 
 			sensorlist += [item0, item1, item2, item3, item4, item5,item6, item7, item8]
 		configure.max_sensors[0] = len(sensorlist)
+
+		plars.update(sensorlist)
 		return sensorlist
 
 class MLX90614():
@@ -354,6 +349,7 @@ class MLX90614():
 				#"Rate limiting" - sleeping to prevent problems with sensor
 				#when requesting data too quickly
 				sleep(self.comm_sleep_amount)
+
 		#By this time, we made a couple requests and the sensor didn't respond
 		#(judging by the fact we haven't returned from this function yet)
 		#So let's just re-raise the last IOError we got
@@ -370,3 +366,19 @@ class MLX90614():
 	def get_obj_temp(self):
 		data = self.read_reg(self.MLX90614_TOBJ1)
 		return self.data_to_temp(data)
+
+def threaded_sensor():
+
+	sensors = Sensor()
+	sensors.get()
+	configure.sensor_ready[0] = True
+
+	timed = timer()
+
+
+	while not configure.status == "quit":
+
+		if configure.samplerate[0] < timed.timelapsed():
+			timed.logtime()
+			start = False
+			data = sensors.get()

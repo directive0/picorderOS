@@ -18,10 +18,8 @@ from PIL import ImageDraw
 # load the module that draws graphs
 from pilgraph import *
 from amg8833_pil import *
-
-#load the module that handles input_kb
-from input import *
-
+from plars import *
+from objects import *
 
 # Load default font.
 font = ImageFont.truetype("assets/babs.otf",13)
@@ -40,7 +38,7 @@ TRANSITION = [False]
 if configure.pc:
 	device = pyscreen(width = 160, height = 128, mode = "RGB")
 else:
-	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
+	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST, bus_speed_hz=24000000)
 	device = st7735(serial, width = 160, height = 128, mode = "RGB")
 
 
@@ -176,7 +174,7 @@ class SelectableLabel(LabelObj):
 
 
 class SettingsFrame(object):
-	def __init__(self,input):
+	def __init__(self):
 
 		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Auto Range",configure.auto], ["LEDs", configure.sleep],["Power Off","poweroff"]]
 
@@ -191,8 +189,6 @@ class SettingsFrame(object):
 		self.gspany = 71
 
 		self.selection = 0
-
-		self.input = Inputs()
 
 		self.auto = configure.auto[0]
 		self.interval = timer()
@@ -245,7 +241,7 @@ class SettingsFrame(object):
 		return oper
 
 
-	def push(self, sensor, draw):
+	def push(self, draw):
 
 		#draw the frame heading
 
@@ -281,29 +277,29 @@ class SettingsFrame(object):
 
 		status = "settings"
 
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
 
-		keys = self.input.read()
+			if keys[0]:
+				self.selection = self.selection + 1
+				if self.selection > (len(self.pages) - 1):
+					self.selection = 0
 
-		if keys[0]:
-			self.selection = self.selection + 1
-			if self.selection > (len(self.pages) - 1):
-				self.selection = 0
+			if keys[1]:
+				state = self.toggle(self.pages[self.selection][1])
 
-		if keys[1]:
-			state = self.toggle(self.pages[self.selection][1])
+				if self.status_raised:
+					status = state
+					self.status_raised = False
 
-			if self.status_raised:
-				status = state
-				self.status_raised = False
+			if keys[2]:
+				status = configure.last_status[0]
+			configure.eventready[0] = False
 
-		if keys[2]:
-			status = configure.last_status[0]
-
-		#print("global: ", configure.status[0]," local: ", status)
 		return status
 
 class PowerDown(object):
-	def __init__(self,input):
+	def __init__(self):
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
@@ -317,7 +313,6 @@ class PowerDown(object):
 
 		self.selection = 0
 
-		self.input = Inputs()
 
 		self.auto = configure.auto[0]
 		self.interval = timer()
@@ -376,18 +371,22 @@ class PowerDown(object):
 		status = "poweroff"
 
 
-		keys = self.input.read()
+		if configure.eventready[0]:
 
-		if keys[0]:
-			status = "shutdown"
+			keys = configure.eventlist[0]
 
-		if keys[1]:
-			pass
+			if keys[0]:
+				status = "shutdown"
 
-		if keys[2]:
-			status = "settings"
+			if keys[1]:
+				pass
 
-		#print("global: ", configure.status[0]," local: ", status)
+			if keys[2]:
+				status = "settings"
+
+			configure.eventready[0] = False
+
+
 		return status
 
 
@@ -395,7 +394,7 @@ class PowerDown(object):
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
 
-	def __init__(self,input):
+	def __init__(self):
 		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
@@ -413,9 +412,6 @@ class MultiFrame(object):
 
 		# sets the currently selected sensor to focus on
 		self.selection = 0
-
-		# grabs the input object for the interface
-		self.input = Inputs()
 
 		# ties the auto state to the global object
 		self.auto = configure.auto[0]
@@ -435,11 +431,12 @@ class MultiFrame(object):
 
 		self.divider = 47
 
-		self.A_Graph = graphlist((-40,85),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[0], width = 1)
+		# create our graph_screen
+		self.A_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[0], width = 1)
 
-		self.B_Graph = graphlist((300,1100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[1], width = 1)
+		self.B_Graph = graph_area(1,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[1], width = 1)
 
-		self.C_Graph = graphlist((0,100),(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[2], width = 1)
+		self.C_Graph = graph_area(2,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[2], width = 1)
 
 		self.Graphs = [self.A_Graph, self.B_Graph, self.C_Graph]
 
@@ -456,17 +453,8 @@ class MultiFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-	# updates the graph for the screen
-	def graphs(self):
-
-		self.C_Graph.update(self.C_Data)
-		self.C_Graph.render(self.draw)
-
-		self.B_Graph.update(self.B_Data)
-		self.B_Graph.render(self.draw)
-
-		self.A_Graph.update(self.A_Data)
-		self.A_Graph.render(self.draw)
+	def get_x(self):
+		return self.gspanx - self.graphx
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".0f"):
@@ -474,21 +462,21 @@ class MultiFrame(object):
 		return datareturn
 
 	# defines the labels for the screen
-	def labels(self,sensors):
+	def labels(self):
 
 		# depending on which number the "selection" variable takes on.
 		if self.selection == 0:
 			raw_a = str(self.A_Data)
 			adjusted_a = self.arrangelabel(raw_a)
-			a_string = adjusted_a + sensors[configure.sensor1[0]][4]
+			a_string = adjusted_a + " " + configure.sensor_info[configure.sensor1[0]][4]
 
 			raw_b = str(self.B_Data)
 			adjusted_b = self.arrangelabel(raw_b)
-			b_string = adjusted_b + " " + sensors[configure.sensor2[0]][4]
+			b_string = adjusted_b + " " + configure.sensor_info[configure.sensor2[0]][4]
 
 			raw_c = str(self.C_Data)
 			adjusted_c = self.arrangelabel(raw_c)
-			c_string = adjusted_c + " " + sensors[configure.sensor3[0]][4]
+			c_string = adjusted_c + " " + configure.sensor_info[configure.sensor3[0]][4]
 
 			self.A_Label.string = a_string
 			self.A_Label.push(23,self.labely,self.draw)
@@ -502,11 +490,14 @@ class MultiFrame(object):
 		# displays more details for whatever sensor is in focus
 		if self.selection != 0:
 
+			carousel = [self.A_Data,self.B_Data,self.C_Data]
+
 			this = self.selection - 1
 
 			this_bundle = self.Graphs[this]
 
-			raw = str(sensors[configure.sensors[this][0]][0])
+			raw = str(carousel[this])
+
 			adjusted = self.arrangelabel(raw, '.2f')
 			self.focus_Label.string = adjusted
 			self.focus_Label.r_align(156,self.titley,self.draw)
@@ -522,14 +513,27 @@ class MultiFrame(object):
 
 
 	# push the image frame and contents to the draw object.
-	def push(self,sensors,draw):
+	def push(self,draw):
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
+		senseslice =[0,0,0]
+
+		for i in range(3):
+
+			dsc = configure.sensor_info[configure.sensors[i][0]][3]
+			dev = configure.sensor_info[configure.sensors[i][0]][5]
+
+			item = plars.get_recent(dsc,dev,num = 1)
+
+			senseslice[i] = item[0]
+
+
+
 		# Grabs the current sensor reading
-		self.A_Data = sensors[configure.sensor1[0]][0]
-		self.B_Data = sensors[configure.sensor2[0]][0]
-		self.C_Data = sensors[configure.sensor3[0]][0]
+		self.A_Data = senseslice[0]#configure.sensor_data[configure.sensor1[0]][0]
+		self.B_Data = senseslice[1]#configure.sensor_data[configure.sensor2[0]][0]
+		self.C_Data = senseslice[2]#configure.sensor_data[configure.sensor3[0]][0]
 
 
 		# Draws the Title
@@ -549,6 +553,7 @@ class MultiFrame(object):
 
 		# turns each channel on individually
 		if self.selection == 0:
+
 			self.C_Graph.render(self.draw)
 			self.B_Graph.render(self.draw)
 			self.A_Graph.render(self.draw)
@@ -563,31 +568,29 @@ class MultiFrame(object):
 		if self.selection == 3:
 			self.C_Graph.render(self.draw)
 
-		self.labels(sensors)
+		self.labels()
 
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
 
-		# get current input event
-		keys = self.input.read()
 
-		# if a key is registering as pressed increment or rollover the selection variable.
-		if keys[0]:
-			self.selection += 1
-			if self.selection > 3:
-				self.selection = 0
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
 
-		# if this input is held down initiate a special input.
-		if self.input.holding[0]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
+			# if a key is registering as pressed increment or rollover the selection variable.
+			if keys[0]:
+				self.selection += 1
+				if self.selection > 3:
+					self.selection = 0
 
-		if keys[1]:
-			status =  "mode_b"
+			if keys[1]:
+				status =  "mode_b"
 
-		if keys[2]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
+			if keys[2]:
+				configure.last_status[0] = "mode_a"
+				status = "settings"
+
+			configure.eventready[0] = False
 
 		return status
 # governs the screen drawing of the entire program. Everything flows through Screen.
@@ -595,9 +598,8 @@ class MultiFrame(object):
 # Screen monitors button presses and passes flags for interface updates to the draw object.
 
 class ThermalFrame(object):
-	def __init__(self,input):
+	def __init__(self):
 		# Sets the topleft origin of the graph
-		self.input = input
 		self.graphx = 23
 		self.graphy = 24
 
@@ -660,7 +662,7 @@ class ThermalFrame(object):
 
 			self.C_Label.r_align(156,self.labely,self.draw)
 
-	def push(self, sensor, draw):
+	def push(self, draw):
 
 		self.draw = draw
 
@@ -689,23 +691,24 @@ class ThermalFrame(object):
 
 
 		status  = "mode_b"
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
 
-		keys = self.input.read()
 
+			# ------------- Input handling -------------- #
+			if keys[0]:
+				status  = "mode_a"
 
+			if keys[1]:
+				self.selection += 1
+				if self.selection > 1:
+					self.selection = 0
 
-		# ------------- Input handling -------------- #
-		if keys[0]:
-			status  = "mode_a"
-
-		if keys[1]:
-			self.selection += 1
-			if self.selection > 1:
-				self.selection = 0
-
-		if keys[2]:
-			status = "settings"
-			configure.last_status[0] = "mode_b"
+			if keys[2]:
+				status = "settings"
+				configure.last_status[0] = "mode_b"
+				
+			configure.eventready[0] = False
 
 		return status
 
@@ -719,33 +722,33 @@ class ColourScreen(object):
 
 		self.status = "mode_a"
 
-		# Creates a local reference for our input object.
-		self.input = Inputs()
+		self.multi_frame = MultiFrame()
+		self.settings_frame = SettingsFrame()
+		self.thermal_frame = ThermalFrame()
+		self.powerdown_frame = PowerDown()
 
-		self.multi_frame = MultiFrame(self.input)
-		self.settings_frame = SettingsFrame(self.input)
-		self.thermal_frame = ThermalFrame(self.input)
-		self.powerdown_frame = PowerDown(self.input)
 
-	def graph_screen(self,sensors):
-		# passes the draw class a new image everytime.
+	def get_size(self):
+		return self.multi_frame.get_x()
+
+	def graph_screen(self):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.multi_frame.push(sensors,self.draw)
+		self.status = self.multi_frame.push(self.draw)
 		self.pixdrw()
 		return self.status
 
-	def thermal_screen(self,sensors):
+	def thermal_screen(self):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.thermal_frame.push(sensors,self.draw)
+		self.status = self.thermal_frame.push(self.draw)
 		self.pixdrw()
 		return self.status
 
-	def settings(self,sensors):
+	def settings(self):
 		self.newimage = self.blankimage.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.settings_frame.push(sensors,self.draw)
+		self.status = self.settings_frame.push(self.draw)
 		self.pixdrw()
 		return self.status
 
