@@ -514,6 +514,30 @@ class MultiFrame(object):
 
 	# push the image frame and contents to the draw object.
 	def push(self,draw):
+
+		# returns mode_a to the main loop unless something causes state change
+		status  = "mode_a"
+
+
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
+
+			# if a key is registering as pressed increment or rollover the selection variable.
+			if keys[0]:
+				self.selection += 1
+				if self.selection > 3:
+					self.selection = 0
+
+			if keys[1]:
+				status =  "mode_b"
+				return status
+
+			if keys[2]:
+				configure.last_status[0] = "mode_a"
+				status = "settings"
+				return status
+
+			configure.eventready[0] = False
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
@@ -570,27 +594,7 @@ class MultiFrame(object):
 
 		self.labels()
 
-		# returns mode_a to the main loop unless something causes state change
-		status  = "mode_a"
 
-
-		if configure.eventready[0]:
-			keys = configure.eventlist[0]
-
-			# if a key is registering as pressed increment or rollover the selection variable.
-			if keys[0]:
-				self.selection += 1
-				if self.selection > 3:
-					self.selection = 0
-
-			if keys[1]:
-				status =  "mode_b"
-
-			if keys[2]:
-				configure.last_status[0] = "mode_a"
-				status = "settings"
-
-			configure.eventready[0] = False
 
 		return status
 # governs the screen drawing of the entire program. Everything flows through Screen.
@@ -664,6 +668,30 @@ class ThermalFrame(object):
 
 	def push(self, draw):
 
+		status  = "mode_b"
+
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
+
+
+			# ------------- Input handling -------------- #
+			if keys[0]:
+				status  = "mode_a"
+				return status
+
+			if keys[1]:
+				self.selection += 1
+				if self.selection > 1:
+					self.selection = 0
+
+			if keys[2]:
+				status = "settings"
+				configure.last_status[0] = "mode_b"
+				return status
+
+			configure.eventready[0] = False
+
+
 		self.draw = draw
 
 		self.labels()
@@ -690,25 +718,7 @@ class ThermalFrame(object):
 
 
 
-		status  = "mode_b"
-		if configure.eventready[0]:
-			keys = configure.eventlist[0]
 
-
-			# ------------- Input handling -------------- #
-			if keys[0]:
-				status  = "mode_a"
-
-			if keys[1]:
-				self.selection += 1
-				if self.selection > 1:
-					self.selection = 0
-
-			if keys[2]:
-				status = "settings"
-				configure.last_status[0] = "mode_b"
-				
-			configure.eventready[0] = False
 
 		return status
 
