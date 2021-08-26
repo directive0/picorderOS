@@ -119,11 +119,6 @@ class Sensor(object):
 			self.accelerometer_infoy = [-500,500,"Accel Y","g", "SenseHat"]
 			self.accelerometer_infoz = [-500,500,"Accel Z","g", "SenseHat"]
 
-
-		if configure.amg8833: # and not configure.simulate:
-			self.amg_info = [0,80,"IR [amg]",self.deg_sym + "c"]
-
-
 		if configure.ir_thermo:
 			i2c = io.I2C(board.SCL, board.SDA, frequency=100000)
 			self.mlx = adafruit_mlx90614.MLX90614(i2c)
@@ -146,10 +141,6 @@ class Sensor(object):
 			self.accelerometer_infox = [-500,500,"Accelerometer X (EP)","g","Envirophat"]
 			self.accelerometer_infoy = [-500,500,"Accelerometer Y (EP)","g","Envirophat"]
 			self.accelerometer_infoz = [-500,500,"Accelerometer Z (EP)","g","Envirophat"]
-
-
-		if configure.amg8833:
-			self.amg_info = [0,80,"IR Thermal Array",self.deg_sym + "c"]
 
 
 		if configure.bme:
@@ -244,10 +235,6 @@ class Sensor(object):
 			item8 = sense_data8 + self.accelerometer_infoy + timestamp
 			item9 = sense_data9 + self.accelerometer_infoz + timestamp
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
-
-		if configure.amg8833:
-			sense_data = amg.pixels
-			item1 = sense_data + self.amg_info + timestamp
 
 		if configure.envirophat:
 			self.rgb = light.rgb()
