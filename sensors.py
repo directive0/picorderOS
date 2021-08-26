@@ -34,15 +34,6 @@ if configure.sensehat:
 	sense.set_imu_config(True,False,False)
 
 
-
-if configure.amg8833: # and not configure.simulate:
-	import busio
-	import board
-	import adafruit_amg88xx
-
-	i2c = busio.I2C(board.SCL, board.SDA)
-	amg = adafruit_amg88xx.AMG88XX(i2c)
-
 if configure.envirophat:
 	from envirophat import light, weather, motion, analog
 
@@ -95,7 +86,6 @@ class Sensor(object):
 			self.infoh = [-100,100,"Sine Wave2", "","Raspberry Pi"]
 
 
-
 		if configure.sensehat:
 			self.ticks = 0
 			self.onoff = 1
@@ -141,7 +131,6 @@ class Sensor(object):
 			self.accelerometer_infox = [-500,500,"Accelerometer X (EP)","g","Envirophat"]
 			self.accelerometer_infoy = [-500,500,"Accelerometer Y (EP)","g","Envirophat"]
 			self.accelerometer_infoz = [-500,500,"Accelerometer Z (EP)","g","Envirophat"]
-
 
 		if configure.bme:
 			# Create library object using our Bus I2C port
