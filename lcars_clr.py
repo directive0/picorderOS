@@ -515,6 +515,8 @@ class MultiFrame(object):
 	# push the image frame and contents to the draw object.
 	def push(self,draw):
 
+		#test
+
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
 
