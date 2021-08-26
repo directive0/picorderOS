@@ -532,14 +532,18 @@ class MultiFrame(object):
 
 			if keys[1]:
 				status =  "mode_b"
+				configure.eventready[0] = False
 				return status
 
 			if keys[2]:
 				configure.last_status[0] = "mode_a"
 				status = "settings"
+				configure.eventready[0] = False
 				return status
 
 			configure.eventready[0] = False
+
+
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
@@ -679,6 +683,7 @@ class ThermalFrame(object):
 			# ------------- Input handling -------------- #
 			if keys[0]:
 				status  = "mode_a"
+				configure.eventready[0] = False
 				return status
 
 			if keys[1]:
@@ -689,6 +694,7 @@ class ThermalFrame(object):
 			if keys[2]:
 				status = "settings"
 				configure.last_status[0] = "mode_b"
+				configure.eventready[0] = False
 				return status
 
 			configure.eventready[0] = False
