@@ -84,12 +84,8 @@ def Main():
 		if configure.display == "1":
 			colourscreen = ColourScreen()
 
-
 			if configure.sensor_ready[0]:
 				plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*2)
-
-
-
 
 
 	print("Main Loop Starting")
@@ -185,7 +181,7 @@ def Main():
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
 		except KeyboardInterrupt:
 			configure.status[0] = "quit"
-			
+
 	print("Quit Encountered")
 	print("Main Loop Shutting Down")
 

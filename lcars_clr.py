@@ -244,7 +244,6 @@ class SettingsFrame(object):
 	def push(self, draw):
 
 		#draw the frame heading
-
 		self.title.push(self.titlex,self.titley,draw)
 
 
@@ -255,11 +254,7 @@ class SettingsFrame(object):
 
 
 		self.A_Label.push(23,self.labely,draw)
-
-
 		self.B_Label.center(self.labely,23,135,draw)
-
-
 		self.C_Label.r_align(156,self.labely,draw)
 
 
@@ -294,6 +289,7 @@ class SettingsFrame(object):
 
 			if keys[2]:
 				status = configure.last_status[0]
+
 			configure.eventready[0] = False
 
 		return status
@@ -647,11 +643,9 @@ class ThermalFrame(object):
 	def labels(self):
 
 		if self.selection == 0 or self.selection == 1:
-
 			raw_a = str(self.low)
 			adjusted_a = self.arrangelabel(raw_a)
 			a_string = "Low: " + adjusted_a
-
 			self.A_Label.string = a_string
 			self.A_Label.push(23,self.labely,self.draw)
 
@@ -659,17 +653,12 @@ class ThermalFrame(object):
 			raw_b = str(self.high)
 			adjusted_b = self.arrangelabel(raw_b)
 			self.B_Label.string = "High: " + adjusted_b
-
-
 			self.B_Label.center(self.labely,23,135, self.draw)
-			#self.baroLabel.push(57,100)
 
 		if self.selection == 0 or self.selection == 3:
 			raw_c = str(self.average)
 			adjusted_c = self.arrangelabel(raw_c)
 			self.C_Label.string = "Avg: " + adjusted_c
-
-
 			self.C_Label.r_align(156,self.labely,self.draw)
 
 	def push(self, draw):
@@ -701,7 +690,6 @@ class ThermalFrame(object):
 
 
 		self.draw = draw
-
 		self.labels()
 
 		# Draw title
@@ -723,10 +711,6 @@ class ThermalFrame(object):
 			self.t_grid.push(draw)
 		elif self.selection ==1:
 			self.t_grid_full.push(draw)
-
-
-
-
 
 		return status
 
