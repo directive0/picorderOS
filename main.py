@@ -128,8 +128,11 @@ def Main():
 					if configure.display == "1":
 						configure.status[0] = colourscreen.graph_screen()
 
-			if configure.status[0] == "mode_b":
+				configure.screen_halt[0] = False
 
+
+			if configure.status[0] == "mode_b":
+				configure.screen_halt[0] = True
 				if configure.tr108:
 
 					configure.status[0] = PyScreen.slider_screen()
@@ -144,9 +147,11 @@ def Main():
 						configure.status[0] = dotscreen.push(data)
 					if configure.display == "1":
 						configure.status[0] = colourscreen.thermal_screen()
+				configure.screen_halt[0] = False
 
 			if (configure.status[0] == "settings"):
 
+				configure.screen_halt[0] = True
 				if configure.tr108:
 					configure.status[0] = PyScreen.settings()
 					if not configure.pc:
@@ -159,15 +164,17 @@ def Main():
 						configure.status[0] = dotscreen.push()
 					if configure.display == "1":
 						configure.status[0] = colourscreen.settings()
+				configure.screen_halt[0] = False
 
 			# Handles the poweroff screen
 			if (configure.status[0] == "poweroff"):
-
+				configure.screen_halt[0] = True
 				if configure.tr109:
 					if configure.display == "0":
 						configure.status[0] = dotscreen.push()
 					if configure.display == "1":
 						configure.status[0] = colourscreen.powerdown()
+				configure.screen_halt[0] = False
 
 			if configure.status[0] == "shutdown":
 				print("Shut Down!")
