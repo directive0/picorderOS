@@ -98,6 +98,7 @@ def Main():
 
 			# Runs the startup animation played when you first boot the program.
 			if configure.status[0] == "startup":
+
 				configure.status[0] = "mode_a"
 
 				if configure.tr108:
@@ -108,8 +109,6 @@ def Main():
 
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			if (configure.status[0] == "mode_a"):
-
-				configure.screen_halt[0] = True
 
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
@@ -128,11 +127,8 @@ def Main():
 					if configure.display == "1":
 						configure.status[0] = colourscreen.graph_screen()
 
-				configure.screen_halt[0] = False
-
-
 			if configure.status[0] == "mode_b":
-				configure.screen_halt[0] = True
+
 				if configure.tr108:
 
 					configure.status[0] = PyScreen.slider_screen()
@@ -147,11 +143,9 @@ def Main():
 						configure.status[0] = dotscreen.push(data)
 					if configure.display == "1":
 						configure.status[0] = colourscreen.thermal_screen()
-				configure.screen_halt[0] = False
 
 			if (configure.status[0] == "settings"):
 
-				configure.screen_halt[0] = True
 				if configure.tr108:
 					configure.status[0] = PyScreen.settings()
 					if not configure.pc:
@@ -164,17 +158,15 @@ def Main():
 						configure.status[0] = dotscreen.push()
 					if configure.display == "1":
 						configure.status[0] = colourscreen.settings()
-				configure.screen_halt[0] = False
 
 			# Handles the poweroff screen
 			if (configure.status[0] == "poweroff"):
-				configure.screen_halt[0] = True
+
 				if configure.tr109:
 					if configure.display == "0":
 						configure.status[0] = dotscreen.push()
 					if configure.display == "1":
 						configure.status[0] = colourscreen.powerdown()
-				configure.screen_halt[0] = False
 
 			if configure.status[0] == "shutdown":
 				print("Shut Down!")
