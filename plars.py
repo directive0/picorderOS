@@ -11,24 +11,8 @@ import json
 
 #	TO DO:
 
-
-#	pull from saved data
-#		All data of a certain time scale
-#			Data at set intervals (last day, last hour, last minute)
-
-
-# 	Incorporate short term memory and long term recall
-#		need to define how buffer works
-#		does it constantly update for all dsc/dev?
-#		is it created upon request?
-#		arbitrarily asigned by PLARS and pulled from archive if outside?
-
-#	EMRG
-#		when called immidiately save all data to local storage and remote
-#		archive.
-
-
-# 	JSON api
+#   - buffer trimming
+#	- JSON api
 
 import os
 import numpy
@@ -117,7 +101,11 @@ class PLARS(object):
 				self.trimbuffer()
 				self.timer.logtime()
 		except:
-			print("Plars failed to update")
+			print("Plars failed to update. Dumping data:")
+			print(data)
+			print("Dumping buffer:")
+			print(self.buffer)
+
 
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):

@@ -51,7 +51,7 @@ if configure.tr109:
 
 # the following function is our main loop, it contains all the flow for our program.
 def Main():
-	
+
 	#start the sensor loop
 	sensor_thread = Thread(target = threaded_sensor, args = ())
 	sensor_thread.start()
@@ -185,6 +185,7 @@ def Main():
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
 		except KeyboardInterrupt:
 			configure.status[0] = "quit"
+			
 	print("Quit Encountered")
 	print("Main Loop Shutting Down")
 
