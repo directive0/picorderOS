@@ -48,10 +48,8 @@ class preferences(object):
 
 		self.moire = [False]
 
-
 		# If sleep is True the lights will respond to hall effect sensors
 		self.sleep = [True]
-
 
 		# controls auto ranging of graphs
 		self.auto = [True]
@@ -95,6 +93,8 @@ class preferences(object):
 		self.samplerate = [0]
 		self.displayinterval = [0]
 
+		self.screen_halt = [False]
+
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []
 		self.sensor_data = []
@@ -108,7 +108,7 @@ class preferences(object):
 		self.dr_closed = [False]
 		self.dr_opening = [False]
 		self.dr_closing = [False]
-		
+
 		# GPIO Pin Assignments (BCM)
 
 		# the tr109 supports two shift registers, and so two sets of pin addresses

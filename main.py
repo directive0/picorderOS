@@ -109,7 +109,7 @@ def Main():
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			if (configure.status[0] == "mode_a"):
 
-
+				self.screen_halt[0] = True
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
 
@@ -127,7 +127,6 @@ def Main():
 					if configure.display == "1":
 						configure.status[0] = colourscreen.graph_screen()
 
-
 			if configure.status[0] == "mode_b":
 
 				if configure.tr108:
@@ -144,7 +143,6 @@ def Main():
 						configure.status[0] = dotscreen.push(data)
 					if configure.display == "1":
 						configure.status[0] = colourscreen.thermal_screen()
-
 
 			if (configure.status[0] == "settings"):
 
@@ -176,7 +174,6 @@ def Main():
 				resetleds()
 				cleangpio()
 				os.system("sudo shutdown -h now")
-
 
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
 		except KeyboardInterrupt:
