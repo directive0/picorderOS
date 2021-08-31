@@ -109,7 +109,8 @@ def Main():
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			if (configure.status[0] == "mode_a"):
 
-				self.screen_halt[0] = True
+				configure.screen_halt[0] = True
+
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
 

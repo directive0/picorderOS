@@ -230,3 +230,8 @@ def ripple_async():
 			# sentinel signal to kill.
 			if configure.status[0] == "quit":
 				break
+
+	# start the ripple routine
+	# have a state variables
+	# received commands asynchronously "start" "stop"
+	# quit when asked.
