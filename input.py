@@ -193,24 +193,26 @@ class Inputs(object):
 
 	def read(self):
 
-		# top hall sensor, 1 = door open
-		if GPIO.input(hallpin1) == 1:
-			if self.door_was_closed == True:
-				self.door_was_closed = False
-				configure.dr_opening[0] = True
+		if configure.dr[0]:
+			
+			# top hall sensor, 1 = door open
+			if GPIO.input(hallpin1) == 1:
+				if self.door_was_closed == True:
+					self.door_was_closed = False
+					configure.dr_opening[0] = True
 
-			configure.dr_open[0] = True
-		else:
-			self.door_was_closed = True
-			configure.dr_open[0] = False
+				configure.dr_open[0] = True
+			else:
+				self.door_was_closed = True
+				configure.dr_open[0] = False
 
-		# lower hall, 0 = door open
-		if GPIO.input(hallpin2) == 1:
-			if self.door_was_open == True:
-				self.door_was_open = False
-				configure.dr_closing[0] = True
-		else:
-			self.door_was_open = True
+			# lower hall, 0 = door open
+			if GPIO.input(hallpin2) == 1:
+				if self.door_was_open == True:
+					self.door_was_open = False
+					configure.dr_closing[0] = True
+			else:
+				self.door_was_open = True
 
 
 
