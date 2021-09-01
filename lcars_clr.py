@@ -8,9 +8,6 @@ from luma.core.interface.serial import spi
 from luma.core.render import canvas
 from luma.lcd.device import st7735
 
-if configure.pc:
-	from luma.emulator.device import pygame as pyscreen
-
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
 from PIL import Image
@@ -37,9 +34,7 @@ SPI_DEVICE = 0
 TRANSITION = [False]
 
 
-if configure.pc:
-	device = pyscreen(width = 160, height = 128, mode = "RGB")
-else:
+if not configure.pc:
 	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)# ,bus_speed_hz=24000000)
 	device = st7735(serial, width = 160, height = 128, mode = "RGB")
 
