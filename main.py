@@ -27,8 +27,6 @@ else:
 	# otherwise load up the demonstration and dummy modules that emulate sensors and pass GPIO signals without requiring any real GPIO.
 	from gpiodummy import *
 
-	from audio import *
-
 # The following are only loaded in TR-108 mode
 if configure.tr108:
 	# Load the TR-108 display modules
@@ -68,6 +66,7 @@ def Main():
 
 	#start the audio service
 	if configure.audio[0]:
+		from audio import *
 		audio_thread = Thread(target = threaded_audio, args = ())
 		audio_thread.start()
 

@@ -11,6 +11,7 @@ if not configure.pc:
 
 if configure.bme:
 	import adafruit_bme680
+	import busio as io
 
 
 
