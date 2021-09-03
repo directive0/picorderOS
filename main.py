@@ -17,6 +17,9 @@ from sensors import *
 from plars import *
 from input import *
 
+if configure.audio[0]:
+	from audio import *
+
 # This part loads the appropriate modules depending on which preference flags are set.
 
 # If we are NOT just running on a computer for development or demo purposes.
@@ -66,7 +69,6 @@ def Main():
 
 	#start the audio service
 	if configure.audio[0]:
-		from audio import *
 		audio_thread = Thread(target = threaded_audio, args = ())
 		audio_thread.start()
 
