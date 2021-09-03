@@ -129,7 +129,7 @@ class Sensor(object):
 
 		if configure.bme:
 			# Create library object using our Bus I2C port
-			i2c = io.I2C(configure.PIN_SCL, configure.PIN_SCL)
+			i2c = io.I2C(configure.PIN_SCL, configure.PIN_SDA)
 			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, address=0x76, debug=False)
 
 			self.temp_info = [-40,85,"Thermometer",self.deg_sym + "c", "BME680"]
