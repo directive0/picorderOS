@@ -20,6 +20,8 @@ class preferences(object):
 
 		# enables sound effect playback
 		self.audio = [True]
+		# holds state for beep input feedback
+		self.beep_ready = [False]
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
@@ -114,9 +116,15 @@ class preferences(object):
 
 		# GPIO Pin Assignments (BCM)
 
+		# i2c Pins
+		self.PIN_SDA = 2
+		self.PIN_SCL = 3
+
+
 		# the tr109 supports two shift registers, and so two sets of pin addresses
 		# prototype unit 00 and 01 have different pin assignments for latch and clock
 		# so these values may need to be swapped
+
 
 		# Main board shift register pins
 		self.PIN_DATA  = 16
@@ -129,11 +137,11 @@ class preferences(object):
 		self.PIN_CLOCK2 = 26
 
 
-		# Hall Effect Sensors pins, for door open/close.
+		# Hall effect sensors pins, for door open/close.
 		self.HALLPIN1 = 12
 		self.HALLPIN2 = 4
 
-		# CAP1208 Alert pins
+		# CAP1208 alert pin
 		self.ALERTPIN = 0
 
 

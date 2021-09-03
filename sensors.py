@@ -10,11 +10,6 @@ if not configure.pc:
 	import os
 
 if configure.bme:
-	#import bme680
-
-	#Using adafruit circuitpython.
-	import board
-	from busio import I2C
 	import adafruit_bme680
 
 
@@ -39,7 +34,6 @@ if configure.envirophat:
 
 # support for the MLX90614 IR Thermo
 if configure.ir_thermo:
-	import board
 	import busio as io
 	import adafruit_mlx90614
 
@@ -110,7 +104,7 @@ class Sensor(object):
 			self.accelerometer_infoz = [-500,500,"Accel Z","g", "SenseHat"]
 
 		if configure.ir_thermo:
-			i2c = io.I2C(board.SCL, board.SDA, frequency=100000)
+			i2c = io.configure.PIN_SCL, configure.PIN_SDA, frequency=100000)
 			self.mlx = adafruit_mlx90614.MLX90614(i2c)
 			self.ir_thermo_ambient = [0,80,"IR ambient [mlx]",self.deg_sym + "c"]
 			self.ir_thermo_object = [0,80,"IR object [mlx]",self.deg_sym + "c"]
@@ -134,7 +128,7 @@ class Sensor(object):
 
 		if configure.bme:
 			# Create library object using our Bus I2C port
-			i2c = I2C(board.SCL, board.SDA)
+			i2c = I2C(configure.PIN_SCL, configure.PIN_SDA)
 			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, address=0x76, debug=False)
 
 			self.temp_info = [-40,85,"Thermometer",self.deg_sym + "c", "BME680"]

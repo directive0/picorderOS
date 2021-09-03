@@ -86,10 +86,10 @@ if configure.input_cap_mpr121:
 	# if using the capacitive touch board from adafruit we import that library
 	import adafruit_mpr121
 	import busio
-	import board
+	#import board
 
 	# Create I2C bus.
-	i2c = busio.I2C(board.SCL, board.SDA)
+	i2c = busio.I2C(configure.PIN_SCL, configure.PIN_SDA)
 
 	# Create MPR121 object. Address can be 5A or 5B (proto uses 5A)
 	mpr121 = adafruit_mpr121.MPR121(i2c, address = 0x5A)
@@ -194,7 +194,7 @@ class Inputs(object):
 	def read(self):
 
 		if configure.dr[0]:
-			
+
 			# top hall sensor, 1 = door open
 			if GPIO.input(hallpin1) == 1:
 				if self.door_was_closed == True:
@@ -234,6 +234,7 @@ class Inputs(object):
 						# mark it in the pressed list
 						self.pressed[iteration] = True
 						configure.eventready[0] = True
+						configure.beep_ready[0] = True
 					else:
 						if input == "release":
 							if self.pressed[iteration] == True:
@@ -241,6 +242,7 @@ class Inputs(object):
 							else:
 								configure.eventready[0] = True
 								self.pressed[iteration] = True
+								configure.beep_ready[0] = True
 						# else mark it not pressed
 						else:
 							self.pressed[iteration] = False
@@ -335,7 +337,6 @@ class Inputs(object):
 						self.waspressed[i] = False
 					else:
 						self.buttonlist[i] = False
-
 
 		if configure.input_cap_mpr121:
 			# Reads the touched capacitive elements
