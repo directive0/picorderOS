@@ -352,4 +352,7 @@ def threaded_sensor():
 		if not configure.screen_halt[0] and configure.samplerate[0] < timed.timelapsed():
 			timed.logtime()
 			start = False
+			
+			configure.sensor_ready[0] = False
 			data = sensors.get()
+			configure.sensor_ready[0] = True

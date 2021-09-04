@@ -731,11 +731,15 @@ class ColourScreen(object):
 		return self.multi_frame.get_x()
 
 	def graph_screen(self):
-		self.newimage = self.image.copy()
-		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.multi_frame.push(self.draw)
-		self.pixdrw()
+		
+		if configure.sensor_ready[0] == True:
+			self.newimage = self.image.copy()
+			self.draw = ImageDraw.Draw(self.newimage)
+			self.status = self.multi_frame.push(self.draw)
+			self.pixdrw()
+
 		return self.status
+
 
 	def thermal_screen(self):
 		self.newimage = self.image.copy()
