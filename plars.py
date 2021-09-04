@@ -96,10 +96,10 @@ class PLARS(object):
 			# appends the new data to the buffer
 			self.buffer = self.buffer.append(newdata, ignore_index=True)
 
-		# if interval has elapsed trim the main buffer and dump old data to core.
-		if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
-			self.trimbuffer()
-			self.timer.logtime()
+			# if interval has elapsed trim the main buffer and dump old data to core.
+			if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
+				self.trimbuffer()
+				self.timer.logtime()
 
 		except:
 			print("Plars failed to update. Dumping data:")
