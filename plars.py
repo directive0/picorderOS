@@ -156,13 +156,13 @@ class PLARS(object):
 		if length > 0:
 
 			# make a new dataframe of the most recent data to keep using
-			newbuffer = self.buffer.head(length)
+			newbuffer = self.buffer.tail(length)
 			test1 = newbuffer["timestamp"]
 			print("making new buffer of most recent data. Length: ", len(newbuffer))
 			print("Highest timecode: ", test1.max())
 
 			# slice off the rows outside the buffer and backup to disk
-			tocore = self.buffer.tail(length)
+			tocore = self.buffer.head(length)
 			self.append_to_core(tocore)
 
 			test2 = tocore["timestamp"]
