@@ -155,6 +155,8 @@ class PLARS(object):
 		# if buffer is larger than target
 		if length > 0:
 
+			print("trimming the buffer--------------------------------------[!]")
+			print("Current buffer size: ", len(self.buffer))
 			# make a new dataframe of the most recent data to keep using
 			newbuffer = self.buffer.tail(length)
 			test1 = newbuffer["timestamp"]
@@ -175,6 +177,8 @@ class PLARS(object):
 				print("to core has newer timestamp")
 			# replace existing buffer with new trimmed buffer
 			self.buffer = newbuffer
+			print("New buffer size: ", len(self.buffer))
+
 
 	# return a number of data from a specific sensor at a specific time interval
 	def get_timed(self, key, interval = 0, num = 5):
