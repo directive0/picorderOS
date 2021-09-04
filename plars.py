@@ -96,10 +96,10 @@ class PLARS(object):
 			# appends the new data to the buffer
 			self.buffer = self.buffer.append(newdata, ignore_index=True)
 
-			# if interval has elapsed trim the main buffer and dump old data to core.
-			if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
-				self.trimbuffer()
-				self.timer.logtime()
+		# if interval has elapsed trim the main buffer and dump old data to core.
+		if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
+			self.trimbuffer()
+			self.timer.logtime()
 
 		except:
 			print("Plars failed to update. Dumping data:")
@@ -157,18 +157,22 @@ class PLARS(object):
 
 			# make a new dataframe of the most recent data to keep using
 			newbuffer = self.buffer.head(-length)
-			column = newbuffer["timestamp"]
+			test1 = newbuffer["timestamp"]
 			print("making new buffer of most recent data. Length: ", len(newbuffer))
-			print("Highest timecode: ", column.max())
+			print("Highest timecode: ", test1.max())
 
 			# slice off the rows outside the buffer and backup to disk
 			tocore = self.buffer.tail(length)
 			self.append_to_core(tocore)
 
-			column = tocore["timestamp"]
+			test2 = tocore["timestamp"]
 			print("appending data to core. Length: ", len(tocore))
-			print("To core highest timecode: ", column.max())
+			print("To core highest timecode: ", test2.max())
 
+			if test1.max()) > test2.max()):
+				print("new buffer has newer timestamp")
+			else:
+				print("to core has newer timestamp")
 			# replace existing buffer with new trimmed buffer
 			self.buffer = newbuffer
 
