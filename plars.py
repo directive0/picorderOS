@@ -169,7 +169,7 @@ class PLARS(object):
 			print("appending data to core. Length: ", len(tocore))
 			print("To core highest timecode: ", test2.max())
 
-			if test1.max()) > test2.max()):
+			if test1.max() > test2.max():
 				print("new buffer has newer timestamp")
 			else:
 				print("to core has newer timestamp")
