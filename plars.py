@@ -156,7 +156,7 @@ class PLARS(object):
 		if length > 0:
 
 			# make a new dataframe of the most recent data to keep using
-			newbuffer = self.buffer.head(-length)
+			newbuffer = self.buffer.head(length)
 			test1 = newbuffer["timestamp"]
 			print("making new buffer of most recent data. Length: ", len(newbuffer))
 			print("Highest timecode: ", test1.max())
