@@ -96,6 +96,10 @@ class PLARS(object):
 			# appends the new data to the buffer
 			self.buffer = self.buffer.append(newdata, ignore_index=True)
 
+			# if interval has elapsed trim the main buffer and dump old data to core.
+			if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
+				self.trimbuffer()
+				self.timer.logtime()
 
 		except:
 			print("Plars failed to update. Dumping data:")
@@ -103,10 +107,7 @@ class PLARS(object):
 			print("Dumping buffer:")
 			print(self.buffer)
 
-		# if interval has elapsed trim the main buffer and dump old data to core.
-		if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
-			self.trimbuffer()
-			self.timer.logtime()
+
 
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
@@ -140,8 +141,6 @@ class PLARS(object):
 
 	def trimbuffer(self, save = True):
 		# should take the buffer in memory and trim some of it
-
-		print("Trimming the buffer!")
 
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
