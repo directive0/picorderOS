@@ -96,16 +96,17 @@ class PLARS(object):
 			# appends the new data to the buffer
 			self.buffer = self.buffer.append(newdata, ignore_index=True)
 
-			# if interval has elapsed trim the main buffer and dump old data to core.
-			if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
-				self.trimbuffer()
-				self.timer.logtime()
+
 		except:
 			print("Plars failed to update. Dumping data:")
 			print(data)
 			print("Dumping buffer:")
 			print(self.buffer)
 
+		# if interval has elapsed trim the main buffer and dump old data to core.
+		if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
+			self.trimbuffer()
+			self.timer.logtime()
 
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
@@ -157,10 +158,17 @@ class PLARS(object):
 
 			# make a new dataframe of the most recent data to keep using
 			newbuffer = self.buffer.head(-length)
+			column = newbuffer["timestamp"]
+			print("making new buffer of most recent data. Length: ", len(newbuffer))
+			print("Highest timecode: ", column.max())
 
 			# slice off the rows outside the buffer and backup to disk
 			tocore = self.buffer.tail(length)
 			self.append_to_core(tocore)
+
+			column = tocore["timestamp"]
+			print("appending data to core. Length: ", len(tocore))
+			print("To core highest timecode: ", column.max())
 
 			# replace existing buffer with new trimmed buffer
 			self.buffer = newbuffer
