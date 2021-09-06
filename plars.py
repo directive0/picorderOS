@@ -88,7 +88,7 @@ class PLARS(object):
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor
 	def update(self,data):
-
+		configure.screen_halt[0] = True
 		try:
 			# creates a new dataframe for the new information to add to the buffer
 			newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
@@ -106,6 +106,7 @@ class PLARS(object):
 			print(data)
 			print("Dumping buffer:")
 			print(self.buffer)
+		configure.screen_halt[0] = False
 
 
 

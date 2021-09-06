@@ -732,12 +732,13 @@ class ColourScreen(object):
 
 	def graph_screen(self):
 
-		self.newimage = self.image.copy()
-		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.multi_frame.push(self.draw)
-		self.pixdrw()
-
-		return self.status
+		if not configure.screen_halt[0]:
+			self.newimage = self.image.copy()
+			self.draw = ImageDraw.Draw(self.newimage)
+			self.status = self.multi_frame.push(self.draw)
+			self.pixdrw()
+		else:
+			return self.status
 
 
 	def thermal_screen(self):
