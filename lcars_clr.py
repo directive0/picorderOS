@@ -740,7 +740,7 @@ class ColourScreen(object):
 			self.pixdrw()
 			configure.sensor_halt[0] = False
 		else:
-			return self.status
+			return "mode_a"
 
 
 	def thermal_screen(self):
