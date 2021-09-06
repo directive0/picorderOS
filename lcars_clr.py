@@ -731,16 +731,12 @@ class ColourScreen(object):
 		return self.multi_frame.get_x()
 
 	def graph_screen(self):
-		print("halt = ", configure.screen_halt[0])
-		if not configure.screen_halt[0]:
-			configure.sensor_halt[0] = True
-			self.newimage = self.image.copy()
-			self.draw = ImageDraw.Draw(self.newimage)
-			self.status = self.multi_frame.push(self.draw)
-			self.pixdrw()
-			configure.sensor_halt[0] = False
-		else:
-			return "mode_a"
+		self.newimage = self.image.copy()
+		self.draw = ImageDraw.Draw(self.newimage)
+		self.status = self.multi_frame.push(self.draw)
+		self.pixdrw()
+		configure.sensor_halt[0] = False
+		return self.status
 
 
 	def thermal_screen(self):
