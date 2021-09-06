@@ -95,7 +95,7 @@ def Main():
 	# Main loop. Break when status is "quit".
 	while configure.status[0] != "quit":
 
-		print("halt = ", configure.screen_halt[0])
+
 		# try allows us to capture a keyboard interrupt and assign behaviours.
 		try:
 

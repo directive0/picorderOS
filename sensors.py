@@ -348,9 +348,9 @@ def threaded_sensor():
 
 
 	while not configure.status == "quit":
-
-		if not configure.screen_halt[0] and configure.samplerate[0] < timed.timelapsed():
+		print("sensorhalt = ", configure.sensor_halt[0])
+		if not configure.sensor_halt[0] and configure.samplerate[0] < timed.timelapsed():
 			timed.logtime()
 			start = False
-			
+
 			data = sensors.get()

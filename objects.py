@@ -81,6 +81,7 @@ class preferences(object):
 		# flag to command the main loop
 		self.sensor_ready = [False]
 		self.screen_halt = [False]
+		self.sensor_halt = [False]
 
 		# An integer determines which sensor in the dataset to plot
 		self.sensor1 = [0]
