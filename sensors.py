@@ -353,6 +353,4 @@ def threaded_sensor():
 			timed.logtime()
 			start = False
 			
-			configure.sensor_ready[0] = False
 			data = sensors.get()
-			configure.sensor_ready[0] = True

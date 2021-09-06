@@ -80,6 +80,7 @@ class preferences(object):
 
 		# flag to command the main loop
 		self.sensor_ready = [False]
+		self.screen_halt = [False]
 
 		# An integer determines which sensor in the dataset to plot
 		self.sensor1 = [0]
@@ -94,8 +95,6 @@ class preferences(object):
 		# used to control refresh speed.
 		self.samplerate = [0]
 		self.displayinterval = [0]
-
-		self.screen_halt = [False]
 
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []
