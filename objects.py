@@ -106,7 +106,7 @@ class preferences(object):
 		self.last_status = ["startup"]
 
 		# Enables/disables door detection
-		self.dr = [False]
+		self.dr = [True]
 
 		# holds the physical status of the devices
 		self.dr_open = [False]
