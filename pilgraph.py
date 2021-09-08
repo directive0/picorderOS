@@ -195,13 +195,17 @@ class graph_area(object):
 
 		#preps the list by adding the X coordinate to every sensor value
 		recent = plars.get_recent(dsc,dev,num = self.spanx)
-		cords = self.graphprep(recent).reverse()
+		cords = self.graphprep(recent)
+		print("cords = ", cords)
+		cords = cords.reverse()
+		print("cords reverse = ", cords)
+
 		self.buff = recent
 
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
 
-		print("cords = ", cords)
+
 
 		if dot:
 			x1 = cords[-1][0] - (self.dotw/2)
