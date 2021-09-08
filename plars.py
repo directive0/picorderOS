@@ -135,7 +135,7 @@ class PLARS(object):
 		# trim it to length (num).
 		trimmed_data = untrimmed_data.tail(num)
 
-		trimmed_data = self.index_by_time(trimmed_data, ascending = False)
+		trimmed_data = self.index_by_time(trimmed_data)
 		# return a list of the values
 		return trimmed_data['value'].tolist()
 
