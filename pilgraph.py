@@ -123,10 +123,10 @@ class graph_area(object):
 	def graphprep(self,datalist):
 
 		# The starting X coordinate
-		self.linepoint = self.x
+		self.linepoint = self.spanx + self.x
 
 		# Spacing between each point.
-		self.jump = 1
+		self.jump = -1
 
 		self.newlist = []
 
