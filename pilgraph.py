@@ -201,8 +201,8 @@ class graph_area(object):
 
 
 		newcords = []
-		for cord in cords:
-				newcords.extend(cord)
+		for i in range(cords):
+				newcords.append(cord)
 		cords = newcords
 		print("cords reverse = ", cords)
 
