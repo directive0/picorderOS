@@ -121,8 +121,8 @@ class PLARS(object):
 		except:
 			print("result returned= ", result2)
 
-	def index_by_time(self,df):
-		df.sort_values(by=['timestamp'])
+	def index_by_time(self,df, ascending = True):
+		df.sort_values(by=['timestamp'], ascending = ascending)
 		return df
 
 	# return a list of n most recent data from specific sensor defined by key
@@ -134,6 +134,8 @@ class PLARS(object):
 		untrimmed_data = self.get_sensor(dsc,dev)
 		# trim it to length (num).
 		trimmed_data = untrimmed_data.tail(num)
+
+		trimmed_data = self.index_by_time(trimmed_data, ascending = False)
 		# return a list of the values
 		return trimmed_data['value'].tolist()
 
