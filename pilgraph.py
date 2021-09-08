@@ -201,6 +201,7 @@ class graph_area(object):
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
 
+		print("cords = ", cords)
 
 		if dot:
 			x1 = cords[-1][0] - (self.dotw/2)
