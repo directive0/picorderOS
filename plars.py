@@ -94,7 +94,7 @@ class PLARS(object):
 			newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 			# appends the new data to the buffer
-			self.buffer = newdata.append(self.buffer, ignore_index=True)
+			self.buffer = self.buffer.append(newdata, ignore_index=True)
 
 			# if interval has elapsed trim the main buffer and dump old data to core.
 			if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:

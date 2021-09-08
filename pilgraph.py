@@ -167,7 +167,7 @@ class graph_area(object):
 			else:
 				# write intensity as scaled zero
 				scaledata = abs(numpy.interp(sourcelow,self.sourcerange,self.targetrange))
-				self.newlist.append((self.linepoint,scaledata))
+				self.newlist.extend((self.linepoint,scaledata))
 
 
 			# increment the cursor
