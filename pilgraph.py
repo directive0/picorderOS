@@ -206,8 +206,8 @@ class graph_area(object):
 
 
 		if dot:
-			x1 = cords[0][0] - (self.dotw/2)
-			y1 = cords[0][1] - (self.doth/2)
-			x2 = cords[0][0] + (self.dotw/2)
-			y2 = cords[0][1] + (self.doth/2)
+			x1 = cords[-1][0] - (self.dotw/2)
+			y1 = cords[-1][1] - (self.doth/2)
+			x2 = cords[-1][0] + (self.dotw/2)
+			y2 = cords[-1][1] + (self.doth/2)
 			draw.ellipse([x1,y1,x2,y2],self.colour)
