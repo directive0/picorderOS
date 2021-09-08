@@ -150,7 +150,7 @@ class graph_area(object):
 
 
 		# for each vertical bar in the graph size
-		for i in range(self.spanx, self.x, 1):
+		for i in range(self.spanx):
 
 			# if the cursor has data to write
 			if i < len(datalist):
@@ -195,7 +195,7 @@ class graph_area(object):
 
 		#preps the list by adding the X coordinate to every sensor value
 		recent = plars.get_recent(dsc,dev,num = self.spanx)
-		cords = self.graphprep(recent)
+		cords = self.graphprep(recent).reverse()
 		self.buff = recent
 
 		# draws the line graph
