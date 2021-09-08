@@ -134,6 +134,7 @@ class graph_area(object):
 		sourcelow = configure.sensor_info[configure.sensors[self.ident][0]][1]
 
 		sourcehigh = configure.sensor_info[configure.sensors[self.ident][0]][2]
+
 		self.sourcerange = [sourcelow,sourcehigh]
 
 		# get the range of the data.
@@ -157,17 +158,17 @@ class graph_area(object):
 				# if auto scaling is on
 				if self.auto == True:
 					# take the sensor value received and map it against the on screen limits
-					scaledata = abs(numpy.interp(datalist[i],self.newrange,self.targetrange))
+					scaledata = abs(numpy.interp(datalist[-i],self.newrange,self.targetrange))
 				else:
 					# use the sensors stated limits as the range.
-					scaledata = abs(numpy.interp(datalist[i],self.sourcerange,self.targetrange))
+					scaledata = abs(numpy.interp(datalist[-i],self.sourcerange,self.targetrange))
 
 				# append the current x position, with this new scaled data as the y positioning into the buffer
 				self.newlist.append((self.linepoint,scaledata))
 			else:
 				# write intensity as scaled zero
 				scaledata = abs(numpy.interp(sourcelow,self.sourcerange,self.targetrange))
-				self.newlist.extend((self.linepoint,scaledata))
+				self.newlist.append((self.linepoint,scaledata))
 
 
 			# increment the cursor
