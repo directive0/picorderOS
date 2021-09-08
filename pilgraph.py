@@ -198,7 +198,8 @@ class graph_area(object):
 		cords = self.graphprep(recent)
 		print("cords = ", cords)
 		print("type = ", type(cords))
-		cords = cords.reverse()
+		newcords = [elem[::-1] for elem in cords ][::-1]
+		cords = newcords
 		print("cords reverse = ", cords)
 
 		self.buff = recent
