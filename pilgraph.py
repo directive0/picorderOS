@@ -197,6 +197,7 @@ class graph_area(object):
 		recent = plars.get_recent(dsc,dev,num = self.spanx)
 		cords = self.graphprep(recent)
 		print("cords = ", cords)
+		print("type = ", type(cords))
 		cords = cords.reverse()
 		print("cords reverse = ", cords)
 
