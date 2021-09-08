@@ -196,15 +196,7 @@ class graph_area(object):
 		#preps the list by adding the X coordinate to every sensor value
 		recent = plars.get_recent(dsc,dev,num = self.spanx)
 		cords = self.graphprep(recent)
-		print("cords = ", cords)
-		print("type = ", type(cords))
-
-
-		newcords = []
-		for i in range(cords):
-				newcords.append(cord)
-		cords = newcords
-		print("cords reverse = ", cords)
+		cords = reversed(cords)
 
 		self.buff = recent
 
