@@ -163,11 +163,11 @@ class graph_area(object):
 					scaledata = abs(numpy.interp(datalist[i],self.sourcerange,self.targetrange))
 
 				# append the current x position, with this new scaled data as the y positioning into the buffer
-				self.newlist.append((self.linepoint,scaledata))
+				self.newlist.extend((self.linepoint,scaledata))
 			else:
 				# write intensity as scaled zero
 				scaledata = abs(numpy.interp(sourcelow,self.sourcerange,self.targetrange))
-				self.newlist.append((self.linepoint,scaledata))
+				self.newlist.extend((self.linepoint,scaledata))
 
 
 			# increment the cursor
