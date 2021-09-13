@@ -119,7 +119,8 @@ class PLARS(object):
 			result2 = result.loc[self.buffer['dev'] == dev]
 			return result2
 		except:
-			print("result returned= ", result2)
+			print("attempting to re-acquire sensor")
+			return get_sensor(self,dsc,dev)
 
 	def index_by_time(self,df, ascending = True):
 		df.sort_values(by=['timestamp'], ascending = ascending)
@@ -157,7 +158,7 @@ class PLARS(object):
 			print("trimming the buffer--------------------------------------[!]")
 			print("Current buffer size: ", len(self.buffer))
 			# make a new dataframe of the most recent data to keep using
-			newbuffer = self.buffer.tail(length)
+			newbuffer = self.buffer.tail(targetsize)
 			test1 = newbuffer["timestamp"]
 			print("making new buffer of most recent data. Length: ", len(newbuffer))
 			print("Highest timecode: ", test1.max())

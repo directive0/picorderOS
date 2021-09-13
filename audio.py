@@ -5,6 +5,7 @@ import simpleaudio as sa
 scansound = sa.WaveObject.from_wave_file("assets/scanning.wav")
 clicksound = sa.WaveObject.from_wave_file("assets/clicking.wav")
 beepsound = sa.WaveObject.from_wave_file("assets/beep.wav")
+alarmsound = sa.WaveObject.from_wave_file("assets/alarm.wav")
 
 
 sounds = [scansound, clicksound]
@@ -45,3 +46,6 @@ def threaded_audio():
             else:
                 if warble.is_playing():
                     warble.stop()
+
+            if configure.alarm[0]:
+                configure.alarm[0] = False

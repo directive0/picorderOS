@@ -20,8 +20,10 @@ class preferences(object):
 
 		# enables sound effect playback
 		self.audio = [True]
+
 		# holds state for beep input feedback
 		self.beep_ready = [False]
+		self.alarm_ready = [False]
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
