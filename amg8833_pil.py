@@ -173,7 +173,7 @@ class ThermalGrid(object):
 			self.rows[i].update(self.data[i],self.high,self.low,surface)
 
 
-    # Function to draw a pretty pattern to the display.
+    # Function to draw a pretty pattern to the display for demonstration.
 	def animate(self):
 
 		self.dummy = makegrid(random = False)

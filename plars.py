@@ -120,7 +120,7 @@ class PLARS(object):
 			return result2
 		except:
 			print("attempting to re-acquire sensor")
-			return get_sensor(self,dsc,dev)
+			return self.get_sensor(self,dsc,dev)
 
 	def index_by_time(self,df, ascending = True):
 		df.sort_values(by=['timestamp'], ascending = ascending)
