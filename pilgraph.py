@@ -155,7 +155,7 @@ class graph_area(object):
 			# if the cursor has data to write
 			if i < len(datalist):
 
-				indexer = len(datalist) - i
+				indexer = (len(datalist) - i) - 1
 				print("list size = ", len(datalist))
 				print("indexer = ", indexer)
 
