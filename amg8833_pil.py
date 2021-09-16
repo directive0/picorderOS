@@ -12,7 +12,7 @@ from colour import Color
 # The following are for LCARS colours from LCARScom.net
 lcars_orange = (255,153,0)
 lcars_pink = (204,153,204)
-lcars_blue = (153,153,204)
+lcars_blue = (153,152,208)
 lcars_red = (204,102,102)
 lcars_peach = (255,204,153)
 lcars_bluer = (153,153,255)

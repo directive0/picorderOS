@@ -155,13 +155,15 @@ class graph_area(object):
 			# if the cursor has data to write
 			if i < len(datalist):
 
+				indexer = self.spanx - i
+
 				# if auto scaling is on
 				if self.auto == True:
 					# take the sensor value received and map it against the on screen limits
-					scaledata = abs(numpy.interp(datalist[i-self.spanx],self.newrange,self.targetrange))
+					scaledata = abs(numpy.interp(datalist[indexer],self.newrange,self.targetrange))
 				else:
 					# use the sensors stated limits as the range.
-					scaledata = abs(numpy.interp(datalist[i-self.spanx],self.sourcerange,self.targetrange))
+					scaledata = abs(numpy.interp(datalist[indexer],self.sourcerange,self.targetrange))
 
 				# append the current x position, with this new scaled data as the y positioning into the buffer
 				self.newlist.append((self.linepoint,scaledata))
