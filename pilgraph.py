@@ -110,7 +110,7 @@ class graph_area(object):
 
 			#pop the oldest value off
 			# may remove this
-			self.buff.pop(0)
+#			self.buff.pop(0)
 			self.tock.logtime()
 
 
@@ -158,10 +158,10 @@ class graph_area(object):
 				# if auto scaling is on
 				if self.auto == True:
 					# take the sensor value received and map it against the on screen limits
-					scaledata = abs(numpy.interp(datalist[i],self.newrange,self.targetrange))
+					scaledata = abs(numpy.interp(datalist[i-range(self.spanx)],self.newrange,self.targetrange))
 				else:
 					# use the sensors stated limits as the range.
-					scaledata = abs(numpy.interp(datalist[i],self.sourcerange,self.targetrange))
+					scaledata = abs(numpy.interp(datalist[i-range(self.spanx)],self.sourcerange,self.targetrange))
 
 				# append the current x position, with this new scaled data as the y positioning into the buffer
 				self.newlist.append((self.linepoint,scaledata))
