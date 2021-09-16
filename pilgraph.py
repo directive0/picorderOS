@@ -156,6 +156,7 @@ class graph_area(object):
 			if i < len(datalist):
 
 				indexer = self.spanx - i
+				print("indexer = ", indexer)
 
 				# if auto scaling is on
 				if self.auto == True:
