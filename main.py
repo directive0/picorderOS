@@ -87,7 +87,7 @@ def Main():
 			colourscreen = ColourScreen()
 
 			if configure.sensor_ready[0]:
-				plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*2)
+				plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*3)
 
 
 	print("Main Loop Starting")
