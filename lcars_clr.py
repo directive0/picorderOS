@@ -731,9 +731,9 @@ class ColourScreen(object):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(self.draw)
-		self.timeit.logtime("Prep for drawing")
+		self.tiemit.post("Prep for drawing")
 		self.pixdrw()
-		self.timeit.logtime("Drawing to screen")
+		self.timeit.post("Drawing to screen")
 		return self.status
 
 
