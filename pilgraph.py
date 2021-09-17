@@ -155,9 +155,10 @@ class graph_area(object):
 			# if the cursor has data to write
 			if i < len(datalist):
 
+				# gives me an index within the current length of the datalist
+				# goes from the most recent data backwards
+				# so the graph prints from left-right: oldest-newest data.
 				indexer = (len(datalist) - i) - 1
-				print("list size = ", len(datalist))
-				print("indexer = ", indexer)
 
 				# if auto scaling is on
 				if self.auto == True:
