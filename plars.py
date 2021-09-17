@@ -155,29 +155,22 @@ class PLARS(object):
 		# if buffer is larger than target
 		if length > 0:
 
-			print("trimming the buffer--------------------------------------[!]")
-			print("Current buffer size: ", len(self.buffer))
+
 			# make a new dataframe of the most recent data to keep using
 			newbuffer = self.buffer.tail(targetsize)
 			test1 = newbuffer["timestamp"]
-			print("making new buffer of most recent data. Length: ", len(newbuffer))
-			print("Highest timecode: ", test1.max())
+
 
 			# slice off the rows outside the buffer and backup to disk
 			tocore = self.buffer.head(length)
+			
 			self.append_to_core(tocore)
 
 			test2 = tocore["timestamp"]
-			print("appending data to core. Length: ", len(tocore))
-			print("To core highest timecode: ", test2.max())
 
-			if test1.max() > test2.max():
-				print("new buffer has newer timestamp")
-			else:
-				print("to core has newer timestamp")
 			# replace existing buffer with new trimmed buffer
 			self.buffer = newbuffer
-			print("New buffer size: ", len(self.buffer))
+
 
 
 	# return a number of data from a specific sensor at a specific time interval
