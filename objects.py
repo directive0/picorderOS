@@ -244,3 +244,7 @@ class timer(object):
 
 	def stoplapsed(self):
 		self.timelapsed()
+
+	def post(self, title):
+		print(title, " took: ", self.timelapsed(), " Seconds")
+		self.logtime()

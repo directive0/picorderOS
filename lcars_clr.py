@@ -623,7 +623,6 @@ class ThermalFrame(object):
 
 		self.timed = timer()
 		self.timed.logtime()
-		self.interval = .1
 
 		self.title = LabelObj("Thermal Array",titlefont)
 
@@ -694,15 +693,12 @@ class ThermalFrame(object):
 		self.title.push(self.titlex,self.titley, self.draw)
 
 
-		# Draw ThermalGrid object
-		if self.timed.timelapsed() > self.interval:
-
-			if self.selection == 0:
-				self.average,self.high,self.low = self.t_grid.update()
-				self.timed.logtime()
-			if self.selection == 1:
-				self.average,self.high,self.low = self.t_grid_full.update()
-				self.timed.logtime()
+		if self.selection == 0:
+			self.average,self.high,self.low = self.t_grid.update()
+			self.timed.logtime()
+		if self.selection == 1:
+			self.average,self.high,self.low = self.t_grid_full.update()
+			self.timed.logtime()
 
 		if self.selection == 0:
 			self.t_grid.push(draw)
@@ -725,17 +721,19 @@ class ColourScreen(object):
 		self.settings_frame = SettingsFrame()
 		self.thermal_frame = ThermalFrame()
 		self.powerdown_frame = PowerDown()
-
+		self.timeit = timer()
 
 	def get_size(self):
 		return self.multi_frame.get_x()
 
 	def graph_screen(self):
+		self.timeit.logtime()
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(self.draw)
+		self.timeit.logtime("Prep for drawing")
 		self.pixdrw()
-		configure.sensor_halt[0] = False
+		self.timeit.logtime("Drawing to screen")
 		return self.status
 
 
