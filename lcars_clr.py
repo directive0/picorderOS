@@ -209,6 +209,8 @@ class SettingsFrame(object):
 		self.C_Label = LabelObj("Exit",font, colour = lcars_blue)
 
 		self.item = LabelObj("No Data",bigfont,colour = lcars_pink)
+
+
 		# device needs to show multiple settings
 		# first the sensor palette configuration
 
@@ -388,6 +390,9 @@ class PowerDown(object):
 class MultiFrame(object):
 
 	def __init__(self):
+
+		self.timeit = timer()
+
 		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
@@ -508,7 +513,7 @@ class MultiFrame(object):
 	# push the image frame and contents to the draw object.
 	def push(self,draw):
 
-		#test
+		self.timeit.event("rendering frame")
 
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
@@ -536,7 +541,7 @@ class MultiFrame(object):
 
 			configure.eventready[0] = False
 
-
+		self.timeit.post("Input check")
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
@@ -552,12 +557,13 @@ class MultiFrame(object):
 			senseslice[i] = item[0]
 
 
-
 		# Grabs the current sensor reading
 		self.A_Data = senseslice[0]#configure.sensor_data[configure.sensor1[0]][0]
 		self.B_Data = senseslice[1]#configure.sensor_data[configure.sensor2[0]][0]
 		self.C_Data = senseslice[2]#configure.sensor_data[configure.sensor3[0]][0]
 
+
+		self.timeit.post("get most recent")
 
 		# Draws the Title
 		if self.selection != 0:
@@ -567,6 +573,8 @@ class MultiFrame(object):
 			self.title.string = "Multi-Graph"
 
 		self.title.push(self.titlex,self.titley,draw)
+
+		self.timeit.post("set titles")
 
 
 		# Updates the graphs with the new data.
@@ -582,6 +590,7 @@ class MultiFrame(object):
 			self.A_Graph.render(self.draw)
 
 
+
 		if self.selection == 1:
 			self.A_Graph.render(self.draw)
 
@@ -591,7 +600,11 @@ class MultiFrame(object):
 		if self.selection == 3:
 			self.C_Graph.render(self.draw)
 
+		self.timeit.post("render graphs")
+
 		self.labels()
+
+		self.timeit.post("render titles")
 
 
 

@@ -234,6 +234,10 @@ class timer(object):
 	def logtime(self):
 		self.lastTime = time.time()
 
+	def event(self,caption):
+		print(caption)
+		self.logtime
+
 	# the following function returns the interval that has elapsed since the last log.
 	def timelapsed(self):
 		#print("comparing times")
@@ -245,6 +249,6 @@ class timer(object):
 	def stoplapsed(self):
 		self.timelapsed()
 
-	def post(self, title):
-		print(title, " took: ", self.timelapsed(), " Seconds")
+	def post(self, caption):
+		print(caption, "took: ", self.timelapsed(), "Seconds")
 		self.logtime()
