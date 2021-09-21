@@ -205,7 +205,7 @@ class graph_area(object):
 		self.timeit.post("pilgraph - getting sensor ")
 
 		#preps the list by adding the X coordinate to every sensor value
-		self.recent = plars.get_recent(dsc,dev,num = self.spanx)
+		recent = plars.get_recent(dsc,dev,num = self.spanx)
 
 		self.timeit.post("pilgraph - acquiring recent sensor list")
 

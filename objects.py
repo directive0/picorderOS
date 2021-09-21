@@ -236,7 +236,7 @@ class timer(object):
 
 	def event(self,caption):
 		print(caption)
-		self.logtime
+		self.logtime()
 
 	# the following function returns the interval that has elapsed since the last log.
 	def timelapsed(self):

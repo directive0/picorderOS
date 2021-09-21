@@ -513,7 +513,7 @@ class MultiFrame(object):
 	# push the image frame and contents to the draw object.
 	def push(self,draw):
 
-		self.timeit.event("rendering frame")
+		self.timeit.event("------------------------------------rendering frame")
 
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
@@ -740,7 +740,7 @@ class ColourScreen(object):
 		return self.multi_frame.get_x()
 
 	def graph_screen(self):
-		self.timeit.logtime()
+		self.timeit.event("Begin LCARS loop ----------------------------------")
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(self.draw)
