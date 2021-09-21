@@ -184,6 +184,7 @@ class graph_area(object):
 
 		return self.newlist
 
+
 	def render(self, draw, auto = True, dot = True):
 
 		self.timeit.event("<------------------starting pilgraph")
@@ -201,10 +202,10 @@ class graph_area(object):
 		dsc = configure.sensor_info[configure.sensors[self.ident][0]][3]
 		dev = configure.sensor_info[configure.sensors[self.ident][0]][5]
 
-		self.timeit.event("pilgraph - getting sensor ")
+		self.timeit.post("pilgraph - getting sensor ")
 
 		#preps the list by adding the X coordinate to every sensor value
-		recent = plars.get_recent(dsc,dev,num = self.spanx)
+		self.recent = plars.get_recent(dsc,dev,num = self.spanx)
 
 		self.timeit.post("pilgraph - acquiring recent sensor list")
 

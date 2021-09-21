@@ -541,7 +541,7 @@ class MultiFrame(object):
 
 			configure.eventready[0] = False
 
-		self.timeit.post("Input check")
+		self.timeit.post("GRAPH - Input check")
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
@@ -563,7 +563,7 @@ class MultiFrame(object):
 		self.C_Data = senseslice[2]#configure.sensor_data[configure.sensor3[0]][0]
 
 
-		self.timeit.post("get most recent")
+		self.timeit.post("GRAPH - get most recent")
 
 		# Draws the Title
 		if self.selection != 0:
@@ -574,7 +574,7 @@ class MultiFrame(object):
 
 		self.title.push(self.titlex,self.titley,draw)
 
-		self.timeit.post("set titles")
+		self.timeit.post("GRAPH - set titles")
 
 
 		# Updates the graphs with the new data.
@@ -600,11 +600,11 @@ class MultiFrame(object):
 		if self.selection == 3:
 			self.C_Graph.render(self.draw)
 
-		self.timeit.post("render graphs")
+		self.timeit.post("GRAPH - render graphs")
 
 		self.labels()
 
-		self.timeit.post("render titles")
+		self.timeit.post("GRAPH - render titles")
 
 
 
@@ -744,9 +744,9 @@ class ColourScreen(object):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(self.draw)
-		self.timeit.post("Prep for drawing")
+		self.timeit.post("LCARS - Prep for drawing")
 		self.pixdrw()
-		self.timeit.post("Drawing to screen")
+		self.timeit.post("LCARS - Drawing to screen")
 		return self.status
 
 
