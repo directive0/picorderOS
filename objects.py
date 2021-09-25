@@ -18,18 +18,18 @@ class preferences(object):
 		# Machine vitals are substituted and Luma screens use emulator
 		self.pc = False
 
-		# enables sound effect playback
-		self.audio = [True]
-
 		# holds state for beep input feedback
 		self.beep_ready = [False]
 		self.alarm_ready = [False]
+
+		# Test alarm value
+		self.alarm1 = ("Thermometer","BME680")
+		self.alarms = []
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
 		self.tr108 = False
 		self.tr109 = True
-
 
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = False
@@ -55,6 +55,9 @@ class preferences(object):
 		# If sleep is True the lights will respond to hall effect sensors
 		self.sleep = [True]
 
+		# enables sound effect playback
+		self.audio = [True]
+
 		# controls auto ranging of graphs
 		self.auto = [True]
 
@@ -64,6 +67,7 @@ class preferences(object):
 		# holds theme state for UI
 		self.theme = [0]
 
+
 		# sets the number of max sensors for user configuration
 		# (is automatically set by the sensor module at startup)
 		self.max_sensors = [0]
@@ -72,6 +76,9 @@ class preferences(object):
 		self.system_vitals = True
 		self.bme = True
 		self.amg8833 = True
+
+		#sets the upper and lower threshold for the alert
+		self.TEMP_ALERT = (0,100)
 
 		# TR108 uses this sensehat
 		self.sensehat = False
@@ -126,7 +133,6 @@ class preferences(object):
 		# the tr109 supports two shift registers, and so two sets of pin addresses
 		# prototype unit 00 and 01 have different pin assignments for latch and clock
 		# so these values may need to be swapped
-
 
 		# Main board shift register pins
 		self.PIN_DATA  = 16
@@ -219,6 +225,7 @@ class flash(object):
 	 return self.value
 
 # The following class is to handle interval timers.
+# its used to handle concurrent program flow, but also for diagnostic.
 class timer(object):
 
 	# Constructor code logs the time it was instantiated.

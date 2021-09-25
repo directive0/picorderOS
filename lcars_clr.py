@@ -391,7 +391,7 @@ class MultiFrame(object):
 
 	def __init__(self):
 
-		self.timeit = timer()
+
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
@@ -513,7 +513,7 @@ class MultiFrame(object):
 	# push the image frame and contents to the draw object.
 	def push(self,draw):
 
-		self.timeit.event("------------------------------------rendering frame")
+
 
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
@@ -541,7 +541,7 @@ class MultiFrame(object):
 
 			configure.eventready[0] = False
 
-		self.timeit.post("GRAPH - Input check")
+
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
@@ -563,7 +563,7 @@ class MultiFrame(object):
 		self.C_Data = senseslice[2]#configure.sensor_data[configure.sensor3[0]][0]
 
 
-		self.timeit.post("GRAPH - get most recent")
+
 
 		# Draws the Title
 		if self.selection != 0:
@@ -574,7 +574,7 @@ class MultiFrame(object):
 
 		self.title.push(self.titlex,self.titley,draw)
 
-		self.timeit.post("GRAPH - set titles")
+
 
 
 		# Updates the graphs with the new data.
@@ -600,11 +600,9 @@ class MultiFrame(object):
 		if self.selection == 3:
 			self.C_Graph.render(self.draw)
 
-		self.timeit.post("GRAPH - render graphs")
 
 		self.labels()
 
-		self.timeit.post("GRAPH - render titles")
 
 
 
@@ -634,9 +632,6 @@ class ThermalFrame(object):
 
 		self.selection = 0
 
-		self.timed = timer()
-		self.timed.logtime()
-
 		self.title = LabelObj("Thermal Array",titlefont)
 
 		self.A_Label = LabelObj("No Data",font,colour = lcars_blue)
@@ -651,20 +646,20 @@ class ThermalFrame(object):
 
 	def labels(self):
 
-		if self.selection == 0 or self.selection == 1:
+		if self.selection == 0:
 			raw_a = str(self.low)
 			adjusted_a = self.arrangelabel(raw_a)
 			a_string = "Low: " + adjusted_a
 			self.A_Label.string = a_string
 			self.A_Label.push(23,self.labely,self.draw)
 
-		if self.selection == 0 or self.selection == 2:
+		if self.selection == 0:
 			raw_b = str(self.high)
 			adjusted_b = self.arrangelabel(raw_b)
 			self.B_Label.string = "High: " + adjusted_b
 			self.B_Label.center(self.labely,23,135, self.draw)
 
-		if self.selection == 0 or self.selection == 3:
+		if self.selection == 0:
 			raw_c = str(self.average)
 			adjusted_c = self.arrangelabel(raw_c)
 			self.C_Label.string = "Avg: " + adjusted_c
@@ -708,10 +703,11 @@ class ThermalFrame(object):
 
 		if self.selection == 0:
 			self.average,self.high,self.low = self.t_grid.update()
-			self.timed.logtime()
 		if self.selection == 1:
 			self.average,self.high,self.low = self.t_grid_full.update()
-			self.timed.logtime()
+
+		if not configure.alarm_ready[0]:
+			if self.high >= configure.alarm_ready[0] = True
 
 		if self.selection == 0:
 			self.t_grid.push(draw)
@@ -734,19 +730,16 @@ class ColourScreen(object):
 		self.settings_frame = SettingsFrame()
 		self.thermal_frame = ThermalFrame()
 		self.powerdown_frame = PowerDown()
-		self.timeit = timer()
+
 
 	def get_size(self):
 		return self.multi_frame.get_x()
 
 	def graph_screen(self):
-		self.timeit.event("Begin LCARS loop ----------------------------------")
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(self.draw)
-		self.timeit.post("LCARS - Prep for drawing")
 		self.pixdrw()
-		self.timeit.post("LCARS - Drawing to screen")
 		return self.status
 
 

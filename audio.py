@@ -20,7 +20,7 @@ def threaded_audio():
     was_open = False
     warble = scansound.play()
     click = clicksound.play()
-
+    alarm = alarmsound
 
     click.stop()
     warble.stop()
@@ -40,6 +40,8 @@ def threaded_audio():
                 beep = beepsound.play()
                 configure.beep_ready[0] = False
 
+
+            # controls the main tricorder sound loop
             if configure.dr_open[0]:
                 if not warble.is_playing():
                     warble = scansound.play()
@@ -49,3 +51,5 @@ def threaded_audio():
 
             if configure.alarm_ready[0]:
                 configure.alarm_ready[0] = False
+        else:
+            warble.stop()
