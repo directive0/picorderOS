@@ -24,7 +24,7 @@ class preferences(object):
 
 		# Test alarm value
 		self.alarm1 = ("Thermometer","BME680")
-		self.alarms = []
+		self.alarms = [self.alarm1]
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
@@ -40,16 +40,22 @@ class preferences(object):
 		self.input_cap1208 = True
 		self.CAPSENSITIVITY = 50
 
+
+		# Controls for global event list
 		self.eventlist = [[]]
 		self.eventready = [False]
 
 		# contains the current button state (0 is unpressed, 1 is pressed)
 		self.events = [0,0,0,0,0,0,0,0]
 
-		# flags control the onboard LEDS. Easy to turn them off if need be.
-		self.leds = [True]
+
+		# led refresh rate.
 		self.LED_TIMER = 0.2
 
+		# flags control the onboard LEDS. Easy to turn them off if need be.
+		self.leds = [True]
+
+		# controls Moire pattern on tr-108
 		self.moire = [False]
 
 		# If sleep is True the lights will respond to hall effect sensors
@@ -99,7 +105,7 @@ class preferences(object):
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
 
 		# sets data logging mode.
-		self.datalog = [False]
+		self.datalog = [True]
 		self.logtime = [60]
 
 		# used to control refresh speed.
