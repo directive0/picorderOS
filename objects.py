@@ -22,10 +22,6 @@ class preferences(object):
 		self.beep_ready = [False]
 		self.alarm_ready = [False]
 
-		# Test alarm value
-		self.alarm1 = ("Thermometer","BME680")
-		self.alarms = [self.alarm1]
-
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
 		self.tr108 = False
@@ -54,6 +50,9 @@ class preferences(object):
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.leds = [True]
+
+		# turns alarms on/off
+		self.alarm = [True]
 
 		# controls Moire pattern on tr-108
 		self.moire = [False]
