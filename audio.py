@@ -20,10 +20,11 @@ def threaded_audio():
     was_open = False
     warble = scansound.play()
     click = clicksound.play()
-    alarm = alarmsound
+    alarm = alarmsound.play()
 
     click.stop()
     warble.stop()
+    alarm.stop()
 
     while not configure.status[0] == "quit":
         if configure.audio[0]:
