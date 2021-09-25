@@ -250,8 +250,6 @@ class SettingsFrame(object):
 		self.itemlabel.string = str(self.pages[self.selection][0])
 		self.itemlabel.push(self.titlex,self.titley+20,draw)
 
-
-
 		self.A_Label.push(23,self.labely,draw)
 		self.B_Label.center(self.labely,23,135,draw)
 		self.C_Label.r_align(156,self.labely,draw)
