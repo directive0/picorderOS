@@ -707,7 +707,10 @@ class ThermalFrame(object):
 			self.average,self.high,self.low = self.t_grid_full.update()
 
 		if not configure.alarm_ready[0]:
-			if self.high >= configure.alarm_ready[0] = True
+			if self.high >= configure.TEMP_ALERT[1]:
+				configure.alarm_ready[0] = True
+			if self.low <= configure.TEMP_ALERT[0]:
+				configure.alarm_ready[0] = True
 
 		if self.selection == 0:
 			self.t_grid.push(draw)
