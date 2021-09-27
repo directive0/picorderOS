@@ -286,9 +286,9 @@ class TFT24T():
 		"""Return a PIL ImageDraw instance for drawing on the image buffer."""
 		d = ImageDraw.Draw(Buffer)
 		# Add custom methods to the draw object:
-		d.textrotated = MethodType(_textrotated, d, ImageDraw.Draw)
-		d.pasteimage = MethodType(_pasteimage, d, ImageDraw.Draw)
-		d.textwrapped = MethodType(_textwrapped, d, ImageDraw.Draw)
+		d.textrotated = MethodType(_textrotated, d)
+		d.pasteimage = MethodType(_pasteimage, d)
+		d.textwrapped = MethodType(_textwrapped, d)
 		return d
 
 	def load_wallpaper(self, filename):
