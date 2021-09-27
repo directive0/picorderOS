@@ -276,7 +276,7 @@ class TFT24T():
 		"""
 
 		if type(color) != type((0,0,0)):
-			print "clear() function colours must be in (255,255,0) form"
+			print("clear() function colours must be in (255,255,0) form")
 			exit()
 		width, height = Buffer.size
 		Buffer.putdata([color]*(width*height))
