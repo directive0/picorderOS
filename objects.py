@@ -33,7 +33,7 @@ class preferences(object):
 		self.input_cap_mpr121 = False
 
 		# CAP1208 and sensitivity settings
-		self.input_cap1208 = True
+		self.input_cap1208 = False
 		self.CAPSENSITIVITY = 50
 
 
@@ -79,8 +79,8 @@ class preferences(object):
 
 		# Toggles individual sensor support
 		self.system_vitals = True
-		self.bme = True
-		self.amg8833 = True
+		self.bme = False
+		self.amg8833 = False
 
 		#sets the upper and lower threshold for the alert
 		self.TEMP_ALERT = (0,100)

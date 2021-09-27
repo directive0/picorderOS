@@ -43,7 +43,7 @@ if configure.tr109:
 
 	# 1.8" TFT colour LCD
 	if configure.display == "1":
-		from lcars_clr import *
+		from lcars_clr_ili9341 import *
 
 	# Nokia 5110 black and white dot matrix screen.
 	if configure.display == "0":

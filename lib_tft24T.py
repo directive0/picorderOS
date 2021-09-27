@@ -379,8 +379,9 @@ def _textrotated(self, position, text, angle, font, fill="white"):
 	Buffer.paste(rotated, position, rotated)  # into the global Buffer
 	#   example:  draw.textrotated(position, text, angle, font, fill)
 
-def _pasteimage(self, filename, position):
-	Buffer.paste(Image.open(filename), position)
+def _pasteimage(self, image, position):
+	Buffer.paste(image, position)
+	#Buffer.paste(Image.open(filename), position)
 	# example: draw.pasteimage('bl.jpg', (30,80))
 
 def _textwrapped(self, position, text1, length, height, font, fill="white"):
