@@ -794,3 +794,4 @@ class ColourScreen(object):
 	def pixdrw(self):
 		thisimage = self.newimage.convert(mode = "RGB")
 		self.surface._pasteimage(thisimage,(0,0))
+		TFT.display()
