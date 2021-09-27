@@ -49,7 +49,7 @@ class preferences(object):
 		self.LED_TIMER = 0.2
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
-		self.leds = [True]
+		self.leds = [False]
 
 		# turns alarms on/off
 		self.alarm = [True]
@@ -61,7 +61,7 @@ class preferences(object):
 		self.sleep = [True]
 
 		# enables sound effect playback
-		self.audio = [True]
+		self.audio = [False]
 
 		# controls auto ranging of graphs
 		self.auto = [True]
