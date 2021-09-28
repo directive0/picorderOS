@@ -793,5 +793,8 @@ class ColourScreen(object):
 
 	def pixdrw(self):
 		thisimage = self.newimage.convert(mode = "RGB")
+		 # Resize the image and rotate it so it's 240x320 pixels.
+    	thisimage = image.rotate(90,0,1).resize((240, 320))
+    	# Draw the image on the display hardware.
 		self.surface.pasteimage(thisimage,(0,0))
 		TFT.display()
