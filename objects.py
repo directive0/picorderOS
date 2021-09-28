@@ -104,7 +104,7 @@ class preferences(object):
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
 
 		# sets data logging mode.
-		self.datalog = [True]
+		self.datalog = [False]
 		self.logtime = [60]
 
 		# used to control refresh speed.
