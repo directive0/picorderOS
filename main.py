@@ -41,6 +41,9 @@ if configure.tr108:
 # for the new TR-109 there are two display modes supported.
 if configure.tr109:
 
+	if configure.display == "2":
+		from lcars_clr import *
+
 	# 1.8" TFT colour LCD
 	if configure.display == "1":
 		from lcars_clr import *
