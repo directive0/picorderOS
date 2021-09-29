@@ -12,7 +12,7 @@ class Wifi_Scan(object):
 
     def update(self):
         ap_list = list(Cell.all('wlan0'))
-        return this
+        return ap_list
 
     def get_info(self,selection):
         ap_list = self.update()
