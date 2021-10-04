@@ -28,23 +28,23 @@ class graph_area(object):
 
 
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
-		self.new = True
-		self.cycle = cycle
+		cdef bool self.new = True
+		cdef int self.cycle = cycle
 		self.tock = timer()
 		self.tock.logtime()
 		self.glist = array('f', [])
 		self.dlist = array('f', [])
 		self.colour = colour
 		self.auto = True
-		self.width = width
-		self.dotw = 6
-		self.doth = 6
+		cdef int self.width = width
+		cdef int self.dotw = 6
+		cdef int self.doth = 6
 		self.buff = array('f', [])
 
 		self.timeit = timer()
 
-		self.datahigh = 0
-		self.datalow = 0
+		cdef int self.datahigh = 0
+		cdef int self.datalow = 0
 		self.newrange = (self.datalow,self.datahigh)
 
 		# stores the graph identifier, there are three on the multiframe
@@ -60,13 +60,10 @@ class graph_area(object):
 		# seeds a list with the coordinates for 0 to give us a list that we
 		# can put our scaled graph values in
 		cdef int i
-
-		for i in range(self.spanx):
-			self.glist.append(self.y + self.spany)
-
 		# seeds a list with sourcerange zero so we can put our sensor readings into it.
 		# dlist is the list where we store the raw sensor values with no scaling
 		for i in range(self.spanx):
+			self.glist.append(self.y + self.spany)
 			self.dlist.append(self.datalow)
 			self.buff.append(self.datalow)
 
@@ -163,7 +160,7 @@ class graph_area(object):
 				# gives me an index within the current length of the datalist
 				# goes from the most recent data backwards
 				# so the graph prints from left-right: oldest-newest data.
-				indexer = (len(datalist) - i) - 1
+				cdef int indexer = (len(datalist) - i) - 1
 
 				# if auto scaling is on
 				if self.auto == True:
