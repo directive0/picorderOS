@@ -24,7 +24,7 @@ import numpy
 from array import *
 from plars import *
 
-class graph_area(object):
+cdef class graph_area(object):
 
 	cdef int cycle, colour, width, ident
 
