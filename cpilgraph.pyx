@@ -157,7 +157,7 @@ cdef class graph_area(object):
 		self.newrange = (self.datalow,self.datahigh)
 
 
-		cdef int i
+		cdef int i, indexer
 		# for each vertical bar in the graph size
 		for i in range(self.spanx):
 
@@ -167,7 +167,7 @@ cdef class graph_area(object):
 				# gives me an index within the current length of the datalist
 				# goes from the most recent data backwards
 				# so the graph prints from left-right: oldest-newest data.
-				cdef int indexer = (len(datalist) - i) - 1
+				indexer = (len(datalist) - i) - 1
 
 				# if auto scaling is on
 				if self.auto == True:
