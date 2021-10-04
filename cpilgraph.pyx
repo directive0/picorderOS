@@ -27,9 +27,6 @@ from plars import *
 
 class graph_area(object):
 
-	cdef int cycle, colour, width, ident, datahigh, datalow
-	cdef bool new, auto_scale
-
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
 
 		self.cycle = cycle
@@ -131,7 +128,7 @@ class graph_area(object):
 	# if the auto flag is set then the class will autoscale the graph so that
 	# the highest and lowest currently displayed values are presented.
 	# takes in a list/array with length => span
-	def graphprep(self,datalist):
+	cpdef graphprep(self,datalist):
 
 		# The starting X coordinate
 		self.linepoint = self.spanx + self.x
