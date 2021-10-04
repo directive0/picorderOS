@@ -82,6 +82,9 @@ class preferences(object):
 		self.bme = True
 		self.amg8833 = True
 
+		# toggles wifi/bt scanning
+		self.EM = True
+
 		#sets the upper and lower threshold for the alert
 		self.TEMP_ALERT = (0,100)
 

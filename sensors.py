@@ -138,6 +138,17 @@ class Sensor(object):
 			self.VOC_info = [300000,1100000,"VOC","KOhm", "BME680"]
 
 
+		# EM sensors are (for now) The RPI's wifi/BT chipset.
+		# Information below will only apply to the RPI Zero W.
+		# add individual sensor module parameters below.
+		#0				1			2		3		4
+		#info = (lower range, upper range, unit, symbol)
+
+
+		if configure.EM:
+			self.wifi_info = [-40,85,"Wifi",self.deg_sym + "c", "bcm43438"]
+
+
 		configure.sensor_info = self.get()
 
 	def sin_gen(self):
@@ -165,6 +176,9 @@ class Sensor(object):
 	def get(self):
 		sensorlist = []
 		timestamp = [time.time()]
+
+		if configure.EM:
+
 
 		if configure.bme:
 

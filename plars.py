@@ -52,6 +52,9 @@ class PLARS(object):
 		self.buffer_size = 15
 		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 
+		#create a buffer for wifi/bt data
+		self.buffer_em = pd.DataFrame(columns=['ssid','db','max','dsc','sym','dev','timestamp'])
+
 
 		self.timer = timer()
 
@@ -85,6 +88,9 @@ class PLARS(object):
 		print("buffer size set to: ", size)
 		self.buffer_size = size
 
+
+	def update_em(self,data):
+		pass
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor
 	def update(self,data):
@@ -96,8 +102,19 @@ class PLARS(object):
 			# appends the new data to the buffer
 			self.buffer = self.buffer.append(newdata, ignore_index=True)
 
-			# if interval has elapsed trim the main buffer and dump old data to core.
-			if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
+
+			# get buffer size to determine how many rows to remove from the end
+			currentsize = len(self.buffer)
+
+			targetsize = self.buffer_size
+
+
+			# determine difference between buffer and target size
+			length = currentsize - targetsize
+
+
+			# if buffer is larger than target
+			if length > 0:
 				self.trimbuffer()
 				self.timer.logtime()
 
@@ -152,24 +169,20 @@ class PLARS(object):
 		length = currentsize - targetsize
 
 
-		# if buffer is larger than target
-		if length > 0:
+		# make a new dataframe of the most recent data to keep using
+		newbuffer = self.buffer.tail(targetsize)
+		test1 = newbuffer["timestamp"]
 
 
-			# make a new dataframe of the most recent data to keep using
-			newbuffer = self.buffer.tail(targetsize)
-			test1 = newbuffer["timestamp"]
+		# slice off the rows outside the buffer and backup to disk
+		tocore = self.buffer.head(length)
 
+		self.append_to_core(tocore)
 
-			# slice off the rows outside the buffer and backup to disk
-			tocore = self.buffer.head(length)
-			
-			self.append_to_core(tocore)
+		test2 = tocore["timestamp"]
 
-			test2 = tocore["timestamp"]
-
-			# replace existing buffer with new trimmed buffer
-			self.buffer = newbuffer
+		# replace existing buffer with new trimmed buffer
+		self.buffer = newbuffer
 
 
 

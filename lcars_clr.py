@@ -242,6 +242,30 @@ class SettingsFrame(object):
 
 	def push(self, draw):
 
+		status = "settings"
+
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
+
+			if keys[0]:
+				self.selection = self.selection + 1
+				if self.selection > (len(self.pages) - 1):
+					self.selection = 0
+
+			if keys[1]:
+				state = self.toggle(self.pages[self.selection][1])
+
+				if self.status_raised:
+					status = state
+					self.status_raised = False
+
+			if keys[2]:
+				status = configure.last_status[0]
+
+			configure.eventready[0] = False
+
+		return status
+
 		#draw the frame heading
 		self.title.push(self.titlex,self.titley,draw)
 
@@ -266,30 +290,6 @@ class SettingsFrame(object):
 				self.item.string = str(self.pages[self.selection][1][0])
 				self.item.push(self.titlex,self.titley+40,draw)
 
-
-		status = "settings"
-
-		if configure.eventready[0]:
-			keys = configure.eventlist[0]
-
-			if keys[0]:
-				self.selection = self.selection + 1
-				if self.selection > (len(self.pages) - 1):
-					self.selection = 0
-
-			if keys[1]:
-				state = self.toggle(self.pages[self.selection][1])
-
-				if self.status_raised:
-					status = state
-					self.status_raised = False
-
-			if keys[2]:
-				status = configure.last_status[0]
-
-			configure.eventready[0] = False
-
-		return status
 
 class PowerDown(object):
 	def __init__(self):
@@ -382,7 +382,107 @@ class PowerDown(object):
 
 		return status
 
+class EMFrame(object):
+	def __init__(self):
+		# Sets the topleft origin of the graph
+		self.graphx = 23
+		self.graphy = 24
 
+		# Sets the x and y span of the graph
+		self.gspanx = 133
+		self.gspany = 71
+		self.titlex = 23
+		self.titley = 6
+
+		self.high = 0
+		self.low = 0
+		self.average = 0
+		self.labely = 102
+
+		self.selection = 0
+
+		self.title = LabelObj("Modulated EM",titlefont)
+
+
+	# this function takes a value and sheds the second digit after the decimal place
+	def arrangelabel(self,data):
+		datareturn = format(float(data), '.0f')
+		return datareturn
+
+	def labels(self):
+
+		if self.selection == 0:
+			raw_a = str(self.low)
+			adjusted_a = self.arrangelabel(raw_a)
+			a_string = "Low: " + adjusted_a
+			self.A_Label.string = a_string
+			self.A_Label.push(23,self.labely,self.draw)
+
+		if self.selection == 0:
+			raw_b = str(self.high)
+			adjusted_b = self.arrangelabel(raw_b)
+			self.B_Label.string = "High: " + adjusted_b
+			self.B_Label.center(self.labely,23,135, self.draw)
+
+		if self.selection == 0:
+			raw_c = str(self.average)
+			adjusted_c = self.arrangelabel(raw_c)
+			self.C_Label.string = "Avg: " + adjusted_c
+			self.C_Label.r_align(156,self.labely,self.draw)
+
+	def push(self, draw):
+
+		status  = "mode_c"
+
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
+
+
+			# ------------- Input handling -------------- #
+			if keys[0]:
+				status  = "mode_a"
+				configure.eventready[0] = False
+				return status
+
+			if keys[1]:
+				status  = "mode_b"
+				configure.eventready[0] = False
+				return status
+
+			if keys[2]:
+				status = "settings"
+				configure.last_status[0] = "mode_b"
+				configure.eventready[0] = False
+				return status
+
+			configure.eventready[0] = False
+
+
+		self.draw = draw
+		self.labels()
+
+		# Draw title
+
+		self.title.push(self.titlex,self.titley, self.draw)
+
+
+		if self.selection == 0:
+			self.average,self.high,self.low = self.t_grid.update()
+		if self.selection == 1:
+			self.average,self.high,self.low = self.t_grid_full.update()
+
+		if not configure.alarm_ready[0]:
+			if self.high >= configure.TEMP_ALERT[1]:
+				configure.alarm_ready[0] = True
+			if self.low <= configure.TEMP_ALERT[0]:
+				configure.alarm_ready[0] = True
+
+		if self.selection == 0:
+			self.t_grid.push(draw)
+		elif self.selection ==1:
+			self.t_grid_full.push(draw)
+
+		return status
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
@@ -724,6 +824,7 @@ class ColourScreen(object):
 		# instantiates an image and uses it in a draw object.
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
 		self.blankimage = Image.open('assets/lcarsframeblank.png')
+		self.lframe = Image.open('assets/lcarsframeblank.png')
 
 		self.status = "mode_a"
 
@@ -731,6 +832,7 @@ class ColourScreen(object):
 		self.settings_frame = SettingsFrame()
 		self.thermal_frame = ThermalFrame()
 		self.powerdown_frame = PowerDown()
+		self.em_frame = EMFrame()
 
 
 	def get_size(self):
@@ -743,6 +845,12 @@ class ColourScreen(object):
 		self.pixdrw()
 		return self.status
 
+	def em_screen(self):
+		self.newimage = self.image.copy()
+		self.draw = ImageDraw.Draw(self.newimage)
+		self.status = self.thermal_frame.push(self.draw)
+		self.pixdrw()
+		return self.status
 
 	def thermal_screen(self):
 		self.newimage = self.image.copy()
