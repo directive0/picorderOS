@@ -178,7 +178,7 @@ class Sensor(object):
 		timestamp = [time.time()]
 
 		if configure.EM:
-
+			pass
 
 		if configure.bme:
 
