@@ -14,6 +14,7 @@ print("Loading C compiled Graphing Module")
 # - a graph identifier so it knows which sensor to grab data for
 
 import cython
+from libcpp cimport bool
 
 from objects import *
 from PIL import Image
@@ -24,7 +25,7 @@ import numpy
 from array import *
 from plars import *
 
-cdef class graph_area(object):
+class graph_area(object):
 
 	cdef int cycle, colour, width, ident, datahigh, datalow
 	cdef bool new, auto_scale
