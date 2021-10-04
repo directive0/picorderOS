@@ -29,22 +29,28 @@ class graph_area(object):
 
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
 		self.new = True
-		cdef int self.cycle = cycle
+		cdef int self.cycle
+		self.cycle = cycle
 		self.tock = timer()
 		self.tock.logtime()
 		self.glist = array('f', [])
 		self.dlist = array('f', [])
 		self.colour = colour
 		self.auto = True
-		cdef int self.width = width
-		cdef int self.dotw = 6
-		cdef int self.doth = 6
+		cdef int self.width
+		self.width = width
+		cdef int self.dotw
+ 		self.dotw = 6
+		cdef int self.doth
+		self.doth = 6
 		self.buff = array('f', [])
 
 		self.timeit = timer()
 
-		cdef int self.datahigh = 0
-		cdef int self.datalow = 0
+		cdef int self.datahigh
+		self.datahigh = 0
+		cdef int self.datalow
+		self.datalow = 0
 		self.newrange = (self.datalow,self.datahigh)
 
 		# stores the graph identifier, there are three on the multiframe
