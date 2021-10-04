@@ -26,7 +26,7 @@ from plars import *
 
 cdef class graph_area(object):
 
-	cdef int cycle, colour, width, ident
+	cdef int cycle, colour, width, ident, datahigh, datalow
 
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
 
@@ -48,9 +48,9 @@ cdef class graph_area(object):
 
 		self.timeit = timer()
 
-		cdef int self.datahigh
+
 		self.datahigh = 0
-		cdef int self.datalow
+
 		self.datalow = 0
 		self.newrange = (self.datalow,self.datahigh)
 
