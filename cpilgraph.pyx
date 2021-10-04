@@ -28,9 +28,10 @@ class graph_area(object):
 
 
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
-		self.new = True
+
 		cdef int self.cycle
 		self.cycle = cycle
+		self.new = True
 		self.tock = timer()
 		self.tock.logtime()
 		self.glist = array('f', [])
@@ -40,7 +41,7 @@ class graph_area(object):
 		cdef int self.width
 		self.width = width
 		cdef int self.dotw
- 		self.dotw = 6
+		self.dotw = 6
 		cdef int self.doth
 		self.doth = 6
 		self.buff = array('f', [])
