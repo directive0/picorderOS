@@ -128,7 +128,7 @@ class graph_area(object):
 	# if the auto flag is set then the class will autoscale the graph so that
 	# the highest and lowest currently displayed values are presented.
 	# takes in a list/array with length => span
-	cpdef graphprep(self,datalist):
+	def graphprep(self,datalist):
 
 		# The starting X coordinate
 		self.linepoint = self.spanx + self.x
