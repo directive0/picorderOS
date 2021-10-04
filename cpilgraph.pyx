@@ -28,7 +28,7 @@ class graph_area(object):
 
 
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
-		cdef bool self.new = True
+		self.new = True
 		cdef int self.cycle = cycle
 		self.tock = timer()
 		self.tock.logtime()
