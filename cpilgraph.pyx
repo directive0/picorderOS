@@ -27,6 +27,7 @@ from plars import *
 cdef class graph_area(object):
 
 	cdef int cycle, colour, width, ident, datahigh, datalow
+	cdef bool new, auto_scale
 
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
 
@@ -37,7 +38,7 @@ cdef class graph_area(object):
 		self.glist = array('f', [])
 		self.dlist = array('f', [])
 		self.colour = colour
-		self.auto = True
+		self.auto_scale = True
 
 		self.width = width
 
@@ -170,7 +171,7 @@ cdef class graph_area(object):
 				indexer = (len(datalist) - i) - 1
 
 				# if auto scaling is on
-				if self.auto == True:
+				if self.auto_scale == True:
 					# take the sensor value received and map it against the on screen limits
 					scaledata = abs(numpy.interp(datalist[indexer],self.newrange,self.targetrange))
 				else:
@@ -195,7 +196,7 @@ cdef class graph_area(object):
 	def render(self, draw, auto = True, dot = True):
 
 		self.timeit.event("<------------------starting pilgraph")
-		self.auto = configure.auto[0]
+		self.auto_scale = configure.auto[0]
 
 		# for PLARS we reduce the common identifier of our currently selected sensor
 		# by using its description (dsc) and device (dev): eg
