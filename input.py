@@ -114,7 +114,11 @@ if configure.input_cap1208:
 	cap1208 = cap1xxx.Cap1208(alert_pin = 0)
 	cap1208._write_byte(0x1F, configure.CAPSENSITIVITY)
 
-
+if configure.input_pcf8575:
+	from pcf8575 import PCF8575
+	i2c_port_num = 1
+	pcf_address = 0x20
+	pcf = PCF8575(i2c_port_num, pcf_address)
 
 # the input class handles all the requirements for handling user directed inputs
 class Inputs(object):
@@ -363,7 +367,20 @@ class Inputs(object):
 					else:
 						self.buttonlist[i] = False
 
-
+		if configure.input_pcf8575:
+			
+			if not configure.eventready[0]:
+				for this, buttons in enumerate(pcf.port):
+					# if an item is pressed
+					if button:
+						#if it wasn't pressed last time
+						if not self.pressed[this]:
+							# mark it in the pressed list
+							self.pressed[this] = True
+							configure.eventready[0] = True
+							configure.beep_ready[0] = True
+					else:
+						self.pressed[this] = False
 
 
 	def keypress(self):

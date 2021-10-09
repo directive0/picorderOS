@@ -31,6 +31,7 @@ class preferences(object):
 		self.input_kb = False
 		self.input_gpio = False
 		self.input_cap_mpr121 = False
+		self.input_pcf8575 = True
 
 		# CAP1208 and sensitivity settings
 		self.input_cap1208 = False
