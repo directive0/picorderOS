@@ -529,7 +529,7 @@ class MultiFrame(object):
 	# push the image frame and contents to the draw object.
 	def push(self,draw):
 
-		self.timeit.event("------------------------------------rendering frame")
+
 
 		# returns mode_a to the main loop unless something causes state change
 		status  = "mode_a"
@@ -557,7 +557,7 @@ class MultiFrame(object):
 
 			configure.eventready[0] = False
 
-		self.timeit.post("GRAPH - Input check")
+
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
@@ -579,7 +579,7 @@ class MultiFrame(object):
 		self.C_Data = senseslice[2]#configure.sensor_data[configure.sensor3[0]][0]
 
 
-		self.timeit.post("GRAPH - get most recent")
+
 
 		# Draws the Title
 		if self.selection != 0:
@@ -590,7 +590,7 @@ class MultiFrame(object):
 
 		self.title.push(self.titlex,self.titley,draw)
 
-		self.timeit.post("GRAPH - set titles")
+
 
 
 		# Updates the graphs with the new data.
@@ -616,11 +616,9 @@ class MultiFrame(object):
 		if self.selection == 3:
 			self.C_Graph.render(self.draw)
 
-		self.timeit.post("GRAPH - render graphs")
+
 
 		self.labels()
-
-		self.timeit.post("GRAPH - render titles")
 
 
 
