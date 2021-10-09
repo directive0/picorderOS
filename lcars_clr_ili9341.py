@@ -760,13 +760,13 @@ class ColourScreen(object):
 		return self.multi_frame.get_x()
 
 	def graph_screen(self):
-		self.timeit.event("Begin LCARS loop ----------------------------------")
+
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.multi_frame.push(self.draw)
-		self.timeit.post("LCARS - Prep for drawing")
+
 		self.pixdrw()
-		self.timeit.post("LCARS - Drawing to screen")
+
 		return self.status
 
 
