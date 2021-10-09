@@ -370,7 +370,8 @@ class Inputs(object):
 		if configure.input_pcf8575:
 
 			if not configure.eventready[0]:
-				for this, buttons in enumerate(pcf.port):
+				print("button state = ", buttonpcf.port)
+				for this, button in enumerate(pcf.port):
 					# if an item is pressed
 					if button:
 						#if it wasn't pressed last time
@@ -381,6 +382,7 @@ class Inputs(object):
 							configure.beep_ready[0] = True
 					else:
 						self.pressed[this] = False
+						configure.eventready[0] = False
 
 
 	def keypress(self):
