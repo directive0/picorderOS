@@ -407,7 +407,7 @@ class MultiFrame(object):
 
 	def __init__(self):
 
-		self.timeit = timer()
+
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
@@ -751,8 +751,6 @@ class ColourScreen(object):
 		self.thermal_frame = ThermalFrame()
 		self.powerdown_frame = PowerDown()
 
-		# interval timer for testing.
-		self.timeit = timer()
 
 	def get_size(self):
 		return self.multi_frame.get_x()

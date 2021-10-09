@@ -23,7 +23,7 @@ from objects import *
 # geo, met, bio, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
 
 # stores the number of buttons to be queried
-buttons = 8
+buttons = 16
 
 threshold = 3
 release_threshold = 2
