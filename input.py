@@ -218,8 +218,6 @@ class Inputs(object):
 			else:
 				self.door_was_open = True
 
-
-
 		if configure.input_cap1208:
 
 			# if the alert pin is brought LOW
@@ -370,7 +368,7 @@ class Inputs(object):
 		if configure.input_pcf8575:
 
 			if not configure.eventready[0]:
-				print("button state = ", buttonpcf.port)
+				print("button state = ", pcf.port)
 				for this, button in enumerate(pcf.port):
 					# if an item is pressed
 					if button:
