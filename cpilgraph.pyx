@@ -157,16 +157,19 @@ class graph_area(object):
 
 
 		cdef int i, indexer
+		cdef int spanx = self.spanx
+		cdef int list_length = len(datalist)
+
 		# for each vertical bar in the graph size
-		for i in range(self.spanx):
+		for i from 0 <= i < spanx:
 
 			# if the cursor has data to write
-			if i < len(datalist):
+			if i < list_length:
 
 				# gives me an index within the current length of the datalist
 				# goes from the most recent data backwards
 				# so the graph prints from left-right: oldest-newest data.
-				indexer = (len(datalist) - i) - 1
+				indexer = (list_length - i) - 1
 
 				# if auto scaling is on
 				if self.auto_scale == True:
@@ -193,7 +196,7 @@ class graph_area(object):
 
 	def render(self, draw, auto = True, dot = True):
 
-		self.timeit.event("<------------------starting pilgraph")
+
 		self.auto_scale = configure.auto[0]
 
 		# for PLARS we reduce the common identifier of our currently selected sensor
@@ -208,23 +211,21 @@ class graph_area(object):
 		dsc = configure.sensor_info[configure.sensors[self.ident][0]][3]
 		dev = configure.sensor_info[configure.sensors[self.ident][0]][5]
 
-		self.timeit.post("pilgraph - getting sensor ")
+
 
 		#preps the list by adding the X coordinate to every sensor value
 		recent = plars.get_recent(dsc,dev,num = self.spanx)
 
-		self.timeit.post("pilgraph - acquiring recent sensor list")
+
 
 		cords = self.graphprep(recent)
-
-		self.timeit.post("pilgraph - parsing list into coordinates")
 
 		self.buff = recent
 
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
 
-		self.timeit.post("pilgraph - drew graph")
+
 
 
 
@@ -234,5 +235,3 @@ class graph_area(object):
 			x2 = cords[0][0] + (self.dotw/2)
 			y2 = cords[0][1] + (self.doth/2)
 			draw.ellipse([x1,y1,x2,y2],self.colour)
-
-		self.timeit.post("pilgraph - made dots")

@@ -187,7 +187,6 @@ class graph_area(object):
 
 	def render(self, draw, auto = True, dot = True):
 
-		self.timeit.event("<------------------starting pilgraph")
 		self.auto = configure.auto[0]
 
 		# for PLARS we reduce the common identifier of our currently selected sensor
@@ -202,24 +201,17 @@ class graph_area(object):
 		dsc = configure.sensor_info[configure.sensors[self.ident][0]][3]
 		dev = configure.sensor_info[configure.sensors[self.ident][0]][5]
 
-		self.timeit.post("pilgraph - getting sensor ")
 
 		#preps the list by adding the X coordinate to every sensor value
 		recent = plars.get_recent(dsc,dev,num = self.spanx)
 
-		self.timeit.post("pilgraph - acquiring recent sensor list")
 
 		cords = self.graphprep(recent)
-
-		self.timeit.post("pilgraph - parsing list into coordinates")
 
 		self.buff = recent
 
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
-
-		self.timeit.post("pilgraph - drew graph")
-
 
 
 		if dot:
@@ -229,4 +221,4 @@ class graph_area(object):
 			y2 = cords[0][1] + (self.doth/2)
 			draw.ellipse([x1,y1,x2,y2],self.colour)
 
-		self.timeit.post("pilgraph - made dots")
+		#self.timeit.post("pilgraph - made dots")
