@@ -116,7 +116,7 @@ if configure.input_cap1208:
 
 if configure.input_pcf8575:
 	from pcf8575 import PCF8575
-	i2c_port_num = 1
+	i2c_port_num = 0
 	pcf_address = 0x20
 	pcf = PCF8575(i2c_port_num, pcf_address)
 
@@ -368,7 +368,7 @@ class Inputs(object):
 						self.buttonlist[i] = False
 
 		if configure.input_pcf8575:
-			
+
 			if not configure.eventready[0]:
 				for this, buttons in enumerate(pcf.port):
 					# if an item is pressed
