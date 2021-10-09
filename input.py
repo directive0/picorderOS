@@ -382,7 +382,7 @@ class Inputs(object):
 							configure.beep_ready[0] = True
 					else:
 						self.pressed[this] = False
-						configure.eventready[0] = False
+
 
 
 	def keypress(self):
