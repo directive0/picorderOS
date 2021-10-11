@@ -371,7 +371,8 @@ class Inputs(object):
 				print("button state = ", pcf.port)
 				for this, button in enumerate(pcf.port):
 					# if an item is pressed
-					if button:
+					if not button:
+						print("pad press registered")
 						#if it wasn't pressed last time
 						if not self.pressed[this]:
 							# mark it in the pressed list
