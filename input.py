@@ -372,10 +372,12 @@ class Inputs(object):
 				for this, button in enumerate(pcf.port):
 					# if an item is pressed
 					if not button:
-						print("pad press registered")
+
 						#if it wasn't pressed last time
 						if not self.pressed[this]:
+
 							# mark it in the pressed list
+							print("pad press registered")
 							self.pressed[this] = True
 							configure.eventready[0] = True
 							configure.beep_ready[0] = True
