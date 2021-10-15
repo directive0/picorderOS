@@ -10,7 +10,7 @@ class Wifi_Scan(object):
     def __init__(self):
         pass
 
-    def update(self):
+    def get_list(self):
         ap_list = list(Cell.all('wlan0'))
         return ap_list
 
@@ -31,8 +31,6 @@ class Wifi_Scan(object):
 
         return title_list
 
-    def get_list(self):
-        return self.update()
 
 
 class BT_Scan(object):
