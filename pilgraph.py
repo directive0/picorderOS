@@ -95,9 +95,8 @@ class graph_area(object):
 		return self.period
 
 	# the following appends data to the list.
-
 	def update(self, data):
-		# grabs the datalist
+		# grabs a fresh datalist
 		self.buff = self.dlist
 
 
@@ -110,9 +109,7 @@ class graph_area(object):
 			#append it to our list of clean data
 			self.buff.append(self.cleandata)
 
-			#pop the oldest value off
-			# may remove this
-#			self.buff.pop(0)
+
 			self.tock.logtime()
 
 

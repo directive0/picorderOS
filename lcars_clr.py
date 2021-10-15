@@ -56,7 +56,7 @@ back_col = 1
 
 # Controls text objects drawn to the LCD
 class LabelObj(object):
-	def __init__(self,string,font, colour = lcars_blue):
+	def __init__(self,string, font, colour = lcars_blue):
 		self.font = font
 		#self.draw = draw
 		self.string = string
@@ -65,9 +65,9 @@ class LabelObj(object):
 	def center(self,y,x,w,draw):
 		size = self.font.getsize(self.string)
 		xmid = x + w/2
-		#ymid = y + h/2
+
 		textposx = xmid - (size[0]/2)
-		#textposy = ymid - (size[1]/2) + self.scaler
+
 		self.push(textposx,y,draw)
 
 	def r_align(self,x,y,draw):
@@ -80,8 +80,30 @@ class LabelObj(object):
 		self.draw.text((locx, locy), self.string, font = self.font, fill= self.colour)
 
 	def getsize(self):
-		size = self.draw.textsize(self.string, font=self.font)
+		size = self.draw.textbox(self.string, font=self.font)
 		return size
+
+class Label_List(object):
+
+	def __init__(self, x, y, spanx, spany):
+		self.x = x
+		self.y = y
+		self.spanx = spanx
+		self.spany = spany
+		self.jump = 0
+		self.spacer = 1
+
+		self.labels = []
+
+
+	def update(self, items, draw):
+		self.labels = []
+		for index, item in enumerate(items):
+			thislabel = LabelObj(item, font)
+			thislabel.push(self.x, self.y + self.jump,draw)
+			self.jump += (thislabel.getsize()[1] + self.spacer)
+
+
 
 class SelectableLabel(LabelObj):
 
@@ -142,8 +164,10 @@ class SelectableLabel(LabelObj):
 			if self.special == 1 and self.oper[0] > configure.max_sensors[0]-1:
 				self.oper[0] = 0
 
+
 			if self.special == 2 and self.oper[0] > (len(themes) - 1):
 				self.oper[0] = 0
+
 
 		return self.oper[0]
 
@@ -397,43 +421,22 @@ class EMFrame(object):
 		self.high = 0
 		self.low = 0
 		self.average = 0
-		self.labely = 102
+		self.labely = 5
+		self.labelxr = 154
+
+		self.testlist = ["test", "this", "list"]
 
 		self.selection = 0
 
 		self.title = LabelObj("Modulated EM",titlefont)
+		self.list = Label_List(25,44)
 
-
-	# this function takes a value and sheds the second digit after the decimal place
-	def arrangelabel(self,data):
-		datareturn = format(float(data), '.0f')
-		return datareturn
-
-	def labels(self):
-
-		if self.selection == 0:
-			raw_a = str(self.low)
-			adjusted_a = self.arrangelabel(raw_a)
-			a_string = "Low: " + adjusted_a
-			self.A_Label.string = a_string
-			self.A_Label.push(23,self.labely,self.draw)
-
-		if self.selection == 0:
-			raw_b = str(self.high)
-			adjusted_b = self.arrangelabel(raw_b)
-			self.B_Label.string = "High: " + adjusted_b
-			self.B_Label.center(self.labely,23,135, self.draw)
-
-		if self.selection == 0:
-			raw_c = str(self.average)
-			adjusted_c = self.arrangelabel(raw_c)
-			self.C_Label.string = "Avg: " + adjusted_c
-			self.C_Label.r_align(156,self.labely,self.draw)
 
 	def push(self, draw):
 
 		status  = "mode_c"
 
+		# input handling
 		if configure.eventready[0]:
 			keys = configure.eventlist[0]
 
@@ -456,31 +459,11 @@ class EMFrame(object):
 				return status
 
 			configure.eventready[0] = False
+			
+		self.title.push(self.labelxr,self.labely,draw)
+		self.list.update(testlist,draw)
 
 
-		self.draw = draw
-		self.labels()
-
-		# Draw title
-
-		self.title.push(self.titlex,self.titley, self.draw)
-
-
-		if self.selection == 0:
-			self.average,self.high,self.low = self.t_grid.update()
-		if self.selection == 1:
-			self.average,self.high,self.low = self.t_grid_full.update()
-
-		if not configure.alarm_ready[0]:
-			if self.high >= configure.TEMP_ALERT[1]:
-				configure.alarm_ready[0] = True
-			if self.low <= configure.TEMP_ALERT[0]:
-				configure.alarm_ready[0] = True
-
-		if self.selection == 0:
-			self.t_grid.push(draw)
-		elif self.selection ==1:
-			self.t_grid_full.push(draw)
 
 		return status
 
@@ -489,8 +472,6 @@ class MultiFrame(object):
 
 	def __init__(self):
 
-
-
 		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
@@ -498,7 +479,6 @@ class MultiFrame(object):
 		# Sets the x and y span of the graph
 		self.gspanx = 133
 		self.gspany = 71
-
 
 		self.marginleft = 23
 		self.marginright= 133
@@ -824,7 +804,7 @@ class ColourScreen(object):
 		# instantiates an image and uses it in a draw object.
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
 		self.blankimage = Image.open('assets/lcarsframeblank.png')
-		self.lframe = Image.open('assets/lcarsframeblank.png')
+		self.tbar = Image.open('assets/lcarsframeblank.png')
 
 		self.status = "mode_a"
 
@@ -846,9 +826,9 @@ class ColourScreen(object):
 		return self.status
 
 	def em_screen(self):
-		self.newimage = self.image.copy()
+		self.newimage = self.tbar.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.thermal_frame.push(self.draw)
+		self.status = self.em_frame.push(self.draw)
 		self.pixdrw()
 		return self.status
 
