@@ -784,7 +784,7 @@ class ThermalFrame(object):
 
 			if keys[1]:
 				self.selection += 1
-				if self.selection > 1:
+				if self.selection > 2:
 					self.selection = 0
 
 			if keys[2]:
@@ -817,8 +817,11 @@ class ThermalFrame(object):
 
 		if self.selection == 0:
 			self.t_grid.push(draw)
-		elif self.selection ==1:
+		elif self.selection == 1:
 			self.t_grid_full.push(draw)
+		elif self.selection == 2:
+			self.selection = 0
+			status = "mode_c"
 
 		return status
 
