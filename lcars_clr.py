@@ -483,7 +483,7 @@ class EMFrame(object):
 
 			if keys[2]:
 				status = "settings"
-				configure.last_status[0] = "mode_b"
+				configure.last_status[0] = "mode_c"
 				configure.eventready[0] = False
 				return status
 
