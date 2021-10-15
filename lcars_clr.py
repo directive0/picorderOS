@@ -306,7 +306,7 @@ class SettingsFrame(object):
 
 			configure.eventready[0] = False
 
-		return status
+
 
 		#draw the frame heading
 		self.title.push(self.titlex,self.titley,draw)
@@ -333,6 +333,7 @@ class SettingsFrame(object):
 				self.item.push(self.titlex,self.titley+40,draw)
 
 
+		return status
 class PowerDown(object):
 	def __init__(self):
 
