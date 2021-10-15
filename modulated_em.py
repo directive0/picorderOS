@@ -26,7 +26,7 @@ class Wifi_Scan(object):
 
         ap_list = self.get_list()
         for ap in ap_list:
-            name = ap.get_list()[0].ssid
+            name = ap.ssid
             title_list.append(name)
 
         return title_list
