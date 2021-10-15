@@ -83,24 +83,43 @@ class LabelObj(object):
 		size = self.font.getsize(self.string)
 		return size
 
+# a class to create a simple text list.
+# initialize with x/y coordinates
+# on update provide list of items to display, and draw object to draw to.
 class Label_List(object):
 
 	def __init__(self, x, y):
+
+		#initial coordinates
 		self.x = x
 		self.y = y
 
+		# used in the loop to offset y location of items.
 		self.jump = 0
+
+		#adjusts the increase in seperation
 		self.spacer = 1
 
+		# holds the items to display
 		self.labels = []
 
 
+	# draws the list of items as a text list.
 	def update(self, items, draw):
+		# clears label buffer.
 		self.labels = []
+
+		# for each item in the list of items to draw
 		for index, item in enumerate(items):
+			# create a text item with the string.
 			thislabel = LabelObj(item, font)
 			thislabel.push(self.x, self.y + self.jump,draw)
+
+			# increase the y position by the height of the last item, plus spacer
 			self.jump += (thislabel.getsize()[1] + self.spacer)
+
+		# when loop is over reset jump counter.
+		self.jump = 0
 
 
 
