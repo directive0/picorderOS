@@ -234,8 +234,8 @@ class SettingsFrame(object):
 		self.interval.logtime()
 		#self.draw = draw
 		self.titlex = 25
-		self.titley = 6
-		self.labely = 102
+		self.titley = 11
+		self.labely = 116
 
 		self.graphcycle = 0
 		self.decimal = 1
