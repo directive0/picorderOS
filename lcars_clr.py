@@ -428,7 +428,7 @@ class EMFrame(object):
 		self.selection = 0
 
 		self.title = LabelObj("Modulated EM",titlefont, colour = lcars_orange)
-		self.list = Label_List(25,44)
+		self.list = Label_List(25,37)
 
 
 	def push(self, draw):

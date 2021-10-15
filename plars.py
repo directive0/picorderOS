@@ -147,7 +147,7 @@ class PLARS(object):
 	def get_recent(self, dsc, dev, num = 5):
 
 		# organize it by time.
-		self.index_by_time(self.buffer)
+		#self.index_by_time(self.buffer)
 		# get a dataframe of just the requested sensor
 		untrimmed_data = self.get_sensor(dsc,dev)
 		# trim it to length (num).
