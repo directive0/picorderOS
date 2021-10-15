@@ -1,5 +1,5 @@
 # PicorderOS Wifi Module Proto
-print("Loading Modulated EM Data Analysis")
+print("Loading Modulated EM Network Analysis")
 
 from wifi import Cell, Scheme
 
@@ -19,6 +19,17 @@ class Wifi_Scan(object):
 
         if selection <= (len(ap_list)-1):
             return (ap_list[selection].ssid, ap_list[selection].signal, ap_list[selection].quality, ap_list[selection].frequency, ap_list[selection].bitrates, ap_list[selection].encrypted, ap_list[selection].channel, ap_list[selection].address, ap_list[selection].mode)
+
+    def get_ssid_list(self):
+
+        title_list = []
+
+        ap_list = self.get_list()
+        for ap in ap_list:
+            name = ap.get_list()[0].ssid
+            title_list.append(name)
+
+        return title_list
 
     def get_list(self):
         return self.update()
