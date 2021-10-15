@@ -20,6 +20,8 @@ from amg8833_pil import *
 from plars import *
 from objects import *
 
+from modulated_em import *
+
 # Load default font.
 font = ImageFont.truetype("assets/babs.otf",13)
 titlefont = ImageFont.truetype("assets/babs.otf",16)
@@ -432,6 +434,9 @@ class PowerDown(object):
 
 class EMFrame(object):
 	def __init__(self):
+
+		wifi = Wifi_Scan()
+
 		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
@@ -485,7 +490,7 @@ class EMFrame(object):
 			configure.eventready[0] = False
 
 		self.title.r_align(self.labelxr,self.labely,draw)
-		self.list.update(self.testlist,draw)
+		self.list.update(wifi.get_ssid_list(),draw)
 
 
 
