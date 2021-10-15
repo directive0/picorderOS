@@ -34,15 +34,15 @@ class PLARS(object):
 		# create buffer
 		self.file_path = "data/datacore.csv"
 
-
-		if os.path.exists(self.file_path):
-			if configure.datalog:
-				self.core = pd.read_csv(self.file_path)
-		else:
-			if not os.path.exists("data"):
-				os.mkdir("data")
-			self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
-			self.core.to_csv(self.file_path)
+		if configure.recall[0]:
+			if os.path.exists(self.file_path):
+				if configure.datalog:
+					self.core = pd.read_csv(self.file_path)
+			else:
+				if not os.path.exists("data"):
+					os.mkdir("data")
+				self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
+				self.core.to_csv(self.file_path)
 
 
 		# Set floating point display to raw, instead of exponent
@@ -171,15 +171,14 @@ class PLARS(object):
 
 		# make a new dataframe of the most recent data to keep using
 		newbuffer = self.buffer.tail(targetsize)
-		test1 = newbuffer["timestamp"]
+
 
 
 		# slice off the rows outside the buffer and backup to disk
 		tocore = self.buffer.head(length)
 
-		self.append_to_core(tocore)
-
-		test2 = tocore["timestamp"]
+		if configure.recall[0]:
+			self.append_to_core(tocore)
 
 		# replace existing buffer with new trimmed buffer
 		self.buffer = newbuffer
