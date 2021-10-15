@@ -235,7 +235,7 @@ class SettingsFrame(object):
 		#self.draw = draw
 		self.titlex = 25
 		self.titley = 11
-		self.labely = 116
+		self.labely = 114
 
 		self.graphcycle = 0
 		self.decimal = 1
@@ -243,14 +243,17 @@ class SettingsFrame(object):
 		self.divider = 47
 
 
-
+		# the set labels for the screen
 		self.title = LabelObj("Settings",titlefont)
-		self.itemlabel = LabelObj("Item Label",titlefont,colour = lcars_peach)
+		self.itemlabel = LabelObj("Item Label",bigfont,colour = lcars_peach)
+		self.item = LabelObj("No Data",titlefont,colour = lcars_pink)
+
+		# three input cue labels
 		self.A_Label = LabelObj("Next",font,colour = lcars_blue)
 		self.B_Label = LabelObj("Enter",font, colour = lcars_blue)
 		self.C_Label = LabelObj("Exit",font, colour = lcars_blue)
 
-		self.item = LabelObj("No Data",bigfont,colour = lcars_pink)
+
 
 
 		# device needs to show multiple settings
