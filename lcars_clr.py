@@ -435,7 +435,7 @@ class PowerDown(object):
 class EMFrame(object):
 	def __init__(self):
 
-		wifi = Wifi_Scan()
+		self.wifi = Wifi_Scan()
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
@@ -490,7 +490,7 @@ class EMFrame(object):
 			configure.eventready[0] = False
 
 		self.title.r_align(self.labelxr,self.labely,draw)
-		self.list.update(wifi.get_ssid_list(),draw)
+		self.list.update(self.wifi.get_ssid_list(),draw)
 
 
 
