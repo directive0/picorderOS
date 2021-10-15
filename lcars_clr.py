@@ -651,7 +651,8 @@ class MultiFrame(object):
 
 			item = plars.get_recent(dsc,dev,num = 1)
 
-			senseslice[i] = item[0]
+			if len(senseslice) > 0:
+				senseslice[i] = item[0]
 
 
 		# Grabs the current sensor reading
