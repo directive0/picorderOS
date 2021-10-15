@@ -249,9 +249,9 @@ class SettingsFrame(object):
 		self.item = LabelObj("No Data",titlefont,colour = lcars_pink)
 
 		# three input cue labels
-		self.A_Label = LabelObj("Next",font,colour = lcars_blue)
-		self.B_Label = LabelObj("Enter",font, colour = lcars_blue)
-		self.C_Label = LabelObj("Exit",font, colour = lcars_blue)
+		self.A_Label = LabelObj("Next",font,colour = lcars_orpeach)
+		self.B_Label = LabelObj("Enter",font, colour = lcars_orpeach)
+		self.C_Label = LabelObj("Exit",font, colour = lcars_orpeach)
 
 
 
