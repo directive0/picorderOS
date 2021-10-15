@@ -114,7 +114,7 @@ class Label_List(object):
 		# for each item in the list of items to draw
 		for index, item in enumerate(items):
 			# create a text item with the string.
-			thislabel = LabelObj(item, font)
+			thislabel = LabelObj(item, font, colour = lcars_orpeach)
 			thislabel.push(self.x, self.y + self.jump,draw)
 
 			# increase the y position by the height of the last item, plus spacer
