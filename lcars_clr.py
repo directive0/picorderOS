@@ -320,7 +320,7 @@ class SettingsFrame(object):
 		self.itemlabel.push(self.titlex+23,self.titley+30,draw)
 
 		self.A_Label.push(2,self.labely,draw)
-		self.B_Label.center(self.labely,23,135,draw)
+		self.B_Label.center(self.labely,23,114,draw)
 		self.C_Label.r_align(156,self.labely,draw)
 
 
