@@ -440,7 +440,7 @@ class EMFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 		self.titlex = 23
-		self.titley = 6
+		self.titley = 4
 
 		self.high = 0
 		self.low = 0
