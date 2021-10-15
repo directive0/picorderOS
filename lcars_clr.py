@@ -427,7 +427,7 @@ class EMFrame(object):
 
 		self.selection = 0
 
-		self.title = LabelObj("Modulated EM",titlefont)
+		self.title = LabelObj("Modulated EM",titlefont, colour = lcars_orange)
 		self.list = Label_List(25,44)
 
 
@@ -459,7 +459,7 @@ class EMFrame(object):
 
 			configure.eventready[0] = False
 
-		self.title.push(self.labelxr,self.labely,draw)
+		self.title.r_align(self.labelxr,self.labely,draw)
 		self.list.update(self.testlist,draw)
 
 
@@ -803,7 +803,7 @@ class ColourScreen(object):
 		# instantiates an image and uses it in a draw object.
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
 		self.blankimage = Image.open('assets/lcarsframeblank.png')
-		self.tbar = Image.open('assets/lcarsframeblank.png')
+		self.tbar = Image.open('assets/lcarssplitframe.png')
 
 		self.status = "mode_a"
 
