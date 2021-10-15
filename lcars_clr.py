@@ -85,7 +85,7 @@ class LabelObj(object):
 
 class Label_List(object):
 
-	def __init__(self, x, y, spanx, spany):
+	def __init__(self, x, y):
 		self.x = x
 		self.y = y
 		self.spanx = spanx
@@ -459,7 +459,7 @@ class EMFrame(object):
 				return status
 
 			configure.eventready[0] = False
-			
+
 		self.title.push(self.labelxr,self.labely,draw)
 		self.list.update(testlist,draw)
 
