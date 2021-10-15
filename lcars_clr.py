@@ -460,7 +460,7 @@ class EMFrame(object):
 			configure.eventready[0] = False
 
 		self.title.push(self.labelxr,self.labely,draw)
-		self.list.update(testlist,draw)
+		self.list.update(self.testlist,draw)
 
 
 
