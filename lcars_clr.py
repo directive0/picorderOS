@@ -458,7 +458,7 @@ class EMFrame(object):
 
 	def push(self, draw):
 
-		status  = "mode_b"
+		status  = "mode_c"
 
 		# input handling
 		if configure.eventready[0]:
