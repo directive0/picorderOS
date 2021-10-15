@@ -80,7 +80,7 @@ class LabelObj(object):
 		self.draw.text((locx, locy), self.string, font = self.font, fill= self.colour)
 
 	def getsize(self):
-		size = self.draw.textbox(self.string, font=self.font)
+		size = self.font.getsize(self.string)
 		return size
 
 class Label_List(object):
