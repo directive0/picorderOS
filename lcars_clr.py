@@ -317,7 +317,7 @@ class SettingsFrame(object):
 
 		#draw the option item heading
 		self.itemlabel.string = str(self.pages[self.selection][0])
-		self.itemlabel.push(self.titlex,self.titley+20,draw)
+		self.itemlabel.push(self.titlex+23,self.titley+20,draw)
 
 		self.A_Label.push(2,self.labely,draw)
 		self.B_Label.center(self.labely,23,135,draw)
@@ -328,12 +328,12 @@ class SettingsFrame(object):
 		if self.selection == 0 or self.selection == 1 or self.selection == 2:
 
 			self.item.string = str(configure.sensor_info[self.pages[self.selection][1][0]][3])
-			self.item.push(self.titlex+23,self.titley+40,draw)
+			self.item.push(self.titlex+23,self.titley+60,draw)
 		else:
 
 			if isinstance(self.pages[self.selection][1][0], bool):
 				self.item.string = str(self.pages[self.selection][1][0])
-				self.item.push(self.titlex+23,self.titley+100,draw)
+				self.item.push(self.titlex+23,self.titley+60,draw)
 
 
 		return status
