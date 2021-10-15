@@ -241,7 +241,7 @@ class SettingsFrame(object):
 		self.decimal = 1
 
 		self.divider = 47
-		self.labely = 102
+
 
 
 		self.title = LabelObj("Settings",titlefont)
@@ -334,6 +334,8 @@ class SettingsFrame(object):
 
 
 		return status
+
+
 class PowerDown(object):
 	def __init__(self):
 
@@ -825,6 +827,7 @@ class ColourScreen(object):
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
 		self.blankimage = Image.open('assets/lcarsframeblank.png')
 		self.tbar = Image.open('assets/lcarssplitframe.png')
+		self.burger = Image.open('assets/lcarsburgerframe.png')
 
 		self.status = "mode_a"
 
@@ -860,7 +863,7 @@ class ColourScreen(object):
 		return self.status
 
 	def settings(self):
-		self.newimage = self.blankimage.copy()
+		self.newimage = self.burger.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.settings_frame.push(self.draw)
 		self.pixdrw()
