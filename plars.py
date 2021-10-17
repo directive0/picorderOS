@@ -21,10 +21,14 @@ from array import *
 import pandas as pd
 import json
 
+from threading import Thread
 
 class PLARS(object):
 
 	def __init__(self):
+
+		# add a lock to avoid race conditions
+		self.lock = threading.Lock()
 
 		# PLARS opens a data frame at initialization.
 		# If the csv file exists it opens it, otherwise creates it.
@@ -95,49 +99,39 @@ class PLARS(object):
 	# initialized sensor
 	def update(self,data):
 
-		try:
-			# creates a new dataframe for the new information to add to the buffer
-			newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
+		# creates a new dataframe for the new information to add to the buffer
+		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 
-			# appends the new data to the buffer
-			self.buffer = self.buffer.append(newdata, ignore_index=True)
+		# sets/requests the thread lock to prevent other threads reading data.
+		self.lock.acquire()
 
+		# appends the new data to the buffer
+		self.buffer = self.buffer.append(newdata, ignore_index=True)
 
-			# get buffer size to determine how many rows to remove from the end
-			currentsize = len(self.buffer)
+		# get buffer size to determine how many rows to remove from the end
+		currentsize = len(self.buffer)
+		targetsize = self.buffer_size
 
-			targetsize = self.buffer_size
+		# determine difference between buffer and target size
+		length = currentsize - targetsize
 
+		# if buffer is larger than target
+		if length > 0:
+			self.trimbuffer()
+			self.timer.logtime()
 
-			# determine difference between buffer and target size
-			length = currentsize - targetsize
-
-
-			# if buffer is larger than target
-			if length > 0:
-				self.trimbuffer()
-				self.timer.logtime()
-
-		except:
-			print("Plars failed to update. Dumping data:")
-			print(data)
-			print("Dumping buffer:")
-			print(self.buffer)
-
+		# release the thread lock for other threads
+		self.lock.release()
 
 
 
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
 
-		try:
-			result = self.buffer.loc[self.buffer['dsc'] == dsc]
+		result = self.buffer.loc[self.buffer['dsc'] == dsc]
 
-			result2 = result.loc[self.buffer['dev'] == dev]
-			return result2
-		except:
-			print("attempting to re-acquire sensor")
-			return self.get_sensor(dsc,dev)
+		result2 = result.loc[self.buffer['dev'] == dev]
+		return result2
 
 	def index_by_time(self,df, ascending = False):
 		df.sort_values(by=['timestamp'], ascending = ascending)
@@ -146,12 +140,18 @@ class PLARS(object):
 	# return a list of n most recent data from specific sensor defined by key
 	def get_recent(self, dsc, dev, num = 5):
 
-		# organize it by time.
-		#self.index_by_time(self.buffer)
+		# set the thread lock so other threads are unable to add sensor data
+		self.lock.acquire()
+
 		# get a dataframe of just the requested sensor
 		untrimmed_data = self.get_sensor(dsc,dev)
+
 		# trim it to length (num).
 		trimmed_data = untrimmed_data.tail(num)
+
+		# release the thread lock.
+		self.lock.release()
+
 		# return a list of the values
 		return trimmed_data['value'].tolist()
 
@@ -161,18 +161,13 @@ class PLARS(object):
 
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
-
 		targetsize = self.buffer_size
-
 
 		# determine difference between buffer and target size
 		length = currentsize - targetsize
 
-
 		# make a new dataframe of the most recent data to keep using
 		newbuffer = self.buffer.tail(targetsize)
-
-
 
 		# slice off the rows outside the buffer and backup to disk
 		tocore = self.buffer.head(length)

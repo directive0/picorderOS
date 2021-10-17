@@ -41,7 +41,7 @@ if not configure.pc:
 	device = st7735(serial, width = 160, height = 128, mode = "RGB")
 
 
-# The following are for LCARS colours from LCARScom.net
+# Standard LCARS colours
 lcars_orange = (255,153,0)
 lcars_pink = (204,153,204)
 lcars_blue = (153,153,204)
