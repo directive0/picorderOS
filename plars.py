@@ -21,7 +21,7 @@ from array import *
 import pandas as pd
 import json
 
-from threading import Thread
+import threading
 
 class PLARS(object):
 
