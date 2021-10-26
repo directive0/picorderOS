@@ -221,15 +221,11 @@ def ripple_async():
 
 	thread_rip = ripple()
 
-	while True:
+	while not configure.status[0] == "quit":
 
 		if timer.timelapsed() > interval:
 			thread_rip.cycle()
 			timer.logtime()
-
-			# sentinel signal to kill.
-			if configure.status[0] == "quit":
-				break
 
 	# start the ripple routine
 	# have a state variables

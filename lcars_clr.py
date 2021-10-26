@@ -39,6 +39,8 @@ TRANSITION = [False]
 if not configure.pc:
 	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)# ,bus_speed_hz=24000000)
 	device = st7735(serial, width = 160, height = 128, mode = "RGB")
+else:
+	device = pygame(width = 160, height = 128)
 
 
 # Standard LCARS colours
@@ -855,8 +857,14 @@ class ColourScreen(object):
 	def graph_screen(self):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
+
+		last_status = self.status
+
 		self.status = self.multi_frame.push(self.draw)
-		self.pixdrw()
+
+		if self.status = last_status:
+			self.pixdrw()
+
 		return self.status
 
 	def em_screen(self):
@@ -869,8 +877,14 @@ class ColourScreen(object):
 	def thermal_screen(self):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
+
+		last_status = self.status
+
 		self.status = self.thermal_frame.push(self.draw)
-		self.pixdrw()
+
+		if self.status = last_status:
+			self.pixdrw()
+
 		return self.status
 
 	def settings(self):
