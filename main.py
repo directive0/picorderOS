@@ -105,7 +105,9 @@ def Main():
 			# Runs the startup animation played when you first boot the program.
 			if configure.status[0] == "startup":
 
-				configure.status[0] = "mode_a"
+				if configure.tr109:
+					configure.status[0] = colourscreen.start_up()
+
 
 				if configure.tr108:
 					configure.status[0] = PyScreen.startup_screen(start_time)
