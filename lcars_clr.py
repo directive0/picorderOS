@@ -902,12 +902,9 @@ class ColourScreen(object):
 		self.newimage = self.burgerfull.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 
-		last_status = self.status
-
 		self.status = self.StartUp.push(self.draw)
 
-		if self.status = last_status:
-			self.pixdrw()
+		self.pixdrw()
 
 		return self.status
 
@@ -920,7 +917,7 @@ class ColourScreen(object):
 
 		self.status = self.multi_frame.push(self.draw)
 
-		if self.status = last_status:
+		if self.status == last_status:
 			self.pixdrw()
 
 		return self.status
