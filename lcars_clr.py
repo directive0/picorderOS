@@ -937,7 +937,7 @@ class ColourScreen(object):
 
 		self.status = self.thermal_frame.push(self.draw)
 
-		if self.status = last_status:
+		if self.status == last_status:
 			self.pixdrw()
 
 		return self.status
