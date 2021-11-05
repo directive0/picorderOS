@@ -6,6 +6,7 @@ from plars import *
 # the following is a sensor module for use with the PicorderOS
 print("Loading Unified Sensor Module")
 
+
 if not configure.pc:
 	import os
 
@@ -16,7 +17,7 @@ if configure.bme:
 
 
 if configure.sensehat:
-	# instantiates and defines paramteres for the sensehat
+	# instantiates and defines paramaters for the sensehat
 
 	from sense_hat import SenseHat
 

@@ -27,6 +27,9 @@ font = ImageFont.truetype("assets/babs.otf",13)
 titlefont = ImageFont.truetype("assets/babs.otf",16)
 bigfont = ImageFont.truetype("assets/babs.otf",20)
 
+# Load assets
+logo = Image.open('assets/picorderOS_logo.png')
+
 # Raspberry Pi hardware SPI config:
 DC = 23
 RST = 24
@@ -65,6 +68,7 @@ class LabelObj(object):
 		#self.draw = draw
 		self.string = string
 		self.colour = colour
+
 
 	def center(self,y,x,w,draw):
 		size = self.font.getsize(self.string)
@@ -342,6 +346,44 @@ class SettingsFrame(object):
 
 		return status
 
+class StartUp(object):
+	def __init__(self):
+		self.titlex = 0
+		self.titley = 46
+		self.labely = 102
+
+		self.graphcycle = 0
+		self.decimal = 1
+
+		self.divider = 47
+		self.labely = 102
+
+
+		self.title = LabelObj("Picorder OS",bigfont, colour = lcars_peach)
+		self.item = LabelObj("version",titlefont,colour = lcars_peach)
+
+		# creates and interval timer for screen refresh.
+		self.interval = timer()
+		self.timeout = 2
+
+	def push(self, draw):
+
+		draw.paste(logo,(59,15))
+		#draw the frame heading
+		self.title.center(self.titley,0,135,draw)
+
+		#draw the title and version
+		self.item.string = configure.version
+		self.item.center(self.titley+40,0, 135,draw)
+
+
+		if self.interval.lapsed() < self.timeout:
+			status = "startup"
+		else:
+			status = "ready"
+
+
+		return status
 
 class PowerDown(object):
 	def __init__(self):
@@ -841,6 +883,7 @@ class ColourScreen(object):
 		self.blankimage = Image.open('assets/lcarsframeblank.png')
 		self.tbar = Image.open('assets/lcarssplitframe.png')
 		self.burger = Image.open('assets/lcarsburgerframe.png')
+		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
 		self.status = "mode_a"
 
@@ -849,10 +892,25 @@ class ColourScreen(object):
 		self.thermal_frame = ThermalFrame()
 		self.powerdown_frame = PowerDown()
 		self.em_frame = EMFrame()
+		self.startup_frame = StartUp()
 
 
 	def get_size(self):
 		return self.multi_frame.get_x()
+
+	def start_up(self):
+		self.newimage = self.burgerfull.copy()
+		self.draw = ImageDraw.Draw(self.newimage)
+
+		last_status = self.status
+
+		self.status = self.StartUp.push(self.draw)
+
+		if self.status = last_status:
+			self.pixdrw()
+
+		return self.status
+
 
 	def graph_screen(self):
 		self.newimage = self.image.copy()

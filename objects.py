@@ -11,8 +11,9 @@ class preferences(object):
 
 	# Initializes the parameters for the program.
 	def __init__(self):
-		self.version = "v0.02"
-		self.author = "written by directive0"
+		self.version = "v2.0"
+		self.author = "directive0"
+
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
