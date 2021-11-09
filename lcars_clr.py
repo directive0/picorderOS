@@ -378,7 +378,7 @@ class StartUp(object):
 		self.item.center(self.titley+40,0, 135,draw)
 
 
-		if self.interval.lapsed() < self.timeout:
+		if self.interval.timelapsed() < self.timeout:
 			status = "startup"
 		else:
 			status = "ready"
