@@ -374,8 +374,8 @@ class StartUp(object):
 		self.title.center(self.titley,0,135,draw)
 
 		#draw the title and version
-		self.item.string = configure.version
-		self.item.center(self.titley+40,0, 135,draw)
+		#self.item.string = configure.version
+		#self.item.center(self.titley+40,0, 135,draw)
 
 
 		if self.interval.timelapsed() < self.timeout:

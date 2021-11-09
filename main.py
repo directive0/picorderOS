@@ -88,7 +88,8 @@ def Main():
 			dotscreen = NokiaScreen()
 		if configure.display == "1":
 			colourscreen = ColourScreen()
-
+			colourscreen.start_up()
+			
 			if configure.sensor_ready[0]:
 				plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*3)
 
