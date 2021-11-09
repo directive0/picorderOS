@@ -369,7 +369,7 @@ class StartUp(object):
 
 	def push(self, draw):
 
-		draw.paste(logo,(59,15))
+		draw.bitmap((59,15),logo)
 		#draw the frame heading
 		self.title.center(self.titley,0,135,draw)
 
