@@ -364,6 +364,7 @@ class StartUp(object):
 
 		# creates and interval timer for screen refresh.
 		self.interval = timer()
+		self.interval.logtime()
 		self.timeout = 2
 
 	def push(self, draw):
