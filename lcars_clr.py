@@ -349,7 +349,7 @@ class SettingsFrame(object):
 class StartUp(object):
 	def __init__(self):
 		self.titlex = 0
-		self.titley = 46
+		self.titley = 77
 		self.labely = 102
 
 		self.graphcycle = 0
