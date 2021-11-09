@@ -903,7 +903,7 @@ class ColourScreen(object):
 		self.newimage = self.burgerfull.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
 
-		self.status = self.StartUp.push(self.draw)
+		self.status = self.startup_frame.push(self.draw)
 
 		self.pixdrw()
 
