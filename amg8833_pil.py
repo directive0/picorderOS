@@ -13,10 +13,10 @@ import numpy as np
 from scipy.interpolate import griddata
 from colour import Color
 # low range of the sensor (this will be blue on the screen)
-MINTEMP = 0.0
+MINTEMP = -2.0
 
 # high range of the sensor (this will be red on the screen)
-MAXTEMP = 80.0
+MAXTEMP = 150.0
 
 # how many color values we can have
 COLORDEPTH = 1024
