@@ -11,6 +11,7 @@ import PIL.ImageOps
 # interpolates the data into a smoothed screen res
 import numpy as np
 from scipy.interpolate import griddata
+from colour import Color
 # low range of the sensor (this will be blue on the screen)
 MINTEMP = 26.0
 
