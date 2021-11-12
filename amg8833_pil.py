@@ -218,8 +218,7 @@ class ThermalGrid(object):
 				# read the pixels
 			pixels = []
 			for row in self.data:
-				print(pixels)
-				print(row)
+
 				pixels = pixels + list(row)
 			pixels = [map_value(p, MINTEMP, MAXTEMP, 0, COLORDEPTH - 1) for p in pixels]
 
