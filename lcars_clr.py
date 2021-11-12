@@ -351,6 +351,7 @@ class StartUp(object):
 		self.titlex = 0
 		self.titley = 77
 		self.labely = 102
+		self.jump = 22
 
 		self.graphcycle = 0
 		self.decimal = 1
@@ -375,7 +376,7 @@ class StartUp(object):
 
 		#draw the title and version
 		self.item.string = configure.version
-		self.item.center(self.titley+24,0, 160,draw)
+		self.item.center(self.titley+self.jump,0, 160,draw)
 
 
 		if self.interval.timelapsed() < self.timeout:

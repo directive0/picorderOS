@@ -5,6 +5,52 @@ import math
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
+
+
+# from https://learn.adafruit.com/adafruit-amg8833-8x8-thermal-camera-sensor/raspberry-pi-thermal-camera
+# interpolates the data into a smoothed screen res
+import numpy as np
+from scipy.interpolate import griddata
+# low range of the sensor (this will be blue on the screen)
+MINTEMP = 26.0
+
+# high range of the sensor (this will be red on the screen)
+MAXTEMP = 32.0
+
+# how many color values we can have
+COLORDEPTH = 1024
+
+# pylint: disable=invalid-slice-index
+points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0, 64)]
+grid_x, grid_y = np.mgrid[0:7:32j, 0:7:32j]
+# pylint: enable=invalid-slice-index
+# sensor is an 8x8 grid so lets do a square
+height = 133
+width = 71
+
+# the list of colors we can choose from
+blue = Color("indigo")
+colors = list(blue.range_to(Color("red"), COLORDEPTH))
+
+# create the array of colors
+colors = [(int(c.red * 255), int(c.green * 255), int(c.blue * 255)) for c in colors]
+
+displayPixelWidth = width / 30
+displayPixelHeight = height / 30
+
+
+# some utility functions
+def constrain(val, min_val, max_val):
+	return min(max_val, max(min_val, val))
+
+
+def map_value(x, in_min, in_max, out_min, out_max):
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+
+
+
+
+
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
@@ -43,7 +89,7 @@ if configure.amg8833:
 
 #some utility functions
 def constrain(val, min_val, max_val):
-    return min(max_val, max(min_val, val))
+	return min(max_val, max(min_val, val))
 
 def map(x, in_min, in_max, out_min, out_max):
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
@@ -79,35 +125,31 @@ class ThermalPixel(object):
 	def update(self,value,high,low,surface):
 		#print("value is ", value)
 
-		if configure.auto[0]:
-			color = map(value, low, high, 0, 254)
-		else:
-			color = map(value, 0, 80, 0, 254)
-		if color > 255:
-			color = 255
-		if color < 0:
-			color = 0
-		#colorindex = int(color)
-		colorindex = int(color)
-		#print("color index is ",colorindex)
-		temp = colrange[colorindex].rgb
-		#print(temp)
-		red = int(temp[0] * 255.0)
-		green = int(temp[1] * 255.0)
-		blue = int(temp[2] * 255.0)
 
-		#print(red,green,blue)
+			if configure.auto[0]:
+				color = map(value, low, high, 0, 254)
+			else:
+				color = map(value, 0, 80, 0, 254)
+			if color > 255:
+				color = 255
+			if color < 0:
+				color = 0
 
-		self.count += 1
+			colorindex = int(color)
 
-		if self.count > 255:
-			self.count = 0
+			temp = colrange[colorindex].rgb
 
-		#if value == low:
-			#print("lowest found, coloring: ", color)
+			red = int(temp[0] * 255.0)
+			green = int(temp[1] * 255.0)
+			blue = int(temp[2] * 255.0)
 
-		#surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (int(color),int(color),int(color)), outline=None)
-		surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (red,green,blue), outline=None)
+			self.count += 1
+
+			if self.count > 255:
+				self.count = 0
+
+			surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (red,green,blue), outline=None)
+
 
 class ThermalColumns(object):
 
@@ -168,12 +210,29 @@ class ThermalGrid(object):
 		self.update()
 
 	def push(self,surface):
+		if not configure.interpolate[0]:
+			for i in range(8):
+				self.rows[i].update(self.data[i],self.high,self.low,surface)
+		else:
+				# read the pixels
+			pixels = []
+			for row in self.data:
+				pixels = pixels + row
+			pixels = [map_value(p, MINTEMP, MAXTEMP, 0, COLORDEPTH - 1) for p in pixels]
 
-		for i in range(8):
-			self.rows[i].update(self.data[i],self.high,self.low,surface)
+			# perform interpolation
+			bicubic = griddata(points, pixels, (grid_x, grid_y), method="cubic")
 
+			# draw everything
+			for ix, row in enumerate(bicubic):
+				for jx, pixel in enumerate(row):
+					x = displayPixelHeight * ix
+					y = displayPixelWidth * jx
+					x2 = x + displayPixelHeight
+					y2 = y + displayPixelWidth
+					surface.rectangle([(x, y), (x2, y2)], fill = colors[constrain(int(pixel), 0, COLORDEPTH - 1)], outline=None)
 
-    # Function to draw a pretty pattern to the display for demonstration.
+	# Function to draw a pretty pattern to the display for demonstration.
 	def animate(self):
 
 		self.dummy = makegrid(random = False)

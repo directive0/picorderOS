@@ -88,6 +88,7 @@ class preferences(object):
 
 		#sets the upper and lower threshold for the alert
 		self.TEMP_ALERT = (0,100)
+		self.interpolate = [True]
 
 		# TR108 uses this sensehat
 		self.sensehat = False
