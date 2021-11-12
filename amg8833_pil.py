@@ -13,10 +13,10 @@ import numpy as np
 from scipy.interpolate import griddata
 from colour import Color
 # low range of the sensor (this will be blue on the screen)
-MINTEMP = 26.0
+MINTEMP = 0.0
 
 # high range of the sensor (this will be red on the screen)
-MAXTEMP = 32.0
+MAXTEMP = 80.0
 
 # how many color values we can have
 COLORDEPTH = 1024
@@ -218,7 +218,9 @@ class ThermalGrid(object):
 				# read the pixels
 			pixels = []
 			for row in self.data:
-				pixels = pixels + row
+				print(pixels)
+				print(row)
+				pixels = pixels + list(row)
 			pixels = [map_value(p, MINTEMP, MAXTEMP, 0, COLORDEPTH - 1) for p in pixels]
 
 			# perform interpolation
@@ -227,8 +229,8 @@ class ThermalGrid(object):
 			# draw everything
 			for ix, row in enumerate(bicubic):
 				for jx, pixel in enumerate(row):
-					x = displayPixelHeight * ix
-					y = displayPixelWidth * jx
+					x = self.x + (displayPixelHeight * ix)
+					y = self.y + (displayPixelWidth * jx)
 					x2 = x + displayPixelHeight
 					y2 = y + displayPixelWidth
 					surface.rectangle([(x, y), (x2, y2)], fill = colors[constrain(int(pixel), 0, COLORDEPTH - 1)], outline=None)
