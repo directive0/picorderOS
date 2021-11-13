@@ -257,15 +257,17 @@ class ThermalGrid(object):
 	def update(self):
 		if configure.amg8833:
 			self.data = amg.pixels
+			print(self.data)
 		else:
 			self.data = self.animate()#makegrid()
 
 		if rotate:
 			self.data = np.transpose(self.data)
-			#self.data = list(reversed(list(zip(*self.data))))
+
 
 		if flip:
-			self.data = np.fliplr(self.data)#list(zip(*self.data[::-1]))
+			self.data = np.fliplr(self.data)
+			print(self.data)
 
 		thisaverage = 0
 		rangemax = []
