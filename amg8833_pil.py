@@ -261,7 +261,8 @@ class ThermalGrid(object):
 			self.data = self.animate()#makegrid()
 
 		if rotate:
-			self.data = list(reversed(list(zip(*self.data))))
+			self.data = np.transpose(self.data)
+			#self.data = list(reversed(list(zip(*self.data))))
 
 		if flip:
 			self.data = list(zip(*self.data[::-1]))
