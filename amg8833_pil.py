@@ -74,7 +74,8 @@ hot = Color("red")
 colrange = list(cool.range_to(hot, 256))
 
 rotate = False
-flip = True
+fliplr = True
+flipud = True
 from objects import *
 
 import sensors
@@ -218,7 +219,6 @@ class ThermalGrid(object):
 				# read the pixels
 			pixels = []
 			for row in self.data:
-
 				pixels = pixels + list(row)
 			pixels = [map_value(p, MINTEMP, MAXTEMP, 0, COLORDEPTH - 1) for p in pixels]
 
@@ -259,15 +259,16 @@ class ThermalGrid(object):
 			self.data = amg.pixels
 			print(self.data)
 		else:
-			self.data = self.animate()#makegrid()
+			self.data = self.animate()
 
 		if rotate:
 			self.data = np.transpose(self.data)
 
-
-		if flip:
+		if fliplr:
 			self.data = np.fliplr(self.data)
-			print(self.data)
+
+		if flipud:
+			self.data = np.flipud(self.data)
 
 		thisaverage = 0
 		rangemax = []
