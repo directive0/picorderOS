@@ -73,8 +73,8 @@ cool = Color("blue")
 hot = Color("red")
 colrange = list(cool.range_to(hot, 256))
 
-rotate = True
-flip = False
+rotate = False
+flip = True
 from objects import *
 
 import sensors
@@ -265,7 +265,7 @@ class ThermalGrid(object):
 			#self.data = list(reversed(list(zip(*self.data))))
 
 		if flip:
-			self.data = list(zip(*self.data[::-1]))
+			self.data = np.fliplr(self.data)#list(zip(*self.data[::-1]))
 
 		thisaverage = 0
 		rangemax = []
