@@ -262,13 +262,13 @@ class ThermalGrid(object):
 			self.data = self.animate()
 
 		if rotate:
-			self.data = np.transpose(self.data)
+			self.data = np.transpose(self.data).tolist()
 
 		if fliplr:
-			self.data = np.fliplr(self.data)
+			self.data = np.fliplr(self.data).tolist()
 
 		if flipud:
-			self.data = np.flipud(self.data)
+			self.data = np.flipud(self.data).tolist()
 
 		thisaverage = 0
 		rangemax = []
