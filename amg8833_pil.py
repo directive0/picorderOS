@@ -48,10 +48,6 @@ def constrain(val, min_val, max_val):
 def map_value(x, in_min, in_max, out_min, out_max):
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-
-
-
-
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
@@ -126,32 +122,30 @@ class ThermalPixel(object):
 
 
 	def update(self,value,high,low,surface):
-		#print("value is ", value)
 
+		if configure.auto[0]:
+			color = map(value, low, high, 0, 254)
+		else:
+			color = map(value, 0, 80, 0, 254)
+		if color > 255:
+			color = 255
+		if color < 0:
+			color = 0
 
-			if configure.auto[0]:
-				color = map(value, low, high, 0, 254)
-			else:
-				color = map(value, 0, 80, 0, 254)
-			if color > 255:
-				color = 255
-			if color < 0:
-				color = 0
+		colorindex = int(color)
 
-			colorindex = int(color)
+		temp = colrange[colorindex].rgb
 
-			temp = colrange[colorindex].rgb
+		red = int(temp[0] * 255.0)
+		green = int(temp[1] * 255.0)
+		blue = int(temp[2] * 255.0)
 
-			red = int(temp[0] * 255.0)
-			green = int(temp[1] * 255.0)
-			blue = int(temp[2] * 255.0)
+		self.count += 1
 
-			self.count += 1
+		if self.count > 255:
+			self.count = 0
 
-			if self.count > 255:
-				self.count = 0
-
-			surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (red,green,blue), outline=None)
+		surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (red,green,blue), outline=None)
 
 
 class ThermalColumns(object):
@@ -269,7 +263,6 @@ class ThermalGrid(object):
 	def update(self):
 		if configure.amg8833:
 			self.data = amg.pixels
-			print(self.data)
 		else:
 			self.data = self.animate()
 
@@ -296,11 +289,8 @@ class ThermalGrid(object):
 			rangemax.append(thismax)
 
 		self.average = thisaverage / (8*8)
-		#print("Average: ", self.average, ", ", "High: ", self.high,", ","Low: ", self.low)
-
 
 		self.high = max(rangemax)
 		self.low = min(rangemin)
 
 		return self.average, self.high, self.low
-		#print(rangesmax)
