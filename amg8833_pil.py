@@ -217,24 +217,7 @@ class ThermalGrid(object):
 			for i in range(8):
 				self.rows[i].update(self.data[i],self.high,self.low,surface)
 		else:
-				# read the pixels
-			pixels = []
-			for row in self.data:
-				pixels = pixels + list(row)
-			pixels = [map_value(p, MINTEMP, MAXTEMP, 0, COLORDEPTH - 1) for p in pixels]
-
-			# perform interpolation
-			bicubic = griddata(points, pixels, (grid_x, grid_y), method="cubic")
-
-			# draw everything
-			for ix, row in enumerate(bicubic):
-				for jx, pixel in enumerate(row):
-					x = self.x + (displayPixelHeight * ix)
-					y = self.y + (displayPixelWidth * jx)
-					x2 = x + displayPixelHeight
-					y2 = y + displayPixelWidth
-					surface.rectangle([(x, y), (x2, y2)], fill = colors[constrain(int(pixel), 0, COLORDEPTH - 1)], outline=None)
-
+			self.interpolate(surface)
 	# Function to draw a pretty pattern to the display for demonstration.
 	def animate(self):
 
@@ -254,6 +237,34 @@ class ThermalGrid(object):
 		self.ticks = self.ticks+1
 		return self.dummy
 
+	def interpolate(self, surface):
+
+		if configure.auto[0]:
+			# low range of the sensor (this will be blue on the screen)
+			mintemp = self.low
+			# high range of the sensor (this will be red on the screen)
+			maxtemp = self.high
+		else:
+			mintemp = MINTEMP
+			maxtemp = MAXTEMP
+
+		pixels = []
+
+		for row in self.data:
+			pixels = pixels + list(row)
+		pixels = [map_value(p, mintemp, maxtemp, 0, COLORDEPTH - 1) for p in pixels]
+
+		# perform interpolation
+		bicubic = griddata(points, pixels, (grid_x, grid_y), method="cubic")
+
+		# draw everything
+		for ix, row in enumerate(bicubic):
+			for jx, pixel in enumerate(row):
+				x = self.x + (displayPixelHeight * ix)
+				y = self.y + (displayPixelWidth * jx)
+				x2 = x + displayPixelHeight
+				y2 = y + displayPixelWidth
+				surface.rectangle([(x, y), (x2, y2)], fill = colors[constrain(int(pixel), 0, COLORDEPTH - 1)], outline=None)
 
 	def update(self):
 		if configure.amg8833:
