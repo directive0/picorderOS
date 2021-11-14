@@ -37,9 +37,6 @@ TFT = TFT24T(spidev.SpiDev(), GPIO)
 TFT.initLCD(DC, RST, LED)
 
 
-
-
-
 # Load default font.
 font = ImageFont.truetype("assets/babs.otf",13)
 titlefont = ImageFont.truetype("assets/babs.otf",16)
