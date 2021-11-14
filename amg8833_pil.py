@@ -75,7 +75,7 @@ colrange = list(cool.range_to(hot, 256))
 
 rotate = False
 fliplr = False
-flipud = False
+flipud = True
 
 from objects import *
 
