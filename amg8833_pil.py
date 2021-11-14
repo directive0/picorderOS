@@ -233,6 +233,11 @@ class ThermalGrid(object):
 
 	def interpolate(self, surface):
 
+		height = self.h
+		width = self.w
+		displayPixelWidth = width / 30
+		displayPixelHeight = height / 30
+
 		if configure.auto[0]:
 			# low range of the sensor (this will be blue on the screen)
 			mintemp = self.low
@@ -261,6 +266,7 @@ class ThermalGrid(object):
 				surface.rectangle([(x, y), (x2, y2)], fill = colors[constrain(int(pixel), 0, COLORDEPTH - 1)], outline=None)
 
 	def update(self):
+
 		if configure.amg8833:
 			self.data = amg.pixels
 		else:
@@ -278,6 +284,7 @@ class ThermalGrid(object):
 		thisaverage = 0
 		rangemax = []
 		rangemin = []
+
 		for i in range(8):
 
 			for j in range(8):
