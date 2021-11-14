@@ -233,8 +233,8 @@ class ThermalGrid(object):
 
 	def interpolate(self, surface):
 
-		height = self.h
-		width = self.w
+		height = self.w
+		width = self.h
 		displayPixelWidth = width / 30
 		displayPixelHeight = height / 30
 
