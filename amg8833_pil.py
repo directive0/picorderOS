@@ -12,34 +12,6 @@ import PIL.ImageOps
 import numpy as np
 from scipy.interpolate import griddata
 from colour import Color
-# low range of the sensor (this will be blue on the screen)
-MINTEMP = -2.0
-
-# high range of the sensor (this will be red on the screen)
-MAXTEMP = 150.0
-
-# how many color values we can have
-COLORDEPTH = 1024
-
-# pylint: disable=invalid-slice-index
-points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0, 64)]
-grid_x, grid_y = np.mgrid[0:7:32j, 0:7:32j]
-# pylint: enable=invalid-slice-index
-# sensor is an 8x8 grid so lets do a square
-height = 133
-width = 71
-
-# the list of colors we can choose from
-blue = Color(rgb=(0.6, 0.6, 1.0)) #Color("blue")
-red = Color(rgb=(0.8, 0.4, 0.4))#"red")
-#blue = Color("indigo")
-colors = list(blue.range_to(red, COLORDEPTH))
-
-# create the array of colors
-colors = [(int(c.red * 255), int(c.green * 255), int(c.blue * 255)) for c in colors]
-
-displayPixelWidth = width / 30
-displayPixelHeight = height / 30
 
 
 # some utility functions
@@ -67,8 +39,36 @@ lcars_pinker = (204,102,153)
 standard_blue = (0,0,255)
 standard_red = (255,0,0)
 
-cool = Color(rgb=(0.6, 0.6, 1.0)) #Color("blue")
-hot = Color(rgb=(0.8, 0.4, 0.4))#"red")
+# low range of the sensor (this will be blue on the screen)
+MINTEMP = -2.0
+
+# high range of the sensor (this will be red on the screen)
+MAXTEMP = 150.0
+
+# how many color values we can have
+COLORDEPTH = 1024
+
+# pylint: disable=invalid-slice-index
+points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0, 64)]
+grid_x, grid_y = np.mgrid[0:7:32j, 0:7:32j]
+# pylint: enable=invalid-slice-index
+# sensor is an 8x8 grid so lets do a square
+height = 133
+width = 71
+
+# the list of colors we can choose from
+cool = Color(rgb=(0.0, 0.0, 0.0)) #Color("blue")
+hot = Color(rgb=(1.0, 0.6, 0.0))#"red")
+#blue = Color("indigo")
+colors = list(cool.range_to(hot, COLORDEPTH))
+
+# create the array of colors
+colors = [(int(c.red * 255), int(c.green * 255), int(c.blue * 255)) for c in colors]
+
+displayPixelWidth = width / 30
+displayPixelHeight = height / 30
+
+
 colrange = list(cool.range_to(hot, 256))
 
 rotate = False
