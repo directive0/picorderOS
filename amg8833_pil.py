@@ -58,7 +58,7 @@ width = 71
 
 # the list of colors we can choose from
 cool = Color(rgb=(0.0, 0.0, 0.0)) #Color("blue")
-hot = Color(rgb=(1.0, 0.6, 0.0))#"red")
+hot = Color(rgb=(0.8, 0.4, 0.6))#"red")
 #blue = Color("indigo")
 colors = list(cool.range_to(hot, COLORDEPTH))
 
