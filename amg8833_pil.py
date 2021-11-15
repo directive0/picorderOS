@@ -65,8 +65,8 @@ lcars_pinker = (204,102,153)
 standard_blue = (0,0,255)
 standard_red = (255,0,0)
 
-cool = Color("blue")
-hot = Color("red")
+cool = Color(rgb=(153,153,255)) #Color("blue")
+hot = Color(rgb=(204,102,102))#"red")
 colrange = list(cool.range_to(hot, 256))
 
 rotate = False
