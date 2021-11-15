@@ -775,7 +775,7 @@ class ThermalFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 		self.t_grid = ThermalGrid(23,24,133,71)
-		self.t_grid_full = ThermalGrid(23,8,133,109)
+		self.t_grid_full = ThermalGrid(23,8,133,103)
 		self.titlex = 23
 		self.titley = 6
 
