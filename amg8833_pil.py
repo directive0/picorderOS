@@ -30,8 +30,10 @@ height = 133
 width = 71
 
 # the list of colors we can choose from
-blue = Color("indigo")
-colors = list(blue.range_to(Color("red"), COLORDEPTH))
+blue = Color(rgb=(0.6, 0.6, 1.0)) #Color("blue")
+red = Color(rgb=(0.8, 0.4, 0.4))#"red")
+#blue = Color("indigo")
+colors = list(blue.range_to(red, COLORDEPTH))
 
 # create the array of colors
 colors = [(int(c.red * 255), int(c.green * 255), int(c.blue * 255)) for c in colors]
@@ -147,7 +149,6 @@ class ThermalPixel(object):
 
 		surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (red,green,blue), outline=None)
 
-
 class ThermalColumns(object):
 
 	def __init__(self,x,y,w,h):
@@ -183,8 +184,6 @@ class ThermalRows(object):
 	def update(self,data,high,low,surface):
 		for i in range(8):
 			self.pixels[i].update(data[i],high, low, surface)
-
-
 
 class ThermalGrid(object):
 
