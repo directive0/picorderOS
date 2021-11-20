@@ -15,7 +15,7 @@ class Wifi_Scan(object):
         return ap_list
 
     def get_info(self,selection):
-        ap_list = self.update()
+        ap_list = self.get_ssid_list()
 
         if selection <= (len(ap_list)-1):
             return (ap_list[selection].ssid, ap_list[selection].signal, ap_list[selection].quality, ap_list[selection].frequency, ap_list[selection].bitrates, ap_list[selection].encrypted, ap_list[selection].channel, ap_list[selection].address, ap_list[selection].mode)
