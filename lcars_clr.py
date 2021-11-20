@@ -35,7 +35,7 @@ TRANSITION = [False]
 
 
 if not configure.pc:
-	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)# ,bus_speed_hz=24000000)
+	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST) ,bus_speed_hz=32000000)
 	device = st7735(serial, width = 160, height = 128, mode = "RGB")
 
 
