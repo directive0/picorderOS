@@ -368,10 +368,10 @@ class Inputs(object):
 		if configure.input_pcf8575:
 
 			if not configure.eventready[0]:
-				this_frame = pcf.port
-				print("button state = ", this_frame)
-				for this, button in enumerate(this_frame):
+				this_frame = list(pcf.port)
 
+				for this, button in enumerate(this_frame):
+					print("button state = ", this_frame)
 					# if an item is pressed
 					if not button:
 
