@@ -380,6 +380,7 @@ class Inputs(object):
 
 							# mark it in the pressed list
 							print("pad press registered")
+							print(this)
 							self.pressed[this] = True
 							configure.eventready[0] = True
 							configure.beep_ready[0] = True
