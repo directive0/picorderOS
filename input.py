@@ -373,7 +373,7 @@ class Inputs(object):
 				this_frame = list(pcf.port)
 
 				for this, button in enumerate(this_frame):
-					print("button state = ", this_frame)
+
 					# if an item is pressed
 					if not button:
 
