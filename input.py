@@ -117,8 +117,10 @@ if configure.input_cap1208:
 if configure.input_pcf8575:
 	from pcf8575 import PCF8575
 	i2c_port_num = 1
-	pcf_address = 0x26
+	pcf_address = 0x20
 	pcf = PCF8575(i2c_port_num, pcf_address)
+
+	button_table = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,0,3,2,0]
 
 # the input class handles all the requirements for handling user directed inputs
 class Inputs(object):
@@ -380,12 +382,12 @@ class Inputs(object):
 
 							# mark it in the pressed list
 							print("pad press registered")
-							print(this)
-							self.pressed[this] = True
+
+							self.pressed[button_table[this]] = True
 							configure.eventready[0] = True
 							configure.beep_ready[0] = True
 					else:
-						self.pressed[this] = False
+						self.pressed[button_table[this]] = False
 
 
 
