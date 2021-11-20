@@ -80,8 +80,8 @@ class preferences(object):
 
 		# Toggles individual sensor support
 		self.system_vitals = True
-		self.bme = False
-		self.amg8833 = False
+		self.bme = True
+		self.amg8833 = True
 
 		#sets the upper and lower threshold for the alert
 		self.TEMP_ALERT = (0,100)
