@@ -117,7 +117,7 @@ if configure.input_cap1208:
 if configure.input_pcf8575:
 	from pcf8575 import PCF8575
 	i2c_port_num = 1
-	pcf_address = 0x20
+	pcf_address = 0x26
 	pcf = PCF8575(i2c_port_num, pcf_address)
 
 # the input class handles all the requirements for handling user directed inputs
