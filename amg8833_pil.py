@@ -37,7 +37,7 @@ if configure.amg8833:
 	import busio
 	import board
 	i2c = busio.I2C(board.SCL, board.SDA)
-	amg = adafruit_amg88xx.AMG88XX(i2c)
+	amg = adafruit_amg88xx.AMG88XX(i2c, addr=0x68)
 
 
 
