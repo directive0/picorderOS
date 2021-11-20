@@ -390,6 +390,11 @@ class Inputs(object):
 					else:
 						self.pressed[button_table[this]] = False
 
+				configure.eventlist[0] = self.pressed
+
+				# return the pressed data
+				return self.pressed
+
 
 
 	def keypress(self):
