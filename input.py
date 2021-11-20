@@ -120,7 +120,7 @@ if configure.input_pcf8575:
 	pcf_address = 0x20
 	pcf = PCF8575(i2c_port_num, pcf_address)
 
-	button_table = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,0,3,2,0]
+	button_table = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,0,3,2,4]
 
 # the input class handles all the requirements for handling user directed inputs
 class Inputs(object):
@@ -381,7 +381,8 @@ class Inputs(object):
 						if not self.pressed[this]:
 
 							# mark it in the pressed list
-							print("pad press registered")
+							print("pad press registered at ", this)
+							print("raising an event at address ", button_table[this])
 
 							self.pressed[button_table[this]] = True
 							configure.eventready[0] = True
