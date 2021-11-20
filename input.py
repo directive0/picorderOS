@@ -223,7 +223,7 @@ class Inputs(object):
 			# if the alert pin is brought LOW
 			if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
 
-				print("touch received")
+				#print("touch received")
 
 				# collect the event list from the chip
 				reading = cap1208.get_input_status()
@@ -368,8 +368,10 @@ class Inputs(object):
 		if configure.input_pcf8575:
 
 			if not configure.eventready[0]:
-				print("button state = ", pcf.port)
-				for this, button in enumerate(pcf.port):
+				this_frame = pcf.port
+				print("button state = ", this_frame)
+				for this, button in enumerate(this_frame):
+
 					# if an item is pressed
 					if not button:
 
