@@ -536,7 +536,7 @@ class EMFrame(object):
 			configure.eventready[0] = False
 
 		self.title.r_align(self.labelxr,self.labely,draw)
-		self.list.update(self.wifi.get_ssid_list(),draw)
+		self.list.update(self.wifi.get_strongest_ssid(),draw)
 
 
 
