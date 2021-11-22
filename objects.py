@@ -68,7 +68,7 @@ class preferences(object):
 		self.auto = [True]
 
 		# chooses SPI display (0 for nokia 5110, 1 for st7735)
-		self.display = "1"
+		self.display = 1
 
 		# holds theme state for UI
 		self.theme = [0]
