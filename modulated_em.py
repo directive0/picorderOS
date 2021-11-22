@@ -33,7 +33,11 @@ class Wifi_Scan(object):
 
         strongest = list[max_index]
 
-        print("Strongest wifi is ", strongest.signal)
+        details = [strongest.ssid, strongest.signal, strongest.quality, strongest.frequency, strongest.bitrates, strongest.encrypted, strongest.channel, strongest.address, strongest.mode]
+
+
+
+        print("Strongest wifi is ", details)
 
     def get_ssid_list(self):
 
