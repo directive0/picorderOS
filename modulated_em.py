@@ -22,7 +22,7 @@ class Wifi_Scan(object):
 
     def get_strongest_ssid(self):
 
-        list = self.getlist()
+        list = self.get_list()
         strengths = []
 
         for cell in list:
