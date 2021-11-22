@@ -15,10 +15,25 @@ class Wifi_Scan(object):
         return ap_list
 
     def get_info(self,selection):
-        ap_list = self.get_ssid_list()
+        ap_list = self.update()
 
         if selection <= (len(ap_list)-1):
             return (ap_list[selection].ssid, ap_list[selection].signal, ap_list[selection].quality, ap_list[selection].frequency, ap_list[selection].bitrates, ap_list[selection].encrypted, ap_list[selection].channel, ap_list[selection].address, ap_list[selection].mode)
+
+    def get_strongest_ssid(self):
+
+        list = self.getlist()
+        strengths = []
+
+        for cell in list:
+            strengths.append(cell.signal)
+
+        max_value = max(strengths)
+        max_index = list.index(max_value)
+
+        strongest = list[max_index]
+
+        print("Strongest wifi is ", strongest.signal)
 
     def get_ssid_list(self):
 
