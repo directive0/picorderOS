@@ -29,7 +29,7 @@ class Wifi_Scan(object):
             strengths.append(cell.signal)
 
         max_value = max(strengths)
-        max_index = list.index(max_value)
+        max_index = strengths.index(max_value)
 
         strongest = list[max_index]
 
