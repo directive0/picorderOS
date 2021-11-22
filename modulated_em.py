@@ -33,7 +33,7 @@ class Wifi_Scan(object):
 
         strongest = list[max_index]
 
-        details = [strongest.ssid, strongest.signal, strongest.quality, strongest.frequency, strongest.bitrates, strongest.encrypted, strongest.channel, strongest.address, strongest.mode]
+        details = [strongest.ssid, strongest.signal, strongest.quality, strongest.frequency, strongest.encrypted, strongest.channel, strongest.address, strongest.mode]
 
         return details
 
