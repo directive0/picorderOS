@@ -135,12 +135,13 @@ class PLARS(object):
 
 
 		# appends the new data to the buffer
-		self.buffer_em = self.buffer_em.merge(newdata)
+		self.buffer_em = self.buffer_em.append(newdata, ignore_index=True)
 
 		print(self.buffer_em)
 
 		self.lock.release()
 		print("released lock")
+
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor
 	def update(self,data):
