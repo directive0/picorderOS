@@ -501,12 +501,18 @@ class EMFrame(object):
 		self.labely = 5
 		self.labelxr = 154
 
-		self.testlist = ["test", "this", "list"]
 
 		self.selection = 0
 
 		self.title = LabelObj("Modulated EM",titlefont, colour = lcars_orange)
+
+		self.signal_name = LabelObj("SSID",bigfont, colour = lcars_orange)
+		self.signal_strength = LabelObj("ST",bigfont, colour = lcars_orange)
+		self.signal_quality = LabelObj("ST",font, colour = lcars_orange)
+		self.signal_encrypt = LabelObj("ST",bigfont, colour = lcars_orange)
+
 		self.list = Label_List(25,37)
+
 
 
 	def push(self, draw):
@@ -536,6 +542,8 @@ class EMFrame(object):
 				return status
 
 			configure.eventready[0] = False
+
+
 
 		self.title.r_align(self.labelxr,self.labely,draw)
 		self.list.update(self.wifi.get_strongest_ssid(),draw)
