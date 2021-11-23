@@ -536,6 +536,7 @@ class EMFrame(object):
 
 		status  = "mode_c"
 		wifi_info = self.wifi.update_plars()
+		self.Signal_Graph.render(draw)
 		info = plars.get_top_em_info()
 		print(info)
 
@@ -572,7 +573,7 @@ class EMFrame(object):
 		self.signal_frequency.push(20,92,draw, string = wifi_info[3])
 		self.signal_mac.push(20,111, draw, string = wifi_info[6])
 
-		self.Signal_Graph.render(draw)
+
 		return status
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
