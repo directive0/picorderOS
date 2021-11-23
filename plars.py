@@ -98,7 +98,7 @@ class PLARS(object):
 
 	def get_top_em_info(self):
 		# Identify the SSID of the strongest signal.
-		return self.identity.tolist()
+		return self.identity.values.tolist()
 
 
 	def get_top_em_history(self, no = 5):
