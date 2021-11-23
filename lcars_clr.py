@@ -538,7 +538,7 @@ class EMFrame(object):
 		self.wifi.update_plars()
 		self.Signal_Graph.render(draw)
 		info = plars.get_top_em_info()[0]
-		print(info)
+
 
 		# input handling
 		if configure.eventready[0]:
