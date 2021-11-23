@@ -536,6 +536,8 @@ class EMFrame(object):
 
 		status  = "mode_c"
 		wifi_info = self.wifi.update_plars()
+		info = plars.get_top_em_info()
+		print(info)
 
 		# input handling
 		if configure.eventready[0]:
@@ -569,6 +571,7 @@ class EMFrame(object):
 		self.signal_strength.r_align(self.labelxr,35,draw)
 		self.signal_frequency.push(20,92,draw, string = wifi_info[3])
 		self.signal_mac.push(20,111, draw, string = wifi_info[6])
+
 		self.Signal_Graph.render(draw)
 		return status
 

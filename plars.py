@@ -62,6 +62,7 @@ class PLARS(object):
 
 		self.timer = timer()
 
+
 	# provide status of database (how many entries, how many devices, size, length)
 	def status(self):
 		pass
@@ -95,7 +96,12 @@ class PLARS(object):
 	def get_em_buffer(self):
 		return self.buffer_em
 
-	def get_top_em_signal(self, no = 5):
+	def get_top_em_info(self):
+		# Identify the SSID of the strongest signal.
+		return self.identity.tolist()
+
+
+	def get_top_em_history(self, no = 5):
 		# returns a list of Db values for whatever SSID is currently the strongest.
 		# suitable to be fed into pilgraph for graphing.
 
@@ -106,28 +112,24 @@ class PLARS(object):
 		# find the most recent timestamp
 		time_column = self.buffer_em["timestamp"]
 		most_recent = time_column.max()
-		print("Time max = ", most_recent)
 
 		#limit focus to data from that timestamp
 		focus = self.buffer_em.loc[self.buffer_em['timestamp'] == most_recent]
-		print("focus = ", focus)
 
 		# find most powerful signal
 		db_column = focus["signal"]
 		strongest = db_column.astype(int).max()
 
 		# Identify the SSID of the strongest signal.
-		identity = focus.loc[focus['signal'] == strongest]
-		print("identity = ", identity)
+		self.identity = focus.loc[focus['signal'] == strongest]
+
 
 		# prepare markers to pull data
 		# Wifi APs can have the same name and different paramaters
 		# I use MAC and frequency to individualize a signal
-		dev = identity["dev"].iloc[0]
-		frq = identity["frequency"].iloc[0]
+		dev = self.identity["dev"].iloc[0]
+		frq = self.identity["frequency"].iloc[0]
 
-		print("dev = ", dev)
-		print("frq = ", frq)
 
 		# release the thread lock.
 		self.lock.release()
@@ -151,7 +153,7 @@ class PLARS(object):
 		print(self.buffer_em)
 
 		self.lock.release()
-		print("released lock")
+
 
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor
