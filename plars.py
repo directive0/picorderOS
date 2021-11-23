@@ -113,7 +113,7 @@ class PLARS(object):
 		print("focus = ", focus)
 
 		# find most powerful SSID
-		focus['signal'].astype(integer)
+		focus['signal'].astype(float)
 		db_column = focus["signal"]
 		print("db colum = ", db_column)
 
