@@ -87,7 +87,7 @@ class LabelObj(object):
 		if string == "None":
 			drawstring = self.string
 		else:
-			drawstring = string
+			drawstring = str(string)
 		self.draw = draw
 		self.draw.text((locx, locy), drawstring, font = self.font, fill= self.colour)
 
