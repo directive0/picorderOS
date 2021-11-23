@@ -84,7 +84,7 @@ class LabelObj(object):
 
 	# Draws the label onto the provided draw buffer.
 	def push(self,locx,locy,draw, string = "None"):
-		if string = "None":
+		if string == "None":
 			drawstring = self.string
 		else:
 			drawstring = string
