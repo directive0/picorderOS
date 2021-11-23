@@ -508,7 +508,7 @@ class EMFrame(object):
 
 		self.selection = 0
 
-		self.title = LabelObj("Modulated EM",titlefont, colour = lcars_orange)
+		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 
 		self.signal_name = LabelObj("SSID",bigfont, colour = lcars_peach)
 		self.signal_strength = LabelObj("ST",bigfont, colour = lcars_pink)
@@ -553,7 +553,7 @@ class EMFrame(object):
 
 
 		self.signal_name.push(20,39,draw, string = wifi_info[0])
-		self.signal_strength.push(111,110,draw, string = wifi_info[1])
+		self.signal_strength.r_align(self.labelxr,39,draw, string = wifi_info[1]+" DB")
 		self.signal_frequency.push(20,95,draw, string = wifi_info[3])
 		self.signal_mac.push(20,112, draw, string = wifi_info[6])
 		return status
