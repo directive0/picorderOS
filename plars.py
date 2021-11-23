@@ -138,10 +138,10 @@ class PLARS(object):
 
 
 	def update_em(self,data):
-		print("Updating EM Dataframe:")
-		print(data)
+		#print("Updating EM Dataframe:")
+
 		newdata = pd.DataFrame(data, columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
-		print(newdata)
+
 
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
@@ -150,7 +150,6 @@ class PLARS(object):
 		# appends the new data to the buffer
 		self.buffer_em = self.buffer_em.append(newdata, ignore_index=True)
 
-		print(self.buffer_em)
 
 		self.lock.release()
 
