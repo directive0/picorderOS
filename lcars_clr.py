@@ -569,7 +569,7 @@ class EMFrame(object):
 		self.signal_strength.r_align(self.labelxr,35,draw)
 		self.signal_frequency.push(20,92,draw, string = wifi_info[3])
 		self.signal_mac.push(20,111, draw, string = wifi_info[6])
-		self.Signal_Graph.update(draw)
+		self.Signal_Graph.render(draw)
 		return status
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
