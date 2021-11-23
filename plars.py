@@ -132,11 +132,14 @@ class PLARS(object):
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
 
+		print("got lock")
 		# appends the new data to the buffer
+		print("appending")
 		self.buffer_em = self.buffer_em.append(newdata, ignore_index=True)
+		print("appended")
 
 		self.lock.release()
-
+		print("released lock")
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor
 	def update(self,data):
