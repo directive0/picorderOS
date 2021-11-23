@@ -83,9 +83,13 @@ class LabelObj(object):
 		self.push(x-size[0],y,draw)
 
 	# Draws the label onto the provided draw buffer.
-	def push(self,locx,locy,draw, string = self.string):
+	def push(self,locx,locy,draw, string = "None"):
+		if string = "None":
+			drawstring = self.string
+		else:
+			drawstring = string
 		self.draw = draw
-		self.draw.text((locx, locy), self.string, font = self.font, fill= self.colour)
+		self.draw.text((locx, locy), drawstring, font = self.font, fill= self.colour)
 
 	def getsize(self):
 		size = self.font.getsize(self.string)
