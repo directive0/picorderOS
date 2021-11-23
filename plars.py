@@ -137,6 +137,7 @@ class PLARS(object):
 		# appends the new data to the buffer
 		self.buffer_em = self.buffer_em.merge(newdata)
 
+		print(self.buffer_em)
 
 		self.lock.release()
 		print("released lock")
