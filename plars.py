@@ -123,7 +123,7 @@ class PLARS(object):
 		strong_sig = focus[strongest]
 
 		identity = focus.loc[focus['signal'] == strong_sig]
-
+		print("identity = ", identity)
 
 
 		# release the thread lock.
