@@ -57,7 +57,7 @@ class PLARS(object):
 		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 		#create a buffer for wifi/bt data
-		self.buffer_em = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dev','dsc','timestamp'])
+		self.buffer_em = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
 
 
 		self.timer = timer()
