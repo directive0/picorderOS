@@ -124,7 +124,7 @@ class PLARS(object):
 		# Wifi APs can have the same name and different paramaters
 		# I use MAC and frequency to individualize a signal
 		dev = identity["dev"]
-		frq = identity["frequency"].astype(float)
+		frq = identity["frequency"]
 
 		print("dev = ", dev)
 		print("frq = ", frq)
