@@ -106,12 +106,15 @@ class PLARS(object):
 		# find the most recent timestamp
 		time_column = self.buffer_em["timestamp"]
 		most_recent = time_column.max()
+		print("Time max = ", most_recent)
 
 		#limit focus to data from that timestamp
 		focus = self.buffer_em.loc[self.buffer_em['timestamp'] == most_recent]
+		print("focus = ", focus)
 
 		# find most powerful SSID
 		db_column = focus["signal"]
+		print("db colum = ", db_column)
 		strongest = db_column.idxmax()
 
 		# find its name
