@@ -32,7 +32,7 @@ class Wifi_Scan(object):
             details = [ap.ssid, ap.signal, ap.quality, ap.frequency, ap.encrypted, ap.channel, ap.address, ap.mode, 'wifi', timestamp]
             ap_fragments.append(details)
 
-        return ap_fragment
+        return ap_fragments
 
     def get_strongest_ssid(self):
 
