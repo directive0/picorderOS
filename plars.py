@@ -207,7 +207,7 @@ class PLARS(object):
 	def get_recent_em(self, dev, frequency, num = 5):
 
 		# get a dataframe of just the requested sensor
-		untrimmed_data = self.get_em(dsc,dev)
+		untrimmed_data = self.get_em(dev,frequency)
 
 		# trim it to length (num).
 		trimmed_data = untrimmed_data.tail(num)
