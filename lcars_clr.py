@@ -535,9 +535,9 @@ class EMFrame(object):
 	def push(self, draw):
 
 		status  = "mode_c"
-		wifi_info = self.wifi.update_plars()
+		self.wifi.update_plars()
 		self.Signal_Graph.render(draw)
-		info = plars.get_top_em_info()
+		info = plars.get_top_em_info()[0]
 		print(info)
 
 		# input handling
@@ -567,11 +567,11 @@ class EMFrame(object):
 		self.title.r_align(self.labelxr,self.titley,draw)
 
 
-		self.signal_name.push(20,35,draw, string = wifi_info[0])
+		self.signal_name.push(20,35,draw, string = info[0])
 		self.signal_strength.string = str(wifi_info[1]) + " DB"
 		self.signal_strength.r_align(self.labelxr,35,draw)
-		self.signal_frequency.push(20,92,draw, string = wifi_info[3])
-		self.signal_mac.push(20,111, draw, string = wifi_info[6])
+		self.signal_frequency.push(20,92,draw, string = info[3])
+		self.signal_mac.push(20,111, draw, string = info[6])
 
 
 		return status
