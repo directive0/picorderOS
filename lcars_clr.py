@@ -535,7 +535,7 @@ class EMFrame(object):
 	def push(self, draw):
 
 		status  = "mode_c"
-		wifi_info = self.wifi.get_strongest_ssid()
+		wifi_info = self.wifi.update_plars()
 
 		# input handling
 		if configure.eventready[0]:
