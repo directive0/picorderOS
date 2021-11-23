@@ -128,7 +128,7 @@ class PLARS(object):
 		print("Updating EM Dataframe:")
 		print(data)
 		newdata = pd.DataFrame(data, columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
-
+		print(newdata)
 
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
