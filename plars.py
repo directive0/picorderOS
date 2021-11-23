@@ -95,12 +95,12 @@ class PLARS(object):
 	def get_em_buffer(self):
 		return self.buffer_em
 
-	def get_em_strongest_history(self):
+	def get_top_em_signal(self, no = 5):
 		# returns a list of Db values for whatever SSID is currently the strongest.
 		# suitable to be fed into pilgraph for graphing.
 
 
-		# set the thread lock so other threads are unable to add sensor data
+		# set the thread lock so other threads are unable to add data
 		self.lock.acquire()
 
 		# find the most recent timestamp
@@ -129,14 +129,10 @@ class PLARS(object):
 		print("dev = ", dev)
 		print("frq = ", frq)
 
-		target_history = self.get_em(dev,frq)
-
-		print("target history =", target_history)
-
-
 		# release the thread lock.
 		self.lock.release()
 
+		return = self.get_recent_em(dev,frq, num = no)
 
 
 	def update_em(self,data):
@@ -203,6 +199,19 @@ class PLARS(object):
 	def index_by_time(self,df, ascending = False):
 		df.sort_values(by=['timestamp'], ascending = ascending)
 		return df
+
+
+	# return a list of n most recent data from specific ssid defined by keys
+	def get_recent_em(self, dev, frequency, num = 5):
+
+		# get a dataframe of just the requested sensor
+		untrimmed_data = self.get_em(dsc,dev)
+
+		# trim it to length (num).
+		trimmed_data = untrimmed_data.tail(num)
+
+		# return a list of the values
+		return trimmed_data['signal'].tolist()
 
 	# return a list of n most recent data from specific sensor defined by key
 	def get_recent(self, dsc, dev, num = 5):

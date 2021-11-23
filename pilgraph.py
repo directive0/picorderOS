@@ -27,6 +27,7 @@ class graph_area(object):
 
 
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0):
+
 		self.new = True
 		self.cycle = cycle
 		self.tock = timer()
@@ -186,7 +187,7 @@ class graph_area(object):
 		return self.newlist
 
 
-	def render(self, draw, auto = True, dot = True, type = 0, range = None):
+	def render(self, draw, auto = True, dot = True, range = None):
 
 		self.auto = configure.auto[0]
 
@@ -198,7 +199,7 @@ class graph_area(object):
 
 		# so every time through the loop PILgraph will pull the latest sensor
 		# settings.
-		if type == 0:
+		if self.type == 0:
 			dsc = configure.sensor_info[configure.sensors[self.ident][0]][3]
 			dev = configure.sensor_info[configure.sensors[self.ident][0]][5]
 
@@ -206,7 +207,7 @@ class graph_area(object):
 			#preps the list by adding the X coordinate to every sensor value
 			recent = plars.get_recent(dsc,dev,num = self.spanx)
 		else:
-			recent = plars.get_recent(dsc,dev,num = self.spanx)
+			recent = plars.get_top_em_signal(num = self.spanx)
 
 
 		cords = self.graphprep(recent)

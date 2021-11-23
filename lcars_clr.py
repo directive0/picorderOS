@@ -490,12 +490,22 @@ class EMFrame(object):
 		self.wifi = Wifi_Scan()
 
 		# Sets the topleft origin of the graph
-		self.graphx = 23
+		self.graphx = 20
 		self.graphy = 24
 
 		# Sets the x and y span of the graph
 		self.gspanx = 133
 		self.gspany = 71
+
+		self.graphcycle = 0
+
+		# Sets the topleft origin of the graph
+		self.graphx = 23
+		self.graphy = 58
+
+		# Sets the x and y span of the graph
+		self.gspanx = 137
+		self.gspany = 29
 		self.titlex = 23
 		self.titley = 2
 
@@ -507,6 +517,9 @@ class EMFrame(object):
 
 
 		self.selection = 0
+
+		# create our graph_screen
+		self.Signal_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, lcars_pinker, width = 2, type = 1)
 
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 
@@ -522,6 +535,7 @@ class EMFrame(object):
 	def push(self, draw):
 
 		status  = "mode_c"
+		wifi_info = self.wifi.get_strongest_ssid()
 
 		# input handling
 		if configure.eventready[0]:
@@ -549,14 +563,13 @@ class EMFrame(object):
 
 		self.title.r_align(self.labelxr,self.titley,draw)
 
-		wifi_info = self.wifi.get_strongest_ssid()
-
 
 		self.signal_name.push(20,35,draw, string = wifi_info[0])
 		self.signal_strength.string = str(wifi_info[1]) + " DB"
 		self.signal_strength.r_align(self.labelxr,35,draw)
 		self.signal_frequency.push(20,92,draw, string = wifi_info[3])
 		self.signal_mac.push(20,111, draw, string = wifi_info[6])
+		self.Signal_Graph.update(draw)
 		return status
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
@@ -571,6 +584,8 @@ class MultiFrame(object):
 		# Sets the x and y span of the graph
 		self.gspanx = 133
 		self.gspany = 71
+
+		self.graphcycle = 0
 
 		self.marginleft = 23
 		self.marginright= 133
@@ -593,7 +608,7 @@ class MultiFrame(object):
 		self.titley = 6
 		self.labely = 102
 
-		self.graphcycle = 0
+
 
 		self.decimal = 1
 
