@@ -132,7 +132,7 @@ class PLARS(object):
 		# release the thread lock.
 		self.lock.release()
 
-		return = self.get_recent_em(dev,frq, num = no)
+		return self.get_recent_em(dev,frq, num = no)
 
 
 	def update_em(self,data):
