@@ -121,7 +121,7 @@ class graph_area(object):
 	# if the auto flag is set then the class will autoscale the graph so that
 	# the highest and lowest currently displayed values are presented.
 	# takes in a list/array with length => span
-	def graphprep(self, datalist, range = None):
+	def graphprep(self, datalist, ranger = None):
 
 		# The starting X coordinate
 		self.linepoint = self.spanx + self.x
@@ -139,7 +139,7 @@ class graph_area(object):
 
 			self.sourcerange = [sourcelow,sourcehigh]
 		else:
-			self.sourcerange = range
+			self.sourcerange = ranger
 
 		# get the range of the data.
 		if len(datalist) > 0:
@@ -187,7 +187,7 @@ class graph_area(object):
 		return self.newlist
 
 
-	def render(self, draw, auto = True, dot = True, range = None):
+	def render(self, draw, auto = True, dot = True, ranger = None):
 
 		self.auto = configure.auto[0]
 
