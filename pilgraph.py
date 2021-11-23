@@ -139,7 +139,11 @@ class graph_area(object):
 
 			self.sourcerange = [sourcelow,sourcehigh]
 		else:
-			self.sourcerange = ranger
+			sourcelow = -90
+
+			sourcehigh = -5
+
+			self.sourcerange = [sourcelow,sourcehigh]
 
 		# get the range of the data.
 		if len(datalist) > 0:
