@@ -553,7 +553,8 @@ class EMFrame(object):
 
 
 		self.signal_name.push(20,39,draw, string = wifi_info[0])
-		self.signal_strength.r_align(self.labelxr,39,draw, string = wifi_info[1])
+		self.signal_strength.string = str(wifi_info[3]) + " DB"
+		self.signal_strength.r_align(self.labelxr,39,draw)
 		self.signal_frequency.push(20,95,draw, string = wifi_info[3])
 		self.signal_mac.push(20,112, draw, string = wifi_info[6])
 		return status
