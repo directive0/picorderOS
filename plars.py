@@ -119,10 +119,8 @@ class PLARS(object):
 
 		strongest = db_column.astype(int).max()
 
-		# find its name
-		strong_sig = focus[strongest]
 
-		identity = focus.loc[focus['signal'] == strong_sig]
+		identity = focus.loc[focus['signal'] == strongest]
 		print("identity = ", identity)
 
 
