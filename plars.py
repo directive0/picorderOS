@@ -120,7 +120,9 @@ class PLARS(object):
 		strongest = db_column.astype(int).max()
 
 		# find its name
-		strongest_ssid = focus[strongest]
+		strong_sig = focus[strongest]
+
+		identity = focus.loc[focus['signal'] == strong_sig]
 
 
 
