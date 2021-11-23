@@ -2,8 +2,8 @@
 print("Loading Modulated EM Network Analysis")
 
 from wifi import Cell, Scheme
-
-
+import time
+from plars import *
 
 class Wifi_Scan(object):
 
@@ -19,6 +19,20 @@ class Wifi_Scan(object):
 
         if selection <= (len(ap_list)-1):
             return (ap_list[selection].ssid, ap_list[selection].signal, ap_list[selection].quality, ap_list[selection].frequency, ap_list[selection].bitrates, ap_list[selection].encrypted, ap_list[selection].channel, ap_list[selection].address, ap_list[selection].mode)
+
+    def dump_data(self):
+        ap_list = self.get_list()
+        return self.plars_package(ap_list)
+
+    def plars_package(self, ap_list):
+        timestamp = time.time()
+        ap_fragments = []
+                            #'ssid','signal','quality','frequency','encrypted','channel','address','mode','dsc','timestamp']
+        for ap in ap_list:
+            details = [ap.ssid, ap.signal, ap.quality, ap.frequency, ap.encrypted, ap.channel, ap.address, ap.mode, 'wifi', timestamp]
+            ap_fragments.append(details)
+
+        return ap_fragment
 
     def get_strongest_ssid(self):
 
@@ -36,6 +50,9 @@ class Wifi_Scan(object):
         details = [strongest.ssid, strongest.signal, strongest.quality, strongest.frequency, strongest.encrypted, strongest.channel, strongest.address, strongest.mode]
 
         return details
+
+    def update_plars(self):
+        plars.update_em(self.dump_data())
 
     def get_ssid_list(self):
 

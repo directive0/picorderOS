@@ -57,7 +57,7 @@ class PLARS(object):
 		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 		#create a buffer for wifi/bt data
-		self.buffer_em = pd.DataFrame(columns=['ssid','db','max','dsc','sym','dev','timestamp'])
+		self.buffer_em = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dev','dsc','timestamp'])
 
 
 		self.timer = timer()
@@ -94,7 +94,18 @@ class PLARS(object):
 
 
 	def update_em(self,data):
-		pass
+		print("Updating EM Dataframe:")
+		print(data)
+		newdata = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
+
+		# sets/requests the thread lock to prevent other threads reading data.
+		self.lock.acquire()
+
+		# appends the new data to the buffer
+		self.buffer_em = self.buffer_em.append(newdata, ignore_index=True)
+
+		self.lock.release()
+
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor
 	def update(self,data):
@@ -123,14 +134,18 @@ class PLARS(object):
 		# release the thread lock for other threads
 		self.lock.release()
 
+	def get_em(self,dsc,dev):
+		result = self.buffer_em.loc[self.buffer_em['dsc'] == dsc]
 
+		result2 = result.loc[result['dev'] == dev]
+		return result2
 
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
 
 		result = self.buffer.loc[self.buffer['dsc'] == dsc]
 
-		result2 = result.loc[self.buffer['dev'] == dev]
+		result2 = result.loc[result['dev'] == dev]
 		return result2
 
 	def index_by_time(self,df, ascending = False):
