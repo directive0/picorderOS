@@ -112,16 +112,25 @@ class PLARS(object):
 		focus = self.buffer_em.loc[self.buffer_em['timestamp'] == most_recent]
 		print("focus = ", focus)
 
-		# find most powerful SSID
-
+		# find most powerful signal
 		db_column = focus["signal"]
-		print("db colum = ", db_column)
-
 		strongest = db_column.astype(int).max()
 
-
+		# Identify the SSID of the strongest signal.
 		identity = focus.loc[focus['signal'] == strongest]
 		print("identity = ", identity)
+
+		# prepare markers to pull data
+		# Wifi APs can have the same name and different paramaters
+		# I use MAC and frequency to individualize a signal
+		dev = identity["dev"]
+		frq = identity["frequency"]
+
+		print("markers = ", dev, ", ", frq)
+
+		target_history = self.get_em(dev,frq)
+
+		print("target history =", target_history)
 
 
 		# release the thread lock.
@@ -175,8 +184,9 @@ class PLARS(object):
 		# release the thread lock for other threads
 		self.lock.release()
 
-	def get_em(self,dsc,dev):
+	def get_em(self,dev,frequency):
 		result = self.buffer_em.loc[self.buffer_em['dev'] == dev]
+		result2 = result.loc[result["frequency"] == frequency]
 
 		return result2
 
