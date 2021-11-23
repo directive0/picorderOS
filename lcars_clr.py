@@ -497,7 +497,7 @@ class EMFrame(object):
 		self.gspanx = 133
 		self.gspany = 71
 		self.titlex = 23
-		self.titley = 4
+		self.titley = 2
 
 		self.high = 0
 		self.low = 0
@@ -511,7 +511,7 @@ class EMFrame(object):
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 
 		self.signal_name = LabelObj("SSID",bigfont, colour = lcars_peach)
-		self.signal_strength = LabelObj("ST",bigfont, colour = lcars_pink)
+		self.signal_strength = LabelObj("ST",bigfont, colour = lcars_pinker)
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_peach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_peach)
 
@@ -552,11 +552,11 @@ class EMFrame(object):
 		wifi_info = self.wifi.get_strongest_ssid()
 
 
-		self.signal_name.push(20,36,draw, string = wifi_info[0])
+		self.signal_name.push(20,35,draw, string = wifi_info[0])
 		self.signal_strength.string = str(wifi_info[1]) + " DB"
-		self.signal_strength.r_align(self.labelxr,36,draw)
+		self.signal_strength.r_align(self.labelxr,35,draw)
 		self.signal_frequency.push(20,92,draw, string = wifi_info[3])
-		self.signal_mac.push(20,110, draw, string = wifi_info[6])
+		self.signal_mac.push(20,111, draw, string = wifi_info[6])
 		return status
 
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
