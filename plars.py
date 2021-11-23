@@ -123,7 +123,7 @@ class PLARS(object):
 		# prepare markers to pull data
 		# Wifi APs can have the same name and different paramaters
 		# I use MAC and frequency to individualize a signal
-		dev = identity["dev"]
+		dev = identity["dev"].iloc[0]
 		frq = identity["frequency"].iloc[0]
 
 		print("dev = ", dev)
