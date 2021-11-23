@@ -26,7 +26,7 @@ from plars import *
 class graph_area(object):
 
 
-	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
+	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0):
 		self.new = True
 		self.cycle = cycle
 		self.tock = timer()
@@ -39,6 +39,7 @@ class graph_area(object):
 		self.dotw = 6
 		self.doth = 6
 		self.buff = array('f', [])
+		self.type = type
 
 		self.timeit = timer()
 
@@ -119,7 +120,7 @@ class graph_area(object):
 	# if the auto flag is set then the class will autoscale the graph so that
 	# the highest and lowest currently displayed values are presented.
 	# takes in a list/array with length => span
-	def graphprep(self,datalist):
+	def graphprep(self, datalist, range = None):
 
 		# The starting X coordinate
 		self.linepoint = self.spanx + self.x
@@ -129,12 +130,15 @@ class graph_area(object):
 
 		self.newlist = []
 
-		# grabs the currently selected sensors range data
-		sourcelow = configure.sensor_info[configure.sensors[self.ident][0]][1]
+		if self.type == 0:
+			# grabs the currently selected sensors range data
+			sourcelow = configure.sensor_info[configure.sensors[self.ident][0]][1]
 
-		sourcehigh = configure.sensor_info[configure.sensors[self.ident][0]][2]
+			sourcehigh = configure.sensor_info[configure.sensors[self.ident][0]][2]
 
-		self.sourcerange = [sourcelow,sourcehigh]
+			self.sourcerange = [sourcelow,sourcehigh]
+		else:
+			self.sourcerange = range
 
 		# get the range of the data.
 		if len(datalist) > 0:
@@ -170,7 +174,7 @@ class graph_area(object):
 				# append the current x position, with this new scaled data as the y positioning into the buffer
 				self.newlist.append((self.linepoint,scaledata))
 			else:
-				# write intensity as scaled zero
+				# If no data just write intensity as scaled zero
 				scaledata = abs(numpy.interp(sourcelow,self.sourcerange,self.targetrange))
 				self.newlist.append((self.linepoint,scaledata))
 
@@ -182,7 +186,7 @@ class graph_area(object):
 		return self.newlist
 
 
-	def render(self, draw, auto = True, dot = True):
+	def render(self, draw, auto = True, dot = True, type = 0, range = None):
 
 		self.auto = configure.auto[0]
 
@@ -194,13 +198,15 @@ class graph_area(object):
 
 		# so every time through the loop PILgraph will pull the latest sensor
 		# settings.
+		if type == 0:
+			dsc = configure.sensor_info[configure.sensors[self.ident][0]][3]
+			dev = configure.sensor_info[configure.sensors[self.ident][0]][5]
 
-		dsc = configure.sensor_info[configure.sensors[self.ident][0]][3]
-		dev = configure.sensor_info[configure.sensors[self.ident][0]][5]
 
-
-		#preps the list by adding the X coordinate to every sensor value
-		recent = plars.get_recent(dsc,dev,num = self.spanx)
+			#preps the list by adding the X coordinate to every sensor value
+			recent = plars.get_recent(dsc,dev,num = self.spanx)
+		else:
+			recent = plars.get_recent(dsc,dev,num = self.spanx)
 
 
 		cords = self.graphprep(recent)

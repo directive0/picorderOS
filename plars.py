@@ -92,6 +92,37 @@ class PLARS(object):
 		print("buffer size set to: ", size)
 		self.buffer_size = size
 
+	def get_em_buffer(self):
+		return self.buffer_em
+
+	def get_em_strongest_history(self):
+		# returns a list of Db values for whatever SSID is currently the strongest.
+		# suitable to be fed into pilgraph for graphing.
+
+
+		# set the thread lock so other threads are unable to add sensor data
+		self.lock.acquire()
+
+		# find the most recent timestamp
+		time_column = self.buffer_em["timestamp"]
+		most_recent = time_column.max()
+
+		#limit focus to data from that timestamp
+		focus = self.buffer_em.loc[self.buffer_em['timestamp'] == most_recent]
+
+		# find most powerful SSID
+		db_column = focus["signal"]
+		strongest = db_column.idxmax()
+
+		# find its name
+		strongest_ssid = focus[strongest]
+
+
+
+		# release the thread lock.
+		self.lock.release()
+
+
 
 	def update_em(self,data):
 		print("Updating EM Dataframe:")
@@ -135,9 +166,8 @@ class PLARS(object):
 		self.lock.release()
 
 	def get_em(self,dsc,dev):
-		result = self.buffer_em.loc[self.buffer_em['dsc'] == dsc]
+		result = self.buffer_em.loc[self.buffer_em['dev'] == dev]
 
-		result2 = result.loc[result['dev'] == dev]
 		return result2
 
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
@@ -147,6 +177,7 @@ class PLARS(object):
 
 		result2 = result.loc[result['dev'] == dev]
 		return result2
+
 
 	def index_by_time(self,df, ascending = False):
 		df.sort_values(by=['timestamp'], ascending = ascending)
