@@ -711,11 +711,12 @@ class MultiFrame(object):
 
 			# if a key is registering as pressed increment or rollover the selection variable.
 			if keys[0]:
+				configure.eventready[0] = False
 				self.selection += 1
 				if self.selection > 3:
-					self.status = "mode_c"
+					status = "mode_c"
 					self.selection = 0
-					return self.status
+					return status
 
 			if keys[1]:
 				status =  "mode_b"
