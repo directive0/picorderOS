@@ -552,13 +552,11 @@ class EMFrame(object):
 				return status
 
 			if keys[1]:
-				status  = "mode_b"
-				configure.eventready[0] = False
-				return status
+				pass
 
 			if keys[2]:
 				status = "settings"
-				configure.last_status[0] = "mode_c"
+				configure.last_status[0] = "mode_b"
 				configure.eventready[0] = False
 				return status
 
@@ -715,7 +713,9 @@ class MultiFrame(object):
 			if keys[0]:
 				self.selection += 1
 				if self.selection > 3:
+					self.status = "mode_c"
 					self.selection = 0
+					return self.status
 
 			if keys[1]:
 				status =  "mode_b"

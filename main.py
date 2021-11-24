@@ -151,14 +151,16 @@ def Main():
 					if configure.display == 0:
 						configure.status[0] = dotscreen.push(data)
 					if configure.display == 1:
-						configure.status[0] = colourscreen.thermal_screen()
+						configure.status[0] = colourscreen.em_screen()
+
 
 			if configure.status[0] == "mode_c":
 
 
 				if configure.tr109:
 					if configure.display == 1:
-						configure.status[0] = colourscreen.em_screen()
+						configure.status[0] = colourscreen.thermal_screen()
+
 
 			if (configure.status[0] == "settings"):
 
