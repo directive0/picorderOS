@@ -868,18 +868,22 @@ class ThermalFrame(object):
 
 			# ------------- Input handling -------------- #
 			if keys[0]:
-				status  = "mode_a"
-				configure.eventready[0] = False
-				return status
-
-			if keys[1]:
 				self.selection += 1
 				if self.selection > 2:
 					self.selection = 0
+					status  = "mode_a"
+					return status
+				configure.eventready[0] = False
+
+
+			if keys[1]:
+				configure.eventready[0] = False
+				status  = "mode_b"
+				return status
 
 			if keys[2]:
 				status = "settings"
-				configure.last_status[0] = "mode_b"
+				configure.last_status[0] = "mode_c"
 				configure.eventready[0] = False
 				return status
 
