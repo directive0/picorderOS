@@ -534,7 +534,7 @@ class EMFrame(object):
 
 	def push(self, draw):
 
-		status  = "mode_c"
+		status  = "mode_b"
 		self.wifi.update_plars()
 		self.Signal_Graph.render(draw)
 		info = plars.get_top_em_info()[0]
