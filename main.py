@@ -147,7 +147,6 @@ def Main():
 						ledc_off()
 
 				if configure.tr109:
-
 					if configure.display == 0:
 						configure.status[0] = dotscreen.push(data)
 					if configure.display == 1:
@@ -155,8 +154,6 @@ def Main():
 
 
 			if configure.status[0] == "mode_c":
-
-
 				if configure.tr109:
 					if configure.display == 1:
 						configure.status[0] = colourscreen.thermal_screen()

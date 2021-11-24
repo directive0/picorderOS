@@ -711,11 +711,13 @@ class MultiFrame(object):
 
 			# if a key is registering as pressed increment or rollover the selection variable.
 			if keys[0]:
+
 				configure.eventready[0] = False
+
 				self.selection += 1
 				if self.selection > 3:
-					status = "mode_c"
 					self.selection = 0
+					status = "mode_c"
 					return status
 
 			if keys[1]:
@@ -858,7 +860,7 @@ class ThermalFrame(object):
 
 	def push(self, draw):
 
-		status  = "mode_b"
+		status  = "mode_c"
 
 		if configure.eventready[0]:
 			keys = configure.eventlist[0]
