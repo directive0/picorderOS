@@ -915,7 +915,7 @@ class ThermalFrame(object):
 			self.t_grid_full.push(draw)
 		elif self.selection == 2:
 			self.selection = 0
-			status = "mode_c"
+			status = "mode_a"
 
 		return status
 
