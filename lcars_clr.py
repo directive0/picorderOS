@@ -7,6 +7,7 @@ import time
 from luma.core.interface.serial import spi
 from luma.core.render import canvas
 from luma.lcd.device import st7735
+from luma.emulator.device import pygame
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps

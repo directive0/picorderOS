@@ -24,3 +24,11 @@ Depending on hardware configuration PicorderOS relies on a number of exotic modu
 - [psutil](https://psutil.readthedocs.io/en/latest/) (For simulating sensors when testing or demonstrating)
 
 Be sure you have these modules installed before attempting to run picorderOS.
+
+A requirements file have been included
+
+```
+python3 -m pip -r requirements.txt
+```
+-m defines next is a python module 
+-r defines next is a requirements file
