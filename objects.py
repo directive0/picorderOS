@@ -83,6 +83,10 @@ class preferences(object):
 		self.bme = True
 		self.amg8833 = True
 
+		# Experimental unsupported sensors
+		self.ir_thermo = False
+		self.envirophat = False
+
 		# toggles wifi/bt scanning
 		self.EM = True
 
@@ -93,9 +97,7 @@ class preferences(object):
 		# TR108 uses this sensehat
 		self.sensehat = False
 
-		# Experimental unsupported sensors
-		self.ir_thermo = False
-		self.envirophat = False
+
 
 		# flag to command the main loop
 		self.sensor_ready = [False]

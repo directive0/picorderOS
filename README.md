@@ -1,5 +1,6 @@
-![Logo](https://raw.githubusercontent.com/directive0/picorderOS/master/assets/picorderOS_logo.png?raw=true "PicorderOS Logo")
-
+<p align="center">
+  <img width="460" height="300" src="https://raw.githubusercontent.com/directive0/picorderOS/master/assets/Picorder_Logo.png">
+</p>
 #
 A set of python components that together provide functionality for a number of Raspberry Pi based tricorder replicas called "Picorders". A Picorder is made of a Raspberry Pi, a sensor package, battery, display and supplemental components to provide a satisfying and accurate Tricorder experience. The goal is to have a raspberry pi based device that provides the operator with a selection of sensor readings that may be useful and feels like a Tricorder from Star Trek.  
 
