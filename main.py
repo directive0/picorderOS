@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
-# PicorderOS Alpha --------------------------------- September 2020
+# PicorderOS Alpha --------------------------------- December 2021
 # Created by Chris Barrett ------------------------- directive0
+# For my sister, a real life Beverly Crusher.
 
 print("PicorderOS - Alpha")
 print("Loading Components")
@@ -38,7 +39,7 @@ if configure.tr108:
 #		from sensehat import *
 
 
-# for the new TR-109 there are two display modes supported.
+# for the TR-109 there are two display modes supported.
 if configure.tr109:
 
 	if configure.display == 2:
@@ -55,7 +56,7 @@ if configure.tr109:
 
 # the following function is our main loop, it contains all the flow for our program.
 def Main():
-
+	start_time = time.time()
 	#start the sensor loop
 	sensor_thread = Thread(target = threaded_sensor, args = ())
 	sensor_thread.start()

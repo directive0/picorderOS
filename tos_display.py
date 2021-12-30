@@ -3,7 +3,7 @@
 # This display module uses Pygame to draw picorder routines to the screen.
 # It is built upon the original Picorder UI and is intended to be used for TOS
 # styled tricorders.
-print("Loading Pygame Screen")
+print("Loading 320x240 Duotronic Interface")
 # The following are some necessary modules for the Picorder.
 import pygame
 import time
