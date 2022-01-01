@@ -1,6 +1,6 @@
 from objects import *
 import simpleaudio as sa
-
+print("Loading Audio Thread")
 
 scansound = sa.WaveObject.from_wave_file("assets/scanning.wav")
 clicksound = sa.WaveObject.from_wave_file("assets/clicking.wav")

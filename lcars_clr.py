@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # This module controls the st7735 type screens
-print("Loading Luma.LCD st7735 Screen")
+print("Loading 160x128 LCARS Interface")
 import math
 import time
 
+
+# remove this part and replace with display
 from luma.core.interface.serial import spi
 from luma.core.render import canvas
 from luma.lcd.device import st7735

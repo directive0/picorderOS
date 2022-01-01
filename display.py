@@ -1,20 +1,11 @@
-# borrowed heavily from:
-# https://github.com/rm-hull/luma.examples/blob/master/examples/demo_opts.py
-print("Loading Unified Display Module")
 
+# -*- coding: utf-8 -*-
+# Originally found: https://github.com/rm-hull/luma.examples/blob/master/examples/demo_opts.py
+# Modified for PicorderOS
+# Copyright (c) 2014-18 Richard Hull and contributors
+# See LICENSE.rst for details.
 
-from objects import *
-import sys
-
-# Luma.LCD modules:
-from luma.core import cmdline, error
-
-
-# outline:
-# use arguments to initialize a screen
-# receive screen information and draw it
-
-# all screen types should accept a standard PIL ImageDraw object
+print("Unified Display Module loading")
 import sys
 import logging
 

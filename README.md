@@ -1,27 +1,36 @@
-<p align="center">
-  <img width="460" height="300" src="https://raw.githubusercontent.com/directive0/picorderOS/master/assets/Picorder_Logo.png">
-</p>
-#
-A set of python components that together provide functionality for a number of Raspberry Pi based tricorder replicas called "Picorders". A Picorder is made of a Raspberry Pi, a sensor package, battery, display and supplemental components to provide a satisfying and accurate Tricorder experience. The goal is to have a raspberry pi based device that provides the operator with a selection of sensor readings that may be useful and feels like a Tricorder from Star Trek.  
+![Logo](https://raw.githubusercontent.com/directive0/picorderOS/master/assets/picorderOS_logo.png?raw=true "PicorderOS Logo")
+
+#PicorderOS is not actually an OS, but a set of python components that together provide functionality for a number of Raspberry Pi based tricorder replicas called "Picorders". A Picorder is made of a Raspberry Pi, one (or more) sensor package, battery, display and supplemental components to provide a satisfying and accurate Tricorder experience. The purpose of this project is to provide a simple, extensible method for quickly getting a raspberry pi to be a handheld sensor data collection and display device.
 
 For more up to date information please visit my [Wiki](https://squaredwave.com/wiki/index.php?title=PicorderOS)
 
 ## Notes:
-At present PicorderOS supports a number of displays, sensors, and inputs. The user can mix and match their desired picorder load out using the configure object contained in objects.py.
+At present PicorderOS supports a number of displays, sensors, and inputs. The user can mix and match their desired picorder load out by editing the objects.py preferences file.
 
-Since picorderOS uses Luma.LCD it can address screens that use ST7735 drivers for colour display, and PCD8544 drivers for low power monochromatic applications.
+The software is driven by a main loop in main.py which starts and controls the screen. Various elements like input detection, LED sequencing, and audio playback run as separate threads, communicating via flags set in the objects.py module.
 
-Using pygame it is also possible to use standard monitors or any display that connects to the Pi via HDMI or Composite.
+PicorderOS features PLARS (Picorder Library Access and Retrieval) to catalogue and organize each sensor reading into a pandas dataframe. PLARS then provides it to screen drawing modules as requested.
 
 ## Requirements:
-Depending on hardware configuration PicorderOS relies on a number of exotic modules to operate:
-- [Pygame](https://www.pygame.org/wiki/GettingStarted)
-- [Luma.lcd](https://pypi.org/project/luma.lcd/)
-- [Adafruit Blinka](https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi)
-- [MPR121 Capacitive Sensor](https://github.com/adafruit/Adafruit_CircuitPython_MPR121)
-- [Sensehat](https://projects.raspberrypi.org/en/projects/getting-started-with-the-sense-hat/2)
-- [RPi.GPIO](https://pypi.org/project/RPi.GPIO/)
-- [os](https://pythonprogramming.net/python-3-os-module/)
+Depending on hardware configuration PicorderOS use a number of exotic modules to operate:
+
+Most installs will require:
+- [RPi.GPIO](https://pypi.org/project/RPi.GPIO/) (For various I/O functions)
+- [os](https://pythonprogramming.net/python-3-os-module/) (For machine vitals)
 - [psutil](https://psutil.readthedocs.io/en/latest/) (For simulating sensors when testing or demonstrating)
+- [Adafruit Blinka](https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi) (Adafruit graciously offers a number of great python sensor libraries through their circuitpython platform)
+
+Depending on your choice of screen you may need:
+- [Pygame](https://www.pygame.org/wiki/GettingStarted) (For framebuffer screens)
+- [Luma.lcd](https://pypi.org/project/luma.lcd/) (For a range of LCD options)
+
+Depending on your sensor loadout and operator interface solution you may require:
+- [Sensehat](https://projects.raspberrypi.org/en/projects/getting-started-with-the-sense-hat/2)
+- [Adafruit Circuitpython BME680](https://github.com/adafruit/Adafruit_CircuitPython_BME680)
+
+I have
+- [cap1xxx](https://github.com/pimoroni/cap1xxx) (For CAP1208 based capacitive touch buttons)
+- [MPR121 Capacitive Sensor](https://github.com/adafruit/Adafruit_CircuitPython_MPR121) (For CAP1208 based capacitive touch buttons)
+
 
 Be sure you have these modules installed before attempting to run picorderOS.
