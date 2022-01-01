@@ -9,6 +9,7 @@ import pygame
 import time
 
 
+from plars import *
 from objects import *
 from input import *
 
@@ -326,7 +327,7 @@ def startUp(surface,timeSinceStart):
 	#mainTitle.center(resolution[0],20,0,181)
 	secTitle.update(configure.version,19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,190)
-	secblurb.update("Skurftronics - Toronto",15,37,210,titleFont,blue)
+	secblurb.update("Skurfsoft - Toronto",15,37,210,titleFont,blue)
 	secblurb.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer
@@ -558,9 +559,11 @@ class Graph_Screen(object):
 		self.margin = 16
 
 
-	def frame(self,sensors):
+	def frame(self):
 		# Because the graph screen is slow to update it needs to pop a reading onto screen as soon as it is initiated I draw a value once and wait for the interval to lapse for the next draw. Once the interval has lapsed pop another value on screen.
 		#Sets a black screen ready for our UI elements
+
+		sensors =
 
 		self.surface.fill(black)
 
@@ -702,7 +705,6 @@ class Graph_Screen(object):
 
 	def visible(self,item,option):
 		self.visibility[item] = option
-
 
 
 

@@ -9,9 +9,8 @@ import json
 
 
 
-#	TO DO:
 
-#   - buffer trimming
+#	TO DO:
 #	- JSON api
 
 import os
