@@ -751,7 +751,7 @@ class Slider_Screen(object):
 
 
 
-	def frame(self,sensors):
+	def frame(self):
 
 		#converts data to float
 		a_newest = float(sensors[configure.sensor1[0]][0])

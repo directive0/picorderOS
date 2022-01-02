@@ -29,18 +29,21 @@ threshold = 3
 release_threshold = 2
 
 
-# if tr108 set up pins for buttons
+# if tr108 set up pins for gpio buttons
 if configure.tr108:
 	pins = [5,6,13]
 
+# tr109 by default uses cap1208. This will require modifying for other inputs
 if configure.tr109:
 
-	# by default the tr-109 uses gpio for hinge close
 	import RPi.GPIO as GPIO
 
-	# hallpin 1 was disabled as sensor board rev 2 accidentaly used it to drive
+	if configure.dr[0]
+
 	hallpin1 = configure.HALLPIN1
 	hallpin2 = configure.HALLPIN2
+
+
 	alertpin = configure.ALERTPIN
 
 	GPIO.setmode(GPIO.BCM)
@@ -69,15 +72,12 @@ if configure.input_gpio:
 
 	if configure.tr109:
 		# setup our 3 control buttons
-
-
 		GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
 	# To add:
 	# GPIO Battery Low
-	# GPIO Hall 1
-	# GPIO Hall 2
 
 
 
@@ -86,24 +86,26 @@ if configure.input_cap_mpr121:
 	# if using the capacitive touch board from adafruit we import that library
 	import adafruit_mpr121
 	import busio
-	#import board
 
-	# Create I2C bus.
+	# initiate I2C bus.
 	i2c = busio.I2C(configure.PIN_SCL, configure.PIN_SDA)
 
 	# Create MPR121 object. Address can be 5A or 5B (proto uses 5A)
 	mpr121 = adafruit_mpr121.MPR121(i2c, address = 0x5A)
 
+	# initializes each input
 	for i in range(3):
 		test = adafruit_mpr121.MPR121_Channel(mpr121,i)
 		test.threshold = threshold
 		test.release_threshold = release_threshold
 
 if configure.input_cap1208:
-	# setup for ugeek test rig.
+
+
 	import RPi.GPIO as GPIO
 
 	GPIO.setmode(GPIO.BCM)
+
 
 	interrupt_pin = 0
 	GPIO.setup(interrupt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -116,85 +118,52 @@ if configure.input_cap1208:
 
 
 
-# the input class handles all the requirements for handling user directed inputs
+# the input class receives and relays control events for user interaction
 class Inputs(object):
 
 	def __init__(self):
 
-		# # create some status variables for debounce.
-		self.eventlist = []
 
-		# fired stores immidiate state of button (if its pressed or not)
-		self.fired = []
-
-		# down stores the first moment of activation, for instances where falling edge detection is required
-		self.down = []
-
-		# up stores the return to being not pressed
-		self.up = []
-
+		# lists for hold behaviour tracking
 		self.holding = []
-		self.holdstarted = []
 		self.holdtimers = []
+		# holding timer interval
 		self.thresh_hold = 1.500
 
-		# waspressed stores information about previous state
-		self.waspressed = []
-
-		self.clear = []
+		# list stores each inputs previous state for comparison with now.
 		self.pressed = []
-		self.lasttime = []
+
+		# a fresh eventlist to initialize.
+		self.clear = []
 
 		# this list stores the final state of all buttons to allow the program to check for multiple button presses for hidden features
 		self.buttonlist = []
 		self.door_was_open = False
 		self.door_was_closed = False
 
-		# prepares these lists for the script
+		# seeds each list with a spot for each input
 		for i in range(buttons):
-			self.lasttime.append("none")
-			self.clear.append(False)
 			self.pressed.append(False)
-			self.fired.append(False)
 			self.buttonlist.append(False)
-			self.down.append(False)
-			self.up.append(True)
-			self.waspressed.append(False)
 			self.holding.append(False)
-			self.holdstarted.append(0)
+			self.clear.append(False)
+
 			thistimer = timer()
 			self.holdtimers.append(thistimer)
-			self.eventlist.append(True)
 
-		self.awaspressed = False
-		self.bwaspressed = False
-		self.cwaspressed = False
-		self.afire = False
-		self.bfire = False
-		self.cfire = False
+
+
+
 
 		configure.eventlist[0] = self.clear
-
-	def is_down(self, i):
-		if self.down[i]:
-			self.down[i] = False
-			return True
-		else:
-			return False
-
-	def is_up(self, i):
-		if not self.down[i]:
-			return True
-		else:
-			return False
 
 	def getlist(self):
 		pass
 
 	def read(self):
 
-		if configure.dr[0]:
-
+		# looks for door open/close.
+		if configure.tr109 and configure.dr[0]:
 			# top hall sensor, 1 = door open
 			if GPIO.input(hallpin1) == 1:
 				if self.door_was_closed == True:
@@ -214,8 +183,6 @@ class Inputs(object):
 			else:
 				self.door_was_open = True
 
-
-
 		if configure.input_cap1208:
 
 			# if the alert pin is brought LOW
@@ -233,13 +200,19 @@ class Inputs(object):
 					if input == "press":
 						# mark it in the pressed list
 						self.pressed[iteration] = True
+						# raise the eventready flag
 						configure.eventready[0] = True
+						# raise the sound effect flag
 						configure.beep_ready[0] = True
 					else:
+						# if an item is marked "released"
 						if input == "release":
+							# if it was previously marked pressed
 							if self.pressed[iteration] == True:
+								# ignore it
 								self.pressed[iteration] = False
 							else:
+								# if it wasn't marked pressed last time (was missed)
 								configure.eventready[0] = True
 								self.pressed[iteration] = True
 								configure.beep_ready[0] = True
@@ -268,8 +241,8 @@ class Inputs(object):
 			# key was pressed
 
 			if key[pygame.K_LEFT]:
-					if not self.waspressed[0]:
-						self.waspressed[0] = True
+					if not self.pressed[0]:
+						self.pressed[0] = True
 						self.holdtimers[0].logtime()
 					else:
 
@@ -278,16 +251,16 @@ class Inputs(object):
 
 			if not key[pygame.K_LEFT]:
 				self.holding[0] = False
-				if self.waspressed[0]:
+				if self.pressed[0]:
 					self.buttonlist[0] = True
-					self.waspressed[0] = False
+					self.pressed[0] = False
 				else:
 					self.buttonlist[0] = False
 
 
 			if key[pygame.K_DOWN]:
-					if not self.waspressed[1]:
-						self.waspressed[1] = True
+					if not self.pressed[1]:
+						self.pressed[1] = True
 						self.holdtimers[1].logtime()
 					else:
 
@@ -296,16 +269,16 @@ class Inputs(object):
 
 			if not key[pygame.K_DOWN]:
 				self.holding[1] = False
-				if self.waspressed[1]:
+				if self.pressed[1]:
 					self.buttonlist[1] = True
-					self.waspressed[1] = False
+					self.pressed[1] = False
 				else:
 					self.buttonlist[1] = False
 
 
 			if key[pygame.K_RIGHT]:
-					if not self.waspressed[2]:
-						self.waspressed[2] = True
+					if not self.pressed[2]:
+						self.pressed[2] = True
 						self.holdtimers[2].logtime()
 					else:
 
@@ -314,9 +287,9 @@ class Inputs(object):
 
 			if not key[pygame.K_RIGHT]:
 				self.holding[2] = False
-				if self.waspressed[2]:
+				if self.pressed[2]:
 					self.buttonlist[2] = True
-					self.waspressed[2] = False
+					self.pressed[2] = False
 				else:
 					self.buttonlist[2] = False
 
@@ -326,15 +299,15 @@ class Inputs(object):
 
 				# if the button has not been registered as pressed
 				if GPIO.input(pins[i]) == 0:  # button pressed
-					if not self.waspressed[i]:
-						self.waspressed[i] = True
+					if not self.pressed[i]:
+						self.pressed[i] = True
 
 
 				if GPIO.input(pins[i]) == 1:
 
-					if self.waspressed[i]:
+					if self.pressed[i]:
 						self.buttonlist[i] = True
-						self.waspressed[i] = False
+						self.pressed[i] = False
 					else:
 						self.buttonlist[i] = False
 
@@ -347,8 +320,8 @@ class Inputs(object):
 
 				# if the button has not been registered as pressed
 				if touched[i]:  # button pressed
-					if not self.waspressed[i]:
-						self.waspressed[i] = True
+					if not self.pressed[i]:
+						self.pressed[i] = True
 						self.holdtimers[i].logtime()
 					else:
 
@@ -357,13 +330,13 @@ class Inputs(object):
 
 				if not touched[i]:
 					self.holding[i] = False
-					if self.waspressed[i]:
+					if self.pressed[i]:
 						self.buttonlist[i] = True
-						self.waspressed[i] = False
+						self.pressed[i] = False
 					else:
 						self.buttonlist[i] = False
 
-
+		configure.eventlist[0] = self.pressed
 
 
 	def keypress(self):
