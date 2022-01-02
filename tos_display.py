@@ -563,6 +563,10 @@ class Graph_Screen(object):
 		# Because the graph screen is slow to update it needs to pop a reading onto screen as soon as it is initiated I draw a value once and wait for the interval to lapse for the next draw. Once the interval has lapsed pop another value on screen.
 		#Sets a black screen ready for our UI elements
 
+		# grabs sensor info from settings for quick reference and display
+		sense_info_a = configure.sensor_info[configure.sensors[0]]
+		sense_info_b = configure.sensor_info[configure.sensors[1]]
+		sense_info_c = configure.sensor_info[configure.sensors[2]]
 
 		self.surface.fill(black)
 
@@ -575,7 +579,6 @@ class Graph_Screen(object):
 		senseslice =[]
 
 		for i in range(3):
-			print(configure.sensor_info)
 			# determines the sensor keys for each of the three main sensors
 			dsc = configure.sensor_info[configure.sensors[i][0]][3]
 			dev = configure.sensor_info[configure.sensors[i][0]][5]
@@ -585,32 +588,34 @@ class Graph_Screen(object):
 			if len(senseslice) > 0:
 				senseslice[i] = item
 
+
 		#converts data to float
 
-		a_newest = float(senseslice[0][0])
-		b_newest = float(senseslice[1][0])
-		c_newest = float(senseslice[2][0])
+		a_newest = float(senseslice[0])
+		b_newest = float(senseslice[1])
+		c_newest = float(senseslice[2])
 		newests = [a_newest,b_newest,c_newest]
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
-		a_cords = graphit(self.data_a,senseslice[0][0])
-		b_cords = graphit(self.data_b,senseslice[1][0])
-		c_cords = graphit(self.data_c,senseslice[2][0])
+		a_cords = graphit(self.data_a,senseslice[0])
+		b_cords = graphit(self.data_b,senseslice[1])
+		c_cords = graphit(self.data_c,senseslice[2])
 		cords = [a_cords,b_cords,c_cords]
 
 		a_content = str(int(a_newest))
 		a_color = themes[configure.theme[0]][0]
-		self.a_label.update(a_content + senseslice[0][4],30,marginleft,205,titleFont,a_color)
+
+		self.a_label.update(a_content + sense_info_a[4],30,marginleft,205,titleFont,a_color)
 
 		b_content = str(int(b_newest))
 		b_color = themes[configure.theme[0]][1]
-		self.b_label.update( b_content + senseslice[1][4],30,114,205,titleFont,b_color)
+		self.b_label.update( b_content + sense_info_b[4],30,114,205,titleFont,b_color)
 		self.b_label.center(resolution[0],31,0,205)
 
 		c_content = str(int(c_newest))
 		c_color = themes[configure.theme[0]][2]
 
-		self.c_label.update(c_content + senseslice[2][4],30,marginright,205,titleFont,c_color)
+		self.c_label.update(c_content + sense_info_c[4],30,marginright,205,titleFont,c_color)
 		self.c_label.r_align(320 - marginright ,205)
 		contents = [a_content,b_content,c_content]
 
@@ -622,22 +627,15 @@ class Graph_Screen(object):
 		intery= (21)
 
 
-		## Interval timer to control refresh
-		#intervaltime = float(self.drawinterval.timelapsed())
-		#persec = 60 / intervaltime
-		#lapse = format(persec, '.2f')
-		#self.drawinterval.logtime()
-		#intervaltext = (lapse + ' sps')
-		#self.intervallabel.update(intervaltext,30,interx,intery,titleFont,white)
-		#self.intervallabelshadow.update(intervaltext, 30, interx + 2, intery + 2 ,titleFont,(100,100,100))
 
 
 		if not configure.auto[0]:
-			a_slide = translate(a_newest, senseslice[0][1], senselice[0][2], 194, 7)
 
-			b_slide = translate(b_newest, senseslice[1][1], senselice[1][2], 194, 7)
+			a_slide = translate(a_newest, sense_info_a[1], sense_info_a[2], 194, 7)
 
-			c_slide = translate(c_newest, senselice[2][1], senseslice[2][2], 194, 7)
+			b_slide = translate(b_newest, sense_info_b[1], sense_info_b[2], 194, 7)
+
+			c_slide = translate(c_newest, sense_info_c[1], sense_info_c[2], 194, 7)
 
 			self.slider1.update(sliderb, 283, a_slide)
 			self.slider2.update(sliderb, 283, b_slide)

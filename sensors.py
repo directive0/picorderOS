@@ -296,6 +296,9 @@ class Sensor(object):
 		configure.max_sensors[0] = len(sensorlist)
 
 
+		if len(sensorlist) < 1:
+			print("NO SENSORS LOADED")
+			
 		return sensorlist
 
 class MLX90614():
