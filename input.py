@@ -13,14 +13,16 @@ print("Loading Unified Input Module")
 # geo, met and bio are going to be standard across all trics.
 
 
-from objects import *
-
 # array holds the pins for each hard coded button on the tric
 # The TR-108 only has 3 buttons
 
 # Max number of buttons
 #	0	1	 2  	3  	4	5	6		7				8			9		10			11	  12	13	14
 # geo, met, bio, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
+
+
+import time
+from objects import *
 
 # stores the number of buttons to be queried
 buttons = 16
@@ -38,7 +40,6 @@ if configure.tr109:
 
 	import RPi.GPIO as GPIO
 
-	if configure.dr[0]
 
 	hallpin1 = configure.HALLPIN1
 	hallpin2 = configure.HALLPIN2
@@ -50,7 +51,6 @@ if configure.tr109:
 	GPIO.setup(hallpin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	GPIO.setup(hallpin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-import time
 
 # set up requirements for USB keyboard
 if configure.input_kb:

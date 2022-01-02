@@ -575,7 +575,7 @@ class Graph_Screen(object):
 		senseslice =[]
 
 		for i in range(3):
-
+			print(configure.sensor_info)
 			# determines the sensor keys for each of the three main sensors
 			dsc = configure.sensor_info[configure.sensors[i][0]][3]
 			dev = configure.sensor_info[configure.sensors[i][0]][5]
