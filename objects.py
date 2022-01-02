@@ -32,9 +32,10 @@ class preferences(object):
 		self.input_kb = False
 		self.input_gpio = False
 		self.input_cap_mpr121 = False
+		self.input_pcf8575 = True
 
 		# CAP1208 and sensitivity settings
-		self.input_cap1208 = True
+		self.input_cap1208 = False
 		self.CAPSENSITIVITY = 50
 
 
@@ -50,7 +51,7 @@ class preferences(object):
 		self.LED_TIMER = 0.2
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
-		self.leds = [True]
+		self.leds = [False]
 
 		# turns alarms on/off
 		self.alarm = [True]
@@ -62,7 +63,7 @@ class preferences(object):
 		self.sleep = [True]
 
 		# enables sound effect playback
-		self.audio = [True]
+		self.audio = [False]
 
 		# controls auto ranging of graphs
 		self.auto = [True]
@@ -80,8 +81,8 @@ class preferences(object):
 
 		# Toggles individual sensor support
 		self.system_vitals = True
-		self.bme = True
-		self.amg8833 = True
+		self.bme = False
+		self.amg8833 = False
 
 		# Experimental unsupported sensors
 		self.ir_thermo = False
@@ -111,7 +112,7 @@ class preferences(object):
 		self.sensors = [self.sensor1, self.sensor2, self.sensor3]
 
 		# sets data logging mode.
-		self.datalog = [True]
+		self.datalog = [False]
 		self.logtime = [60]
 		self.recall = [False]
 

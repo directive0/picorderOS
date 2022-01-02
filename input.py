@@ -23,7 +23,7 @@ from objects import *
 # geo, met, bio, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
 
 # stores the number of buttons to be queried
-buttons = 8
+buttons = 16
 
 threshold = 3
 release_threshold = 2
@@ -116,6 +116,11 @@ if configure.input_cap1208:
 	cap1208 = cap1xxx.Cap1208(alert_pin = 0)
 	cap1208._write_byte(0x1F, configure.CAPSENSITIVITY)
 
+if configure.input_pcf8575:
+	from pcf8575 import PCF8575
+	i2c_port_num = 0
+	pcf_address = 0x20
+	pcf = PCF8575(i2c_port_num, pcf_address)
 
 
 # the input class receives and relays control events for user interaction
@@ -337,6 +342,25 @@ class Inputs(object):
 						self.buttonlist[i] = False
 
 		configure.eventlist[0] = self.pressed
+		if configure.input_pcf8575:
+
+			if not configure.eventready[0]:
+				print("button state = ", pcf.port)
+				for this, button in enumerate(pcf.port):
+					# if an item is pressed
+					if not button:
+
+						#if it wasn't pressed last time
+						if not self.pressed[this]:
+
+							# mark it in the pressed list
+							print("pad press registered")
+							self.pressed[this] = True
+							configure.eventready[0] = True
+							configure.beep_ready[0] = True
+					else:
+						self.pressed[this] = False
+
 
 
 	def keypress(self):
