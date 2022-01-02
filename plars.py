@@ -213,7 +213,7 @@ class PLARS(object):
 		# return a list of the values
 		return trimmed_data['signal'].tolist()
 
-	# return a list of n most recent data from specific sensor defined by key
+	# return a list of n most recent data from specific sensor defined by keys
 	def get_recent(self, dsc, dev, num = 5):
 
 		# set the thread lock so other threads are unable to add sensor data
