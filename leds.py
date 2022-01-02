@@ -113,7 +113,8 @@ def resetleds():
 # # I figured it was easier than having different functions for different combinations.
 # # This way you can just manually set them as you please.
 def screen_on():
-	GPIO.output(sc_led, GPIO.HIGH)
+	if configure.tr109:
+		GPIO.output(sc_led, GPIO.HIGH)
 
 def leda_on():
 	GPIO.output(led1, GPIO.HIGH)
@@ -140,7 +141,9 @@ def ledd_off():
 	GPIO.output(led4, GPIO.LOW)
 #
 def screen_off():
-	GPIO.output(sc_led, GPIO.LOW)
+	if configure.tr109:
+		GPIO.output(sc_led, GPIO.LOW)
+
 
 # The following class drives the ABGD ripple animation for the tr-109.
 class ripple(object):

@@ -854,8 +854,8 @@ class Screen(object):
 		status = self.slidescreen.frame(sensors)
 		return status
 
-	def graph_screen(self,sensors):
-		status = self.graphscreen.frame(sensors)
+	def graph_screen(self):
+		status = self.graphscreen.frame()
 		return status
 
 	def settings(self):
