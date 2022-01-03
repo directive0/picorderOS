@@ -576,7 +576,7 @@ class Graph_Screen(object):
 		# resolves the key items (dsc and dev) for the targeted sensor, for plars to use.
 		# creates a "senseslice"; an up to date data fragment for each configured sensor
 
-		senseslice =[]
+		senseslice = [0,0,0]
 
 		for i in range(3):
 			# determines the sensor keys for each of the three main sensors
