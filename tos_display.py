@@ -586,6 +586,7 @@ class Graph_Screen(object):
 			print(dsc,dev)
 
 			item = plars.get_recent(dsc,dev,num = 1)
+			print(item)
 			if len(senseslice) > 0:
 				senseslice[i] = item
 
