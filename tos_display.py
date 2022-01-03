@@ -564,9 +564,9 @@ class Graph_Screen(object):
 		#Sets a black screen ready for our UI elements
 
 		# grabs sensor info from settings for quick reference and display
-		sense_info_a = configure.sensor_info[configure.sensors[0]]
-		sense_info_b = configure.sensor_info[configure.sensors[1]]
-		sense_info_c = configure.sensor_info[configure.sensors[2]]
+		sense_info_a = configure.sensor_info[configure.sensors[0][0]]
+		sense_info_b = configure.sensor_info[configure.sensors[1][0]]
+		sense_info_c = configure.sensor_info[configure.sensors[2][0]]
 
 		self.surface.fill(black)
 
@@ -697,7 +697,6 @@ class Graph_Screen(object):
 
 		# The following code handles inputs and button presses.
 		keys = self.input.read()
-		#print("keys reading as: ", keys)
 		# if a key is registering as pressed.
 		if keys[0]:
 			self.selection += 1
