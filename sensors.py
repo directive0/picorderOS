@@ -7,6 +7,8 @@ from plars import *
 print("Loading Unified Sensor Module")
 
 
+
+
 if not configure.pc:
 	import os
 
@@ -29,6 +31,9 @@ if configure.sensehat:
 
 	# Sets the IMU Configuration.
 	sense.set_imu_config(True,False,False)
+
+	# Prepares an array of 64 pixel triplets for the Sensehat moire display
+	moire=[[0 for x in range(3)] for x in range(64)]
 
 
 if configure.envirophat:
@@ -195,21 +200,32 @@ class Sensor(object):
 
 			sensorlist += [item1, item2, item3, item4]
 
-		if configure.sensehat:# and not configure.simulate:
+		if configure.sensehat:
 
 			if configure.moire:
+				cxtick=self.ticks/15.0
+				cytick=self.ticks/8.0
+
 				for x in range(8):
 					for y in range(8):
 						# it's this cool plasma effect from demoscene I stole from
 						# somewhere.
-						cx = x + 0.5*math.sin(self.ticks/5.0)
-						cy = y + 0.5*math.cos(self.ticks/3.0)
-						v = math.sin(math.sqrt(1.0*(math.pow(cx, 2.0)+math.pow(cy, 2.0))+1.0)+self.ticks)
-						#v = v + math.sin(x*10.0+self.ticks)
+						cx = x + 0.5*math.sin(cxtick)
+						cy = y + 0.5*math.cos(cytick)
+						v = math.sin(math.sqrt(1.0*(math.pow(cy, 2.0)+math.pow(cx, 2.0))+1.0)+self.ticks)
 						v = (v + 1.0)/2.0
 						v = int(v*255.0)
-						sense.set_pixel(x,y,v,v,v)
-				self.ticks = self.ticks+1
+		                # Adjust colors by replacing v arguments with these modified versions
+						# firstV = max(0,v-200)
+						# secondV = max(0,v-300)
+						# thirdV = max(0,v-150)
+						# moire[(x*8)+y]=[firstV,secondV,thirdV]
+
+                        # Pack the computed pixel into the moire pixel list
+						moire[(x*8)+y]=[v,v,v]
+
+				sense.set_pixels(moire)
+				self.ticks += 1
 			else:
 				sense.clear()  # no arguments defaults to off
 
@@ -293,12 +309,14 @@ class Sensor(object):
 			item8 = dummyload8 + self.infoh + timestamp
 
 			sensorlist += [item0, item1, item2, item3, item4, item5,item6, item7, item8]
+
 		configure.max_sensors[0] = len(sensorlist)
 
 
 		if len(sensorlist) < 1:
 			print("NO SENSORS LOADED")
-			
+
+		print("sensorlist from sensors.py is: ", sensorlist)
 		return sensorlist
 
 class MLX90614():

@@ -1,6 +1,6 @@
 ![Logo](https://raw.githubusercontent.com/directive0/picorderOS/master/assets/picorderOS_logo.png?raw=true "PicorderOS Logo")
 
-#PicorderOS is not actually an OS, but a set of python components that together provide functionality for a number of Raspberry Pi based tricorder replicas called "Picorders". A Picorder is made of a Raspberry Pi, one (or more) sensor package, battery, display and supplemental components to provide a satisfying and accurate Tricorder experience. The purpose of this project is to provide a simple, extensible method for quickly getting a raspberry pi to be a handheld sensor data collection and display device.
+# PicorderOS is not actually an OS, but a set of python components that together provide functionality for a number of Raspberry Pi based tricorder replicas called "Picorders". A Picorder is made of a Raspberry Pi, one (or more) sensor package, battery, display and supplemental components to provide a satisfying and accurate Tricorder experience. The purpose of this project is to provide a simple, extensible method for quickly getting a raspberry pi to be a handheld sensor data collection and display device.
 
 For more up to date information please visit my [Wiki](https://squaredwave.com/wiki/index.php?title=PicorderOS)
 
@@ -33,4 +33,16 @@ I have
 - [MPR121 Capacitive Sensor](https://github.com/adafruit/Adafruit_CircuitPython_MPR121) (For CAP1208 based capacitive touch buttons)
 
 
-Be sure you have these modules installed before attempting to run picorderOS.
+Be sure you have these modules installed before attempting to run picorderOS. A fresh Raspberry Pi OS image can usually be initialized with the following installation commands:
+
+```
+sudo apt-get update
+
+sudo apt-get upgrade
+
+sudo apt-get install libatlas-base-dev libsdl2-dev libopenjp2-7-dev libtiff5
+
+pip3 install --upgrade pandas psutil numpy colour luma.lcd luma.emulator adafruit-circuitpython-bme680 sense-hat adafruit-circuitpython-mpr121
+
+
+```

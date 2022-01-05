@@ -216,6 +216,7 @@ class PLARS(object):
 	# return a list of n most recent data from specific sensor defined by keys
 	def get_recent(self, dsc, dev, num = 5):
 
+		print("plars: received request for recent: ", dsc,", ",dev,", ",num)
 		# set the thread lock so other threads are unable to add sensor data
 		self.lock.acquire()
 
@@ -229,7 +230,9 @@ class PLARS(object):
 		self.lock.release()
 
 		# return a list of the values
-		return trimmed_data['value'].tolist()
+		result = trimmed_data['value'].tolist()
+		print("plars: returning data: ", result)
+		return result
 
 
 	def trimbuffer(self, save = True):

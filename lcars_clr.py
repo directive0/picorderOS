@@ -742,7 +742,7 @@ class MultiFrame(object):
 		senseslice =[0,0,0]
 
 		for i in range(3):
-			
+
 			dsc = configure.sensor_info[configure.sensors[i][0]][3]
 			dev = configure.sensor_info[configure.sensors[i][0]][5]
 
