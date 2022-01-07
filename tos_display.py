@@ -830,7 +830,7 @@ class Screen(object):
 		else:
 			# on the picorder use this option (Fullscreen).
 			flags = pygame.FULLSCREEN | pygame.SCALED
-			self.surface = pygame.display.set_mode(screenSize, flags)
+			self.surface = pygame.display.set_mode(screenSize, flags, display=0)
 			pygame.event.set_blocked(pygame.MOUSEMOTION)
 			pygame.mouse.set_visible(False)
 
