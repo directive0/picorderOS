@@ -76,7 +76,7 @@ status = "startup"
 last_status = "startup"
 
 # sets the icon for the program (will show up in docks/taskbars on PCs)
-pygame.display.set_icon(blueInsignia)
+#pygame.display.set_icon(blueInsignia)
 
 
 
@@ -818,6 +818,11 @@ class Screen(object):
 
 	def __init__(self):
 		screenSize = resolution
+
+		# The following commands initiate a pygame environment.
+		pygame.init()
+		pygame.font.init()
+		pygame.display.set_caption('PicorderOS')
 
 		# I forget, probably colour depth?
 		smodes = pygame.display.list_modes(def_modes)
