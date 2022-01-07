@@ -569,7 +569,7 @@ class EMFrame(object):
 
 		self.signal_name.push(20,35,draw, string = info[0])
 		self.signal_strength.string = str(info[1]) + " DB"
-		self.signal_strength.r_align(self.labelxr,111,draw)
+		self.signal_strength.r_align(self.labelxr,92,draw)
 		self.signal_frequency.push(20,92,draw, string = info[3])
 		self.signal_mac.push(20,111, draw, string = info[6])
 
