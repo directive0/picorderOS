@@ -25,14 +25,14 @@ class preferences(object):
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
-		self.tr108 = False
-		self.tr109 = True
+		self.tr108 = True
+		self.tr109 = False
 
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = False
-		self.input_gpio = False
+		self.input_gpio = True
 		self.input_cap_mpr121 = False
-		self.input_pcf8575 = True
+		self.input_pcf8575 = False
 
 		# CAP1208 and sensitivity settings
 		self.input_cap1208 = False
@@ -79,6 +79,9 @@ class preferences(object):
 		# (is automatically set by the sensor module at startup)
 		self.max_sensors = [0]
 
+		# TR108 uses this sensehat
+		self.sensehat = False
+
 		# Toggles individual sensor support
 		self.system_vitals = True
 		self.bme = False
@@ -94,11 +97,6 @@ class preferences(object):
 		#sets the upper and lower threshold for the alert
 		self.TEMP_ALERT = (0,100)
 		self.interpolate = [True]
-
-		# TR108 uses this sensehat
-		self.sensehat = False
-
-
 
 		# flag to command the main loop
 		self.sensor_ready = [False]

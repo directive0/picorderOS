@@ -40,9 +40,9 @@ sudo apt-get update
 
 sudo apt-get upgrade
 
-sudo apt-get install libatlas-base-dev libsdl2-dev libopenjp2-7-dev libtiff5
+sudo apt-get install libatlas-base-dev libsdl2-dev libopenjp2-7-dev libtiff5 python3-pandas python3-psutil
 
-pip3 install --upgrade pandas psutil numpy colour luma.lcd luma.emulator adafruit-circuitpython-bme680 sense-hat adafruit-circuitpython-mpr121
+pip3 install --upgrade colour luma.lcd luma.emulator adafruit-circuitpython-bme680 sense-hat adafruit-circuitpython-mpr121
 
 
 ```

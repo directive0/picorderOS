@@ -693,7 +693,7 @@ class Graph_Screen(object):
 		#draws UI to frame buffer
 
 
-		pygame.display.flip()
+		pygame.display.update()
 
 		status  = "mode_a"
 

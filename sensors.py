@@ -7,8 +7,6 @@ from plars import *
 print("Loading Unified Sensor Module")
 
 
-
-
 if not configure.pc:
 	import os
 
@@ -316,7 +314,7 @@ class Sensor(object):
 		if len(sensorlist) < 1:
 			print("NO SENSORS LOADED")
 
-		print("sensorlist from sensors.py is: ", sensorlist)
+		#print("sensorlist from sensors.py is: ", sensorlist)
 		return sensorlist
 
 class MLX90614():
