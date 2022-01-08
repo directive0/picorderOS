@@ -11,7 +11,11 @@ class Wifi_Scan(object):
         pass
 
     def get_list(self):
-        ap_list = list(Cell.all('wlan0'))
+        try:
+            ap_list = list(Cell.all('wlan0'))
+        except:
+            print("Wifi failed")
+            ap_list = []
         return ap_list
 
     def get_info(self,selection):

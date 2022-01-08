@@ -20,7 +20,7 @@ if not configure.pc:
 		os.system('xset -display :0 -dpms')
 
 # The following commands initiate a pygame environment.
-pygame.init()
+print(pygame.init())
 pygame.font.init()
 pygame.display.set_caption('PicorderOS')
 
