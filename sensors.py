@@ -221,7 +221,7 @@ class Sensor(object):
 			sense_data4 = [sense.get_compass_raw()["x"]]
 			sense_data5 = [sense.get_compass_raw()["y"]]
 			sense_data6 = [sense.get_compass_raw()["z"]]
-			# sense_data7 = [sense.get_accelerometer_raw()["x"]]
+			sense_data7 = [sense.get_accelerometer_raw()["x"]]
 			# sense_data8 = [sense.get_accelerometer_raw()["y"]]
 			# sense_data9 = [sense.get_accelerometer_raw()["z"]]
 
