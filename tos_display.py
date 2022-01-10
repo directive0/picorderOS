@@ -17,10 +17,10 @@ if not configure.pc:
 	if configure.tr108:
 		import os
 		# runs a CLI command to disable the raspberry pi's screen blanking
-		os.system('xset -display :0 -dpms')
+		#os.system('xset -display :0 -dpms')
 
 # The following commands initiate a pygame environment.
-print(pygame.init())
+pygame.init()
 pygame.font.init()
 pygame.display.set_caption('PicorderOS')
 
@@ -345,9 +345,10 @@ def startUp(surface,timeSinceStart):
 	secblurb.draw(surface)
 
 	pygame.display.flip()
-
+	elapsed = timenow - timeSinceStart
+	print("elapsed: ", elapsed)
 	#waits for 2 seconds to elapse before returning the state that will take us to the sensor readout
-	if (timenow - timeSinceStart) < 2:
+	if elapsed < 2:
 	 return "mode_a"
 	else:
 	 return "ready"
@@ -588,7 +589,7 @@ class Graph_Screen(object):
 			item = plars.get_recent(dsc,dev,num = 1)
 			print(item)
 			if len(senseslice) > 0:
-				senseslice[i] = item
+				senseslice[i] = float(item)
 
 
 		#converts data to float
