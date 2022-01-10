@@ -187,16 +187,18 @@ class Sensor(object):
 
 		if configure.sensehat:
 
-			if configure.moire:
-				cxtick=self.ticks/15.0
-				cytick=self.ticks/8.0
+                if configure.sensehat:
 
-				for x in range(8):
-					for y in range(8):
-						# it's this cool plasma effect from demoscene I stole from
-						# somewhere.
-						cx = x + 0.5*math.sin(cxtick)
-						cy = y + 0.5*math.cos(cytick)
+	                if configure.moire:
+                        cxtick=0.5*math.sin(self.ticks/15.0) # change this line
+                        cytick=0.5*math.cos(self.ticks/8.0) #change this line
+
+                        for x in range(8):
+                                for y in range(8):
+                                        # it's this cool plasma effect from demoscene I stole from
+                                        # somewhere.
+                                        cx = x + cxtick #change this line
+                                        cy = y + cytick #change this line
 						v = math.sin(math.sqrt(1.0*(math.pow(cy, 2.0)+math.pow(cx, 2.0))+1.0)+self.ticks)
 						v = (v + 1.0)/2.0
 						v = int(v*255.0)
