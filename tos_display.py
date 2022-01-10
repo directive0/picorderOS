@@ -564,7 +564,7 @@ class Graph_Screen(object):
 		#Sets a black screen ready for our UI elements
 
 		# grabs sensor info from settings for quick reference and display
-		sense_info_a = configure.sensor_info[configure.sensors[0][0]]
+		sense_info_a = configure.sensor_info[configure.sensors[0]]
 		sense_info_b = configure.sensor_info[configure.sensors[1][0]]
 		sense_info_c = configure.sensor_info[configure.sensors[2][0]]
 
