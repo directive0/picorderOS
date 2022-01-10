@@ -223,6 +223,8 @@ class PLARS(object):
 		# get a dataframe of just the requested sensor
 		untrimmed_data = self.get_sensor(dsc,dev)
 
+		print("plars: ", untrimmed_data)
+
 		# trim it to length (num).
 		trimmed_data = untrimmed_data.tail(num)
 
