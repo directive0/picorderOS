@@ -97,15 +97,15 @@ class Sensor(object):
 			self.sense.set_imu_config(True,False,False)
 			# activates low light conditions to not blind the user.
 			self.sense.low_light = True
-			self.temp_info = [0,65,"Thermometer (SH)",self.deg_sym + "c", "SenseHat"]
+			self.temp_info = [0,65,"Thermometer",self.deg_sym + "c", "SenseHat"]
 			self.humidity_info = [20,80,"Hygrometer", "%", "SenseHat"]
 			self.pressure_info = [260,1260,"Barometer","hPa", "SenseHat"]
-			self.magnet_infox = [-500,500,"Magnet X","G", "SenseHat"]
-			self.magnet_infoy = [-500,500,"Magnet Y","G", "SenseHat"]
-			self.magnet_infoz = [-500,500,"Magnet Z","G", "SenseHat"]
-			self.accelerometer_infox = [-500,500,"Accel X","g", "SenseHat"]
-			self.accelerometer_infoy = [-500,500,"Accel Y","g", "SenseHat"]
-			self.accelerometer_infoz = [-500,500,"Accel Z","g", "SenseHat"]
+			self.magnet_infox = [-500,500,"MagnetX","G", "SenseHat"]
+			self.magnet_infoy = [-500,500,"MagnetY","G", "SenseHat"]
+			self.magnet_infoz = [-500,500,"MagnetZ","G", "SenseHat"]
+			self.accelerometer_infox = [-500,500,"AccelX","g", "SenseHat"]
+			self.accelerometer_infoy = [-500,500,"AccelY","g", "SenseHat"]
+			self.accelerometer_infoz = [-500,500,"AccelZ","g", "SenseHat"]
 
 		if configure.ir_thermo:
 			i2c = io.I2C(configure.PIN_SCL, configure.PIN_SDA, frequency=100000)
