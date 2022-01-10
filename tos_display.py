@@ -589,7 +589,7 @@ class Graph_Screen(object):
 			item = plars.get_recent(dsc,dev,num = 1)
 			print(item)
 			if len(senseslice) > 0:
-				senseslice[i] = float(item)
+				senseslice[i] = item[0]
 
 
 		#converts data to float
