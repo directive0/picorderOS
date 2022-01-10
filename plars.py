@@ -178,6 +178,8 @@ class PLARS(object):
 			self.trimbuffer()
 			self.timer.logtime()
 
+		print("plars buffer is:", self.buffer)
+
 		# release the thread lock for other threads
 		self.lock.release()
 
