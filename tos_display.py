@@ -31,7 +31,7 @@ pygame.display.set_caption('PicorderOS')
 # set the screen configuration
 resolution = (320,240)
 def_modes = 16
-refreshrate = 1
+refreshrate = 0
 
 # controls the margins to adjust for adjusting text positioning.
 marginright = 16
