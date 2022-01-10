@@ -699,7 +699,7 @@ class Graph_Screen(object):
 
 
 		# The following code handles inputs and button presses.
-		keys = configure.eventlist[0]
+		keys = [0,0,0]
 		# if a key is registering as pressed.
 		if keys[0]:
 			self.selection += 1
