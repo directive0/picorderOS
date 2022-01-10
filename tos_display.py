@@ -589,21 +589,21 @@ class Graph_Screen(object):
 			item = plars.get_recent(dsc,dev,num = 1)
 			print(item)
 			if len(senseslice) > 0:
-				senseslice[i] = item[0]
+				senseslice[i] = item
 
 
 		#converts data to float
 		print(senseslice)
 
-		a_newest = float(senseslice[0])
-		b_newest = float(senseslice[1])
-		c_newest = float(senseslice[2])
+		a_newest = float(senseslice[0][0])
+		b_newest = float(senseslice[1][0])
+		c_newest = float(senseslice[2][0])
 		newests = [a_newest,b_newest,c_newest]
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
-		a_cords = graphit(self.data_a,senseslice[0])
-		b_cords = graphit(self.data_b,senseslice[1])
-		c_cords = graphit(self.data_c,senseslice[2])
+		a_cords = graphit(self.data_a,senseslice[0][0])
+		b_cords = graphit(self.data_b,senseslice[1][0])
+		c_cords = graphit(self.data_c,senseslice[2][0])
 		cords = [a_cords,b_cords,c_cords]
 
 		a_content = str(int(a_newest))
