@@ -306,6 +306,7 @@ class Inputs(object):
 				if GPIO.input(pins[i]) == 0:  # button pressed
 					if not self.pressed[i]:
 						self.pressed[i] = True
+						configure.eventlist[0] = True
 
 
 				if GPIO.input(pins[i]) == 1:
@@ -341,7 +342,7 @@ class Inputs(object):
 					else:
 						self.buttonlist[i] = False
 
-		configure.eventlist[0] = self.pressed
+
 		if configure.input_pcf8575:
 
 			if not configure.eventready[0]:
@@ -361,7 +362,7 @@ class Inputs(object):
 					else:
 						self.pressed[this] = False
 
-
+		configure.eventlist[0] = self.pressed
 
 	def keypress(self):
 		pygame.event.get()

@@ -582,10 +582,10 @@ class Graph_Screen(object):
 			# determines the sensor keys for each of the three main sensors
 			dsc = configure.sensor_info[configure.sensors[i][0]][3]
 			dev = configure.sensor_info[configure.sensors[i][0]][5]
-			print("dsc, dev: ",dsc,dev)
+
 
 			item = plars.get_recent(dsc,dev,num = 1)
-			print("item: ", item)
+
 
 			if len(senseslice) > 0:
 				senseslice[i] = item
@@ -695,21 +695,23 @@ class Graph_Screen(object):
 
 		status  = "mode_a"
 
+		if configure.eventready[0]:
 
-		# The following code handles inputs and button presses.
-		keys = [0,0,0]
-		# if a key is registering as pressed.
-		if keys[0]:
-			self.selection += 1
-			if self.selection > 3:
-				self.selection = 0
+			# The following code handles inputs and button presses.
+			keys = configure.eventlist[0]
 
-		if keys[1]:
-			status =  "mode_b"
+			# if a key is registering as pressed.
+			if keys[0]:
+				self.selection += 1
+				if self.selection > 3:
+					self.selection = 0
 
-		if keys[2]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
+			if keys[1]:
+				status =  "mode_b"
+
+			if keys[2]:
+				configure.last_status[0] = "mode_a"
+				status = "settings"
 
 		return status
 

@@ -216,14 +216,13 @@ class PLARS(object):
 	# return a list of n most recent data from specific sensor defined by keys
 	def get_recent(self, dsc, dev, num = 5):
 
-		#print("plars: received request for recent: ", dsc,", ",dev,", ",num)
 		# set the thread lock so other threads are unable to add sensor data
 		self.lock.acquire()
 
 		# get a dataframe of just the requested sensor
 		untrimmed_data = self.get_sensor(dsc,dev)
 
-		print("plars: ", untrimmed_data)
+
 
 		# trim it to length (num).
 		trimmed_data = untrimmed_data.tail(num)
@@ -233,7 +232,7 @@ class PLARS(object):
 
 		# return a list of the values
 		result = trimmed_data['value'].tolist()
-		#print("plars: returning data: ", result)
+
 		return result
 
 
