@@ -216,9 +216,9 @@ class Sensor(object):
 
 
 			sense_data = [sense.get_temperature()]
-			# sense_data2 = [sense.get_pressure()]
-			# sense_data3 = [sense.get_humidity()]
-			# sense_data4 = [sense.get_compass_raw()["x"]]
+			sense_data2 = [sense.get_pressure()]
+			sense_data3 = [sense.get_humidity()]
+			sense_data4 = [sense.get_compass_raw()["x"]]
 			# sense_data5 = [sense.get_compass_raw()["y"]]
 			# sense_data6 = [sense.get_compass_raw()["z"]]
 			# sense_data7 = [sense.get_accelerometer_raw()["x"]]
@@ -226,18 +226,17 @@ class Sensor(object):
 			# sense_data9 = [sense.get_accelerometer_raw()["z"]]
 
 			item1 = sense_data + self.temp_info + timestamp
-			# item2 = sense_data2 + self.pressure_info + timestamp
-			# item3 = sense_data3 + self.humidity_info + timestamp
-			#
-			# item4 = sense_data4 + self.magnet_infox + timestamp
+			item2 = sense_data2 + self.pressure_info + timestamp
+			item3 = sense_data3 + self.humidity_info + timestamp
+			item4 = sense_data4 + self.magnet_infox + timestamp
 			# item5 = sense_data5 + self.magnet_infoy + timestamp
 			# item6 = sense_data6 + self.magnet_infoz + timestamp
 			# item7 = sense_data7 + self.accelerometer_infox + timestamp
 			# item8 = sense_data8 + self.accelerometer_infoy + timestamp
 			# item9 = sense_data9 + self.accelerometer_infoz + timestamp
 
-			sensorlist += [item1]#, item2, item3, item4, item5, item6, item7, item8, item9]
-			print("sensehat sensors", sensorlist)
+			sensorlist += [item1, item2, item3, item4] #, item5, item6, item7, item8, item9]
+			#print("sensehat sensors", sensorlist)
 		if configure.envirophat:
 			self.rgb = light.rgb()
 			self.analog_values = analog.read_all()

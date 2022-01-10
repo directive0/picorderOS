@@ -346,9 +346,9 @@ def startUp(surface,timeSinceStart):
 
 	pygame.display.flip()
 	elapsed = timenow - timeSinceStart
-	print("elapsed: ", elapsed)
+
 	#waits for 2 seconds to elapse before returning the state that will take us to the sensor readout
-	if elapsed > 10:
+	if elapsed > 3:
 	 return "mode_a"
 	else:
 	 return "startup"
@@ -563,8 +563,6 @@ class Graph_Screen(object):
 		# Because the graph screen is slow to update it needs to pop a reading onto screen as soon as it is initiated I draw a value once and wait for the interval to lapse for the next draw. Once the interval has lapsed pop another value on screen.
 		#Sets a black screen ready for our UI elements
 
-		#print(configure.sensor_info)
-
 		# grabs sensor info from settings for quick reference and display
 		sense_info_a = configure.sensor_info[configure.sensors[0][0]]
 		sense_info_b = configure.sensor_info[configure.sensors[1][0]]
@@ -594,8 +592,6 @@ class Graph_Screen(object):
 
 
 		#converts data to float
-
-		print(senseslice)
 		a_newest = float(senseslice[0][0])
 		b_newest = float(senseslice[1][0])
 		c_newest = float(senseslice[2][0])

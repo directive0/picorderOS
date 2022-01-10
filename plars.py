@@ -159,7 +159,7 @@ class PLARS(object):
 
 		# creates a new dataframe for the new information to add to the buffer
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
-		print("plars received:", newdata)
+
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
 
@@ -177,8 +177,6 @@ class PLARS(object):
 		if length > 0:
 			self.trimbuffer()
 			self.timer.logtime()
-
-		print("plars buffer is:", self.buffer)
 
 		# release the thread lock for other threads
 		self.lock.release()
