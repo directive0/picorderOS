@@ -221,9 +221,11 @@ class Sensor(object):
 			sense_data4 = [sense.get_compass_raw()["x"]]
 			sense_data5 = [sense.get_compass_raw()["y"]]
 			sense_data6 = [sense.get_compass_raw()["z"]]
-			sense_data7 = [float(sense.get_accelerometer_raw()["x"])]
-			sense_data8 = [float(sense.get_accelerometer_raw()["y"])]
-			sense_data9 = [float(sense.get_accelerometer_raw()["z"])]
+
+			acceldata = sense.get_accelerometer_raw()
+			sense_data7 = [float(acceldata["x"])]
+			sense_data8 = [float(acceldata["y"])]
+			sense_data9 = [float(acceldata["z"])]
 
 			item1 = sense_data + self.temp_info + timestamp
 			item2 = sense_data2 + self.pressure_info + timestamp
