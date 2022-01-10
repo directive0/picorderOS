@@ -351,7 +351,7 @@ def startUp(surface,timeSinceStart):
 	if elapsed < 200:
 	 return "mode_a"
 	else:
-	 return "ready"
+	 return "startup"
 
 # the following function displays version information about the program
 def about(surface):
