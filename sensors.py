@@ -97,7 +97,7 @@ class Sensor(object):
 			self.sense.set_imu_config(True,False,False)
 			# activates low light conditions to not blind the user.
 			self.sense.low_light = True
-			self.temp_info = [0,65,"Thermometer (SH)",self.deg_sym + "c"]
+			self.temp_info = [0,65,"Thermometer (SH)",self.deg_sym + "c", "SenseHat"]
 			self.humidity_info = [20,80,"Hygrometer", "%", "SenseHat"]
 			self.pressure_info = [260,1260,"Barometer","hPa", "SenseHat"]
 			self.magnet_infox = [-500,500,"Magnet X","G", "SenseHat"]
@@ -302,7 +302,7 @@ class Sensor(object):
 		if len(sensorlist) < 1:
 			print("NO SENSORS LOADED")
 
-		
+
 		return sensorlist
 
 class MLX90614():
