@@ -563,8 +563,10 @@ class Graph_Screen(object):
 		# Because the graph screen is slow to update it needs to pop a reading onto screen as soon as it is initiated I draw a value once and wait for the interval to lapse for the next draw. Once the interval has lapsed pop another value on screen.
 		#Sets a black screen ready for our UI elements
 
+		print(configure.sensor_info)
+
 		# grabs sensor info from settings for quick reference and display
-		sense_info_a = configure.sensor_info[configure.sensors[0]]
+		sense_info_a = configure.sensor_info[configure.sensors[0][0]]
 		sense_info_b = configure.sensor_info[configure.sensors[1][0]]
 		sense_info_c = configure.sensor_info[configure.sensors[2][0]]
 
