@@ -348,7 +348,7 @@ def startUp(surface,timeSinceStart):
 	elapsed = timenow - timeSinceStart
 	print("elapsed: ", elapsed)
 	#waits for 2 seconds to elapse before returning the state that will take us to the sensor readout
-	if elapsed < 2:
+	if elapsed < 200:
 	 return "mode_a"
 	else:
 	 return "ready"
