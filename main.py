@@ -112,7 +112,7 @@ def Main():
 
 
 				if configure.tr108:
-					configure.status[0] = PyScreen.startUp(start_time)
+					configure.status[0] = PyScreen.startup_screen(start_time)
 
 			if configure.status[0] == "ready":
 				configure.status[0] = "mode_a"
