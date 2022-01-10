@@ -721,7 +721,7 @@ class Graph_Screen(object):
 
 
 class Slider_Screen(object):
-	def __init__(self, surface,input):
+	def __init__(self, surface):
 		# This function draws the main 3-slider interface, modelled after McCoy's tricorder in "Plato's Stepchildren". It displays temperature, humidity and pressure.
 		self.surface = surface
 
@@ -837,10 +837,9 @@ class Screen(object):
 
 
 		self.timed = time.time()
-		self.input = Inputs()
-		self.graphscreen = Graph_Screen(self.surface,self.input)
-		self.slidescreen = Slider_Screen(self.surface,self.input)
-		self.settings_screen = Settings_Panel(self.surface,self.input)
+		self.graphscreen = Graph_Screen(self.surface)
+		self.slidescreen = Slider_Screen(self.surface)
+		self.settings_screen = Settings_Panel(self.surface)
 
 
 	def startup_screen(self,start_time):
