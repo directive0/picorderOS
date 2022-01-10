@@ -187,28 +187,28 @@ class Sensor(object):
 
 		if configure.sensehat:
 
-                if configure.sensehat:
+				if configure.sensehat:
 
-	                if configure.moire:
-                        cxtick=0.5*math.sin(self.ticks/15.0) # change this line
-                        cytick=0.5*math.cos(self.ticks/8.0) #change this line
+					if configure.moire:
+						cxtick=0.5*math.sin(self.ticks/15.0) # change this line
+						cytick=0.5*math.cos(self.ticks/8.0) #change this line
 
-                        for x in range(8):
-                                for y in range(8):
-                                        # it's this cool plasma effect from demoscene I stole from
-                                        # somewhere.
-                                        cx = x + cxtick #change this line
-                                        cy = y + cytick #change this line
+						for x in range(8):
+								for y in range(8):
+										# it's this cool plasma effect from demoscene I stole from
+										# somewhere.
+										cx = x + cxtick #change this line
+										cy = y + cytick #change this line
 						v = math.sin(math.sqrt(1.0*(math.pow(cy, 2.0)+math.pow(cx, 2.0))+1.0)+self.ticks)
 						v = (v + 1.0)/2.0
 						v = int(v*255.0)
-		                # Adjust colors by replacing v arguments with these modified versions
+						# Adjust colors by replacing v arguments with these modified versions
 						# firstV = max(0,v-200)
 						# secondV = max(0,v-300)
 						# thirdV = max(0,v-150)
 						# moire[(x*8)+y]=[firstV,secondV,thirdV]
 
-                        # Pack the computed pixel into the moire pixel list
+						# Pack the computed pixel into the moire pixel list
 						moire[(x*8)+y]=[v,v,v]
 
 				sense.set_pixels(moire)
