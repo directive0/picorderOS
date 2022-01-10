@@ -112,7 +112,7 @@ def Main():
 
 
 				if configure.tr108:
-					configure.status[0] = PyScreen.graph_screen()
+					configure.status[0] = PyScreen.startUp(start_time)
 
 			if configure.status[0] == "ready":
 				configure.status[0] = "mode_a"
@@ -153,12 +153,10 @@ def Main():
 					if configure.display == 1:
 						configure.status[0] = colourscreen.em_screen()
 
-
 			if configure.status[0] == "mode_c":
 				if configure.tr109:
 					if configure.display == 1:
 						configure.status[0] = colourscreen.thermal_screen()
-
 
 			if (configure.status[0] == "settings"):
 
