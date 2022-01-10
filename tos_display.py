@@ -593,7 +593,7 @@ class Graph_Screen(object):
 
 		#converts data to float
 
-
+		print(senseslice)
 		a_newest = float(senseslice[0][0])
 		b_newest = float(senseslice[1][0])
 		c_newest = float(senseslice[2][0])
