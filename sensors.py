@@ -228,7 +228,6 @@ class Sensor(object):
 			item1 = sense_data + self.temp_info + timestamp
 			item2 = sense_data2 + self.pressure_info + timestamp
 			item3 = sense_data3 + self.humidity_info + timestamp
-
 			item4 = sense_data4 + self.magnet_infox + timestamp
 			item5 = sense_data5 + self.magnet_infoy + timestamp
 			item6 = sense_data6 + self.magnet_infoz + timestamp

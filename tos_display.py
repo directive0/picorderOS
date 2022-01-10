@@ -585,16 +585,14 @@ class Graph_Screen(object):
 			dsc = configure.sensor_info[configure.sensors[i][0]][3]
 			dev = configure.sensor_info[configure.sensors[i][0]][5]
 
-			print(dsc,dev)
-
 			item = plars.get_recent(dsc,dev,num = 1)
-			print(item)
+
 			if len(senseslice) > 0:
 				senseslice[i] = item
 
 
 		#converts data to float
-		print(senseslice)
+
 
 		a_newest = float(senseslice[0][0])
 		b_newest = float(senseslice[1][0])
