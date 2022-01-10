@@ -222,10 +222,10 @@ class Sensor(object):
 			sense_data5 = [sense.get_compass_raw()["y"]]
 			sense_data6 = [sense.get_compass_raw()["z"]]
 
-			acceldata = sense.get_accelerometer_raw()
-			sense_data7 = [float(acceldata["x"])]
-			sense_data8 = [float(acceldata["y"])]
-			sense_data9 = [float(acceldata["z"])]
+			# acceldata = sense.get_accelerometer_raw()
+			# sense_data7 = [float(acceldata["x"])]
+			# sense_data8 = [float(acceldata["y"])]
+			# sense_data9 = [float(acceldata["z"])]
 
 			item1 = sense_data + self.temp_info + timestamp
 			item2 = sense_data2 + self.pressure_info + timestamp
@@ -233,11 +233,11 @@ class Sensor(object):
 			item4 = sense_data4 + self.magnet_infox + timestamp
 			item5 = sense_data5 + self.magnet_infoy + timestamp
 			item6 = sense_data6 + self.magnet_infoz + timestamp
-			item7 = sense_data7 + self.accelerometer_infox + timestamp
-			item8 = sense_data8 + self.accelerometer_infoy + timestamp
-			item9 = sense_data9 + self.accelerometer_infoz + timestamp
+			# item7 = sense_data7 + self.accelerometer_infox + timestamp
+			# item8 = sense_data8 + self.accelerometer_infoy + timestamp
+			# item9 = sense_data9 + self.accelerometer_infoz + timestamp
 
-			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
+			sensorlist += [item1, item2, item3, item4, item5, item6]
 			#print("sensehat sensors", sensorlist)
 		if configure.envirophat:
 			self.rgb = light.rgb()
