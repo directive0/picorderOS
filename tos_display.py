@@ -418,10 +418,10 @@ def graphit(data,new, auto = True):
 
 class Settings_Panel(object):
 
-	def __init__(self,surface,input):
+	def __init__(self,surface):
 
 		self.left_margin = 37
-		self.input = input
+
 		self.index = 0
 		self.surface = surface
 		self.labelstart = 47
@@ -507,10 +507,9 @@ class Graph_Screen(object):
 
 	# Draws three graphs in a grid and three corresponding labels.
 
-	def __init__(self,surface,input):
+	def __init__(self,surface):
 
-		# initializes the input
-		self.input = input
+
 		# for long presses
 		self.input_timer = timer()
 		self.presstime = 5
@@ -700,16 +699,12 @@ class Graph_Screen(object):
 
 
 		# The following code handles inputs and button presses.
-		keys = self.input.read()
+		keys = configure.eventlist[0]
 		# if a key is registering as pressed.
 		if keys[0]:
 			self.selection += 1
 			if self.selection > 3:
 				self.selection = 0
-
-		if self.input.holding[0]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
 
 		if keys[1]:
 			status =  "mode_b"
