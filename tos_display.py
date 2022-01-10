@@ -601,9 +601,9 @@ class Graph_Screen(object):
 		newests = [a_newest,b_newest,c_newest]
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
-		a_cords = graphit(self.data_a,senseslice[0][0])
-		b_cords = graphit(self.data_b,senseslice[1][0])
-		c_cords = graphit(self.data_c,senseslice[2][0])
+		a_cords = graphit(self.data_a,senseslice[0])
+		b_cords = graphit(self.data_b,senseslice[1])
+		c_cords = graphit(self.data_c,senseslice[2])
 		cords = [a_cords,b_cords,c_cords]
 
 		a_content = str(int(a_newest))
