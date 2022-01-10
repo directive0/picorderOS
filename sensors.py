@@ -84,7 +84,6 @@ class Sensor(object):
 			self.infog = [-100,100,"Cos Wave", "","Raspberry Pi"]
 			self.infoh = [-100,100,"Sine Wave2", "","Raspberry Pi"]
 
-
 		if configure.sensehat:
 			self.ticks = 0
 			self.onoff = 1
@@ -140,18 +139,6 @@ class Sensor(object):
 			self.humidity_info = [0,100,"Hygrometer", "%", "BME680"]
 			self.pressure_info = [300,1100,"Barometer","hPa", "BME680"]
 			self.VOC_info = [300000,1100000,"VOC","KOhm", "BME680"]
-
-
-		# EM sensors are (for now) The RPI's wifi/BT chipset.
-		# Information below will only apply to the RPI Zero W.
-		# add individual sensor module parameters below.
-		#0				1			2		3		4
-		#info = (lower range, upper range, unit, symbol)
-
-
-		if configure.EM:
-			self.wifi_info = [-40,85,"Wifi",self.deg_sym + "c", "bcm43438"]
-
 
 		configure.sensor_info = self.get()
 
@@ -248,6 +235,7 @@ class Sensor(object):
 			item7 = sense_data7 + self.accelerometer_infox + timestamp
 			item8 = sense_data8 + self.accelerometer_infoy + timestamp
 			item9 = sense_data9 + self.accelerometer_infoz + timestamp
+
 			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
 
 		if configure.envirophat:
@@ -314,7 +302,7 @@ class Sensor(object):
 		if len(sensorlist) < 1:
 			print("NO SENSORS LOADED")
 
-		#print("sensorlist from sensors.py is: ", sensorlist)
+		print("sensorlist from sensors.py is: ", sensorlist)
 		return sensorlist
 
 class MLX90614():
