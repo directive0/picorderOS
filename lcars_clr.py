@@ -491,18 +491,10 @@ class EMFrame(object):
 
 		self.wifi = Wifi_Scan()
 
-		# Sets the topleft origin of the graph
-		self.graphx = 20
-		self.graphy = 24
-
-		# Sets the x and y span of the graph
-		self.gspanx = 133
-		self.gspany = 71
-
 		self.graphcycle = 0
 
 		# Sets the topleft origin of the graph
-		self.graphx = 23
+		self.graphx = 21
 		self.graphy = 58
 
 		# Sets the x and y span of the graph
@@ -527,8 +519,8 @@ class EMFrame(object):
 
 		self.signal_name = LabelObj("SSID",bigfont, colour = lcars_peach)
 		self.signal_strength = LabelObj("ST",bigfont, colour = lcars_pinker)
-		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_peach)
-		self.signal_mac = LabelObj("MAC",font, colour = lcars_peach)
+		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
+		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 
 		self.list = Label_List(25,35)
 
@@ -596,7 +588,7 @@ class EMFrame(object):
 				label = strength + " dB • " + name
 
 				list_for_labels.append(label)
-				
+
 			self.title.r_align(self.labelxr,self.titley,draw)
 			self.list.update(list_for_labels,draw)
 
