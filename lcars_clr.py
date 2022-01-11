@@ -537,10 +537,6 @@ class EMFrame(object):
 	def push(self, draw):
 
 		status  = "mode_b"
-		self.wifi.update_plars()
-		self.Signal_Graph.render(draw)
-		info = plars.get_top_em_info()[0]
-
 
 		# input handling
 		if configure.eventready[0]:
@@ -554,6 +550,10 @@ class EMFrame(object):
 				return status
 
 			if keys[1]:
+				self.selection += 1
+
+				if self.selection > 2:
+					self.selection = 0
 				pass
 
 			if keys[2]:
@@ -563,6 +563,14 @@ class EMFrame(object):
 				return status
 
 			configure.eventready[0] = False
+
+
+		self.wifi.update_plars()
+		self.Signal_Graph.render(draw)
+		info = plars.get_top_em_info()[0]
+
+
+
 
 		self.title.r_align(self.labelxr,self.titley,draw)
 
