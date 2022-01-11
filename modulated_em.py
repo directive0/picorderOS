@@ -22,7 +22,7 @@ class Wifi_Scan(object):
         ap_list = self.update()
 
         if selection <= (len(ap_list)-1):
-            return (ap_list[selection].ssid, ap_list[selection].signal, ap_list[selection].quality, ap_list[selection].frequency, ap_list[selection].bitrates, ap_list[selection].encrypted, ap_list[selection].channel, ap_list[selection].address, ap_list[selection].mode)
+            return (ap_list[selection].ssid, int(ap_list[selection].signal), ap_list[selection].quality, ap_list[selection].frequency, ap_list[selection].bitrates, ap_list[selection].encrypted, ap_list[selection].channel, ap_list[selection].address, ap_list[selection].mode)
 
     def dump_data(self):
         ap_list = self.get_list()
