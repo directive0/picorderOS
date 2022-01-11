@@ -495,11 +495,11 @@ class EMFrame(object):
 		self.graphcycle = 0
 
 		# Sets the topleft origin of the graph
-		self.graphx = 21
+		self.graphx = 20
 		self.graphy = 58
 
 		# Sets the x and y span of the graph
-		self.gspanx = 137
+		self.gspanx = 135
 		self.gspany = 29
 		self.titlex = 23
 		self.titley = 2

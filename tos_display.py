@@ -632,11 +632,11 @@ class Graph_Screen(object):
 
 		if not configure.auto[0]:
 
-			a_slide = translate(a_newest, sense_info_a[1], sense_info_a[2], 194, 7)
+			a_slide = translate(a_newest, sense_info_a[1], sense_info_a[2], 191, 9)
 
-			b_slide = translate(b_newest, sense_info_b[1], sense_info_b[2], 194, 7)
+			b_slide = translate(b_newest, sense_info_b[1], sense_info_b[2], 191, 9)
 
-			c_slide = translate(c_newest, sense_info_c[1], sense_info_c[2], 194, 7)
+			c_slide = translate(c_newest, sense_info_c[1], sense_info_c[2], 191, 9)
 
 			self.slider1.update(sliderb, 283, a_slide)
 			self.slider2.update(sliderb, 283, b_slide)
