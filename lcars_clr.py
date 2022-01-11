@@ -595,7 +595,7 @@ class EMFrame(object):
 
 				list_for_labels.append(label)
 
-			self.list.push(list_for_labels,draw)
+			self.list.update(list_for_labels,draw)
 
 			# assign each list element and its
 
