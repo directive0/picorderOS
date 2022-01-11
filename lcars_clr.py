@@ -566,7 +566,7 @@ class EMFrame(object):
 
 		self.wifi.update_plars()
 
-		if self.selection = 0:
+		if self.selection == 0:
 
 			# grab EM data from plars
 			info = plars.get_top_em_info()[0]
@@ -580,7 +580,7 @@ class EMFrame(object):
 			self.signal_frequency.push(20,92,draw, string = info[3])
 			self.signal_mac.push(20,111, draw, string = info[6])
 
-		if self.selection = 1:
+		if self.selection == 1:
 
 			list_for_labels = []
 			# grab EM list
