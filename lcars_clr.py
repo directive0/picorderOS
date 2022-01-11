@@ -552,7 +552,7 @@ class EMFrame(object):
 			if keys[1]:
 				self.selection += 1
 
-				if self.selection > 2:
+				if self.selection >= 2:
 					self.selection = 0
 				pass
 
@@ -564,23 +564,40 @@ class EMFrame(object):
 
 			configure.eventready[0] = False
 
-
 		self.wifi.update_plars()
-		self.Signal_Graph.render(draw)
-		info = plars.get_top_em_info()[0]
+
+		if self.selection = 0:
+
+			# grab EM data from plars
+			info = plars.get_top_em_info()[0]
+
+			# draw screen elements
+			self.Signal_Graph.render(draw)
+			self.title.r_align(self.labelxr,self.titley,draw)
+			self.signal_name.push(20,35,draw, string = info[0])
+			self.signal_strength.string = str(info[1]) + " DB"
+			self.signal_strength.r_align(self.labelxr,92,draw)
+			self.signal_frequency.push(20,92,draw, string = info[3])
+			self.signal_mac.push(20,111, draw, string = info[6])
+
+		if self.selection = 1:
+
+			list_for_labels = []
+			# grab EM list
+			em_list = plars.get_recent_em_list()
 
 
+			for ssid in em_list:
+				name = str(ssid[0])
+				strength = str(ssid[1])
 
+				label = strength + " " + name
 
-		self.title.r_align(self.labelxr,self.titley,draw)
+				list_for_labels.append(label)
 
+			self.list.push(list_for_labels,draw)
 
-		self.signal_name.push(20,35,draw, string = info[0])
-		self.signal_strength.string = str(info[1]) + " DB"
-		self.signal_strength.r_align(self.labelxr,92,draw)
-		self.signal_frequency.push(20,92,draw, string = info[3])
-		self.signal_mac.push(20,111, draw, string = info[6])
-
+			# assign each list element and its
 
 		return status
 

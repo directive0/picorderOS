@@ -62,10 +62,6 @@ class PLARS(object):
 		self.timer = timer()
 
 
-	# provide status of database (how many entries, how many devices, size, length)
-	def status(self):
-		pass
-
 	def shutdown(self):
 		self.append_to_core(self.buffer)
 
@@ -92,28 +88,40 @@ class PLARS(object):
 		print("buffer size set to: ", size)
 		self.buffer_size = size
 
-	def get_em_buffer(self):
-		return self.buffer_em
+	# returns a list of every EM transciever that was discovered last scan.
+	def get_recent_em_list(self):
+
+		# set the thread lock so other threads are unable to add data
+		self.lock.acquire()
+
+		recent_em = self.get_recent_em()
+
+		# release the thread lock.
+		self.lock.release()
+
+		return recent_em.tolist()
 
 	def get_top_em_info(self):
 		# Identify the SSID of the strongest signal.
 		return self.identity.values.tolist()
 
-
-	def get_top_em_history(self, no = 5):
-		# returns a list of Db values for whatever SSID is currently the strongest.
-		# suitable to be fed into pilgraph for graphing.
-
-
-		# set the thread lock so other threads are unable to add data
-		self.lock.acquire()
-
+	def get_em_recent(self):
 		# find the most recent timestamp
 		time_column = self.buffer_em["timestamp"]
 		most_recent = time_column.max()
 
 		#limit focus to data from that timestamp
-		focus = self.buffer_em.loc[self.buffer_em['timestamp'] == most_recent]
+		return self.buffer_em.loc[self.buffer_em['timestamp'] == most_recent]
+
+	def get_top_em_history(self, no = 5):
+		# returns a list of Db values for whatever SSID is currently the strongest.
+		# suitable to be fed into pilgraph for graphing.
+
+		# set the thread lock so other threads are unable to add data
+		self.lock.acquire()
+
+		#limit focus to data from that timestamp
+		focus = self.get_em_recent()
 
 		# find most powerful signal
 		db_column = focus["signal"]
@@ -213,6 +221,7 @@ class PLARS(object):
 		# return a list of the values
 		return trimmed_data['signal'].tolist()
 
+
 	# return a list of n most recent data from specific sensor defined by keys
 	def get_recent(self, dsc, dev, num = 5):
 
@@ -259,23 +268,12 @@ class PLARS(object):
 		self.buffer = newbuffer
 
 
-
-	# return a number of data from a specific sensor at a specific time interval
-	def get_timed(self, key, interval = 0, num = 5):
-		#load csv file as dataframe
-		pass
-
 	def emrg(self):
 		self.get_core()
 		return self.df
 
 	def convert_epoch(self, time):
 		return datetime.datetime.fromtimestamp(time)
-
-	# request accepts a JSON object and returns a JSON response. Obviously not working yet.
-	def request(self, request):
-		pass
-
 
 # Creates a plars database object as soon as it is loaded.
 plars = PLARS()

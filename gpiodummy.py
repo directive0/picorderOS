@@ -53,7 +53,7 @@ def buttonget():
 
 	return buttondict
 
-# The following function returns the debounced activation for each button, much more elegant for use in my program.
+# The following function returns the debounced activation for each button.
 class debounce(object):
 
 	def __init__(self):
