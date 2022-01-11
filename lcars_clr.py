@@ -4,6 +4,7 @@ print("Loading 160x128 LCARS Interface")
 import math
 import time
 
+from operator import itemgetter
 
 # remove this part and replace with display
 from luma.core.interface.serial import spi
@@ -580,8 +581,10 @@ class EMFrame(object):
 			# grab EM list
 			em_list = plars.get_recent_em_list()
 
+			sorted_em_list = sorted(em_list, key=itemgetter(1)
+
 			# prepare a list of the data received for display
-			for ssid in em_list:
+			for ssid in sorted_em_list:
 				name = str(ssid[0])
 				strength = str(ssid[1])
 
