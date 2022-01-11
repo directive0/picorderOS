@@ -571,6 +571,7 @@ class EMFrame(object):
 
 			# draw screen elements
 			self.Signal_Graph.render(draw)
+			self.title.string = "Top EM Transciever"
 			self.title.r_align(self.labelxr,self.titley,draw)
 			self.signal_name.push(20,35,draw, string = info[0])
 			self.signal_strength.string = str(info[1]) + " DB"
@@ -596,7 +597,7 @@ class EMFrame(object):
 				label = strength + " dB • " + name
 
 				list_for_labels.append(label)
-
+			self.title.string = "Modulated EM Scan"
 			self.title.r_align(self.labelxr,self.titley,draw)
 			self.list.update(list_for_labels,draw)
 
