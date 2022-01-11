@@ -581,7 +581,7 @@ class EMFrame(object):
 			# grab EM list
 			em_list = plars.get_recent_em_list()
 
-			sorted_em_list = sorted(em_list, key=itemgetter(1))
+			sorted_em_list = sorted(em_list, key=itemgetter(1), reverse = True)
 
 			# prepare a list of the data received for display
 			for ssid in sorted_em_list:
