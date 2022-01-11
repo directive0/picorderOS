@@ -103,7 +103,7 @@ class LabelObj(object):
 # on update provide list of items to display, and draw object to draw to.
 class Label_List(object):
 
-	def __init__(self, x, y):
+	def __init__(self, x, y, colour = None):
 
 		#initial coordinates
 		self.x = x
@@ -118,6 +118,11 @@ class Label_List(object):
 		# holds the items to display
 		self.labels = []
 
+		if colour == None:
+			self.colour = lcars_orpeach
+		else:
+			self.colour = colour
+
 
 	# draws the list of items as a text list.
 	def update(self, items, draw):
@@ -129,7 +134,7 @@ class Label_List(object):
 
 			string = str(item)
 			# create a text item with the string.
-			thislabel = LabelObj(string, font, colour = lcars_orpeach)
+			thislabel = LabelObj(string, font, colour = self.colour)
 			thislabel.push(self.x, self.y + self.jump,draw)
 
 			# increase the y position by the height of the last item, plus spacer
@@ -499,7 +504,7 @@ class EMFrame(object):
 		self.graphy = 58
 
 		# Sets the x and y span of the graph
-		self.gspanx = 135
+		self.gspanx = 135z
 		self.gspany = 29
 		self.titlex = 23
 		self.titley = 2
@@ -523,7 +528,7 @@ class EMFrame(object):
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 
-		self.list = Label_List(22,35)
+		self.list = Label_List(22,35, colour = lcars_peach)
 
 
 
