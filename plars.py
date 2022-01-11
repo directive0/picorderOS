@@ -102,7 +102,18 @@ class PLARS(object):
 		return recent_em.tolist()
 
 	def get_top_em_info(self):
+
+		#find the most recent timestamp to limit focus
+		focus = self.get_em_recent()
+
+		# find most powerful signal of the most recent transciever data
+		db_column = focus["signal"]
+		strongest = db_column.astype(int).max()
+
 		# Identify the SSID of the strongest signal.
+		self.identity = focus.loc[focus['signal'] == strongest]
+
+		# Return the SSID of the strongest signal as a list.
 		return self.identity.values.tolist()
 
 	def get_em_recent(self):
