@@ -582,16 +582,18 @@ class EMFrame(object):
 
 		if self.selection == 1:
 
+			# list to hold the data labels
 			list_for_labels = []
+
 			# grab EM list
 			em_list = plars.get_recent_em_list()
 
-
+			# prepare a list of the data received for display
 			for ssid in em_list:
 				name = str(ssid[0])
 				strength = str(ssid[1])
 
-				label = strength + " " + name
+				label = strength + " dB • " + name
 
 				list_for_labels.append(label)
 
