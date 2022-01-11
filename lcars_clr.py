@@ -530,7 +530,7 @@ class EMFrame(object):
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_peach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_peach)
 
-		self.list = Label_List(25,37)
+		self.list = Label_List(25,35)
 
 
 
@@ -596,7 +596,8 @@ class EMFrame(object):
 				label = strength + " dB • " + name
 
 				list_for_labels.append(label)
-
+				
+			self.title.r_align(self.labelxr,self.titley,draw)
 			self.list.update(list_for_labels,draw)
 
 			# assign each list element and its
