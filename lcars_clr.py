@@ -504,7 +504,7 @@ class EMFrame(object):
 		self.graphy = 58
 
 		# Sets the x and y span of the graph
-		self.gspanx = 135z
+		self.gspanx = 135
 		self.gspany = 29
 		self.titlex = 23
 		self.titley = 2
