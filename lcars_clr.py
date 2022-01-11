@@ -522,7 +522,7 @@ class EMFrame(object):
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 
-		self.list = Label_List(25,35)
+		self.list = Label_List(22,35)
 
 
 
