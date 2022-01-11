@@ -98,7 +98,7 @@ class PLARS(object):
 		recent_em = self.get_em_recent()
 
 		# sort it by signal strength
-		recent_em.sort_values(by=['signal'], ascending = ascending)
+		recent_em.sort_values(by=['signal'], ascending = False)
 
 		# release the thread lock.
 		self.lock.release()
