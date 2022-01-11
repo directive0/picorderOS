@@ -99,7 +99,7 @@ class PLARS(object):
 		# release the thread lock.
 		self.lock.release()
 
-		return recent_em.tolist()
+		return recent_em.values.tolist()
 
 	def get_top_em_info(self):
 
