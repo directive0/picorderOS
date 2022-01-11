@@ -94,7 +94,7 @@ class PLARS(object):
 		# set the thread lock so other threads are unable to add data
 		self.lock.acquire()
 
-		recent_em = self.get_recent_em()
+		recent_em = self.get_em_recent()
 
 		# release the thread lock.
 		self.lock.release()
