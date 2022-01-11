@@ -94,7 +94,11 @@ class PLARS(object):
 		# set the thread lock so other threads are unable to add data
 		self.lock.acquire()
 
+		# get the most recent ssids discovered
 		recent_em = self.get_em_recent()
+
+		# sort it by signal strength
+		recent_em.sort_values(by=['signal'], ascending = ascending)
 
 		# release the thread lock.
 		self.lock.release()
