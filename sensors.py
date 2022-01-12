@@ -317,7 +317,7 @@ class Sensor(object):
 		if len(sensorlist) < 1:
 			print("NO SENSORS LOADED")
 
-		print sensorlist
+		print(sensorlist)
 		return sensorlist
 
 class MLX90614():
