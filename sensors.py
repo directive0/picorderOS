@@ -181,6 +181,7 @@ class Sensor(object):
 
 		if configure.pocket_geiger:
 			data = self.radiation.status()
+			print(data)
 			rad_data = [float(data["uSvh"])]
 			rad_package = self.radiation_info + timestamp
 			sensorlist += [rad_package]
