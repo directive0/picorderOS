@@ -52,17 +52,6 @@ theme3 = [blue, white, red]
 themes = [theme1,theme2, theme3]
 themenames = ["alpha", "beta", "delta"]
 
-# The following are for LCARS colours from LCARScom.net
-lcars_orange = (255,153,0)
-lcars_pink = (204,153,204)
-lcars_blue = (153,153,204)
-lcars_red = (204,102,102)
-lcars_peach = (255,204,153)
-lcars_bluer = (153,153,255)
-lcars_orpeach = (255,153,102)
-lcars_pinker = (204,102,153)
-
-
 
 # The following lists/objects are for UI elements.
 titleFont = "assets/babs.otf"
