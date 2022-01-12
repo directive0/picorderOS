@@ -74,11 +74,12 @@ class preferences(object):
 		# holds theme state for UI
 		self.theme = [0]
 
-
 		# sets the number of max sensors for user configuration
 		# (is automatically set by the sensor module at startup)
 		self.max_sensors = [0]
 
+
+# SENSORS-------------------------------------------------------------#
 		# TR108 uses this sensehat
 		self.sensehat = False
 
@@ -87,12 +88,17 @@ class preferences(object):
 		self.bme = False
 		self.amg8833 = False
 
-		# Experimental unsupported sensors
+		# Experimental sensors
+		self.pocket_geiger = False
 		self.ir_thermo = False
 		self.envirophat = False
 
 		# toggles wifi/bt scanning
 		self.EM = True
+
+
+# SENSORS-------------------------------------------------------------#
+
 
 		#sets the upper and lower threshold for the alert
 		self.TEMP_ALERT = (0,100)
@@ -163,6 +169,12 @@ class preferences(object):
 
 		# CAP1208 alert pin
 		self.ALERTPIN = 0
+
+		# PocketGeiger PIN_SCL
+		self.PG_SIG = 20
+		self.PG_NS = 21
+
+		
 
 
 configure = preferences()

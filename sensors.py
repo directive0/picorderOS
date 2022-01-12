@@ -47,6 +47,9 @@ if configure.system_vitals:
 	import psutil
 	import math
 
+if configure.pocket_geiger:
+	from PiPocketGeiger import RadiationWatch
+
 
 class Sensor(object):
 	# sensors should check the configuration flags to see which sensors are
@@ -140,6 +143,10 @@ class Sensor(object):
 			self.pressure_info = [300,1100,"Barometer","hPa", "BME680"]
 			self.VOC_info = [300000,1100000,"VOC","KOhm", "BME680"]
 
+		if configure.pocket_geiger:
+			self.radiation_info = [0.05,10000.0,"Radiation","uSv/h", "PocketGeiger"]
+			self.radiation = RadiationWatch(self.PG_SIG,self.PG_NS)
+
 		configure.sensor_info = self.get()
 
 	def sin_gen(self):
@@ -170,6 +177,12 @@ class Sensor(object):
 
 		if configure.EM:
 			pass
+
+		if configure.pocket_geiger:
+			rad_data = [float(radiation.status["uSvh"])]
+			rad_package = self.radiation_info + timestamp
+			sensorlist += [rad_package]
+
 
 		if configure.bme:
 
