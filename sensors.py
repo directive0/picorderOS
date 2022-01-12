@@ -145,7 +145,7 @@ class Sensor(object):
 
 		if configure.pocket_geiger:
 			self.radiation_info = [0.05,10000.0,"Radiation","uSv/h", "PocketGeiger"]
-			self.radiation = RadiationWatch(self.PG_SIG,self.PG_NS)
+			self.radiation = RadiationWatch(configure.PG_SIG,configure.PG_NS)
 
 		configure.sensor_info = self.get()
 
