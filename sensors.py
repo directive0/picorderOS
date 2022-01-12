@@ -144,7 +144,7 @@ class Sensor(object):
 			self.VOC_info = [300000,1100000,"VOC","KOhm", "BME680"]
 
 		if configure.pocket_geiger:
-			self.radiation_info = [0.05,10000.0,"Radiation","uSv/h", "PocketGeiger"]
+			self.radiation_info = [0.05,10000.0,"Radiation","usvh", "PocketGeiger"]
 			self.radiation = RadiationWatch(configure.PG_SIG,configure.PG_NS)
 			self.radiation.setup()
 
