@@ -1,7 +1,7 @@
 from objects import *
 import time
 from plars import *
-
+import math
 
 # the following is a sensor module for use with the PicorderOS
 print("Loading Unified Sensor Module")
@@ -90,8 +90,7 @@ class Sensor(object):
 		if configure.sensehat:
 			self.ticks = 0
 			self.onoff = 1
-			# activates low light conditions to not blind the user.
-			sense.low_light = True
+
 			# instantiate a sensehat object,
 			self.sense = SenseHat()
 			# Initially clears the LEDs once loaded
@@ -100,15 +99,15 @@ class Sensor(object):
 			self.sense.set_imu_config(True,False,False)
 			# activates low light conditions to not blind the user.
 			self.sense.low_light = True
-			self.temp_info = [0,65,"Thermometer",self.deg_sym + "c", "SenseHat"]
-			self.humidity_info = [20,80,"Hygrometer", "%", "SenseHat"]
-			self.pressure_info = [260,1260,"Barometer","hPa", "SenseHat"]
-			self.magnet_infox = [-500,500,"MagnetX","G", "SenseHat"]
-			self.magnet_infoy = [-500,500,"MagnetY","G", "SenseHat"]
-			self.magnet_infoz = [-500,500,"MagnetZ","G", "SenseHat"]
-			self.accelerometer_infox = [-500,500,"AccelX","g", "SenseHat"]
-			self.accelerometer_infoy = [-500,500,"AccelY","g", "SenseHat"]
-			self.accelerometer_infoz = [-500,500,"AccelZ","g", "SenseHat"]
+			self.temp_info = [0,65,"Thermometer",self.deg_sym + "c", "sensehat"]
+			self.humidity_info = [20,80,"Hygrometer", "%", "sensehat"]
+			self.pressure_info = [260,1260,"Barometer","hPa", "sensehat"]
+			self.magnet_infox = [-500,500,"MagnetX","G", "sensehat"]
+			self.magnet_infoy = [-500,500,"MagnetY","G", "sensehat"]
+			self.magnet_infoz = [-500,500,"MagnetZ","G", "sensehat"]
+			self.accelerometer_infox = [-500,500,"AccelX","g", "sensehat"]
+			self.accelerometer_infoy = [-500,500,"AccelY","g", "sensehat"]
+			self.accelerometer_infoz = [-500,500,"AccelZ","g", "sensehat"]
 
 		if configure.ir_thermo:
 			i2c = io.I2C(configure.PIN_SCL, configure.PIN_SDA, frequency=100000)
@@ -206,8 +205,8 @@ class Sensor(object):
 			if configure.sensehat:
 
 				if configure.moire:
-					cxtick=0.5*math.sin(self.ticks/15.0) # change this line
-					cytick=0.5*math.cos(self.ticks/8.0) #change this line
+					cxtick = 0.5 * math.sin(self.ticks/15.0) # change this line
+					cytick = 0.5 * math.cos(self.ticks/8.0) #change this line
 
 					for x in range(8):
 							for y in range(8):
