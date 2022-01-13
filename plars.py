@@ -182,11 +182,11 @@ class PLARS(object):
 
 		# creates a new dataframe for the new information to add to the buffer
 		newdata = pd.DataFrame.from_records(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
-		print("Plars: data received")
-		print(data)
-		print("Plars: data generated")
-		print(newdata)
 
+		print("Plars: buffer")
+		print(self.buffer)
+
+		
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
 
@@ -258,8 +258,7 @@ class PLARS(object):
 		# trim it to length (num).
 		trimmed_data = untrimmed_data.tail(num)
 
-		# release the thread lock.
-		self.lock.release()
+
 
 		# return a list of the values
 		result = trimmed_data['value'].tolist()
@@ -267,6 +266,9 @@ class PLARS(object):
 		if dsc == "Radiation":
 			print("radiation dsc was received")
 			print(result)
+
+		# release the thread lock.
+		self.lock.release()
 
 		return result
 
