@@ -186,7 +186,7 @@ class PLARS(object):
 		print("Plars: buffer")
 		print(self.buffer)
 
-		
+
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
 
@@ -204,9 +204,9 @@ class PLARS(object):
 		length = currentsize - targetsize
 
 		# if buffer is larger than target
-		if length > 0:
-			self.trimbuffer()
-			self.timer.logtime()
+		#if length > 0:
+		#	self.trimbuffer()
+		#	self.timer.logtime()
 
 		# release the thread lock for other threads
 		self.lock.release()
