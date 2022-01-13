@@ -591,7 +591,7 @@ class Graph_Screen(object):
 			newests = [a_newest,b_newest,c_newest]
 		except:
 			configure.status[0] = "quit"
-			break
+			return "quit"
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
 		a_cords = graphit(self.data_a,senseslice[0])
