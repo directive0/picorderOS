@@ -181,7 +181,7 @@ class Sensor(object):
 
 		if configure.pocket_geiger:
 			data = self.radiation.status()
-			print(data)
+
 			rad_data = [data["uSvh"]]
 			rad_package = self.radiation_info + timestamp
 			sensorlist += [rad_package]
@@ -317,7 +317,7 @@ class Sensor(object):
 		if len(sensorlist) < 1:
 			print("NO SENSORS LOADED")
 
-		print(sensorlist)
+		#print(sensorlist)
 		return sensorlist
 
 class MLX90614():
