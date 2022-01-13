@@ -257,6 +257,9 @@ class PLARS(object):
 		# return a list of the values
 		result = trimmed_data['value'].tolist()
 
+		if dsc == "Radiation":
+			print(result)
+
 		return result
 
 
