@@ -182,14 +182,19 @@ class PLARS(object):
 
 		# creates a new dataframe for the new information to add to the buffer
 		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
-		print("Plars has made new data")
+		print("Plars: data received")
 		print(data)
+		print("Plars: data generated")
 		print(newdata)
+
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
 
 		# appends the new data to the buffer
 		self.buffer = self.buffer.append(newdata, ignore_index=True)
+
+		print("Plars: buffer")
+		print(self.buffer)
 
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
