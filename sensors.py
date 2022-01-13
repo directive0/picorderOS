@@ -183,7 +183,7 @@ class Sensor(object):
 			data = self.radiation.status()
 
 			rad_data = [data["uSvh"]]
-			rad_package = self.radiation_info + timestamp
+			rad_package = rad_data + self.radiation_info + timestamp
 			sensorlist += [rad_package]
 
 
