@@ -77,15 +77,15 @@ class Sensor(object):
 			self.step2 = 0.0
 			self.steptan = 0.0
 
-			self.cputemp = [0,100,"CPU Temp",self.deg_sym + "c","Raspberry Pi"]
-			self.infoa = [0,100,"CPU Percent","%","Raspberry Pi"]
-			self.infob = [0,float(psutil.virtual_memory().total) / 1024,"Virtual Memory", "b","Raspberry Pi"]
-			self.infoc = [0,100000,"Bytes Sent", "b","Raspberry Pi"]
-			self.infod = [0,100000,"Bytes Received", "b","Raspberry Pi"]
-			self.infoe = [-100,100,"Sine Wave", "","Raspberry Pi"]
-			self.infof = [-500,500,"Tangent Wave", "","Raspberry Pi"]
-			self.infog = [-100,100,"Cos Wave", "","Raspberry Pi"]
-			self.infoh = [-100,100,"Sine Wave2", "","Raspberry Pi"]
+			self.cputemp = [0,100,"CPUTemp",self.deg_sym + "c","RaspberryPi"]
+			self.infoa = [0,100,"CPUPercent","%","Raspberry Pi"]
+			self.infob = [0,float(psutil.virtual_memory().total) / 1024,"VirtualMemory", "b","RaspberryPi"]
+			self.infoc = [0,100000,"BytesSent", "b","RaspberryPi"]
+			self.infod = [0,100000,"BytesReceived", "b","RaspberryPi"]
+			self.infoe = [-100,100,"SineWave", "","RaspberryPi"]
+			self.infof = [-500,500,"TangentWave", "","RaspberryPi"]
+			self.infog = [-100,100,"CosWave", "","RaspberryPi"]
+			self.infoh = [-100,100,"SineWave2", "","RaspberryPi"]
 
 		if configure.sensehat:
 			self.ticks = 0
