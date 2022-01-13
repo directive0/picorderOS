@@ -181,7 +181,7 @@ class PLARS(object):
 	def update(self,data):
 
 		# creates a new dataframe for the new information to add to the buffer
-		newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
+		newdata = pd.DataFrame.from_records(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
 		print("Plars: data received")
 		print(data)
 		print("Plars: data generated")
