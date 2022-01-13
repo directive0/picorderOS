@@ -258,6 +258,7 @@ class PLARS(object):
 		result = trimmed_data['value'].tolist()
 
 		if dsc == "Radiation":
+			print("radiation dsc was received")
 			print(result)
 
 		return result

@@ -569,11 +569,12 @@ class Graph_Screen(object):
 
 		for i in range(3):
 			# determines the sensor keys for each of the three main sensors
-			dsc = configure.sensor_info[configure.sensors[i][0]][3]
-			dev = configure.sensor_info[configure.sensors[i][0]][5]
+			this_index = int(configure.sensors[i][0])
 
-			print(configure.sensors[i][0])
-			print(configure.sensor_info[0][0])
+			dsc = configure.sensor_info[this_index][3]
+			dev = configure.sensor_info[this_index][5]
+
+			print("dsc,dev: ", dsc, ", ", dev)
 
 			item = plars.get_recent(dsc,dev,num = 1)
 
