@@ -190,6 +190,7 @@ class PLARS(object):
 		# appends the new data to the buffer
 		self.buffer = self.buffer.append(newdata, ignore_index=True)
 
+		print((self.buffer.dev == 'pocketgeiger').sum())
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
 		targetsize = self.buffer_size

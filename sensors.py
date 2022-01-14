@@ -389,6 +389,6 @@ def threaded_sensor():
 			start = False
 
 			data = sensors.get()
-			print("dataget = ", data)
+
 
 			plars.update(data)
