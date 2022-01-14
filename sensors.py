@@ -202,30 +202,28 @@ class Sensor(object):
 
 		if configure.sensehat:
 
-			if configure.sensehat:
+			if configure.moire:
+				cxtick = 0.5 * math.sin(self.ticks/15.0) # change this line
+				cytick = 0.5 * math.cos(self.ticks/8.0) #change this line
 
-				if configure.moire:
-					cxtick = 0.5 * math.sin(self.ticks/15.0) # change this line
-					cytick = 0.5 * math.cos(self.ticks/8.0) #change this line
-
-					for x in range(8):
-							for y in range(8):
-									# it's this cool plasma effect from demoscene I stole from
-									# somewhere.
-									cx = x + cxtick #change this line
-									cy = y + cytick #change this line
-									v = math.sin(math.sqrt(1.0*(math.pow(cy, 2.0)+math.pow(cx, 2.0))+1.0)+self.ticks)
-									v = (v + 1.0)/2.0
-									v = int(v*255.0)
+				for x in range(8):
+						for y in range(8):
+								# it's this cool plasma effect from demoscene I stole from
+								# somewhere.
+								cx = x + cxtick #change this line
+								cy = y + cytick #change this line
+								v = math.sin(math.sqrt(1.0*(math.pow(cy, 2.0)+math.pow(cx, 2.0))+1.0)+self.ticks)
+								v = (v + 1.0)/2.0
+								v = int(v*255.0)
 
 
-									# Pack the computed pixel into the moire pixel list
-									moire[(x*8)+y]=[v,v,v]
+								# Pack the computed pixel into the moire pixel list
+								moire[(x*8)+y]=[v,v,v]
 
-					sense.set_pixels(moire)
-					self.ticks += 1
-				else:
-					sense.clear()  # no arguments defaults to off
+				sense.set_pixels(moire)
+				self.ticks += 1
+			else:
+				sense.clear()  # no arguments defaults to off
 
 
 			sense_data = [sense.get_temperature()]
@@ -251,7 +249,7 @@ class Sensor(object):
 			# item9 = sense_data9 + self.accelerometer_infoz + timestamp
 
 			sensorlist += [item1, item2, item3, item4, item5, item6]
-			#print("sensehat sensors", sensorlist)
+
 		if configure.envirophat:
 			self.rgb = light.rgb()
 			self.analog_values = analog.read_all()
@@ -391,5 +389,6 @@ def threaded_sensor():
 			start = False
 
 			data = sensors.get()
+			print("dataget = ", dataget)
 
 			plars.update(data)
