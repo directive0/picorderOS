@@ -574,7 +574,6 @@ class Graph_Screen(object):
 			dsc = configure.sensor_info[this_index][3]
 			dev = configure.sensor_info[this_index][5]
 
-			print("dsc,dev: ", dsc, ", ", dev)
 
 			item = plars.get_recent(dsc,dev,num = 1)
 
