@@ -214,11 +214,13 @@ class PLARS(object):
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
 
-		result = self.buffer.loc[self.buffer['dsc'] == dsc]
+		#result = self.buffer.loc[self.buffer['dsc'] == dsc]
+		result = self.buffer[self.buffer["dsc"] == dsc]
 		print("get_sensor result")
 		print(result)
 
-		result2 = result.loc[result['dev'] == dev]
+		#result2 = result.loc[result['dev'] == dev]
+		result2 = self.buffer[self.buffer["dev"] == dev]
 		print("get_sensor result 2")
 		print(result2)
 		return result2
@@ -248,11 +250,8 @@ class PLARS(object):
 		# set the thread lock so other threads are unable to add sensor data
 		self.lock.acquire()
 
-		test1 = str(dsc)
-		test2 = str(dev)
-
 		# get a dataframe of just the requested sensor
-		untrimmed_data = self.get_sensor(test1,test2)
+		untrimmed_data = self.get_sensor(dsc,dev)
 
 
 
