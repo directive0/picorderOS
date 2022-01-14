@@ -264,15 +264,6 @@ class PLARS(object):
 		# return a list of the values
 		result = trimmed_data['value'].tolist()
 
-		if dsc == "Radiation":
-			print("radiation dsc was received")
-			print(dsc,dev)
-			print("untrimmed:")
-			print(untrimmed_data)
-			print("trimmed:")
-			print(trimmed_data)
-			print(result)
-
 		# release the thread lock.
 		self.lock.release()
 
