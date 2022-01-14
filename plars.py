@@ -204,9 +204,9 @@ class PLARS(object):
 		length = currentsize - targetsize
 
 		# if buffer is larger than target
-		#if length > 0:
-		#	self.trimbuffer()
-		#	self.timer.logtime()
+		if length > 0:
+			self.trimbuffer()
+			self.timer.logtime()
 
 		# release the thread lock for other threads
 		self.lock.release()
@@ -265,6 +265,7 @@ class PLARS(object):
 
 		if dsc == "Radiation":
 			print("radiation dsc was received")
+			print(dsc,dev)
 			print(result)
 
 		# release the thread lock.
