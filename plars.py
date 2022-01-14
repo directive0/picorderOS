@@ -190,9 +190,6 @@ class PLARS(object):
 		# appends the new data to the buffer
 		self.buffer = self.buffer.append(newdata, ignore_index=True)
 
-		print("Plars: buffer")
-		print(self.buffer)
-
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
 		targetsize = self.buffer_size
@@ -218,6 +215,7 @@ class PLARS(object):
 	def get_sensor(self,dsc,dev):
 
 		result = self.buffer.loc[self.buffer['dsc'] == dsc]
+		print("get_sensor result")
 
 		result2 = result.loc[result['dev'] == dev]
 		return result2
