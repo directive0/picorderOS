@@ -588,7 +588,8 @@ class Graph_Screen(object):
 			b_newest = float(senseslice[1][0])
 			c_newest = float(senseslice[2][0])
 			newests = [a_newest,b_newest,c_newest]
-
+		except:
+			return status
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
 		a_cords = graphit(self.data_a,senseslice[0])
