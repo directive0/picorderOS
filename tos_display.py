@@ -558,7 +558,7 @@ class Graph_Screen(object):
 			# determines the sensor keys for each of the three main sensors
 			this_index = int(configure.sensors[i][0])
 
-			dsc,dev = configure.sensor_info[this_index]
+			dsc,dev,sym = configure.sensor_info[this_index]
 
 
 
@@ -566,7 +566,7 @@ class Graph_Screen(object):
 
 
 			if len(senseslice) > 0:
-				senseslice[i] = item
+				senseslice[i] = item, sym
 
 
 		#converts data to float
@@ -579,25 +579,25 @@ class Graph_Screen(object):
 			return status
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
-		a_cords = graphit(self.data_a,senseslice[0])
-		b_cords = graphit(self.data_b,senseslice[1])
-		c_cords = graphit(self.data_c,senseslice[2])
+		a_cords = graphit(self.data_a,a_newest)
+		b_cords = graphit(self.data_b,b_newest)
+		c_cords = graphit(self.data_c,c_newest)
 		cords = [a_cords,b_cords,c_cords]
 
 		a_content = str(int(a_newest))
 		a_color = themes[configure.theme[0]][0]
 
-		self.a_label.update(a_content + sense_info_a[4],30,marginleft,205,titleFont,a_color)
+		self.a_label.update(a_content + senseslice[0][1],30,marginleft,205,titleFont,a_color)
 
 		b_content = str(int(b_newest))
 		b_color = themes[configure.theme[0]][1]
-		self.b_label.update( b_content + sense_info_b[4],30,114,205,titleFont,b_color)
+		self.b_label.update( b_content + senseslice[1][1],30,114,205,titleFont,b_color)
 		self.b_label.center(resolution[0],31,0,205)
 
 		c_content = str(int(c_newest))
 		c_color = themes[configure.theme[0]][2]
 
-		self.c_label.update(c_content + sense_info_c[4],30,marginright,205,titleFont,c_color)
+		self.c_label.update(c_content + senseslice[0][2],30,marginright,205,titleFont,c_color)
 		self.c_label.r_align(320 - marginright ,205)
 		contents = [a_content,b_content,c_content]
 

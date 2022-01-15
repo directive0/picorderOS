@@ -181,7 +181,7 @@ class Sensor(object):
 
 		allinfo = []
 		for fragment in info:
-			thisfrag = [fragment.dsc,fragment.dev]
+			thisfrag = [fragment.dsc,fragment.dev,fragment.sym]
 			allinfo.append(thisfrag)
 		return allinfo
 
