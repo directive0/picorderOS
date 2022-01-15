@@ -370,7 +370,7 @@ def about(surface):
 def graphit(data,new, auto = True):
 
 	#puts a new sensor value at the end
-	data.updatelist(new[0])
+	data.updatelist(new)
 
 	#grabs our databuffer object.
 	buffer = data.grablist()
