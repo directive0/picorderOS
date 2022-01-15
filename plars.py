@@ -225,13 +225,11 @@ class PLARS(object):
 
 		#result = self.buffer.loc[self.buffer['dsc'] == dsc]
 		result = self.buffer[self.buffer["dsc"] == dsc]
-		print("get_sensor result")
-		print(result)
+
 
 		#result2 = result.loc[result['dev'] == dev]
 		result2 = self.buffer[self.buffer["dev"] == dev]
-		print("get_sensor result 2")
-		print(result2)
+
 		return result2
 
 

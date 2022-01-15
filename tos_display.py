@@ -552,7 +552,7 @@ class Graph_Screen(object):
 		# resolves the key items (dsc and dev) for the targeted sensor, for plars to use.
 		# creates a "senseslice"; an up to date data fragment for each configured sensor
 
-		senseslice = [0,0,0]
+		senseslice = []
 
 		for i in range(3):
 
@@ -563,7 +563,7 @@ class Graph_Screen(object):
 
 			item = plars.get_recent(dsc,dev,num = 1)
 
-			senseslice[i] = item, sym
+			senseslice.append([item, sym])
 
 		print("slice = ", senseslice)
 		#converts data to float
