@@ -183,22 +183,16 @@ class PLARS(object):
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
 
-		# creates a new dataframe to add new data to
-		newdata = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 
-		#chainloader for the fragment objects:
+ 		fragdata = []
+		#listbuilder:
 		for fragment in data:
-			value = fragment.value
-			mini = fragment.mini
-			maxi = fragment.maxi
-			dsc = fragment.dsc
-			dev = fragment.dev
-			sym = fragment.sym
-			timestamp = fragment.timestamp
-			fragdata = [value,mini,maxi,dsc,sym,dev,timestamp]
+			item = fragment.get()
+			fragdata.append(item)
 			print("fragdata = ", fragdata)
-			thisdata = pd.DataFrame(fragdata,columns=['value','min','max','dsc','sym','dev','timestamp'])
-			newdata.append(thisdata)
+
+		# creates a new dataframe to add new data to
+		newdata = pd.DataFrame(fragdata, columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 		print(newdata)
 

@@ -63,23 +63,23 @@ class Fragment(object):
 		self.sym = sym
 		self.value = 4.20
 
-
+	# Sets the value and timestamp for the fragment.
 	def set(self,value, timestamp):
 		self.value = value
 		self.timestamp = timestamp
 
+	# Returns all the data for the fragment.
+	def get(self):
+		return [self.value, self.mini, self.maxi, self.dsc, self.sym, self.dev, self.timestamp]
 
 class Sensor(object):
 	# sensors should check the configuration flags to see which sensors are
-	# selected and then if active should poll the sensor and append it to then
-	# sensor array for the different panels.
+	# selected and then if active should poll the sensor and append it to the
+	# sensor array.
 
 	def __init__(self):
 
-		#Init should set up the necessary info for the sensors that are active.
-
-		# We make a sensor counter (for the rest of the program)
-		sensorcount = 0
+		#set up the necessary info for the sensors that are active.
 
 		# create a simple reference for the degree symbol since we use it a lot
 		self.deg_sym = '\xB0'
@@ -95,6 +95,7 @@ class Sensor(object):
 		# data fragments (objects that contain the most recent sensor value,
 		# plus its context) are objects called Fragment().
 		if configure.system_vitals:
+			
 			self.step = 0.0
 			self.step2 = 0.0
 			self.steptan = 0.0
@@ -325,6 +326,7 @@ class Sensor(object):
 
 			# load the fragments into the sensorlist
 			sensorlist.extend((self.cputemp, self.cpuperc, self.virtmem, self.bytsent, self.bytrece, self.sinewav, self.tanwave, self.coswave, self.sinwav2))
+			print(sensorlist)
 
 		configure.max_sensors[0] = len(sensorlist)
 
