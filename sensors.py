@@ -170,14 +170,14 @@ class Sensor(object):
 			self.VOC_info = [300000,1100000,"VOC","KOhm", "BME680"]
 
 		if configure.pocket_geiger:
-			self.radiation_info = [0.0, 10000.0, "Radiation", "usvh", "pocketgeiger"]
+			self.radiat = Fragment(0.0, 10000.0, "Radiation", "usvh", "pocketgeiger")
 			self.radiation = RadiationWatch(configure.PG_SIG,configure.PG_NS)
 			self.radiation.setup()
 
 		configure.sensor_info = self.get_all_info()
 
 		print(configure.sensor_info)
-		
+
 	def get_all_info(self):
 		info = self.get()
 
@@ -222,10 +222,10 @@ class Sensor(object):
 
 		if configure.pocket_geiger:
 			data = self.radiation.status()
+			rad_data = float(data["uSvh"])
 
-			rad_data = [float(data["uSvh"])]
-			rad_package = rad_data + self.radiation_info + timestamp
-			sensorlist += [rad_package]
+			self.radiat.set(rad_data, timestamp)
+			sensorlist.extend(self.radiat)
 
 		if configure.bme:
 

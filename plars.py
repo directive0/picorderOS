@@ -223,15 +223,9 @@ class PLARS(object):
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
 
-		#result = self.buffer.loc[self.buffer['dsc'] == dsc]
 		result = self.buffer[self.buffer["dsc"] == dsc]
 
-
-
 		result2 = result.loc[result['dev'] == dev]
-		#result2 = self.buffer[self.buffer["dev"] == dev]
-
-		print("result", result2)
 
 		return result2
 
