@@ -180,16 +180,20 @@ class PLARS(object):
 	# initialized sensor
 	def update(self,data):
 
+		# sets/requests the thread lock to prevent other threads reading data.
+		self.lock.acquire()
+
 		# creates a new dataframe to add new data to
 		newdata = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 		#chainloader for the fragment objects:
 		for fragment in data:
 			value = fragment.value
-			mini = fragment.min
-			maxi = fragment.max
+			mini = fragment.mini
+			maxi = fragment.maxi
 			dsc = fragment.dsc
 			dev = fragment.dev
+			sym = fragment.sym
 			timestamp = fragment.timestamp
 			fragdata = [value,mini,maxi,dsc,sym,dev,timestamp]
 			thisdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
@@ -197,8 +201,7 @@ class PLARS(object):
 
 		print(newdata)
 
-		# sets/requests the thread lock to prevent other threads reading data.
-		self.lock.acquire()
+
 
 		# appends the new data to the buffer
 		self.buffer = self.buffer.append(newdata, ignore_index=True)

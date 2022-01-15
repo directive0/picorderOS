@@ -53,11 +53,11 @@ if configure.pocket_geiger:
 # prototype for an object to store each sensor value and context.
 class Fragment(object):
 
-	__slots__ = ('value','min','max','dsc','sym','dev','timestamp')
+	__slots__ = ('value','mini','maxi','dsc','sym','dev','timestamp')
 
-	def __init__(self,min,max,dsc,sym,dev):
-		self.min = min
-		self.max = max
+	def __init__(self,mini,maxi,dsc,sym,dev):
+		self.mini = mini
+		self.maxi = maxi
 		self.dsc = dsc
 		self.dev = dev
 		self.sym = sym
