@@ -542,7 +542,7 @@ class Graph_Screen(object):
 		sense_info_b = configure.sensor_info[configure.sensors[1][0]]
 		sense_info_c = configure.sensor_info[configure.sensors[2][0]]
 
-
+		status  = "mode_a"
 
 		self.surface.fill(black)
 
@@ -555,20 +555,17 @@ class Graph_Screen(object):
 		senseslice = [0,0,0]
 
 		for i in range(3):
+
 			# determines the sensor keys for each of the three main sensors
 			this_index = int(configure.sensors[i][0])
 
 			dsc,dev,sym = configure.sensor_info[this_index]
 
-
-
 			item = plars.get_recent(dsc,dev,num = 1)
 
+			senseslice[i] = item, sym
 
-			if len(senseslice) > 0:
-				senseslice[i] = item, sym
-
-
+		print("slice = ", senseslice)
 		#converts data to float
 		try:
 			a_newest = float(senseslice[0][0])
@@ -674,7 +671,7 @@ class Graph_Screen(object):
 
 		pygame.display.update()
 
-		status  = "mode_a"
+
 
 		if configure.eventready[0]:
 
