@@ -228,8 +228,8 @@ class PLARS(object):
 
 
 
-		#result2 = result.loc[result['dev'] == dev]
-		result2 = self.buffer[self.buffer["dev"] == dev]
+		result2 = result.loc[result['dev'] == dev]
+		#result2 = self.buffer[self.buffer["dev"] == dev]
 
 		print("result", result2)
 
