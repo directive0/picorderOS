@@ -226,6 +226,7 @@ class PLARS(object):
 		#result = self.buffer.loc[self.buffer['dsc'] == dsc]
 		result = self.buffer[self.buffer["dsc"] == dsc]
 
+		print("result", result)
 
 		#result2 = result.loc[result['dev'] == dev]
 		result2 = self.buffer[self.buffer["dev"] == dev]
