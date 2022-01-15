@@ -563,7 +563,7 @@ class Graph_Screen(object):
 
 			item = plars.get_recent(dsc,dev,num = 1)
 
-			senseslice.append([item, sym])
+			senseslice.append([item[0], sym])
 
 		print("slice = ", senseslice)
 		#converts data to float
