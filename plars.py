@@ -182,24 +182,22 @@ class PLARS(object):
 
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
-		fragdata = []
+
+
 		#listbuilder:
+		fragdata = []
+
 		for fragment in data:
 			item = fragment.get()
 			fragdata.append(item)
-			print("fragdata = ", fragdata)
+
 
 		# creates a new dataframe to add new data to
 		newdata = pd.DataFrame(fragdata, columns=['value','min','max','dsc','sym','dev','timestamp'])
 
-		print(newdata)
-
-
-
 		# appends the new data to the buffer
 		self.buffer = self.buffer.append(newdata, ignore_index=True)
 
-		print((self.buffer.dev == 'pocketgeiger').sum())
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
 		targetsize = self.buffer_size
