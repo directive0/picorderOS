@@ -50,6 +50,26 @@ if configure.system_vitals:
 if configure.pocket_geiger:
 	from PiPocketGeiger import RadiationWatch
 
+# prototype for an object to store each sensor value and context.
+class Fragment(object):
+
+	__slots__ = ('value','min','max','dsc','sym','dev','timestamp')
+
+	def __init__(min,max,dsc,sym,dev,timestamp):
+		self.value = value
+		self.min = min
+		self.max = max
+		self.dsc = dsc
+		self.dev = dev
+		self.sym = sym
+		self.timestamp = timestamp
+		self.value = 4.20
+
+
+	def set(self,value, timestamp):
+		self.value = value
+		self.timestamp = timestamp
+
 
 class Sensor(object):
 	# sensors should check the configuration flags to see which sensors are
@@ -70,22 +90,27 @@ class Sensor(object):
 		# add individual sensor module parameters below.
 		#0				1			2		3		4
 		#info = (lower range, upper range, unit, symbol)
+		#'value','min','max','dsc','sym','dev','timestamp'
 
 
+		# testing:
+		# data fragments (objects that contain the most recent sensor value,
+		# plus its context) are objects called Fragment().
 		if configure.system_vitals:
 			self.step = 0.0
 			self.step2 = 0.0
 			self.steptan = 0.0
+			totalmem = float(psutil.virtual_memory().total) / 1024
 
-			self.cputemp = [0,100,"CPUTemp",self.deg_sym + "c","RaspberryPi"]
-			self.infoa = [0,100,"CPUPercent","%","Raspberry Pi"]
-			self.infob = [0,float(psutil.virtual_memory().total) / 1024,"VirtualMemory", "b","RaspberryPi"]
-			self.infoc = [0,100000,"BytesSent", "b","RaspberryPi"]
-			self.infod = [0,100000,"BytesReceived", "b","RaspberryPi"]
-			self.infoe = [-100,100,"SineWave", "","RaspberryPi"]
-			self.infof = [-500,500,"TangentWave", "","RaspberryPi"]
-			self.infog = [-100,100,"CosWave", "","RaspberryPi"]
-			self.infoh = [-100,100,"SineWave2", "","RaspberryPi"]
+			self.cputemp = Fragment(0, 100, "CPUTemp", self.deg_sym + "c", "RaspberryPi")
+			self.cpuperc = Fragment(0,100,"CPUPercent","%","Raspberry Pi")
+			self.virtmem = Fragment(0,totalmem,"VirtualMemory","b","RaspberryPi")
+			self.bytsent = Fragment(0,100000,"BytesSent","b","RaspberryPi")
+			self.bytrece = Fragment(0, 100000,"BytesReceived","b","RaspberryPi")
+			self.sinewav = Fragment(-100,100,"SineWave", "","RaspberryPi")
+			self.tanwave = Fragment(-500,500,"TangentWave", "","RaspberryPi")
+			self.coswave = Fragment(-100,100,"CosWave", "","RaspberryPi")
+			self.sinwav2 = Fragment(-100,100,"SineWave2", "","RaspberryPi")
 
 		if configure.sensehat:
 			self.ticks = 0
@@ -172,8 +197,12 @@ class Sensor(object):
 
 
 	def get(self):
+
+		#sensorlist holds all the data fragments to be handed to plars.
 		sensorlist = []
-		timestamp = [time.time()]
+
+		#timestamp for this sensor get.
+		timestamp = time.time()
 
 		if configure.EM:
 			pass
@@ -184,7 +213,6 @@ class Sensor(object):
 			rad_data = [float(data["uSvh"])]
 			rad_package = rad_data + self.radiation_info + timestamp
 			sensorlist += [rad_package]
-
 
 		if configure.bme:
 
@@ -284,29 +312,21 @@ class Sensor(object):
 			if not configure.pc:
 				t = float(os.popen("cat /sys/class/thermal/thermal_zone0/temp").readline())
 			else:
-				t = float(0)
+				t = float(4.20)
 
-			systemtemp = [t]
-			dummyload = [float(psutil.cpu_percent())]
-			dummyload2 = [float(psutil.virtual_memory().available) * 0.0000001]
-			dummyload3 = [float(psutil.net_io_counters().bytes_sent) * 0.00001]
-			dummyload4 = [float(psutil.net_io_counters().bytes_recv) * 0.00001]
-			dummyload5 = [float(self.sin_gen()*100)]
-			dummyload6 = [float(self.tan_gen()*100)]
-			dummyload7 = [float(self.cos_gen()*100)]
-			dummyload8 = [float(self.sin2_gen()*100)]
+			# update each fragment with new data and mark the time.
+			self.cputemp.set(t,timestamp)
+			self.cpuperc.set(float(psutil.cpu_percent()),timestamp)
+			self.virtmem.set(float(psutil.virtual_memory().available * 0.0000001),timestamp)
+			self.bytsent.set(float(psutil.net_io_counters().bytes_recv * 0.00001),timestamp)
+			self.bytrece.set(float(psutil.net_io_counters().bytes_recv * 0.00001),timestamp)
+			self.sinewav.set(float(self.sin_gen()*100),timestamp)
+			self.tanwave.set(float(self.tan_gen()*100),timestamp)
+			self.coswave.set(float(self.cos_gen()*100),timestamp)
+			self.sinwav2.set(float(self.sin2_gen()*100),timestamp)
 
-			item0 = systemtemp + self.cputemp + timestamp
-			item1 = dummyload + self.infoa + timestamp
-			item2 = dummyload2 + self.infob + timestamp
-			item3 = dummyload3 + self.infoc + timestamp
-			item4 = dummyload4 + self.infod + timestamp
-			item5 = dummyload5 + self.infoe + timestamp
-			item6 = dummyload6 + self.infof + timestamp
-			item7 = dummyload7 + self.infog + timestamp
-			item8 = dummyload8 + self.infoh + timestamp
-
-			sensorlist += [item0, item1, item2, item3, item4, item5,item6, item7, item8]
+			# load the fragments into the sensorlist
+			sensorlist.extend((self.cputemp, self.cpuperc, self.virtmem, self.bytsent, self.bytrece, self.sinewav, self.tanwave, self.coswave, self.sinwav2))
 
 		configure.max_sensors[0] = len(sensorlist)
 

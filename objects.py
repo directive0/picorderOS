@@ -14,19 +14,67 @@ class preferences(object):
 		self.version = "v2.0"
 		self.author = "directive0"
 
-
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
 		self.pc = False
-
-		# holds state for beep input feedback
-		self.beep_ready = [False]
-		self.alarm_ready = [False]
 
 		# These two bits determine the target device (Original picorder or new version)
 		# If both true the screens will fight for control!
 		self.tr108 = True
 		self.tr109 = False
+# SENSORS----------------------------------------------------------------------#
+		# TR108 uses this sensehat
+		self.sensehat = False
+
+		# Toggles individual sensor support
+		self.system_vitals = True
+		self.bme = False
+		self.amg8833 = False
+
+		# Experimental sensors
+		self.pocket_geiger = False
+		self.ir_thermo = False
+		self.envirophat = False
+
+		# toggles wifi/bt scanning
+		self.EM = True
+
+
+# PIN ASSIGNMENTS--------------------------------------------------------------#]
+
+		# GPIO Pin Assignments (BCM)
+
+		# i2c Pins
+		self.PIN_SDA = 2
+		self.PIN_SCL = 3
+
+		# the tr109 supports two shift registers, and so two sets of pin addresses
+		# prototype unit 00 and 01 have different pin assignments for latch and clock
+		# so these values may need to be swapped
+
+		# Main board shift register pins
+		self.PIN_DATA  = 16
+		self.PIN_LATCH = 6
+		self.PIN_CLOCK = 20
+
+		# Sensor board shift register pins
+		self.PIN_DATA2 = 19
+		self.PIN_LATCH2 = 21
+		self.PIN_CLOCK2 = 26
+
+
+		# Hall effect sensors pins, for door open/close.
+		self.HALLPIN1 = 12
+		self.HALLPIN2 = 4
+
+		# CAP1208 alert pin
+		self.ALERTPIN = 0
+
+		# PocketGeiger Pins
+		self.PG_SIG = 20
+		self.PG_NS = 21
+
+# INPUT MODULE-----------------------------------------------------------------#
 
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = False
@@ -39,6 +87,18 @@ class preferences(object):
 		self.CAPSENSITIVITY = 50
 
 
+
+# OUTPUT SETTINGS--------------------------------------------------------------#
+
+		# chooses SPI display (0 for nokia 5110, 1 for st7735)
+		self.display = 1
+
+		# led refresh rate.
+		self.LED_TIMER = 0.2
+
+
+# GLOBAL VARIABLES-------------------------------------------------------------#
+
 		# Controls for global event list
 		self.eventlist = [[]]
 		self.eventready = [False]
@@ -46,9 +106,10 @@ class preferences(object):
 		# contains the current button state (0 is unpressed, 1 is pressed)
 		self.events = [0,0,0,0,0,0,0,0]
 
+		# holds state for beep input feedback
+		self.beep_ready = [False]
+		self.alarm_ready = [False]
 
-		# led refresh rate.
-		self.LED_TIMER = 0.2
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
 		self.leds = [False]
@@ -68,8 +129,6 @@ class preferences(object):
 		# controls auto ranging of graphs
 		self.auto = [True]
 
-		# chooses SPI display (0 for nokia 5110, 1 for st7735)
-		self.display = 1
 
 		# holds theme state for UI
 		self.theme = [0]
@@ -77,27 +136,6 @@ class preferences(object):
 		# sets the number of max sensors for user configuration
 		# (is automatically set by the sensor module at startup)
 		self.max_sensors = [0]
-
-
-# SENSORS-------------------------------------------------------------#
-		# TR108 uses this sensehat
-		self.sensehat = False
-
-		# Toggles individual sensor support
-		self.system_vitals = True
-		self.bme = False
-		self.amg8833 = False
-
-		# Experimental sensors
-		self.pocket_geiger = False
-		self.ir_thermo = False
-		self.envirophat = False
-
-		# toggles wifi/bt scanning
-		self.EM = True
-
-
-# SENSORS-------------------------------------------------------------#
 
 
 		#sets the upper and lower threshold for the alert
@@ -141,40 +179,9 @@ class preferences(object):
 		self.dr_opening = [False]
 		self.dr_closing = [False]
 
-		# GPIO Pin Assignments (BCM)
-
-		# i2c Pins
-		self.PIN_SDA = 2
-		self.PIN_SCL = 3
 
 
-		# the tr109 supports two shift registers, and so two sets of pin addresses
-		# prototype unit 00 and 01 have different pin assignments for latch and clock
-		# so these values may need to be swapped
 
-		# Main board shift register pins
-		self.PIN_DATA  = 16
-		self.PIN_LATCH = 6
-		self.PIN_CLOCK = 20
-
-		# Sensor board shift register pins
-		self.PIN_DATA2 = 19
-		self.PIN_LATCH2 = 21
-		self.PIN_CLOCK2 = 26
-
-
-		# Hall effect sensors pins, for door open/close.
-		self.HALLPIN1 = 12
-		self.HALLPIN2 = 4
-
-		# CAP1208 alert pin
-		self.ALERTPIN = 0
-
-		# PocketGeiger PIN_SCL
-		self.PG_SIG = 20
-		self.PG_NS = 21
-
-		
 
 
 configure = preferences()
