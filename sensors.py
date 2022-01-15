@@ -72,6 +72,9 @@ class Fragment(object):
 	def get(self):
 		return [self.value, self.mini, self.maxi, self.dsc, self.sym, self.dev, self.timestamp]
 
+	def get_info(self):
+		return [self.mini, self.maxi, self.dsc, self.sym, self.dev]
+
 class Sensor(object):
 	# sensors should check the configuration flags to see which sensors are
 	# selected and then if active should poll the sensor and append it to the
@@ -95,14 +98,14 @@ class Sensor(object):
 		# data fragments (objects that contain the most recent sensor value,
 		# plus its context) are objects called Fragment().
 		if configure.system_vitals:
-			
+
 			self.step = 0.0
 			self.step2 = 0.0
 			self.steptan = 0.0
 			totalmem = float(psutil.virtual_memory().total) / 1024
 
-			self.cputemp = Fragment(0, 100, "CPUTemp", self.deg_sym + "c", "RaspberryPi")
-			self.cpuperc = Fragment(0,100,"CPUPercent","%","Raspberry Pi")
+			self.cputemp = Fragment(0, 100, "CpuTemp", self.deg_sym + "c", "RaspberryPi")
+			self.cpuperc = Fragment(0,100,"CpuPercent","%","Raspberry Pi")
 			self.virtmem = Fragment(0,totalmem,"VirtualMemory","b","RaspberryPi")
 			self.bytsent = Fragment(0,100000,"BytesSent","b","RaspberryPi")
 			self.bytrece = Fragment(0, 100000,"BytesReceived","b","RaspberryPi")
@@ -171,7 +174,16 @@ class Sensor(object):
 			self.radiation = RadiationWatch(configure.PG_SIG,configure.PG_NS)
 			self.radiation.setup()
 
-		configure.sensor_info = self.get()
+		configure.sensor_info = self.get_all_info()
+
+	def get_all_info(self):
+		info = self.get()
+
+		allinfo = []
+		for fragment in info:
+			thisfrag = [fragment.dsc,fragment.dev]
+			allinfo.append(thisfrag)
+		return allinfo
 
 	def sin_gen(self):
 		wavestep = math.sin(self.step)

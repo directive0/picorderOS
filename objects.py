@@ -3,15 +3,13 @@ import time
 print("Loading Global Objects")
 # This module contains generally useful objects that the entire program may call on.
 
-# This variable is used to pass information to things like progress notifications
-global_notify = "PicorderOS is not active"
 
 
 class preferences(object):
 
 	# Initializes the parameters for the program.
 	def __init__(self):
-		self.version = "v2.0"
+		self.version = "v2"
 		self.author = "directive0"
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.

@@ -248,21 +248,6 @@ class Image(object):
 	def draw(self, surface):
 		surface.blit(self.Img, (self.x,self.y))
 
-# a bit ambitious. A function to draw scales for the slider screen
-def make_scale(high,low,grads,lrlow,lrhigh,lylow,lyhigh,grnlow,grnhigh,hylow,hyhigh,hrlow,hrhigh,labels):
-
-	# create a surface to save our background.
-
-	backSurface = pygame.display.set_mode(resolution)
-
-	# draw the lines from top to bottom
-
-	# draw the graduations
-
-
-	# draw labels
-
-	# r	eturn pygame screen
 
 # The following class is used to prepare sensordata for display on the graph.
 class graphlist(object):
@@ -310,10 +295,10 @@ def startUp(surface,timeSinceStart):
 	secblurb = Label()
 
 	logoposx = (resolution[0]/2) - (226/2)
+
 	#sets out UI objects with the appropriate data
 	insignia.update(pioslogo, logoposx, 60)
-	#mainTitle.update("Picorder OS",25,22,181,titleFont,white)
-	#mainTitle.center(resolution[0],20,0,181)
+
 	secTitle.update(configure.version,19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,190)
 	secblurb.update("Skurfsoft - Toronto",15,37,210,titleFont,blue)
@@ -557,6 +542,8 @@ class Graph_Screen(object):
 		sense_info_b = configure.sensor_info[configure.sensors[1][0]]
 		sense_info_c = configure.sensor_info[configure.sensors[2][0]]
 
+
+
 		self.surface.fill(black)
 
 		#draws Background gridplane
@@ -571,8 +558,8 @@ class Graph_Screen(object):
 			# determines the sensor keys for each of the three main sensors
 			this_index = int(configure.sensors[i][0])
 
-			dsc = configure.sensor_info[this_index][3]
-			dev = configure.sensor_info[this_index][5]
+			dsc,dev = configure.sensor_info[this_index]
+
 
 
 			item = plars.get_recent(dsc,dev,num = 1)
