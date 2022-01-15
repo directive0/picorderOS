@@ -338,7 +338,7 @@ class Sensor(object):
 
 			# load the fragments into the sensorlist
 			sensorlist.extend((self.cputemp, self.cpuperc, self.virtmem, self.bytsent, self.bytrece, self.sinewav, self.tanwave, self.coswave, self.sinwav2))
-			print(sensorlist)
+
 
 		configure.max_sensors[0] = len(sensorlist)
 
