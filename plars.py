@@ -196,7 +196,7 @@ class PLARS(object):
 			sym = fragment.sym
 			timestamp = fragment.timestamp
 			fragdata = [value,mini,maxi,dsc,sym,dev,timestamp]
-			thisdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
+			thisdata = pd.DataFrame(fragdata,columns=['value','min','max','dsc','sym','dev','timestamp'])
 			newdata.append(thisdata)
 
 		print(newdata)
