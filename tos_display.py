@@ -593,7 +593,7 @@ class Graph_Screen(object):
 		c_content = str(int(c_newest))
 		c_color = themes[configure.theme[0]][2]
 
-		self.c_label.update(c_content + senseslice[0][2],30,marginright,205,titleFont,c_color)
+		self.c_label.update(c_content + senseslice[2][1],30,marginright,205,titleFont,c_color)
 		self.c_label.r_align(320 - marginright ,205)
 		contents = [a_content,b_content,c_content]
 
