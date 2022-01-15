@@ -56,7 +56,7 @@ class Fragment(object):
 	__slots__ = ('value','min','max','dsc','sym','dev','timestamp')
 
 	def __init__(min,max,dsc,sym,dev,timestamp):
-		self.value = value
+
 		self.min = min
 		self.max = max
 		self.dsc = dsc

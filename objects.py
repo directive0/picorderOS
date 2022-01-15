@@ -37,7 +37,7 @@ class preferences(object):
 		self.envirophat = False
 
 		# toggles wifi/bt scanning
-		self.EM = True
+		self.EM = False
 
 
 # PIN ASSIGNMENTS--------------------------------------------------------------#]
@@ -78,14 +78,13 @@ class preferences(object):
 
 		# testing this setting to switch between Pygame controls and gpio ones
 		self.input_kb = False
-		self.input_gpio = True
+		self.input_gpio = False
 		self.input_cap_mpr121 = False
 		self.input_pcf8575 = False
 
 		# CAP1208 and sensitivity settings
 		self.input_cap1208 = False
 		self.CAPSENSITIVITY = 50
-
 
 
 # OUTPUT SETTINGS--------------------------------------------------------------#
@@ -181,9 +180,6 @@ class preferences(object):
 
 
 
-
-
-
 configure = preferences()
 
 # the following function maps a value from the target range onto the desination range
@@ -213,7 +209,6 @@ class toggle(object):
 				self.setting = False
 			else:
 				self.setting = True
-
 
 # The following class is to keep track of whether an item has been initiated or is to be reset. This allows me to keep track of items easily.
 class initial(object):
