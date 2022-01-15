@@ -200,6 +200,7 @@ class PLARS(object):
 
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
+		print(currentsize)
 		targetsize = self.buffer_size
 
 		# determine difference between buffer and target size
