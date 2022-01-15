@@ -182,9 +182,7 @@ class PLARS(object):
 
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
-
-
- 		fragdata = []
+		fragdata = []
 		#listbuilder:
 		for fragment in data:
 			item = fragment.get()
