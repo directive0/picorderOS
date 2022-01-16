@@ -254,6 +254,7 @@ class PLARS(object):
 		# set the thread lock so other threads are unable to add sensor data
 		self.lock.acquire()
 
+		print(self.buffer)
 		print('dsc,dev', dsc, dev)
 		# get a dataframe of just the requested sensor
 		untrimmed_data = self.get_sensor(dsc,dev)
