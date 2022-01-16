@@ -50,7 +50,7 @@ if configure.system_vitals:
 if configure.pocket_geiger:
 	from PiPocketGeiger import RadiationWatch
 
-# prototype for an object to store each sensor value and context.
+# An object to store each sensor value and context.
 class Fragment(object):
 
 	__slots__ = ('value','mini','maxi','dsc','sym','dev','timestamp')
@@ -72,6 +72,7 @@ class Fragment(object):
 	def get(self):
 		return [self.value, self.mini, self.maxi, self.dsc, self.sym, self.dev, self.timestamp]
 
+	# Returns only the info constants for this fragment
 	def get_info(self):
 		return [self.mini, self.maxi, self.dsc, self.sym, self.dev]
 
@@ -164,13 +165,13 @@ class Sensor(object):
 			i2c = io.I2C(configure.PIN_SCL, configure.PIN_SDA)
 			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, address=0x76, debug=False)
 
-			self.temp_info = [-40,85,"Thermometer",self.deg_sym + "c", "BME680"]
-			self.humidity_info = [0,100,"Hygrometer", "%", "BME680"]
-			self.pressure_info = [300,1100,"Barometer","hPa", "BME680"]
-			self.VOC_info = [300000,1100000,"VOC","KOhm", "BME680"]
+			self.bme_temp = Fragment(-40,85,"Thermometer",self.deg_sym + "c", "BME680")
+			self.bme_hum = Fragment(0,100,"Hygrometer", "%", "BME680")
+			self.bme_press = Fragment(300,1100,"Barometer","hPa", "BME680")
+			self.bme_voc = Fragment(300000,1100000,"VOC","KOhm", "BME680")
 
 		if configure.pocket_geiger:
-			self.radiat = Fragment(0.0, 10000.0, "Radiation", "usvh", "pocketgeiger")
+			self.radiat = Fragment(0.0, 10000.0, "Radiation", "uSvh", "pocketgeiger")
 			self.radiation = RadiationWatch(configure.PG_SIG,configure.PG_NS)
 			self.radiation.setup()
 
@@ -225,7 +226,7 @@ class Sensor(object):
 			rad_data = float(data["uSvh"])
 
 			self.radiat.set(rad_data, timestamp)
-			sensorlist.extend(self.radiat)
+			sensorlist.extend((self.radiat))
 
 		if configure.bme:
 
