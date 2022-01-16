@@ -564,7 +564,6 @@ class Graph_Screen(object):
 
 			item = plars.get_recent(dsc,dev,num = 1)
 
-			print(item)
 			senseslice.append([item[0], sym])
 
 
