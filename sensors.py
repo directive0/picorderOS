@@ -61,7 +61,7 @@ class Fragment(object):
 		self.dsc = dsc
 		self.dev = dev
 		self.sym = sym
-		self.value = 4.20
+		self.value = 47
 
 	# Sets the value and timestamp for the fragment.
 	def set(self,value, timestamp):
@@ -127,38 +127,35 @@ class Sensor(object):
 			self.sense.set_imu_config(True,False,False)
 			# activates low light conditions to not blind the user.
 			self.sense.low_light = True
-			self.temp_info = [0,65,"Thermometer",self.deg_sym + "c", "sensehat"]
-			self.humidity_info = [20,80,"Hygrometer", "%", "sensehat"]
-			self.pressure_info = [260,1260,"Barometer","hPa", "sensehat"]
-			self.magnet_infox = [-500,500,"MagnetX","G", "sensehat"]
-			self.magnet_infoy = [-500,500,"MagnetY","G", "sensehat"]
-			self.magnet_infoz = [-500,500,"MagnetZ","G", "sensehat"]
-			self.accelerometer_infox = [-500,500,"AccelX","g", "sensehat"]
-			self.accelerometer_infoy = [-500,500,"AccelY","g", "sensehat"]
-			self.accelerometer_infoz = [-500,500,"AccelZ","g", "sensehat"]
+
+			self.sh_temp = Fragment(0,65,"Thermometer",self.deg_sym + "c", "sensehat")
+			self.sh_humi = Fragment(20,80,"Hygrometer", "%", "sensehat")
+			self.sh_baro = Fragment(260,1260,"Barometer","hPa", "sensehat")
+			self.sh_magx = Fragment(-500,500,"MagnetX","G", "sensehat")
+			self.sh_magy = Fragment(-500,500,"MagnetY","G", "sensehat")
+			self.sh_magz = Fragment(-500,500,"MagnetZ","G", "sensehat")
+			self.sh_accx = Fragment(-500,500,"AccelX","g", "sensehat")
+			self.sh_accy = Fragment(-500,500,"AccelY","g", "sensehat")
+			self.sh_accz = Fragment(-500,500,"AccelZ","g", "sensehat")
 
 		if configure.ir_thermo:
 			i2c = io.I2C(configure.PIN_SCL, configure.PIN_SDA, frequency=100000)
 			self.mlx = adafruit_mlx90614.MLX90614(i2c)
-			self.ir_thermo_ambient = [0,80,"IR ambient [mlx]",self.deg_sym + "c"]
-			self.ir_thermo_object = [0,80,"IR object [mlx]",self.deg_sym + "c"]
+
+			self.irt_ambi = Fragment(0,80,"IR ambient [mlx]",self.deg_sym + "c")
+			self.irt_obje = Fragment(0,80,"IR object [mlx]",self.deg_sym + "c")
 
 		if configure.envirophat: # and not configure.simulate:
 
-			self.rgb = light.rgb()
-			self.analog_values = analog.read_all()
-			self.mag_values = motion.magnetometer()
-			self.acc_values = [round(x, 2) for x in motion.accelerometer()]
-
-			self.temp_info = [0,65,"Thermometer",self.deg_sym + "c","Envirophat"]
-			self.humidity_info = [20,80,"Hygrometer", "%","Envirophat"]
-			self.pressure_info = [260,1260,"Barometer","hPa","Envirophat"]
-			self.magnet_infox = [-500,500,"Magnetomer X","G","Envirophat"]
-			self.magnet_infoy = [-500,500,"Magnetomer Y","G","Envirophat"]
-			self.magnet_infoz = [-500,500,"Magnetomer Z","G","Envirophat"]
-			self.accelerometer_infox = [-500,500,"Accelerometer X (EP)","g","Envirophat"]
-			self.accelerometer_infoy = [-500,500,"Accelerometer Y (EP)","g","Envirophat"]
-			self.accelerometer_infoz = [-500,500,"Accelerometer Z (EP)","g","Envirophat"]
+			self.ep_temp = Fragment(0,65,"Thermometer",self.deg_sym + "c","Envirophat")
+			self.ep_colo = Fragment(20,80,"Colour", "RGB","Envirophat")
+			self.ep_baro = Fragment(260,1260,"Barometer","hPa","Envirophat")
+			self.ep_magx = Fragment(-500,500,"Magnetomer X","G","Envirophat")
+			self.ep_magy = Fragment(-500,500,"Magnetomer Y","G","Envirophat")
+			self.ep_magz = Fragment(-500,500,"Magnetomer Z","G","Envirophat")
+			self.ep_accx = Fragment(-500,500,"Accelerometer X (EP)","g","Envirophat")
+			self.ep_accy = Fragment(-500,500,"Accelerometer Y (EP)","g","Envirophat")
+			self.ep_accz = Fragment(-500,500,"Accelerometer Z (EP)","g","Envirophat")
 
 		if configure.bme:
 			# Create library object using our Bus I2C port
@@ -166,7 +163,7 @@ class Sensor(object):
 			self.bme = adafruit_bme680.Adafruit_BME680_I2C(i2c, address=0x76, debug=False)
 
 			self.bme_temp = Fragment(-40,85,"Thermometer",self.deg_sym + "c", "BME680")
-			self.bme_hum = Fragment(0,100,"Hygrometer", "%", "BME680")
+			self.bme_humi = Fragment(0,100,"Hygrometer", "%", "BME680")
 			self.bme_press = Fragment(300,1100,"Barometer","hPa", "BME680")
 			self.bme_voc = Fragment(300000,1100000,"VOC","KOhm", "BME680")
 
@@ -218,9 +215,6 @@ class Sensor(object):
 		#timestamp for this sensor get.
 		timestamp = time.time()
 
-		if configure.EM:
-			pass
-
 		if configure.pocket_geiger:
 			data = self.radiation.status()
 			rad_data = float(data["uSvh"])
@@ -230,67 +224,30 @@ class Sensor(object):
 
 		if configure.bme:
 
-			sense_data = [self.bme.temperature]
-			sense_data2 = [self.bme.pressure]
-			sense_data3 = [self.bme.humidity]
-			sense_data4 = [self.bme.gas / 1000]
+			self.bme_temp.set(self.bme.temperature,timestamp)
+			self.bme_humi.set(self.bme.humidity,timestamp)
+			self.bme_press.set(self.bme.pressure,timestamp)
+			self.bme_voc.set(self.bme.gas / 1000,timestamp)
 
-			item1 = sense_data + self.temp_info + timestamp
-			item2 = sense_data2 + self.pressure_info + timestamp
-			item3 = sense_data3 + self.humidity_info + timestamp
-			item4 = sense_data4 + self.VOC_info + timestamp
-
-			sensorlist += [item1, item2, item3, item4]
+			sensorlist.extend((self.bme_temp,self.bme_humi,self.bme_press, self.bme_voc))
 
 		if configure.sensehat:
 
-			if configure.moire:
-				cxtick = 0.5 * math.sin(self.ticks/15.0) # change this line
-				cytick = 0.5 * math.cos(self.ticks/8.0) #change this line
+			magdata = sense.get_compass_raw()
+			acceldata = sense.get_accelerometer_raw()
 
-				for x in range(8):
-						for y in range(8):
-								# it's this cool plasma effect from demoscene I stole from
-								# somewhere.
-								cx = x + cxtick #change this line
-								cy = y + cytick #change this line
-								v = math.sin(math.sqrt(1.0*(math.pow(cy, 2.0)+math.pow(cx, 2.0))+1.0)+self.ticks)
-								v = (v + 1.0)/2.0
-								v = int(v*255.0)
+			self.sh_temp.set(sense.get_temperature(),timestamp)
+			self.sh_humi.set(sense.get_humidity(),timestamp)
+			self.sh_baro.set(sense.get_pressure(),timestamp)
+			self.sh_magx.set(magdata["x"],timestamp)
+			self.sh_magy.set(magdata["y"],timestamp)
+			self.sh_magz.set(magdata["z"],timestamp)
+			self.sh_accx.set(acceldata['x'],timestamp)
+			self.sh_accy.set(acceldata['y'],timestamp)
+			self.sh_accz.set(acceldata['z'],timestamp)
 
+			sensorlist.extend((self.sh_temp, self.sh_baro, self.sh_humi, self.sh_magx, self.sh_magy, self.sh_magz, self.sh_accx, self.sh_accy, self.sh_accz))
 
-								# Pack the computed pixel into the moire pixel list
-								moire[(x*8)+y]=[v,v,v]
-
-				sense.set_pixels(moire)
-				self.ticks += 1
-			else:
-				sense.clear()  # no arguments defaults to off
-
-
-			sense_data = [sense.get_temperature()]
-			sense_data2 = [sense.get_pressure()]
-			sense_data3 = [sense.get_humidity()]
-			sense_data4 = [sense.get_compass_raw()["x"]]
-			sense_data5 = [sense.get_compass_raw()["y"]]
-			sense_data6 = [sense.get_compass_raw()["z"]]
-
-			# acceldata = sense.get_accelerometer_raw()
-			# sense_data7 = [float(acceldata["x"])]
-			# sense_data8 = [float(acceldata["y"])]
-			# sense_data9 = [float(acceldata["z"])]
-
-			item1 = sense_data + self.temp_info + timestamp
-			item2 = sense_data2 + self.pressure_info + timestamp
-			item3 = sense_data3 + self.humidity_info + timestamp
-			item4 = sense_data4 + self.magnet_infox + timestamp
-			item5 = sense_data5 + self.magnet_infoy + timestamp
-			item6 = sense_data6 + self.magnet_infoz + timestamp
-			# item7 = sense_data7 + self.accelerometer_infox + timestamp
-			# item8 = sense_data8 + self.accelerometer_infoy + timestamp
-			# item9 = sense_data9 + self.accelerometer_infoz + timestamp
-
-			sensorlist += [item1, item2, item3, item4, item5, item6]
 
 		if configure.envirophat:
 			self.rgb = light.rgb()
@@ -298,27 +255,17 @@ class Sensor(object):
 			self.mag_values = motion.magnetometer()
 			self.acc_values = [round(x, 2) for x in motion.accelerometer()]
 
-			sense_data = [weather.temperature()]
-			sense_data2 = [weather.pressure(unit='hpa')]
-			sense_data3 = [light.light()]
-			sense_data4 = [self.mag_values[0]]
-			sense_data5 = [self.mag_values[1]]
-			sense_data6 = [self.mag_values[2]]
-			sense_data7 = [self.acc_values[0]]
-			sense_data8 = [self.acc_values[1]]
-			sense_data9 = [self.acc_values[2]]
+			self.ep_temp.set(weather.temperature(),timestamp)
+			self.ep_colo.set(light.light(),timestamp)
+			self.ep_baro.set(weather.pressure(unit='hpa'), timestamp)
+			self.ep_magx.set(self.mag_values[0],timestamp)
+			self.ep_magy.set(self.mag_values[1],timestamp)
+			self.ep_magz.set(self.mag_values[2],timestamp)
+			self.ep_accx.set(self.acc_values[0],timestamp)
+			self.ep_accy.set(self.acc_values[1],timestamp)
+			self.ep_accz.set(self.acc_values[2],timestamp)
 
-			item1 = sense_data + self.temp_info + timestamp
-			item2 = sense_data2 + self.pressure_info + timestamp
-			item3 = sense_data3 + self.humidity_info + timestamp
-
-			item4 = sense_data4 + self.magnet_infox + timestamp
-			item5 = sense_data5 + self.magnet_infoy + timestamp
-			item6 = sense_data6 + self.magnet_infoz + timestamp
-			item7 = sense_data7 + self.accelerometer_infox + timestamp
-			item8 = sense_data8 + self.accelerometer_infoy + timestamp
-			item9 = sense_data9 + self.accelerometer_infoz + timestamp
-			sensorlist += [item1, item2, item3, item4, item5, item6, item7, item8, item9]
+			sensorlist.extend((self.ep_temp, self.ep_baro, self.ep_colo, self.ep_magx, self.ep_magy, self.ep_magz, self.ep_accx, self.ep_accy, self.ep_accz))
 
 		# provides the basic definitions for the system vitals sensor readouts
 		if configure.system_vitals:
@@ -326,7 +273,7 @@ class Sensor(object):
 			if not configure.pc:
 				t = float(os.popen("cat /sys/class/thermal/thermal_zone0/temp").readline())
 			else:
-				t = float(4.20)
+				t = float(47)
 
 			# update each fragment with new data and mark the time.
 			self.cputemp.set(t,timestamp)
@@ -341,7 +288,6 @@ class Sensor(object):
 
 			# load the fragments into the sensorlist
 			sensorlist.extend((self.cputemp, self.cpuperc, self.virtmem, self.bytsent, self.bytrece, self.sinewav, self.tanwave, self.coswave, self.sinwav2))
-
 
 		configure.max_sensors[0] = len(sensorlist)
 

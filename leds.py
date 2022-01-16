@@ -16,6 +16,19 @@ timer = timer()
 if not configure.pc:
 	import RPi.GPIO as GPIO
 
+if configure.sensehat:
+	# instantiates and defines paramaters for the sensehat
+
+	from sense_hat import SenseHat
+
+	# instantiate a sensehat object,
+	sensehat = SenseHat()
+
+	# Initially clears the LEDs once loaded
+	sensehat.clear()
+
+	# Prepares an array of 64 pixel triplets for the Sensehat moire display
+	moire=[[0 for x in range(3)] for x in range(64)]
 
 
 # a list of the shift register pin data, for loop purposes (main board, sensor board).
@@ -192,32 +205,56 @@ class ripple(object):
 		# if lights are engaged this block of code will run the animation, or else
 		# turn them off.
 		if self.lights:
+			
+			if configure.sensehat and configure.moire:
+				cxtick = 0.5 * math.sin(self.ticks/15.0) # change this line
+				cytick = 0.5 * math.cos(self.ticks/8.0) #change this line
+
+				for x in range(8):
+						for y in range(8):
+								# it's this cool plasma effect from demoscene I stole from
+								# somewhere.
+								cx = x + cxtick #change this line
+								cy = y + cytick #change this line
+								v = math.sin(math.sqrt(1.0*(math.pow(cy, 2.0)+math.pow(cx, 2.0))+1.0)+self.ticks)
+								v = (v + 1.0)/2.0
+								v = int(v*255.0)
 
 
-			if self.beat > 3:
-				self.beat = 0
+								# Pack the computed pixel into the moire pixel list
+								moire[(x*8)+y]=[v,v,v]
 
-			if self.beat == 0:
-				shiftout(140)
-				shiftout(140,board = 1)
+				sensehat.set_pixels(moire)
+				self.ticks += 1
+			else:
+				sensehat.clear()  # no arguments defaults to off
 
-			if self.beat == 1:
-				shiftout(74)
-				shiftout(74,board = 1)
+			if configure.tr109:
+				if self.beat > 3:
+					self.beat = 0
 
-			if self.beat == 2:
-				shiftout(41)
-				shiftout(41, board = 1)
+				if self.beat == 0:
+					shiftout(140)
+					shiftout(140,board = 1)
 
-			if self.beat == 3:
-				shiftout(26)
-				shiftout(26, board = 1)
+				if self.beat == 1:
+					shiftout(74)
+					shiftout(74,board = 1)
 
-			self.beat += 1
+				if self.beat == 2:
+					shiftout(41)
+					shiftout(41, board = 1)
+
+				if self.beat == 3:
+					shiftout(26)
+					shiftout(26, board = 1)
+
+				self.beat += 1
 
 		else:
-			shiftout(0)
-			shiftout(0,board =1)
+			if configure.tr109:
+				shiftout(0)
+				shiftout(0,board =1)
 
 # function to handle lights as a seperate thread.
 def ripple_async():
