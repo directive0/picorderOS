@@ -216,10 +216,11 @@ class Sensor(object):
 		timestamp = time.time()
 
 		if configure.pocket_geiger:
+
 			data = self.radiation.status()
 			rad_data = float(data["uSvh"])
-
 			self.radiat.set(rad_data, timestamp)
+
 			sensorlist.append(self.radiat)
 
 		if configure.bme:
@@ -247,7 +248,6 @@ class Sensor(object):
 			self.sh_accz.set(acceldata['z'],timestamp)
 
 			sensorlist.extend((self.sh_temp, self.sh_baro, self.sh_humi, self.sh_magx, self.sh_magy, self.sh_magz, self.sh_accx, self.sh_accy, self.sh_accz))
-
 
 		if configure.envirophat:
 			self.rgb = light.rgb()
@@ -291,11 +291,9 @@ class Sensor(object):
 
 		configure.max_sensors[0] = len(sensorlist)
 
-
 		if len(sensorlist) < 1:
 			print("NO SENSORS LOADED")
 
-		#print(sensorlist)
 		return sensorlist
 
 class MLX90614():
