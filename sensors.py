@@ -226,7 +226,7 @@ class Sensor(object):
 			rad_data = float(data["uSvh"])
 
 			self.radiat.set(rad_data, timestamp)
-			sensorlist.extend((self.radiat))
+			sensorlist.append(self.radiat)
 
 		if configure.bme:
 
