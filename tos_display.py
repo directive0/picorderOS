@@ -581,7 +581,7 @@ class Graph_Screen(object):
 		c_cords = graphit(self.data_c,c_newest)
 		cords = [a_cords,b_cords,c_cords]
 
-		a_content = str(int(a_newest))
+		a_content = str(a_newest)
 		a_color = themes[configure.theme[0]][0]
 
 		self.a_label.update(a_content + senseslice[0][1],30,marginleft,205,titleFont,a_color)
