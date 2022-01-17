@@ -548,7 +548,7 @@ class Graph_Screen(object):
 			self.figuresize = [4, 4]
 
 			self.fig = pylab.figure(figsize = self.figuresize, dpi = 100)
-			self.ax = fig.gca()
+			self.ax = self.fig.gca()
 
 
 
@@ -662,7 +662,7 @@ class Graph_Screen(object):
 				self.a_label.draw(self.surface)
 				self.b_label.draw(self.surface)
 				self.c_label.draw(self.surface)
-			else:
+			else:	
 				this_index = int(configure.sensors[i][0])
 
 				dsc,dev,sym = configure.sensor_info[0]
@@ -674,7 +674,7 @@ class Graph_Screen(object):
 				self.canvas = agg.FigureCanvasAgg(self.fig)
 				self.canvas.draw()
 				self.renderer = self.canvas.get_renderer()
-				self.raw_data = renderer.tostring_rgb()
+				self.raw_data = self.renderer.tostring_rgb()
 
 				surf = pygame.image.fromstring(raw_data, size, "RGB")
 				self.surface.blit(surf, (0,0))
