@@ -5,6 +5,7 @@ print("Loading Unified Indicator Module")
 
 from objects import *
 import time
+import math
 
 #loads parameters for configurations
 interval = configure.LED_TIMER
