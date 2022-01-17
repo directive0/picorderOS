@@ -663,12 +663,12 @@ class Graph_Screen(object):
 				self.b_label.draw(self.surface)
 				self.c_label.draw(self.surface)
 			else:
-				this_index = int(configure.sensors[i][0])
 
 				dsc,dev,sym = configure.sensor_info[0]
-
+				print(dsc,dev,sym)
 				item = plars.get_recent(dsc,dev,num = 40)
 				print(item)
+
 				self.ax.plot(item)
 
 				self.canvas = agg.FigureCanvasAgg(self.fig)
@@ -677,7 +677,7 @@ class Graph_Screen(object):
 				raw_data = self.renderer.tostring_rgb()
 
 				surf = pygame.image.fromstring(raw_data, (100,100), "RGB")
-				self.surface.blit(surf, (0,0))
+				self.surface.blit(surf, (10,10))
 
 
 		# this checks if we are viewing a sensor individually and graphing it alone.
