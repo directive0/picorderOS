@@ -205,8 +205,8 @@ class ripple(object):
 		# if lights are engaged this block of code will run the animation, or else
 		# turn them off.
 		if self.lights:
-			
-			if configure.sensehat and configure.moire:
+
+			if configure.sensehat[0] and configure.moire[0]:
 				cxtick = 0.5 * math.sin(self.ticks/15.0) # change this line
 				cytick = 0.5 * math.cos(self.ticks/8.0) #change this line
 
@@ -226,8 +226,7 @@ class ripple(object):
 
 				sensehat.set_pixels(moire)
 				self.ticks += 1
-			else:
-				sensehat.clear()  # no arguments defaults to off
+
 
 			if configure.tr109:
 				if self.beat > 3:
