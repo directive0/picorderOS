@@ -545,7 +545,7 @@ class Graph_Screen(object):
 
 		if matplot:
 
-			self.figuresize = [4, 4]
+			self.figuresize = [1, 1]
 
 			self.fig = pylab.figure(figsize = self.figuresize, dpi = 100)
 			self.ax = self.fig.gca()
@@ -668,15 +668,15 @@ class Graph_Screen(object):
 				dsc,dev,sym = configure.sensor_info[0]
 
 				item = plars.get_recent(dsc,dev,num = 40)
-
+				print(item)
 				self.ax.plot(item)
 
 				self.canvas = agg.FigureCanvasAgg(self.fig)
 				self.canvas.draw()
 				self.renderer = self.canvas.get_renderer()
-				self.raw_data = self.renderer.tostring_rgb()
+				raw_data = self.renderer.tostring_rgb()
 
-				surf = pygame.image.fromstring(raw_data, size, "RGB")
+				surf = pygame.image.fromstring(raw_data, (100,100), "RGB")
 				self.surface.blit(surf, (0,0))
 
 
