@@ -65,7 +65,10 @@ class Fragment(object):
 
 	# Sets the value and timestamp for the fragment.
 	def set(self,value, timestamp):
-		self.value = value
+
+		if not value:
+			self.value = value
+
 		self.timestamp = timestamp
 
 	# Returns all the data for the fragment.

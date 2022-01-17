@@ -8,7 +8,7 @@ print("Loading 320x240 Duotronic Interface")
 import pygame
 import time
 
-
+matplot = False
 
 
 from plars import *
@@ -29,6 +29,15 @@ pygame.display.set_caption('PicorderOS')
 # The following commands disable the mouse and cursor.
 #pygame.event.set_blocked(pygame.MOUSEMOTION)
 #pygame.mouse.set_visible(0)
+
+if matplot:
+	import matplotlib
+	matplotlib.use("Agg")
+
+	import matplotlib.backends.backend_agg as agg
+
+
+	import pylab
 
 # set the screen configuration
 resolution = (320,240)
@@ -534,6 +543,14 @@ class Graph_Screen(object):
 
 		self.margin = 16
 
+		if matplot:
+
+			self.figuresize = [4, 4]
+
+			self.fig = pylab.figure(figsize = self.figuresize, dpi = 100)
+			self.ax = fig.gca()
+
+
 
 	def frame(self):
 		# Because the graph screen is slow to update it needs to pop a reading onto screen as soon as it is initiated I draw a value once and wait for the interval to lapse for the next draw. Once the interval has lapsed pop another value on screen.
@@ -629,20 +646,39 @@ class Graph_Screen(object):
 		sliders = [self.slider1,self.slider2,self.slider3]
 
 		if self.selection == 0:
-			#draw the lines
-			pygame.draw.lines(self.surface, a_color, False, a_cords, 2)
-			self.slider1.draw(self.surface)
 
-			pygame.draw.lines(self.surface, b_color, False, b_cords, 2)
-			self.slider2.draw(self.surface)
+			if not matplot:
+				#draw the lines
+				pygame.draw.lines(self.surface, a_color, False, a_cords, 2)
+				self.slider1.draw(self.surface)
 
-			pygame.draw.lines(self.surface, c_color, False, c_cords, 2)
-			self.slider3.draw(self.surface)
+				pygame.draw.lines(self.surface, b_color, False, b_cords, 2)
+				self.slider2.draw(self.surface)
 
-			# draws the labels
-			self.a_label.draw(self.surface)
-			self.b_label.draw(self.surface)
-			self.c_label.draw(self.surface)
+				pygame.draw.lines(self.surface, c_color, False, c_cords, 2)
+				self.slider3.draw(self.surface)
+
+				# draws the labels
+				self.a_label.draw(self.surface)
+				self.b_label.draw(self.surface)
+				self.c_label.draw(self.surface)
+			else:
+				this_index = int(configure.sensors[i][0])
+
+				dsc,dev,sym = configure.sensor_info[0]
+
+				item = plars.get_recent(dsc,dev,num = 40)
+
+				self.ax.plot(item)
+
+				self.canvas = agg.FigureCanvasAgg(self.fig)
+				self.canvas.draw()
+				self.renderer = self.canvas.get_renderer()
+				self.raw_data = renderer.tostring_rgb()
+
+				surf = pygame.image.fromstring(raw_data, size, "RGB")
+				self.surface.blit(surf, (0,0))
+
 
 		# this checks if we are viewing a sensor individually and graphing it alone.
 		if self.selection != 0:

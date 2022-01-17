@@ -8,11 +8,6 @@ import json
 #	different Picorder screen modes.
 
 
-
-
-#	TO DO:
-#	- JSON api
-
 import os
 import numpy
 import datetime
