@@ -167,6 +167,7 @@ class ripple(object):
 		self.disabled = False
 		self.statuswas = False
 		self.lights = True
+		self.ticks = 0
 
 
 	def cycle(self):
