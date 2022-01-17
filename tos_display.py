@@ -662,7 +662,7 @@ class Graph_Screen(object):
 				self.a_label.draw(self.surface)
 				self.b_label.draw(self.surface)
 				self.c_label.draw(self.surface)
-			else:	
+			else:
 				this_index = int(configure.sensors[i][0])
 
 				dsc,dev,sym = configure.sensor_info[0]
