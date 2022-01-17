@@ -234,7 +234,7 @@ class ripple(object):
 				shiftout(0,board =1)
 
 
-		if configure.sensehat[0] and configure.moire[0]:
+		if configure.sensehat and configure.moire[0]:
 			cxtick = 0.5 * math.sin(self.ticks/15.0) # change this line
 			cytick = 0.5 * math.cos(self.ticks/8.0) #change this line
 
