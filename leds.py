@@ -206,28 +206,6 @@ class ripple(object):
 		# turn them off.
 		if self.lights:
 
-			if configure.sensehat[0] and configure.moire[0]:
-				cxtick = 0.5 * math.sin(self.ticks/15.0) # change this line
-				cytick = 0.5 * math.cos(self.ticks/8.0) #change this line
-
-				for x in range(8):
-						for y in range(8):
-								# it's this cool plasma effect from demoscene I stole from
-								# somewhere.
-								cx = x + cxtick #change this line
-								cy = y + cytick #change this line
-								v = math.sin(math.sqrt(1.0*(math.pow(cy, 2.0)+math.pow(cx, 2.0))+1.0)+self.ticks)
-								v = (v + 1.0)/2.0
-								v = int(v*255.0)
-
-
-								# Pack the computed pixel into the moire pixel list
-								moire[(x*8)+y]=[v,v,v]
-
-				sensehat.set_pixels(moire)
-				self.ticks += 1
-
-
 			if configure.tr109:
 				if self.beat > 3:
 					self.beat = 0
@@ -254,6 +232,30 @@ class ripple(object):
 			if configure.tr109:
 				shiftout(0)
 				shiftout(0,board =1)
+
+
+		if configure.sensehat[0] and configure.moire[0]:
+			cxtick = 0.5 * math.sin(self.ticks/15.0) # change this line
+			cytick = 0.5 * math.cos(self.ticks/8.0) #change this line
+
+			for x in range(8):
+					for y in range(8):
+							# it's this cool plasma effect from demoscene I stole from
+							# somewhere.
+							cx = x + cxtick #change this line
+							cy = y + cytick #change this line
+							v = math.sin(math.sqrt(1.0*(math.pow(cy, 2.0)+math.pow(cx, 2.0))+1.0)+self.ticks)
+							v = (v + 1.0)/2.0
+							v = int(v*255.0)
+
+
+							# Pack the computed pixel into the moire pixel list
+							moire[(x*8)+y]=[v,v,v]
+
+			sensehat.set_pixels(moire)
+			self.ticks += 1
+
+
 
 # function to handle lights as a seperate thread.
 def ripple_async():
