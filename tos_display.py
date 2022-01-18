@@ -545,10 +545,6 @@ class Graph_Screen(object):
 
 		if matplot:
 
-			self.figuresize = [1, 1]
-
-			self.fig = pylab.figure(figsize = self.figuresize, dpi = 100)
-			self.ax = self.fig.gca()
 
 
 
@@ -663,6 +659,10 @@ class Graph_Screen(object):
 				self.b_label.draw(self.surface)
 				self.c_label.draw(self.surface)
 			else:
+				self.figuresize = [1, 1]
+
+				self.fig = pylab.figure(figsize = self.figuresize, dpi = 100)
+				self.ax = self.fig.gca()
 
 				dsc,dev,sym = configure.sensor_info[0]
 				print(dsc,dev,sym)
