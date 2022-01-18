@@ -580,7 +580,7 @@ class Graph_Screen(object):
 			if len(item) > 0:
 				senseslice.append([item[0], sym])
 			else:
-				senseslice.append(47, sym])
+				senseslice.append([47, sym])
 		#converts data to float
 
 		a_newest = float(senseslice[0][0])
