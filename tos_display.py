@@ -305,14 +305,14 @@ def startUp(surface,timeSinceStart):
 	secTitle = Label()
 	secblurb = Label()
 
-	logoposx = (resolution[0]/2) - (226/2)
+	logoposx = (resolution[0]/2) - (41/2)
 
 	#sets out UI objects with the appropriate data
 	insignia.update(pioslogo, logoposx, 60)
 
 	secTitle.update(configure.version,19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,190)
-	secblurb.update("Skurfsoft - Toronto",15,37,210,titleFont,blue)
+	secblurb.update("LOADING",15,37,210,titleFont,blue)
 	secblurb.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer
@@ -641,39 +641,22 @@ class Graph_Screen(object):
 
 		if self.selection == 0:
 
-			if not matplot:
-				#draw the lines
-				pygame.draw.lines(self.surface, a_color, False, a_cords, 2)
-				self.slider1.draw(self.surface)
+			#draw the lines
+			pygame.draw.lines(self.surface, c_color, False, c_cords, 2)
+			self.slider3.draw(self.surface)
 
-				pygame.draw.lines(self.surface, b_color, False, b_cords, 2)
-				self.slider2.draw(self.surface)
+			pygame.draw.lines(self.surface, b_color, False, b_cords, 2)
+			self.slider2.draw(self.surface)
 
-				pygame.draw.lines(self.surface, c_color, False, c_cords, 2)
-				self.slider3.draw(self.surface)
+			pygame.draw.lines(self.surface, a_color, False, a_cords, 2)
+			self.slider1.draw(self.surface)
 
-				# draws the labels
-				self.a_label.draw(self.surface)
-				self.b_label.draw(self.surface)
-				self.c_label.draw(self.surface)
-			else:
 
-				self.fig = pylab.figure(figsize = [3,2], dpi = 100)
-				self.ax = self.fig.gca()
+			# draws the labels
+			self.a_label.draw(self.surface)
+			self.b_label.draw(self.surface)
+			self.c_label.draw(self.surface)
 
-				dsc,dev,sym = configure.sensor_info[1]
-
-				item = plars.get_recent(dsc,dev,num = 40)
-
-				self.ax.plot(item)
-
-				self.canvas = agg.FigureCanvasAgg(self.fig)
-				self.canvas.draw()
-				self.renderer = self.canvas.get_renderer()
-				raw_data = self.renderer.tostring_rgb()
-
-				surf = pygame.image.fromstring(raw_data, (300,200), "RGB")
-				self.surface.blit(surf, (20,20))
 
 
 		# this checks if we are viewing a sensor individually and graphing it alone.

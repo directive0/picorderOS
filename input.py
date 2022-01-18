@@ -248,9 +248,9 @@ class Inputs(object):
 			if key[pygame.K_LEFT]:
 					if not self.pressed[0]:
 						self.pressed[0] = True
+						configure.eventready[0] = True
 						self.holdtimers[0].logtime()
 					else:
-
 						if self.holdtimers[0].timelapsed() > self.thresh_hold:
 							self.holding[0] = True
 
@@ -266,6 +266,7 @@ class Inputs(object):
 			if key[pygame.K_DOWN]:
 					if not self.pressed[1]:
 						self.pressed[1] = True
+						configure.eventready[0] = True
 						self.holdtimers[1].logtime()
 					else:
 
@@ -284,6 +285,7 @@ class Inputs(object):
 			if key[pygame.K_RIGHT]:
 					if not self.pressed[2]:
 						self.pressed[2] = True
+						configure.eventready[0] = True
 						self.holdtimers[2].logtime()
 					else:
 
