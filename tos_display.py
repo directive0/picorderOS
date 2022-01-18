@@ -67,7 +67,7 @@ themenames = ["alpha", "beta", "delta"]
 # The following lists/objects are for UI elements.
 titleFont = "assets/babs.otf"
 blueInsignia = pygame.image.load('assets/icon.png')
-pioslogo = pygame.image.load('assets/picorderOS_logo.png')
+pioslogo = pygame.image.load('assets/Picorder_Logo.png')
 backplane = pygame.image.load('assets/background.png')
 backgraph = pygame.image.load('assets/backgraph.png')
 slidera = pygame.image.load('assets/slider.png')
@@ -305,7 +305,7 @@ def startUp(surface,timeSinceStart):
 	secTitle = Label()
 	secblurb = Label()
 
-	logoposx = (resolution[0]/2) - (41/2)
+	logoposx = (resolution[0]/2) - (203/2)
 
 	#sets out UI objects with the appropriate data
 	insignia.update(pioslogo, logoposx, 60)
