@@ -579,15 +579,16 @@ class Graph_Screen(object):
 			# determines the sensor keys for each of the three main sensors
 			this_index = int(configure.sensors[i][0])
 
-			dsc,dev,sym = configure.sensor_info[this_index]
+			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
 
 			item = plars.get_recent(dsc,dev,num = 1)
 
 			if len(item) > 0:
-				senseslice.append([item[0], sym])
+				senseslice.append([item[0], sym, mini, maxi])
 			else:
-				senseslice.append([47, sym])
+				senseslice.append([47, sym, mini, maxi])
+
 		#converts data to float
 
 		a_newest = float(senseslice[0][0])
@@ -757,26 +758,47 @@ class Slider_Screen(object):
 
 	def frame(self):
 
-		#converts data to float
-		a_newest = float(sensors[configure.sensor1[0]][0])
-		b_newest = float(sensors[configure.sensor2[0]][0])
-		c_newest = float(sensors[configure.sensor3[0]][0])
+		senseslice = []
 
+		for i in range(3):
+
+			# determines the sensor keys for each of the three main sensors
+			this_index = int(configure.sensors[i][0])
+
+			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
+
+
+			item = plars.get_recent(dsc,dev,num = 1)
+
+			if len(item) > 0:
+				senseslice.append([item[0], sym, mini, maxi])
+			else:
+				senseslice.append([47, sym, mini, maxi])
+
+		#converts data to float
+		a_newest = float(senseslice[0][0])
+		b_newest = float(senseslice[1][0])
+		c_newest = float(senseslice[2][0])
+		newests = [a_newest,b_newest,c_newest]
 
 
 		# data labels
 		a_content = str(int(a_newest))
-		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],19,47,215,titleFont,yellow)
+		self.a_label.update(a_content + senseslice[0][1],19,47,215,titleFont,yellow)
 		b_content = str(int(b_newest))
-		self.b_label.update(b_content + sensors[configure.sensor2[0]][4],19,152,215,titleFont,yellow)
+		self.b_label.update(b_content + senseslice[1][1],19,152,215,titleFont,yellow)
 		c_content = str(int(c_newest))
-		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],19,254,215,titleFont,yellow)
+		self.c_label.update(c_content + senseslice[2][1],19,254,215,titleFont,yellow)
 
 		# slider data adjustment
 		# the routine takes the raw sensor data and converts it to screen coordinates to move the sliders
-		a_slide = translate(float(sensors[configure.sensor1[0]][0]), sensors[configure.sensor1[0]][1], sensors[configure.sensor1[0]][2], 204, 15)
-		b_slide = translate(float(sensors[configure.sensor2[0]][0]), sensors[configure.sensor2[0]][1], sensors[configure.sensor2[0]][2], 204, 15)
-		c_slide = translate(float(sensors[configure.sensor3[0]][0]), sensors[configure.sensor3[0]][1], sensors[configure.sensor3[0]][2], 204, 15)
+		# determines the sensor keys for each of the three main sensors
+
+
+
+		a_slide = translate(senseslice[0][0], senseslice[0][2], senseslice[0][3], 204, 15)
+		b_slide = translate(senseslice[1][0], senseslice[1][2], senseslice[1][3], 204, 15)
+		c_slide = translate(senseslice[2][0], senseslice[2][2], senseslice[2][3], 204, 15)
 
 		# Updates our UI objects with data parsed from sensor/weather
 		self.backPlane.update(backplane, 0, 0)
@@ -858,8 +880,8 @@ class Screen(object):
 		status = about()
 		return status
 
-	def slider_screen(self,sensors):
-		status = self.slidescreen.frame(sensors)
+	def slider_screen(self):
+		status = self.slidescreen.frame()
 		return status
 
 	def graph_screen(self):
