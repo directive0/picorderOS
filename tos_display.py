@@ -402,6 +402,7 @@ def graphit(data, auto = True):
 		else:
 			prep.append(translate(i, data_low, data_high, 204, 17)) # <----need to fix total scale.
 
+	print("prep is: ", prep)
 	return graphprep(prep)
 
 
