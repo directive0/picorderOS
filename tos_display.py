@@ -289,7 +289,7 @@ def graphprep(list):
 	newlist = []
 	print("list length: ", len(list))
 	for i in range(145):
-		if (i - 1) > len(list):
+		if i > (len(list) - 1):
 			item = 110
 		else:
 			print("i is: ", i)
