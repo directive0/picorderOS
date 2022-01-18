@@ -176,7 +176,6 @@ class Sensor(object):
 
 		configure.sensor_info = self.get_all_info()
 
-		print(configure.sensor_info)
 
 	def get_all_info(self):
 		info = self.get()

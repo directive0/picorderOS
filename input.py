@@ -156,10 +156,6 @@ class Inputs(object):
 			thistimer = timer()
 			self.holdtimers.append(thistimer)
 
-
-
-
-
 		configure.eventlist[0] = self.clear
 
 	def getlist(self):
