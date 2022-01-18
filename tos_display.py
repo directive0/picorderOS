@@ -657,15 +657,13 @@ class Graph_Screen(object):
 				self.b_label.draw(self.surface)
 				self.c_label.draw(self.surface)
 			else:
-				self.figuresize = [1, 1]
 
-				self.fig = pylab.figure(figsize = self.figuresize, dpi = 100)
+				self.fig = pylab.figure(figsize = [1,1], dpi = 100)
 				self.ax = self.fig.gca()
 
 				dsc,dev,sym = configure.sensor_info[0]
-				print(dsc,dev,sym)
+
 				item = plars.get_recent(dsc,dev,num = 40)
-				print(item)
 
 				self.ax.plot(item)
 
