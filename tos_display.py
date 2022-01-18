@@ -287,6 +287,7 @@ def graphprep(list):
 	linepoint = 15
 	jump = 2
 	newlist = []
+	print("list length: ", len(list))
 	for i in range(145):
 		if (i - 1) > len(list):
 			item = 110
