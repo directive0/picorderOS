@@ -606,16 +606,17 @@ class Graph_Screen(object):
 			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
 			datas[i] = plars.get_recent(dsc,dev,num = 145)
-			print(datas[i])
+
 
 
 			if len(datas[i]) == 0:
-				datas[i] = 47
+				datas[i] = [47]
 
 			item = datas[i]
 
 			senseslice.append([item[0], dsc, dev, sym, mini, maxi])
 
+		print(datas)
 		#converts data to float
 
 		a_newest = float(senseslice[0][0])
