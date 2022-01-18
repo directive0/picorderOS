@@ -543,8 +543,6 @@ class Graph_Screen(object):
 
 		self.margin = 16
 
-		if matplot:
-
 
 
 
