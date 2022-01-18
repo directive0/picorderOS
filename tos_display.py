@@ -291,6 +291,7 @@ def graphprep(list):
 		if (i - 1) > len(list):
 			item = 110
 		else:
+			print("i is: ", i)
 			item = list[i]
 
 		newlist.append((linepoint,item))
