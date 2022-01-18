@@ -383,6 +383,7 @@ def graphit(data, auto = True):
 
 	#grabs our databuffer object.
 	buffer = data
+	print("buffer = ", buffer)
 
 	prep = []
 
