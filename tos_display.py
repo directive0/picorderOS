@@ -227,7 +227,7 @@ class SelectableLabel(Label):
 
 		label = self.myfont.render(self.content, 1, self.color)
 
-		dsc,dev,sym = configure.sensor_info[self.oper[0]]
+		dsc,dev,sym,maxi,mini = configure.sensor_info[self.oper[0]]
 
 		status_text = "dummy"
 		if self.special == 0:
