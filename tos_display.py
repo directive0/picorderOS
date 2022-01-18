@@ -390,6 +390,7 @@ def graphit(data, auto = True):
 	data_low = min(buffer)
 
 	for i in data:
+
 		if configure.auto[0]:
 			prep.append(translate(i, data_low, data_high, 204, 17))
 		else:
@@ -605,6 +606,7 @@ class Graph_Screen(object):
 			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
 			datas[i] = plars.get_recent(dsc,dev,num = 145)
+			print(datas[i])
 
 			item = datas[i]
 
