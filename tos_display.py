@@ -287,12 +287,12 @@ def graphprep(list):
 	linepoint = 15
 	jump = 2
 	newlist = []
-	print("list length: ", len(list))
+
 	for i in range(145):
 		if i > (len(list) - 1):
 			item = 110
 		else:
-			print("i is: ", i)
+
 			item = list[i]
 
 		newlist.append((linepoint,item))
@@ -390,7 +390,7 @@ def graphit(data, auto = True):
 
 	#grabs our databuffer object.
 	buffer = data
-	print("buffer = ", buffer)
+
 
 	prep = []
 
@@ -404,7 +404,7 @@ def graphit(data, auto = True):
 		else:
 			prep.append(translate(i, data_low, data_high, 204, 17)) # <----need to fix total scale.
 
-	print("prep is: ", prep)
+
 	return graphprep(prep)
 
 
@@ -625,7 +625,7 @@ class Graph_Screen(object):
 
 			senseslice.append([item[0], dsc, dev, sym, mini, maxi])
 
-		print(datas)
+
 		#converts data to float
 
 		a_newest = float(senseslice[0][0])
