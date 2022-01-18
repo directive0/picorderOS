@@ -288,7 +288,12 @@ def graphprep(list):
 	jump = 2
 	newlist = []
 	for i in range(145):
-		newlist.append((linepoint,list[i]))
+		if (i - 1) > len(list):
+			item = 110
+		else:
+			item = list[i]
+
+		newlist.append((linepoint,item))
 		linepoint = linepoint + jump
 
 	return newlist
