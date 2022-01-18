@@ -607,9 +607,9 @@ class Graph_Screen(object):
 			item = plars.get_recent(dsc,dev,num = 1)
 
 			if len(item) > 0:
-				senseslice.append([item[0], sym, mini, maxi])
+				senseslice.append([item[0], dsc, dev, sym, mini, maxi])
 			else:
-				senseslice.append([47, sym, mini, maxi])
+				senseslice.append([47, dsc, dev, sym, mini, maxi])
 
 		#converts data to float
 
@@ -628,17 +628,17 @@ class Graph_Screen(object):
 		a_content = str(a_newest)
 		a_color = themes[configure.theme[0]][0]
 
-		self.a_label.update(a_content + senseslice[0][1],30,marginleft,205,titleFont,a_color)
+		self.a_label.update(a_content + senseslice[0][3],30,marginleft,205,titleFont,a_color)
 
 		b_content = str(int(b_newest))
 		b_color = themes[configure.theme[0]][1]
-		self.b_label.update( b_content + senseslice[1][1],30,114,205,titleFont,b_color)
+		self.b_label.update( b_content + senseslice[1][3],30,114,205,titleFont,b_color)
 		self.b_label.center(resolution[0],31,0,205)
 
 		c_content = str(int(c_newest))
 		c_color = themes[configure.theme[0]][2]
 
-		self.c_label.update(c_content + senseslice[2][1],30,marginright,205,titleFont,c_color)
+		self.c_label.update(c_content + senseslice[2][3],30,marginright,205,titleFont,c_color)
 		self.c_label.r_align(320 - marginright ,205)
 		contents = [a_content,b_content,c_content]
 
@@ -654,11 +654,11 @@ class Graph_Screen(object):
 
 		if not configure.auto[0]:
 
-			a_slide = translate(a_newest, sense_info_a[1], sense_info_a[2], 191, 9)
+			a_slide = translate(a_newest, senseslice[0][4], senseslice[0][5], 191, 9)
 
-			b_slide = translate(b_newest, sense_info_b[1], sense_info_b[2], 191, 9)
+			b_slide = translate(b_newest, senseslice[1][2], senseslice[1][5], 191, 9)
 
-			c_slide = translate(c_newest, sense_info_c[1], sense_info_c[2], 191, 9)
+			c_slide = translate(c_newest, senseslice[2][2], senseslice[2][5], 191, 9)
 
 			self.slider1.update(sliderb, 283, a_slide)
 			self.slider2.update(sliderb, 283, b_slide)
@@ -691,12 +691,13 @@ class Graph_Screen(object):
 
 
 		# this checks if we are viewing a sensor individually and graphing it alone.
+		# if individually:
 		if self.selection != 0:
 			# we make a variable carrying the index of the currently selected item.
 			this = self.selection - 1
 
 			# we grab information for it.
-			dsc,dev,sym = configure.sensor_info[this]
+			sym, dsc = senseslice[this][2],senseslice[this][1]
 
 			# we collect its default colour based off our theme
 			this_color = themes[configure.theme[0]][this]
