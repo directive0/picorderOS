@@ -227,12 +227,13 @@ class SelectableLabel(Label):
 
 		label = self.myfont.render(self.content, 1, self.color)
 
+		dsc,dev,sym = configure.sensor_info[this_index]
 
 		status_text = "dummy"
 		if self.special == 0:
 			status_text = str(self.oper[0])
 		elif self.special == 1:
-			status_text = configure.sensor_info[self.oper[0]][3]
+			status_text = dsc
 		elif self.special == 2:
 			status_text = themenames[self.oper[0]]
 
@@ -704,7 +705,7 @@ class Graph_Screen(object):
 
 			if keys[1]:
 				status =  "mode_b"
-				
+
 			if keys[2]:
 				configure.last_status[0] = "mode_a"
 				status = "settings"
