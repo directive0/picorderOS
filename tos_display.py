@@ -469,20 +469,26 @@ class Settings_Panel(object):
 
 		result = "settings"
 
-		# pulls input information
-		keys = self.input.read()
+		if configure.eventready[0]:
 
-		if keys[0]:
-			self.index += 1
+			# The following code handles inputs and button presses.
+			keys = configure.eventlist[0]
 
-			if self.index > (len(self.options) - 1):
-				self.index = 0
+			# if a key is registering as pressed.
+			if keys[0]:
+				self.index += 1
 
-		if keys[1]:
-			self.options[self.index].toggle()
+				if self.index > (len(self.options) - 1):
+					self.index = 0
 
-		if keys[2]:
-			result = configure.last_status[0]
+			if keys[1]:
+				self.options[self.index].toggle()
+
+			if keys[2]:
+				result = configure.last_status[0]
+
+			configure.eventready[0] = False
+
 
 		return result
 
