@@ -608,12 +608,13 @@ class Graph_Screen(object):
 			datas[i] = plars.get_recent(dsc,dev,num = 145)
 			print(datas[i])
 
+
+			if len(datas[i]) == 0:
+				datas[i] = 47
+
 			item = datas[i]
 
-			if len(item) > 0:
-				senseslice.append([item[0], dsc, dev, sym, mini, maxi])
-			else:
-				senseslice.append([47, dsc, dev, sym, mini, maxi])
+			senseslice.append([item[0], dsc, dev, sym, mini, maxi])
 
 		#converts data to float
 
