@@ -554,16 +554,38 @@ class Graph_Screen(object):
 
 
 	def frame(self):
-		# Because the graph screen is slow to update it needs to pop a reading onto screen as soon as it is initiated I draw a value once and wait for the interval to lapse for the next draw. Once the interval has lapsed pop another value on screen.
-		#Sets a black screen ready for our UI elements
+		status  = "mode_a"
+
+		if configure.eventready[0]:
+
+			# The following code handles inputs and button presses.
+			keys = configure.eventlist[0]
+
+			# if a key is registering as pressed.
+			if keys[0]:
+				self.selection += 1
+				if self.selection > 3:
+					self.selection = 0
+
+			if keys[1]:
+				status =  "mode_b"
+				return status
+
+			if keys[2]:
+				configure.last_status[0] = "mode_a"
+				status = "settings"
+				return status
+
+			configure.eventready[0] = False
+
 
 		# grabs sensor info from settings for quick reference and display
 		sense_info_a = configure.sensor_info[configure.sensors[0][0]]
 		sense_info_b = configure.sensor_info[configure.sensors[1][0]]
 		sense_info_c = configure.sensor_info[configure.sensors[2][0]]
 
-		status  = "mode_a"
 
+		#Sets a black screen ready for our UI elements
 		self.surface.fill(black)
 
 		#draws Background gridplane
@@ -696,31 +718,8 @@ class Graph_Screen(object):
 		#self.intervallabel.draw(self.surface)
 
 		#draws UI to frame buffer
-
-
 		pygame.display.update()
 
-
-
-		if configure.eventready[0]:
-
-			# The following code handles inputs and button presses.
-			keys = configure.eventlist[0]
-
-			# if a key is registering as pressed.
-			if keys[0]:
-				self.selection += 1
-				if self.selection > 3:
-					self.selection = 0
-
-			if keys[1]:
-				status =  "mode_b"
-
-			if keys[2]:
-				configure.last_status[0] = "mode_a"
-				status = "settings"
-
-			configure.eventready[0] = False
 
 		return status
 
@@ -757,6 +756,29 @@ class Slider_Screen(object):
 
 
 	def frame(self):
+		#set status for return to main
+		status  = "mode_b"
+
+
+		if configure.eventready[0]:
+
+			# The following code handles inputs and button presses.
+			keys = configure.eventlist[0]
+
+			# if a key is registering as pressed.
+			if keys[0]:
+				status =  "mode_a"
+				return status
+
+			if keys[1]:
+				status =  "mode_b"
+
+			if keys[2]:
+				configure.last_status[0] = "mode_b"
+				status = "settings"
+				return status
+
+			configure.eventready[0] = False
 
 		senseslice = []
 
@@ -817,28 +839,9 @@ class Slider_Screen(object):
 		self.b_label.draw(self.surface)
 		self.c_label.draw(self.surface)
 
+		pygame.display.update()
 		# draws UI to frame buffer
-		#if (rot.read() == True): < can flip screen if necessary
-		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
-		status  = "mode_b"
-
-		keys = self.input.read()
-
-		if keys[0]:
-			status =  "mode_a"
-
-		if keys[2]:
-			configure.last_status[0] = "mode_b"
-			status = "settings"
-
-
-		pygame.display.flip()
-		#tock.timed = time.time()
-
-			#returns state to main loop
 		return status
-
-
 # A basic screen object. Is given parameters and displays them on a number of preset panels
 class Screen(object):
 
