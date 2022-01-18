@@ -276,22 +276,22 @@ class graphlist(object):
 
 	# the following appends data to the list.
 	def updatelist(self, data):
-		#grabs a simple 15 wide tuple for our values
+
 		#puts a new sensor value at the end
 		self.glist.append(data)
 		#pop the oldest value off
 		self.glist.pop(0)
 
-	# the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.
-	def graphprep(self,list):
-		linepoint = 15
-		jump = 2
-		self.newlist = []
-		for i in range(145):
-			self.newlist.append((linepoint,list[i]))
-			linepoint = linepoint + jump
+# the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.
+def graphprep(self,list):
+	linepoint = 15
+	jump = 2
+	newlist = []
+	for i in range(145):
+		newlist.append((linepoint,list[i]))
+		linepoint = linepoint + jump
 
-		return self.newlist
+	return newlist
 
 # the following function runs the startup animation
 def startUp(surface,timeSinceStart):
@@ -379,26 +379,23 @@ def about(surface):
 
 
 # graphit is a quick tool to help prepare graphs
-def graphit(data,new, auto = True):
-
-	#puts a new sensor value at the end
-	data.updatelist(new)
+def graphit(data, auto = True):
 
 	#grabs our databuffer object.
-	buffer = data.grablist()
+	buffer = data
 
 	prep = []
 
 	data_high = max(buffer)
 	data_low = min(buffer)
 
-	for i in data.grablist():
+	for i in data:
 		if configure.auto[0]:
 			prep.append(translate(i, data_low, data_high, 204, 17))
 		else:
-			prep.append(translate(i, new[1], new[2], 204, 17))
+			prep.append(translate(i, data_low, data_high, 204, 17)) # <----need to fix total scale.
 
-	return data.graphprep(prep)
+	return graphprep(prep)
 
 
 
@@ -595,6 +592,10 @@ class Graph_Screen(object):
 		# creates a "senseslice"; an up to date data fragment for each configured sensor
 
 		senseslice = []
+		data_a = []
+		data_b = []
+		data_c = []
+		datas = [data_a,data_b,data_c]
 
 		for i in range(3):
 
@@ -603,8 +604,9 @@ class Graph_Screen(object):
 
 			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
+			datas[i] = plars.get_recent(dsc,dev,num = 145)
 
-			item = plars.get_recent(dsc,dev,num = 1)
+			item = datas[i]
 
 			if len(item) > 0:
 				senseslice.append([item[0], dsc, dev, sym, mini, maxi])
@@ -620,9 +622,9 @@ class Graph_Screen(object):
 
 
 		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
-		a_cords = graphit(self.data_a,a_newest)
-		b_cords = graphit(self.data_b,b_newest)
-		c_cords = graphit(self.data_c,c_newest)
+		a_cords = graphit(data_a)
+		b_cords = graphit(data_b)
+		c_cords = graphit(data_c)
 		cords = [a_cords,b_cords,c_cords]
 
 		a_content = str(a_newest)
@@ -697,7 +699,7 @@ class Graph_Screen(object):
 			this = self.selection - 1
 
 			# we grab information for it.
-			sym, dsc = senseslice[this][2],senseslice[this][1]
+			sym, dsc = senseslice[this][3],senseslice[this][1]
 
 			# we collect its default colour based off our theme
 			this_color = themes[configure.theme[0]][this]
