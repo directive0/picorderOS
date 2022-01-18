@@ -309,7 +309,7 @@ def startUp(surface,timeSinceStart):
 	logoposx = (resolution[0]/2) - (98/2)
 
 	#sets out UI objects with the appropriate data
-	insignia.update(pioslogo, logoposx, 60)
+	insignia.update(pioslogo, logoposx, 37)
 
 	secTitle.update("PicorderOS " + configure.version,19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,190)
@@ -666,6 +666,9 @@ class Graph_Screen(object):
 			# we make a variable carrying the index of the currently selected item.
 			this = self.selection - 1
 
+			# we grab information for it.
+			dsc,dev,sym = configure.sensor_info[this]
+
 			# we collect its default colour based off our theme
 			this_color = themes[configure.theme[0]][this]
 
@@ -674,11 +677,11 @@ class Graph_Screen(object):
 			pygame.draw.lines(self.surface, this_color, False, focus_cords, 2)
 			focus_slider.draw(self.surface)
 
-			self.focus_label.update(configure.sensor_info[configure.sensors[this][0]][3],30,283,205,titleFont,this_color)
+			self.focus_label.update(dsc,30,283,205,titleFont,this_color)
 			self.focus_label.r_align(320 - marginright ,205)
 			self.focus_label.draw(self.surface)
 
-			self.a_label.update(contents[this] + sensors[configure.sensors[this][0]][4],30,15,205,titleFont,this_color)
+			self.a_label.update(contents[this] + sym,30,15,205,titleFont,this_color)
 			self.a_label.draw(self.surface)
 
 		# draws the interval label (indicates refresh rate)
