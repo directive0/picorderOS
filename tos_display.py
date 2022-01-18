@@ -283,7 +283,7 @@ class graphlist(object):
 		self.glist.pop(0)
 
 # the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.
-def graphprep(self,list):
+def graphprep(list):
 	linepoint = 15
 	jump = 2
 	newlist = []
