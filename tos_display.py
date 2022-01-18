@@ -67,7 +67,7 @@ themenames = ["alpha", "beta", "delta"]
 # The following lists/objects are for UI elements.
 titleFont = "assets/babs.otf"
 blueInsignia = pygame.image.load('assets/icon.png')
-pioslogo = pygame.image.load('assets/Picorder_Logo.png')
+pioslogo = pygame.image.load('assets/Med_Picorder_Logo.png')
 backplane = pygame.image.load('assets/background.png')
 backgraph = pygame.image.load('assets/backgraph.png')
 slidera = pygame.image.load('assets/slider.png')
@@ -305,14 +305,14 @@ def startUp(surface,timeSinceStart):
 	secTitle = Label()
 	secblurb = Label()
 
-	logoposx = (resolution[0]/2) - (203/2)
+	logoposx = (resolution[0]/2) - (98/2)
 
 	#sets out UI objects with the appropriate data
 	insignia.update(pioslogo, logoposx, 60)
 
-	secTitle.update(configure.version,19,37,210,titleFont,blue)
+	secTitle.update("PicorderOS " + configure.version,19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,190)
-	secblurb.update("LOADING",15,37,210,titleFont,blue)
+	secblurb.update("LOADING..",15,37,210,titleFont,blue)
 	secblurb.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer
@@ -333,7 +333,7 @@ def startUp(surface,timeSinceStart):
 	elapsed = timenow - timeSinceStart
 
 	#waits for 2 seconds to elapse before returning the state that will take us to the sensor readout
-	if elapsed > 3:
+	if elapsed > 1:
 	 return "mode_a"
 	else:
 	 return "startup"
@@ -577,9 +577,10 @@ class Graph_Screen(object):
 
 			item = plars.get_recent(dsc,dev,num = 1)
 
-			senseslice.append([item[0], sym])
-
-
+			if len(item) > 0:
+				senseslice.append([item[0], sym])
+			else:
+				senseslice.append(47, sym])
 		#converts data to float
 
 		a_newest = float(senseslice[0][0])
