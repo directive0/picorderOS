@@ -189,18 +189,20 @@ class SelectableLabel(LabelObj):
 
 	def toggle(self):
 
-		# if the parameter supplied is a boolean
+		# if the parameter supplied is a boolean just flip it.
 		if isinstance(self.oper[0], bool):
 			#toggle its state
 			self.oper[0] = not self.oper[0]
 
-		#if the parameter supplied is an integer
+		# if the parameter supplied is an integer its to change
+		# one of the graphed sensors.
+
 		elif isinstance(self.oper[0], int):
 
 			# increment the integer.
 			self.oper[0] += 1
 
-			# if the integer is larger than the pool
+			# if the integer is larger than the pool reset it
 			if self.special == 1 and self.oper[0] > configure.max_sensors[0]-1:
 				self.oper[0] = 0
 
@@ -348,11 +350,9 @@ class SettingsFrame(object):
 
 		#draw the 3 graph parameter items
 		if self.selection == 0 or self.selection == 1 or self.selection == 2:
-
-			self.item.string = str(configure.sensor_info[self.pages[self.selection][1][0]][3])
+			self.item.string = str(configure.sensor_info[self.pages[self.selection][1][0]][2])
 			self.item.push(self.titlex+23,self.titley+53,draw)
 		else:
-
 			if isinstance(self.pages[self.selection][1][0], bool):
 				self.item.string = str(self.pages[self.selection][1][0])
 				self.item.push(self.titlex+23,self.titley+53,draw)
@@ -684,15 +684,15 @@ class MultiFrame(object):
 		if self.selection == 0:
 			raw_a = str(self.A_Data)
 			adjusted_a = self.arrangelabel(raw_a)
-			a_string = adjusted_a + " " + configure.sensor_info[configure.sensor1[0]][4]
+			a_string = adjusted_a + " " + configure.sensor_info[configure.sensor1[0]][3]
 
 			raw_b = str(self.B_Data)
 			adjusted_b = self.arrangelabel(raw_b)
-			b_string = adjusted_b + " " + configure.sensor_info[configure.sensor2[0]][4]
+			b_string = adjusted_b + " " + configure.sensor_info[configure.sensor2[0]][3]
 
 			raw_c = str(self.C_Data)
 			adjusted_c = self.arrangelabel(raw_c)
-			c_string = adjusted_c + " " + configure.sensor_info[configure.sensor3[0]][4]
+			c_string = adjusted_c + " " + configure.sensor_info[configure.sensor3[0]][3]
 
 			self.A_Label.string = a_string
 			self.A_Label.push(23,self.labely,self.draw)
@@ -768,17 +768,30 @@ class MultiFrame(object):
 		# passes the current bitmap buffer to the object incase someone else needs it.
 		self.draw = draw
 
-		senseslice =[0,0,0]
+		senseslice = []
+		data_a = []
+		data_b = []
+		data_c = []
+		datas = [data_a,data_b,data_c]
 
 		for i in range(3):
 
-			dsc = configure.sensor_info[configure.sensors[i][0]][3]
-			dev = configure.sensor_info[configure.sensors[i][0]][5]
+			# determines the sensor keys for each of the three main sensors
+			this_index = int(configure.sensors[i][0])
 
-			item = plars.get_recent(dsc,dev,num = 1)
+			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
-			if len(senseslice) > 0:
-				senseslice[i] = item[0]
+			datas[i] = plars.get_recent(dsc,dev,num = 145)
+
+
+
+			if len(datas[i]) == 0:
+				datas[i] = [47]
+
+			item = datas[i]
+
+			senseslice.append([item[0], dsc, dev, sym, mini, maxi])
+
 
 
 		# Grabs the current sensor reading
@@ -792,7 +805,7 @@ class MultiFrame(object):
 		# Draws the Title
 		if self.selection != 0:
 			this = self.selection - 1
-			self.title.string = configure.sensor_info[configure.sensors[this][0]][3]
+			self.title.string = senseslice[this][1]
 		else:
 			self.title.string = "Multi-Graph"
 

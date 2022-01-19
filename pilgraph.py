@@ -204,8 +204,10 @@ class graph_area(object):
 		# so every time through the loop PILgraph will pull the latest sensor
 		# settings.
 		if self.type == 0:
-			dsc = configure.sensor_info[configure.sensors[self.ident][0]][3]
-			dev = configure.sensor_info[configure.sensors[self.ident][0]][5]
+
+
+			dsc,dev,sym,maxi,mini = configure.sensor_info[configure.sensors[self.ident]]
+
 
 
 			#preps the list by adding the X coordinate to every sensor value
@@ -221,7 +223,7 @@ class graph_area(object):
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
 
-
+		# draws the line dot.
 		if dot:
 			x1 = cords[0][0] - (self.dotw/2)
 			y1 = cords[0][1] - (self.doth/2)
