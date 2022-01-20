@@ -327,9 +327,9 @@ def graphit(data, auto = True):
 			data_high = max(buffer)
 			data_low = min(buffer)
 			# scales the data on the y axis.
-			prep.append(translate(i, data_low, data_high, 204, 17))
+			prep.append(translate(i, data_low, data_high, GRAPH_Y2, GRAPH_Y))
 		else:
-			prep.append(translate(i, data_low, data_high, 204, 17)) # <----need to fix total scale.
+			prep.append(translate(i, data_low, data_high, GRAPH_Y2, GRAPH_Y)) # <----need to fix total scale.
 
 
 	return graphprep(prep)
