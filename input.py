@@ -240,61 +240,61 @@ class Inputs(object):
 			key = self.keypress()
 
 			# key was pressed
+			configure.eventready[0] == False:
+				if key[pygame.K_LEFT]:
+						if not self.pressed[0]:
+							self.pressed[0] = True
+							configure.eventready[0] = True
+							self.holdtimers[0].logtime()
+						else:
+							if self.holdtimers[0].timelapsed() > self.thresh_hold:
+								self.holding[0] = True
 
-			if key[pygame.K_LEFT]:
-					if not self.pressed[0]:
-						self.pressed[0] = True
-						configure.eventready[0] = True
-						self.holdtimers[0].logtime()
+				if not key[pygame.K_LEFT]:
+					self.holding[0] = False
+					if self.pressed[0]:
+						self.buttonlist[0] = True
+						self.pressed[0] = False
 					else:
-						if self.holdtimers[0].timelapsed() > self.thresh_hold:
-							self.holding[0] = True
-
-			if not key[pygame.K_LEFT]:
-				self.holding[0] = False
-				if self.pressed[0]:
-					self.buttonlist[0] = True
-					self.pressed[0] = False
-				else:
-					self.buttonlist[0] = False
+						self.buttonlist[0] = False
 
 
-			if key[pygame.K_DOWN]:
-					if not self.pressed[1]:
-						self.pressed[1] = True
-						configure.eventready[0] = True
-						self.holdtimers[1].logtime()
+				if key[pygame.K_DOWN]:
+						if not self.pressed[1]:
+							self.pressed[1] = True
+							configure.eventready[0] = True
+							self.holdtimers[1].logtime()
+						else:
+
+							if self.holdtimers[1].timelapsed() > self.thresh_hold:
+								self.holding[1] = True
+
+				if not key[pygame.K_DOWN]:
+					self.holding[1] = False
+					if self.pressed[1]:
+						self.buttonlist[1] = True
+						self.pressed[1] = False
 					else:
-
-						if self.holdtimers[1].timelapsed() > self.thresh_hold:
-							self.holding[1] = True
-
-			if not key[pygame.K_DOWN]:
-				self.holding[1] = False
-				if self.pressed[1]:
-					self.buttonlist[1] = True
-					self.pressed[1] = False
-				else:
-					self.buttonlist[1] = False
+						self.buttonlist[1] = False
 
 
-			if key[pygame.K_RIGHT]:
-					if not self.pressed[2]:
-						self.pressed[2] = True
-						configure.eventready[0] = True
-						self.holdtimers[2].logtime()
+				if key[pygame.K_RIGHT]:
+						if not self.pressed[2]:
+							self.pressed[2] = True
+							configure.eventready[0] = True
+							self.holdtimers[2].logtime()
+						else:
+
+							if self.holdtimers[2].timelapsed() > self.thresh_hold:
+								self.holding[2] = True
+
+				if not key[pygame.K_RIGHT]:
+					self.holding[2] = False
+					if self.pressed[2]:
+						self.buttonlist[2] = True
+						self.pressed[2] = False
 					else:
-
-						if self.holdtimers[2].timelapsed() > self.thresh_hold:
-							self.holding[2] = True
-
-			if not key[pygame.K_RIGHT]:
-				self.holding[2] = False
-				if self.pressed[2]:
-					self.buttonlist[2] = True
-					self.pressed[2] = False
-				else:
-					self.buttonlist[2] = False
+						self.buttonlist[2] = False
 
 		if configure.input_gpio:
 
