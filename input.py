@@ -240,7 +240,7 @@ class Inputs(object):
 			key = self.keypress()
 
 			# key was pressed
-			configure.eventready[0] == False:
+			if configure.eventready[0] == False:
 				if key[pygame.K_LEFT]:
 						if not self.pressed[0]:
 							self.pressed[0] = True
