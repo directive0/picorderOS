@@ -10,6 +10,13 @@ import time
 
 matplot = False
 
+SAMPLE_SIZE = 70
+GRAPH_WIDTH = 280
+GRAPH_HEIGHT = 179
+GRAPH_X = 20
+GRAPH_Y = 21
+GRAPH_X2 = GRAPH_X + GRAPH_WIDTH
+GRAPH_Y2 = GRAPH_Y + GRAPH_HEIGHT
 
 from plars import *
 from objects import *
@@ -284,21 +291,49 @@ class graphlist(object):
 
 # the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.
 def graphprep(list):
-	linepoint = 15
-	jump = 2
+	linepoint = GRAPH_X
+	jump = GRAPH_WIDTH / SAMPLE_SIZE
 	newlist = []
 
-	for i in range(145):
+	for i in range(SAMPLE_SIZE):
+		# if not enough data
 		if i > (len(list) - 1):
+			# make the data show as 0 scale. (y coord 110)
 			item = 110
 		else:
-
+			# otherwise just keep plotting the data provided.
 			item = list[i]
 
 		newlist.append((linepoint,item))
 		linepoint = linepoint + jump
 
 	return newlist
+
+# graphit is a quick tool to help prepare graphs by changing their data from
+# absolute values into scaled values for their pixel position on screen.
+def graphit(data, auto = True):
+
+	#grabs our databuffer object.
+	buffer = data
+
+
+	prep = []
+
+	for i in data:
+
+
+		if configure.auto[0]:
+			# autoscales the data.
+			data_high = max(buffer)
+			data_low = min(buffer)
+			# scales the data on the y axis.
+			prep.append(translate(i, data_low, data_high, 204, 17))
+		else:
+			prep.append(translate(i, data_low, data_high, 204, 17)) # <----need to fix total scale.
+
+
+	return graphprep(prep)
+
 
 # the following function runs the startup animation
 def startUp(surface,timeSinceStart):
@@ -383,29 +418,6 @@ def about(surface):
 	secblurb.draw(surface)
 
 	pygame.display.flip()
-
-
-# graphit is a quick tool to help prepare graphs
-def graphit(data, auto = True):
-
-	#grabs our databuffer object.
-	buffer = data
-
-
-	prep = []
-
-	data_high = max(buffer)
-	data_low = min(buffer)
-
-	for i in data:
-
-		if configure.auto[0]:
-			prep.append(translate(i, data_low, data_high, 204, 17))
-		else:
-			prep.append(translate(i, data_low, data_high, 204, 17)) # <----need to fix total scale.
-
-
-	return graphprep(prep)
 
 
 
@@ -614,10 +626,10 @@ class Graph_Screen(object):
 
 			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
-			datas[i] = plars.get_recent(dsc,dev,num = 145)
+			datas[i] = plars.get_recent(dsc,dev,num = SAMPLE_SIZE)
 
 
-
+			# if data capture is failed, replace with 47 for diagnostic
 			if len(datas[i]) == 0:
 				datas[i] = [47]
 
@@ -669,11 +681,11 @@ class Graph_Screen(object):
 
 		if not configure.auto[0]:
 
-			a_slide = translate(a_newest, senseslice[0][4], senseslice[0][5], 191, 9)
+			a_slide = translate(a_newest, senseslice[0][4], senseslice[0][5], GRAPH_Y2, GRAPH_Y)
 
-			b_slide = translate(b_newest, senseslice[1][2], senseslice[1][5], 191, 9)
+			b_slide = translate(b_newest, senseslice[1][2], senseslice[1][5], GRAPH_Y2, GRAPH_Y)
 
-			c_slide = translate(c_newest, senseslice[2][2], senseslice[2][5], 191, 9)
+			c_slide = translate(c_newest, senseslice[2][2], senseslice[2][5], GRAPH_Y2, GRAPH_Y)
 
 			self.slider1.update(sliderb, 283, a_slide)
 			self.slider2.update(sliderb, 283, b_slide)
