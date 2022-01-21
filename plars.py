@@ -203,7 +203,7 @@ class PLARS(object):
 
 		# if buffer is larger than target
 		if length > 0:
-			#self.trimbuffer()
+			self.trimbuffer()
 			self.timer.logtime()
 
 		# release the thread lock for other threads
