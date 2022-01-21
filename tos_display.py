@@ -7,6 +7,7 @@ print("Loading 320x240 Duotronic Interface")
 # The following are some necessary modules for the Picorder.
 import pygame
 import time
+import os
 
 matplot = False
 
@@ -28,6 +29,7 @@ if not configure.pc:
 		# runs a CLI command to disable the raspberry pi's screen blanking
 		#os.system('xset -display :0 -dpms')
 
+os.environ['PYGAME_BLEND_ALPHA_SDL2'] = '1'
 # The following commands initiate a pygame environment.
 pygame.init()
 pygame.font.init()
