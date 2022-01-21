@@ -201,7 +201,7 @@ class PLARS(object):
 		# determine difference between buffer and target size
 		length = currentsize - targetsize
 
-		# if buffer is larger than target
+		# if buffer is larger than target size
 		if length > 0:
 			self.trimbuffer()
 			self.timer.logtime()
