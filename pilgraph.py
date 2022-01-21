@@ -84,20 +84,11 @@ class graph_area(object):
 		average = sum(self.buff) / len(self.buff)
 		return average
 
-	# returns the highest
-	def get_high(self):
-		return max(self.buff)
-
-	def get_low(self):
-		return min(self.buff)
-
 	# this function calculates the approximate time scale of the graph
 	def giveperiod(self):
-		self.period = (self.spanx * self.cycle) / 60
+		self.period = (self.sample * self.cycle) / 60
 
 		return self.period
-
-
 
 	# the following pairs the list of values with coordinates on the X axis.
 
@@ -203,9 +194,9 @@ class graph_area(object):
 
 
 			#preps the list by adding the X coordinate to every sensor value
-			recent = plars.get_recent(dsc,dev,num = self.spanx)
+			recent = plars.get_recent(dsc,dev,num = self.samples)
 		else:
-			recent = plars.get_top_em_history(no = self.spanx)
+			recent = plars.get_top_em_history(no = self.samples)
 
 
 		cords = self.graphprep(recent)
