@@ -782,7 +782,7 @@ class MultiFrame(object):
 
 			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
-			datas[i] = plars.get_recent(dsc,dev,num = 145)
+			datas[i] = plars.get_recent(dsc,dev,num = self.samples)
 
 
 
@@ -812,13 +812,6 @@ class MultiFrame(object):
 
 		self.title.push(self.titlex,self.titley,draw)
 
-
-
-
-		# Updates the graphs with the new data.
-		self.A_Graph.update(self.A_Data)
-		self.B_Graph.update(self.B_Data)
-		self.C_Graph.update(self.C_Data)
 
 		# turns each channel on individually
 		if self.selection == 0:

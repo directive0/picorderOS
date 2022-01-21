@@ -97,24 +97,6 @@ class graph_area(object):
 
 		return self.period
 
-	# the following appends data to the list.
-	def update(self, data):
-		# grabs a fresh datalist
-		self.buff = self.dlist
-
-
-		# if the time elapsed has reached the set interval then collect data
-		if self.tock.timelapsed() >= self.cycle:
-
-			# we load new data from the caller
-			self.cleandata = data
-
-			#append it to our list of clean data
-			self.buff.append(self.cleandata)
-
-
-			self.tock.logtime()
-
 
 
 	# the following pairs the list of values with coordinates on the X axis.
