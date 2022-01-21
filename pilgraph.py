@@ -26,8 +26,9 @@ from plars import *
 class graph_area(object):
 
 
-	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0):
+	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0, samples = 20):
 
+		self.samples = samples
 		self.new = True
 		self.cycle = cycle
 		self.tock = timer()
@@ -123,11 +124,14 @@ class graph_area(object):
 	# takes in a list/array with length => span
 	def graphprep(self, datalist, ranger = None):
 
-		# The starting X coordinate
+		# The starting X coordinate, the graph draws from right to left (new to old).
 		self.linepoint = self.spanx + self.x
 
+		# calculate how many pixels per sample the graph will take.
+		spacing = self.spanx / self.samples
+
 		# Spacing between each point.
-		self.jump = -1
+		self.jump = -spacing
 
 		self.newlist = []
 

@@ -90,6 +90,7 @@ class Sensor(object):
 		# create a simple reference for the degree symbol since we use it a lot
 		self.deg_sym = '\xB0'
 
+		self.generators = False
 
 		# add individual sensor module parameters below.
 		#0				1			2		3		4
@@ -112,10 +113,12 @@ class Sensor(object):
 			self.virtmem = Fragment(0,totalmem,"VirtualMemory","b","RaspberryPi")
 			self.bytsent = Fragment(0,100000,"BytesSent","b","RaspberryPi")
 			self.bytrece = Fragment(0, 100000,"BytesReceived","b","RaspberryPi")
-			self.sinewav = Fragment(-100,100,"SineWave", "","RaspberryPi")
-			self.tanwave = Fragment(-500,500,"TangentWave", "","RaspberryPi")
-			self.coswave = Fragment(-100,100,"CosWave", "","RaspberryPi")
-			self.sinwav2 = Fragment(-100,100,"SineWave2", "","RaspberryPi")
+
+			if self.generators:
+				self.sinewav = Fragment(-100,100,"SineWave", "","RaspberryPi")
+				self.tanwave = Fragment(-500,500,"TangentWave", "","RaspberryPi")
+				self.coswave = Fragment(-100,100,"CosWave", "","RaspberryPi")
+				self.sinwav2 = Fragment(-100,100,"SineWave2", "","RaspberryPi")
 
 		if configure.sensehat:
 			self.ticks = 0
@@ -282,13 +285,18 @@ class Sensor(object):
 			self.virtmem.set(float(psutil.virtual_memory().available * 0.0000001),timestamp)
 			self.bytsent.set(float(psutil.net_io_counters().bytes_recv * 0.00001),timestamp)
 			self.bytrece.set(float(psutil.net_io_counters().bytes_recv * 0.00001),timestamp)
-			self.sinewav.set(float(self.sin_gen()*100),timestamp)
-			self.tanwave.set(float(self.tan_gen()*100),timestamp)
-			self.coswave.set(float(self.cos_gen()*100),timestamp)
-			self.sinwav2.set(float(self.sin2_gen()*100),timestamp)
+
+			if self.generators:
+				self.sinewav.set(float(self.sin_gen()*100),timestamp)
+				self.tanwave.set(float(self.tan_gen()*100),timestamp)
+				self.coswave.set(float(self.cos_gen()*100),timestamp)
+				self.sinwav2.set(float(self.sin2_gen()*100),timestamp)
 
 			# load the fragments into the sensorlist
-			sensorlist.extend((self.cputemp, self.cpuperc, self.virtmem, self.bytsent, self.bytrece, self.sinewav, self.tanwave, self.coswave, self.sinwav2))
+			sensorlist.extend((self.cputemp, self.cpuperc, self.virtmem, self.bytsent, self.bytrece))
+
+			if self.generators:
+				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2))
 
 		configure.max_sensors[0] = len(sensorlist)
 

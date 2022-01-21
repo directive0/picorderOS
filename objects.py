@@ -157,6 +157,7 @@ class preferences(object):
 
 		# used to control refresh speed.
 		self.samplerate = [0]
+		self.samples = 11
 		self.displayinterval = [0]
 
 		# holds sensor data (issued by the sensor module at init)

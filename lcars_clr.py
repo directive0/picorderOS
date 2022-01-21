@@ -613,9 +613,10 @@ class MultiFrame(object):
 		# Sets the topleft origin of the graph
 		self.graphx = 23
 		self.graphy = 24
+		self.samples = 66
 
 		# Sets the x and y span of the graph
-		self.gspanx = 133
+		self.gspanx = 132
 		self.gspany = 71
 
 		self.graphcycle = 0
@@ -648,11 +649,11 @@ class MultiFrame(object):
 		self.divider = 47
 
 		# create our graph_screen
-		self.A_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[0], width = 1)
+		self.A_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[0], width = 1, samples = self.samples)
 
-		self.B_Graph = graph_area(1,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[1], width = 1)
+		self.B_Graph = graph_area(1,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[1], width = 1, samples = self.samples)
 
-		self.C_Graph = graph_area(2,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[2], width = 1)
+		self.C_Graph = graph_area(2,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, theme1[2], width = 1, samples = self.samples)
 
 		self.Graphs = [self.A_Graph, self.B_Graph, self.C_Graph]
 
