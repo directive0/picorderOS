@@ -106,6 +106,10 @@ class graph_area(object):
 	# takes in a list/array with length => span
 	def graphprep(self, datalist, ranger = None):
 
+		index = configure.sensors[self.ident][0]
+
+		dsc,dev,sym,maxi,mini = configure.sensor_info[index]
+
 		# The starting X coordinate, the graph draws from right to left (new to old).
 		self.linepoint = self.spanx + self.x
 
@@ -117,13 +121,14 @@ class graph_area(object):
 
 		self.newlist = []
 
+		# if this graph ISNT for WIFI.
 		if self.type == 0:
-			# grabs the currently selected sensors range data
-			sourcelow = configure.sensor_info[configure.sensors[self.ident][0]][1]
-
-			sourcehigh = configure.sensor_info[configure.sensors[self.ident][0]][2]
+			# grabs the currently selected sensors range data.
+			sourcelow = mini
+			sourcehigh = maxi
 
 			self.sourcerange = [sourcelow,sourcehigh]
+		#otherwise assume its for wifi.
 		else:
 			sourcelow = -90
 
