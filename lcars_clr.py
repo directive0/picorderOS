@@ -682,18 +682,19 @@ class MultiFrame(object):
 	def labels(self):
 
 		# depending on which number the "selection" variable takes on.
+
 		if self.selection == 0:
 			raw_a = str(self.A_Data)
 			adjusted_a = self.arrangelabel(raw_a)
-			a_string = adjusted_a + " " + configure.sensor_info[configure.sensor1[0]][3]
+			a_string = adjusted_a + " " + configure.sensor_info[configure.sensor1[0]][0]
 
 			raw_b = str(self.B_Data)
 			adjusted_b = self.arrangelabel(raw_b)
-			b_string = adjusted_b + " " + configure.sensor_info[configure.sensor2[0]][3]
+			b_string = adjusted_b + " " + configure.sensor_info[configure.sensor2[0]][0]
 
 			raw_c = str(self.C_Data)
 			adjusted_c = self.arrangelabel(raw_c)
-			c_string = adjusted_c + " " + configure.sensor_info[configure.sensor3[0]][3]
+			c_string = adjusted_c + " " + configure.sensor_info[configure.sensor3[0]][0]
 
 			self.A_Label.string = a_string
 			self.A_Label.push(23,self.labely,self.draw)
