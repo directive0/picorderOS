@@ -149,7 +149,7 @@ class graph_area(object):
 
 
 		# for each vertical bar in the graph size
-		for i in range(self.spanx):
+		for i in range(self.samples):
 
 			# if the cursor has data to write
 			if i < len(datalist):
