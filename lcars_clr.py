@@ -350,7 +350,7 @@ class SettingsFrame(object):
 
 		#draw the 3 graph parameter items
 		if self.selection == 0 or self.selection == 1 or self.selection == 2:
-			self.item.string = str(configure.sensor_info[self.pages[self.selection][1][0]][2])
+			self.item.string = str(configure.sensor_info[self.pages[self.selection][1][0]][0])
 			self.item.push(self.titlex+23,self.titley+53,draw)
 		else:
 			if isinstance(self.pages[self.selection][1][0], bool):
