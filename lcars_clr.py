@@ -519,7 +519,7 @@ class EMFrame(object):
 		self.selection = 0
 
 		# create our graph_screen
-		self.Signal_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, lcars_pinker, width = 2, type = 1)
+		self.Signal_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, lcars_pinker, width = 2, type = 1, samples = 45)
 
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 

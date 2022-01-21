@@ -84,11 +84,20 @@ class graph_area(object):
 		average = sum(self.buff) / len(self.buff)
 		return average
 
+	# returns the highest
+	def get_high(self):
+		return max(self.buff)
+
+	def get_low(self):
+		return min(self.buff)
+
 	# this function calculates the approximate time scale of the graph
 	def giveperiod(self):
-		self.period = (self.sample * self.cycle) / 60
+		self.period = (self.spanx * self.cycle) / 60
 
 		return self.period
+
+
 
 	# the following pairs the list of values with coordinates on the X axis.
 
