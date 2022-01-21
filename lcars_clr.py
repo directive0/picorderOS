@@ -612,12 +612,12 @@ class MultiFrame(object):
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
-		self.graphy = 24
+		self.graphy = 25
 		self.samples = 66
 
 		# Sets the x and y span of the graph
 		self.gspanx = 132
-		self.gspany = 71
+		self.gspany = 69
 
 		self.graphcycle = 0
 
