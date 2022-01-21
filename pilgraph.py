@@ -191,9 +191,9 @@ class graph_area(object):
 		# settings.
 		if self.type == 0:
 
-			index = configure.sensors[self.ident]
+			index = configure.sensors[self.ident][0]
 
-			dsc,dev,sym,maxi,mini = configure.sensor_info[index][0]
+			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
 
 
 
