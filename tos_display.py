@@ -596,6 +596,7 @@ class Graph_Screen(object):
 			if keys[2]:
 				configure.last_status[0] = "mode_a"
 				status = "settings"
+				configure.eventready[0] = False
 				return status
 
 			configure.eventready[0] = False
