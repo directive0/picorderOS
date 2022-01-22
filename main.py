@@ -78,8 +78,8 @@ def Main():
 	# they all have different names but each display object should use the same
 	# named methods for simplicity sake.
 	if configure.tr108:
-
 		PyScreen = Screen()
+		plars.set_buffer(PyScreen.get_size()*len(configure.sensor_info)*2)
 
 	if configure.tr109:
 
@@ -90,7 +90,7 @@ def Main():
 			colourscreen.start_up()
 
 			if configure.sensor_ready[0]:
-				plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info[0])*3)
+				plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info)*2)
 
 
 	print("Main Loop Starting")

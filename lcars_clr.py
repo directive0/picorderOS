@@ -980,7 +980,7 @@ class ColourScreen(object):
 
 
 	def get_size(self):
-		return self.multi_frame.get_x()
+		return self.multi_frame.samples
 
 	def start_up(self):
 		self.newimage = self.burgerfull.copy()

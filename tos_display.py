@@ -904,6 +904,8 @@ class Screen(object):
 		self.slidescreen = Slider_Screen(self.surface)
 		self.settings_screen = Settings_Panel(self.surface)
 
+	def get_size(self):
+		return SAMPLE_SIZE
 
 	def startup_screen(self,start_time):
 		status = startUp(self.surface,start_time)
