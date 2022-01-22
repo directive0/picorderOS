@@ -29,6 +29,7 @@ from modulated_em import *
 font = ImageFont.truetype("assets/babs.otf",13)
 titlefont = ImageFont.truetype("assets/babs.otf",16)
 bigfont = ImageFont.truetype("assets/babs.otf",20)
+giantfont = ImageFont.truetype("assets/babs.otf",25)
 
 # Load assets
 logo = Image.open('assets/picorderOS_logo.png')
@@ -524,7 +525,7 @@ class EMFrame(object):
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 
 		self.signal_name = LabelObj("SSID",bigfont, colour = lcars_peach)
-		self.signal_strength = LabelObj("ST",bigfont, colour = lcars_pinker)
+		self.signal_strength = LabelObj("ST",giantfont, colour = lcars_pinker)
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 
@@ -571,7 +572,7 @@ class EMFrame(object):
 
 			# draw screen elements
 			self.Signal_Graph.render(draw)
-			self.title.string = "Top EM Transciever"
+			self.title.string = "Dominant Transciever"
 			self.title.r_align(self.labelxr,self.titley,draw)
 			self.signal_name.push(20,35,draw, string = info[0])
 			self.signal_strength.string = str(info[1]) + " DB"
