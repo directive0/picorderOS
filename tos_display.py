@@ -654,13 +654,13 @@ class Graph_Screen(object):
 
 		a_content = str(a_newest)
 		if len(a_content) > 6:
-			a_content = format(float(a_newest), ".0f")
+			a_content = format(a_newest, ".0f")
 		a_color = themes[configure.theme[0]][0]
 		self.a_label.update(a_content + senseslice[0][3],30,marginleft,205,titleFont,a_color)
 
 		b_content = str(b_newest)
 		if len(a_content) > 6:
-			b_content = str(format(float(b_newest), ".0f"))
+			b_content = str(format(b_newest, ".0f"))
 		b_color = themes[configure.theme[0]][1]
 		self.b_label.update( b_content + senseslice[1][3],30,114,205,titleFont,b_color)
 		self.b_label.center(resolution[0],31,0,205)
@@ -668,7 +668,7 @@ class Graph_Screen(object):
 
 		c_content = str(c_newest)
 		if len(a_content) > 6:
-			c_content = str(format(float(c_newest), ".0f"))
+			c_content = str(format(c_newest, ".0f"))
 		c_color = themes[configure.theme[0]][2]
 
 		self.c_label.update(c_content + senseslice[2][3],30,marginright,205,titleFont,c_color)
