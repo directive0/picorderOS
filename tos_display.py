@@ -661,7 +661,7 @@ class Graph_Screen(object):
 		b_content = "{:.2f}".format(b_newest)
 		b_color = themes[configure.theme[0]][1]
 		self.b_label.update( b_content + senseslice[1][3],27,114,205,titleFont,b_color)
-		self.b_label.center(resolution[0],31,0,205)
+		self.b_label.center(resolution[0],27,0,205)
 
 
 		c_content = "{:.2f}".format(c_newest)
