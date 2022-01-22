@@ -201,9 +201,11 @@ class PLARS(object):
 		# determine difference between buffer and target size
 		length = currentsize - targetsize
 
-		# if buffer is larger than target size
-		if length > 0 and configure.trim_buffer[0]:
-			self.trimbuffer()
+
+		if configure.trim_buffer[0]:
+			# if buffer is larger than double the buffer size
+			if length >= self.buffer_size * 2:
+				self.trimbuffer()
 
 		# release the thread lock for other threads
 		self.lock.release()
