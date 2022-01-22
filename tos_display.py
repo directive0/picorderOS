@@ -507,6 +507,7 @@ class Settings_Panel(object):
 
 			if keys[2]:
 				result = configure.last_status[0]
+				configure.eventready[0] = False
 
 			configure.eventready[0] = False
 
@@ -806,6 +807,7 @@ class Slider_Screen(object):
 			if keys[2]:
 				configure.last_status[0] = "mode_b"
 				status = "settings"
+				configure.eventready[0] = False
 				return status
 
 			configure.eventready[0] = False
