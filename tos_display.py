@@ -117,7 +117,7 @@ class Label(object):
 		self.x = 0
 		self.y = 0
 		self.color = white
-		self.fontSize = 33
+		self.fontSize = 30
 		self.myfont = pygame.font.Font(titleFont, self.fontSize)
 		text = "hello"
 		self.size = self.myfont.size(text)
@@ -655,19 +655,19 @@ class Graph_Screen(object):
 
 		a_content = "{:.2f}".format(a_newest)
 		a_color = themes[configure.theme[0]][0]
-		self.a_label.update(a_content + senseslice[0][3],30,marginleft,205,titleFont,a_color)
+		self.a_label.update(a_content + senseslice[0][3],27,marginleft,205,titleFont,a_color)
 
 
 		b_content = "{:.2f}".format(b_newest)
 		b_color = themes[configure.theme[0]][1]
-		self.b_label.update( b_content + senseslice[1][3],30,114,205,titleFont,b_color)
+		self.b_label.update( b_content + senseslice[1][3],27,114,205,titleFont,b_color)
 		self.b_label.center(resolution[0],31,0,205)
 
 
 		c_content = "{:.2f}".format(c_newest)
 		c_color = themes[configure.theme[0]][2]
 
-		self.c_label.update(c_content + senseslice[2][3],30,marginright,205,titleFont,c_color)
+		self.c_label.update(c_content + senseslice[2][3],27,marginright,205,titleFont,c_color)
 		self.c_label.r_align(320 - marginright ,205)
 		contents = [a_content,b_content,c_content]
 
