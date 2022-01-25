@@ -47,7 +47,6 @@ class PLARS(object):
 		pd.set_option('display.float_format', '{:.7f}'.format)
 
 		#create a buffer object to hold screen data
-		self.buffer_size = 100
 		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 		#create a buffer for wifi/bt data
@@ -77,11 +76,6 @@ class PLARS(object):
 	#pends a new set of data to the CSV file.
 	def append_to_core(self, data):
 		data.to_csv(self.file_path, mode='a', header=False)
-
-	# sets the size of the standard screen buffer
-	def set_buffer(self,size):
-		print("buffer size set to: ", size)
-		self.buffer_size = size
 
 	# returns a list of every EM transciever that was discovered last scan.
 	def get_recent_em_list(self):
@@ -274,7 +268,7 @@ class PLARS(object):
 
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
-		targetsize = self.buffer_size
+		targetsize = configure.buffer_size[0]
 
 		# determine difference between buffer and target size
 		length = currentsize - targetsize

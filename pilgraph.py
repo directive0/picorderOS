@@ -194,19 +194,22 @@ class graph_area(object):
 
 		# so every time through the loop PILgraph will pull the latest sensor
 		# settings.
+
+		# standard pilgraph: takes DSC,DEV keypairs from screen drawer, asks
+		# plars for data, graphs it.
 		if self.type == 0:
 
 			index = configure.sensors[self.ident][0]
-
 			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
-
-
-
-			#preps the list by adding the X coordinate to every sensor value
 			recent = plars.get_recent(dsc,dev,num = self.samples)
-		else:
+
+		# EM pilgraph: pulls wifi data only.
+		elif self.type == 1:
 			recent = plars.get_top_em_history(no = self.samples)
 
+		# Testing a stream graph
+		elif self.type == 2:
+			recent = plars.get_recent(dsc,dev,num = self.samples)
 
 		cords = self.graphprep(recent)
 
@@ -222,5 +225,3 @@ class graph_area(object):
 			x2 = cords[0][0] + (self.dotw/2)
 			y2 = cords[0][1] + (self.doth/2)
 			draw.ellipse([x1,y1,x2,y2],self.colour)
-
-		#self.timeit.post("pilgraph - made dots")

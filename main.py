@@ -79,7 +79,7 @@ def Main():
 	# named methods for simplicity sake.
 	if configure.tr108:
 		PyScreen = Screen()
-		plars.set_buffer(PyScreen.get_size()*len(configure.sensor_info))
+		configure.buffer_size[0] = PyScreen.get_size()*len(configure.sensor_info)
 
 	if configure.tr109:
 
@@ -89,8 +89,8 @@ def Main():
 			colourscreen = ColourScreen()
 			colourscreen.start_up()
 
-			if configure.sensor_ready[0]:
-				plars.set_buffer(colourscreen.get_size()*len(configure.sensor_info))
+
+		configure.buffer_size[0] = colourscreen.get_size()*len(configure.sensor_info)
 
 
 	print("Main Loop Starting")
