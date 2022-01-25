@@ -187,14 +187,13 @@ class PLARS(object):
 		newdata = pd.DataFrame(fragdata, columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 
-
 		# appends the new data to the buffer
 		self.buffer = self.buffer.append(newdata, ignore_index=True)
 
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
 
-		targetsize = self.buffer_size
+		targetsize = configure.buffer_size[0]
 
 		# determine difference between buffer and target size
 		length = currentsize - targetsize
@@ -202,7 +201,7 @@ class PLARS(object):
 
 		if configure.trim_buffer[0]:
 			# if buffer is larger than double the buffer size
-			if length >= self.buffer_size * 2:
+			if length >= configure.buffer_size[0] * 2:
 				self.trimbuffer()
 
 		# release the thread lock for other threads
