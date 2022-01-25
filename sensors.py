@@ -50,6 +50,14 @@ if configure.system_vitals:
 if configure.pocket_geiger:
 	from PiPocketGeiger import RadiationWatch
 
+if configure.amg8833:
+	import adafruit_amg88xx
+	import busio
+	import board
+	i2c = busio.I2C(board.SCL, board.SDA)
+	amg = adafruit_amg88xx.AMG88XX(i2c)
+
+
 # An object to store each sensor value and context.
 class Fragment(object):
 
@@ -177,6 +185,9 @@ class Sensor(object):
 			self.radiation = RadiationWatch(configure.PG_SIG,configure.PG_NS)
 			self.radiation.setup()
 
+		if configure.amg8833:
+			self.amg_high = Fragment(0.0, 80.0, "IR High", self.deg_sym + "c", "amg8833")
+			self.amg_low = Fragment(0.0, 80.0, "IR low", self.deg_sym + "c", "amg8833")
 		configure.sensor_info = self.get_all_info()
 
 
@@ -298,6 +309,22 @@ class Sensor(object):
 
 			if self.generators:
 				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2))
+
+		if configure.amg8833:
+			data = amg.pixels
+
+			rangemax = []
+			rangemin = []
+
+			for i in range(8):
+				thismax = max(self.data[i])
+				thismin = min(self.data[i])
+				rangemin.append(thismin)
+				rangemax.append(thismax)
+
+
+			self.amg_high.set(max(rangemax),t)
+			self.amg_low.set(min(rangemin),t)
 
 		configure.max_sensors[0] = len(sensorlist)
 
