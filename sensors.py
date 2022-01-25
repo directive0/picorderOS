@@ -188,6 +188,7 @@ class Sensor(object):
 		if configure.amg8833:
 			self.amg_high = Fragment(0.0, 80.0, "IRHigh", self.deg_sym + "c", "amg8833")
 			self.amg_low = Fragment(0.0, 80.0, "IRLow", self.deg_sym + "c", "amg8833")
+
 		configure.sensor_info = self.get_all_info()
 
 
@@ -322,9 +323,11 @@ class Sensor(object):
 				rangemin.append(thismin)
 				rangemax.append(thismax)
 
+			high = float(max(rangemax))
+			low = float(min(rangemin))
 
-			self.amg_high.set(max(rangemax),t)
-			self.amg_low.set(min(rangemin),t)
+			self.amg_high.set(high,t)
+			self.amg_low.set(low,t)
 
 			sensorlist.extend((self.amg_high, self.amg_low))
 
