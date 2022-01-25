@@ -186,8 +186,8 @@ class Sensor(object):
 			self.radiation.setup()
 
 		if configure.amg8833:
-			self.amg_high = Fragment(0.0, 80.0, "IR High", self.deg_sym + "c", "amg8833")
-			self.amg_low = Fragment(0.0, 80.0, "IR low", self.deg_sym + "c", "amg8833")
+			self.amg_high = Fragment(0.0, 80.0, "IRHigh", self.deg_sym + "c", "amg8833")
+			self.amg_low = Fragment(0.0, 80.0, "IRLow", self.deg_sym + "c", "amg8833")
 		configure.sensor_info = self.get_all_info()
 
 
@@ -325,6 +325,8 @@ class Sensor(object):
 
 			self.amg_high.set(max(rangemax),t)
 			self.amg_low.set(min(rangemin),t)
+
+			sensorlist.extend((self.amg_high, self.amg_low))
 
 		configure.max_sensors[0] = len(sensorlist)
 
