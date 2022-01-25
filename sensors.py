@@ -326,8 +326,8 @@ class Sensor(object):
 			high = float(max(rangemax))
 			low = float(min(rangemin))
 
-			self.amg_high.set(high,t)
-			self.amg_low.set(low,t)
+			self.amg_high.set(high,timestamp)
+			self.amg_low.set(low,timestamp)
 
 			sensorlist.extend((self.amg_high, self.amg_low))
 
