@@ -315,7 +315,7 @@ class Sensor(object):
 		if configure.amg8833:
 			data = numpy.array(amg.pixels)
 
-			high = numpy.amin(data)
+			high = numpy.max(data)
 			low = numpy.min(data)
 
 			self.amg_high.set(high,timestamp)

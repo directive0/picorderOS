@@ -784,7 +784,7 @@ class MultiFrame(object):
 
 			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
-			datas[i] = plars.get_recent(dsc,dev,num = self.samples)
+			datas[i] = plars.get_recent(dsc,dev,num = 1)
 
 
 
