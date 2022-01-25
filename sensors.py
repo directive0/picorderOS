@@ -317,8 +317,8 @@ class Sensor(object):
 			rangemin = []
 
 			for i in range(8):
-				thismax = max(self.data[i])
-				thismin = min(self.data[i])
+				thismax = max(data[i])
+				thismin = min(data[i])
 				rangemin.append(thismin)
 				rangemax.append(thismax)
 
