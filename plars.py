@@ -172,23 +172,25 @@ class PLARS(object):
 
 
 	# updates the data storage file with the most recent sensor values from each
-	# initialized sensor
+	# initialized sensor.
+	# Sensor data is taken in as Fragment() instance objects. Each one contains
+	# the a sensor value and context for it (scale, symbol, unit, etc).
 	def update(self,data):
-
-		# sets/requests the thread lock to prevent other threads reading data.
-		self.lock.acquire()
-
 
 		#listbuilder:
 		fragdata = []
 
 		for fragment in data:
+			#
 			item = fragment.get()
 			fragdata.append(item)
 
 
 		# creates a new dataframe to add new data to
 		newdata = pd.DataFrame(fragdata, columns=['value','min','max','dsc','sym','dev','timestamp'])
+
+		# sets/requests the thread lock to prevent other threads reading data.
+		self.lock.acquire()
 
 		# appends the new data to the buffer
 		self.buffer = self.buffer.append(newdata, ignore_index=True)

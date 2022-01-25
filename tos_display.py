@@ -9,8 +9,6 @@ import pygame
 import time
 import os
 
-matplot = False
-
 SAMPLE_SIZE = 70
 GRAPH_WIDTH = 280
 GRAPH_HEIGHT = 182
@@ -38,15 +36,6 @@ pygame.display.set_caption('PicorderOS')
 # The following commands disable the mouse and cursor.
 #pygame.event.set_blocked(pygame.MOUSEMOTION)
 #pygame.mouse.set_visible(0)
-
-if matplot:
-	import matplotlib
-	matplotlib.use("Agg")
-
-	import matplotlib.backends.backend_agg as agg
-
-
-	import pylab
 
 # set the screen configuration
 resolution = (320,240)
@@ -545,7 +534,7 @@ class Graph_Screen(object):
 		# Draws Background gridplane
 		self.graphback = Image()
 		self.graphback.update(backgraph, 0, 0)
-		#self.graphback.draw(surface)
+
 
 		# Instantiates 3 labels for our readout
 		self.a_label = Label()

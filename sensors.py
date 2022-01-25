@@ -275,7 +275,8 @@ class Sensor(object):
 		if configure.system_vitals:
 
 			if not configure.pc:
-				t = float(os.popen("cat /sys/class/thermal/thermal_zone0/temp").readline())
+				f = os.popen("cat /sys/class/thermal/thermal_zone0/temp").readline()
+				t = float(f[0:2] + "." + f[2:])
 			else:
 				t = float(47)
 
