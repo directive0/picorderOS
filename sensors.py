@@ -2,6 +2,7 @@ from objects import *
 import time
 from plars import *
 import math
+import numpy
 
 # the following is a sensor module for use with the PicorderOS
 print("Loading Unified Sensor Module")
@@ -312,19 +313,10 @@ class Sensor(object):
 				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2))
 
 		if configure.amg8833:
-			data = amg.pixels
+			data = numpy.array(amg.pixels)
 
-			rangemax = []
-			rangemin = []
-
-			for i in range(8):
-				thismax = max(data[i])
-				thismin = min(data[i])
-				rangemin.append(thismin)
-				rangemax.append(thismax)
-
-			high = float(max(rangemax))
-			low = float(min(rangemin))
+			high = numpy.amin(data)
+			low = numpy.min(data)
 
 			self.amg_high.set(high,timestamp)
 			self.amg_low.set(low,timestamp)

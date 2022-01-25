@@ -675,7 +675,7 @@ class MultiFrame(object):
 		return self.gspanx - self.graphx
 
 	# takes a value and sheds the second digit after the decimal place
-	def arrangelabel(self,data,range = ".0f"):
+	def arrangelabel(self,data,range = ".1f"):
 		datareturn = format(float(data), range)
 		return datareturn
 

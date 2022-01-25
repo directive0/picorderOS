@@ -47,7 +47,7 @@ class PLARS(object):
 		pd.set_option('display.float_format', '{:.7f}'.format)
 
 		#create a buffer object to hold screen data
-		self.buffer_size = 15
+		self.buffer_size = 100
 		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 
 		#create a buffer for wifi/bt data
@@ -179,7 +179,7 @@ class PLARS(object):
 
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
-		
+
 		#listbuilder:
 		fragdata = []
 
