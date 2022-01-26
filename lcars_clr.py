@@ -394,10 +394,10 @@ class StartUp(object):
 		self.item.center(self.titley+self.jump,0, 160,draw)
 
 
-		if self.interval.timelapsed() < self.timeout:
-			status = "startup"
+		if self.interval.timelapsed() > self.timeout and configure.sensor_ready[0]:
+			status = "mode_a"
 		else:
-			status = "ready"
+			status = "startup"
 
 
 		return status

@@ -366,8 +366,8 @@ def startUp(surface,timeSinceStart):
 	pygame.display.flip()
 	elapsed = timenow - timeSinceStart
 
-	#waits for 2 seconds to elapse before returning the state that will take us to the sensor readout
-	if elapsed > 1:
+	#waits for x seconds to elapse before returning the state that will take us to the sensor readout
+	if elapsed > 1 and configure.sensor_ready[0]:
 	 return "mode_a"
 	else:
 	 return "startup"

@@ -113,8 +113,6 @@ def Main():
 				if configure.tr108:
 					configure.status[0] = PyScreen.startup_screen(start_time)
 
-			if configure.status[0] == "ready":
-				configure.status[0] = "mode_a"
 
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			if (configure.status[0] == "mode_a"):
