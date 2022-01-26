@@ -390,7 +390,7 @@ class StartUp(object):
 		self.title.center(self.titley,0,160,draw)
 
 		#draw the title and version
-		self.item.string = configure.version
+		self.item.string = "Initializing Sensor Array"
 		self.item.center(self.titley+self.jump,0, 160,draw)
 
 

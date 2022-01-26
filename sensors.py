@@ -232,13 +232,7 @@ class Sensor(object):
 		#timestamp for this sensor get.
 		timestamp = time.time()
 
-		if configure.pocket_geiger:
 
-			data = self.radiation.status()
-			rad_data = float(data["uSvh"])
-			self.radiat.set(rad_data, timestamp)
-
-			sensorlist.append(self.radiat)
 
 		if configure.bme:
 
@@ -265,6 +259,25 @@ class Sensor(object):
 			self.sh_accz.set(acceldata['z'],timestamp)
 
 			sensorlist.extend((self.sh_temp, self.sh_baro, self.sh_humi, self.sh_magx, self.sh_magy, self.sh_magz, self.sh_accx, self.sh_accy, self.sh_accz))
+
+		if configure.pocket_geiger:
+
+			data = self.radiation.status()
+			rad_data = float(data["uSvh"])
+			self.radiat.set(rad_data, timestamp)
+
+			sensorlist.append(self.radiat)
+
+		if configure.amg8833:
+			data = numpy.array(amg.pixels)
+
+			high = numpy.max(data)
+			low = numpy.min(data)
+
+			self.amg_high.set(high,timestamp)
+			self.amg_low.set(low,timestamp)
+
+			sensorlist.extend((self.amg_high, self.amg_low))
 
 		if configure.envirophat:
 			self.rgb = light.rgb()
@@ -312,16 +325,7 @@ class Sensor(object):
 			if self.generators:
 				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2))
 
-		if configure.amg8833:
-			data = numpy.array(amg.pixels)
 
-			high = numpy.max(data)
-			low = numpy.min(data)
-
-			self.amg_high.set(high,timestamp)
-			self.amg_low.set(low,timestamp)
-
-			sensorlist.extend((self.amg_high, self.amg_low))
 
 		configure.max_sensors[0] = len(sensorlist)
 

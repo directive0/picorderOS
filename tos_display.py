@@ -344,9 +344,9 @@ def startUp(surface,timeSinceStart):
 	#sets out UI objects with the appropriate data
 	insignia.update(pioslogo, logoposx, 37)
 
-	secTitle.update("PicorderOS " + configure.version,19,37,210,titleFont,blue)
+	secTitle.update("PicorderOS V2" + configure.version,19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,190)
-	secblurb.update("LOADING..",15,37,210,titleFont,blue)
+	secblurb.update("Initializing Sensor Array",15,37,210,titleFont,blue)
 	secblurb.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer
