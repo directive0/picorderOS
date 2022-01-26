@@ -376,7 +376,7 @@ class StartUp(object):
 
 
 		self.title = LabelObj("PicorderOS " + configure.version,bigfont, colour = lcars_peach)
-		self.item = LabelObj(self.boot_message,titlefont,colour = lcars_peach)
+		self.item = LabelObj(configure.boot_message,titlefont,colour = lcars_peach)
 
 		# creates and interval timer for screen refresh.
 		self.interval = timer()

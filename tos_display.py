@@ -346,7 +346,7 @@ def startUp(surface,timeSinceStart):
 
 	secTitle.update("PicorderOS " + configure.version,19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,190)
-	secblurb.update(self.boot_message,15,37,210,titleFont,blue)
+	secblurb.update(configure.boot_message,15,37,210,titleFont,blue)
 	secblurb.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer
