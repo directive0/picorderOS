@@ -344,9 +344,9 @@ def startUp(surface,timeSinceStart):
 	#sets out UI objects with the appropriate data
 	insignia.update(pioslogo, logoposx, 37)
 
-	secTitle.update("PicorderOS" + configure.version,19,37,210,titleFont,blue)
+	secTitle.update("PicorderOS " + configure.version,19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,190)
-	secblurb.update("Initializing Sensor Array",15,37,210,titleFont,blue)
+	secblurb.update(self.boot_message,15,37,210,titleFont,blue)
 	secblurb.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer
@@ -367,7 +367,7 @@ def startUp(surface,timeSinceStart):
 	elapsed = timenow - timeSinceStart
 
 	#waits for x seconds to elapse before returning the state that will take us to the sensor readout
-	if elapsed > 1 and configure.sensor_ready[0]:
+	if elapsed > configure.boot_delay and configure.sensor_ready[0]:
 	 return "mode_a"
 	else:
 	 return "startup"

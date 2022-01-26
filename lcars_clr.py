@@ -375,13 +375,12 @@ class StartUp(object):
 		self.labely = 102
 
 
-		self.title = LabelObj("Picorder OS",bigfont, colour = lcars_peach)
-		self.item = LabelObj("version",titlefont,colour = lcars_peach)
+		self.title = LabelObj("PicorderOS " + configure.version,bigfont, colour = lcars_peach)
+		self.item = LabelObj(self.boot_message,titlefont,colour = lcars_peach)
 
 		# creates and interval timer for screen refresh.
 		self.interval = timer()
 		self.interval.logtime()
-		self.timeout = 2
 
 	def push(self, draw):
 
@@ -390,11 +389,10 @@ class StartUp(object):
 		self.title.center(self.titley,0,160,draw)
 
 		#draw the title and version
-		self.item.string = "Initializing Sensor Array"
 		self.item.center(self.titley+self.jump,0, 160,draw)
 
 
-		if self.interval.timelapsed() > self.timeout and configure.sensor_ready[0]:
+		if self.interval.timelapsed() > configure.boot_delay and configure.sensor_ready[0]:
 			status = "mode_a"
 		else:
 			status = "startup"

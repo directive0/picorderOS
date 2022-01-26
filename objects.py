@@ -9,8 +9,11 @@ class preferences(object):
 
 	# Initializes the parameters for the program.
 	def __init__(self):
+
+		# Sets the variables for boot up
 		self.version = "v2"
-		self.author = "directive0"
+		self.boot_message = "Initializing Sensor Array"
+		self.boot_delay = 2
 
 		# enables "PC Mode": sensors and GPIO calls are disabled.
 		# Machine vitals are substituted and Luma screens use emulator
@@ -37,6 +40,17 @@ class preferences(object):
 		# toggles wifi/bt scanning
 		self.EM = False
 
+# INPUT MODULE-----------------------------------------------------------------#
+
+		# testing this setting to switch between Pygame controls and gpio ones
+		self.input_kb = False
+		self.input_gpio = False
+		self.input_cap_mpr121 = False
+		self.input_pcf8575 = False
+
+		# CAP1208 and sensitivity settings
+		self.input_cap1208 = False
+		self.CAPSENSITIVITY = 50
 
 # PIN ASSIGNMENTS--------------------------------------------------------------#]
 
@@ -72,19 +86,6 @@ class preferences(object):
 		self.PG_SIG = 20
 		self.PG_NS = 21
 
-# INPUT MODULE-----------------------------------------------------------------#
-
-		# testing this setting to switch between Pygame controls and gpio ones
-		self.input_kb = False
-		self.input_gpio = False
-		self.input_cap_mpr121 = False
-		self.input_pcf8575 = False
-
-		# CAP1208 and sensitivity settings
-		self.input_cap1208 = False
-		self.CAPSENSITIVITY = 50
-
-
 # OUTPUT SETTINGS--------------------------------------------------------------#
 
 		# chooses SPI display (0 for nokia 5110, 1 for st7735)
@@ -109,23 +110,22 @@ class preferences(object):
 
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
-		self.leds = [False]
-
-		# turns alarms on/off
-		self.alarm = [True]
+		self.leds = [True]
 
 		# controls Moire pattern on tr-108
 		self.moire = [False]
 
-		# If sleep is True the lights will respond to hall effect sensors
-		self.sleep = [True]
-
 		# enables sound effect playback
 		self.audio = [False]
 
+		# turns alarms on/off
+		self.alarm = [True]
+
+		# If sleep is True the lights will respond to hall effect sensors
+		self.sleep = [True]
+
 		# controls auto ranging of graphs
 		self.auto = [True]
-
 
 		# holds theme state for UI
 		self.theme = [0]
@@ -133,7 +133,6 @@ class preferences(object):
 		# sets the number of max sensors for user configuration
 		# (is automatically set by the sensor module at startup)
 		self.max_sensors = [0]
-
 
 		#sets the upper and lower threshold for the alert
 		self.TEMP_ALERT = (0,100)
