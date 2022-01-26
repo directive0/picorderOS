@@ -54,16 +54,13 @@ if configure.tr109:
 
 # the following function is our main loop, it contains all the flow for our program.
 def Main():
-	start_time = time.time()
-	#start the sensor loop
-	sensor_thread = Thread(target = threaded_sensor, args = ())
-	sensor_thread.start()
+
 	# Instantiate a screen object to draw data to screen. Right now for testing
 	# they all have different names but each display object should use the same
 	# named methods for simplicity sake.
 	if configure.tr108:
 		PyScreen = Screen()
-		configure.buffer_size[0] = PyScreen.get_size()*len(configure.sensor_info)
+		configure.graph_size[0] = PyScreen.get_size()
 
 	if configure.tr109:
 
@@ -73,9 +70,12 @@ def Main():
 			colourscreen = ColourScreen()
 			colourscreen.start_up()
 
+		configure.graph_size[0] = colourscreen.get_size()
 
-		configure.buffer_size[0] = colourscreen.get_size()*len(configure.sensor_info)
-
+	start_time = time.time()
+	#start the sensor loop
+	sensor_thread = Thread(target = threaded_sensor, args = ())
+	sensor_thread.start()
 
 	if configure.leds[0]:
 		# seperate thread for LED lighting.

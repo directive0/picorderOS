@@ -390,6 +390,7 @@ def threaded_sensor():
 
 	sensors = Sensor()
 	sensors.get()
+	configure.buffer_size[0] = configure.graph_size[0]*len(configure.sensor_info)
 	configure.sensor_ready[0] = True
 
 	timed = timer()
@@ -397,11 +398,8 @@ def threaded_sensor():
 
 	while not configure.status == "quit":
 
-		if configure.samplerate[0] < timed.timelapsed():
+		if timed.timelapsed() > configure.samplerate[0]:
+
 			timed.logtime()
-			start = False
-
 			data = sensors.get()
-
-
 			plars.update(data)

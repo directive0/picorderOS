@@ -154,6 +154,7 @@ class preferences(object):
 		self.datalog = [False]
 		self.trim_buffer = [True]
 		self.buffer_size = [0]
+		self.graph_size = [0]
 		self.logtime = [60]
 		self.recall = [False]
 
