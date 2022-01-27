@@ -610,7 +610,7 @@ class MultiFrame(object):
 	def __init__(self):
 
 		# Sets the topleft origin of the graph
-		self.graphx = 23
+		self.graphx = 18
 		self.graphy = 25
 		self.samples = configure.samples
 
