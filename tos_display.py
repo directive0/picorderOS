@@ -9,7 +9,7 @@ import pygame
 import time
 import os
 
-SAMPLE_SIZE = 70
+SAMPLE_SIZE = configure.samples
 GRAPH_WIDTH = 280
 GRAPH_HEIGHT = 182
 GRAPH_X = 18
