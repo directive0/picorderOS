@@ -26,9 +26,9 @@ from plars import *
 class graph_area(object):
 
 
-	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0, samples = 20):
+	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0):
 
-		self.samples = samples
+		self.samples = configure.sample
 		self.new = True
 		self.cycle = cycle
 		self.tock = timer()
