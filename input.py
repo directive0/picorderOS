@@ -316,7 +316,7 @@ class Inputs(object):
 					else:
 						self.buttonlist[i] = False
 
-		if configure.input_joystick:
+		if configure.sensehat and configure.input_joystick:
 			for event in sense.stick.get_events():
 
 				if (event.direction == 'left' and event.action == 'pressed'):
@@ -327,6 +327,7 @@ class Inputs(object):
 					else:
 						if self.holdtimers[0].timelapsed() > self.thresh_hold:
 							self.holding[0] = True
+
 				if (event.direction == 'left' and event.action == 'released'):
 					self.holding[0] = False
 					if self.pressed[0]:
