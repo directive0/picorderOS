@@ -328,13 +328,13 @@ class Inputs(object):
 						if self.holdtimers[0].timelapsed() > self.thresh_hold:
 							self.holding[0] = True
 
-				if (event.direction == 'left' and event.action == 'released'):
-					self.holding[0] = False
-					if self.pressed[0]:
-						self.buttonlist[0] = True
-						self.pressed[0] = False
-					else:
-						self.buttonlist[0] = False
+				# if (event.direction == 'left' and event.action == 'released'):
+				# 	self.holding[0] = False
+				# 	if self.pressed[0]:
+				# 		self.buttonlist[0] = True
+				# 		self.pressed[0] = False
+				# 	else:
+				# 		self.buttonlist[0] = False
 
 				if (event.direction == 'down' and event.action == 'pressed'):
 					if not self.pressed[1]:
@@ -344,13 +344,14 @@ class Inputs(object):
 					else:
 						if self.holdtimers[1].timelapsed() > self.thresh_hold:
 							self.holding[1] = True
-				if (event.direction == 'down' and event.action == 'released'):
-					self.holding[1] = False
-					if self.pressed[1]:
-						self.buttonlist[1] = True
-						self.pressed[1] = False
-					else:
-						self.buttonlist[1] = False
+
+				# if (event.direction == 'down' and event.action == 'released'):
+				# 	self.holding[1] = False
+				# 	if self.pressed[1]:
+				# 		self.buttonlist[1] = True
+				# 		self.pressed[1] = False
+				# 	else:
+				# 		self.buttonlist[1] = False
 
 				if (event.direction == 'right' and event.action == 'pressed'):
 					if not self.pressed[2]:
@@ -360,14 +361,14 @@ class Inputs(object):
 					else:
 						if self.holdtimers[2].timelapsed() > self.thresh_hold:
 							self.holding[2] = True
-				if (event.direction == 'right' and event.action == 'released'):
-					self.holding[2] = False
-					if self.pressed[2]:
-						self.buttonlist[2] = True
-						self.pressed[2] = False
-					else:
-						self.buttonlist[2] = False
 
+				# if (event.direction == 'right' and event.action == 'released'):
+				# 	self.holding[2] = False
+				# 	if self.pressed[2]:
+				# 		self.buttonlist[2] = True
+				# 		self.pressed[2] = False
+				# 	else:
+				# 		self.buttonlist[2] = False
 
 		if configure.input_cap_mpr121:
 			# Reads the touched capacitive elements
@@ -393,7 +394,6 @@ class Inputs(object):
 						self.pressed[i] = False
 					else:
 						self.buttonlist[i] = False
-
 
 		if configure.input_pcf8575:
 
