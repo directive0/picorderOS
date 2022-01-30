@@ -317,50 +317,52 @@ class Inputs(object):
 						self.buttonlist[i] = False
 
 		if configure.sensehat and configure.input_joystick:
-			for event in sense.stick.get_events():
+			
+			if configure.eventready[0] == False:
+				for event in sense.stick.get_events():
 
-				if (event.direction == 'left' and event.action == 'pressed'):
-					if not self.pressed[0]:
-						self.pressed[0] = True
-						configure.eventready[0] = True
-						self.holdtimers[0].logtime()
-					else:
-						if self.holdtimers[0].timelapsed() > self.thresh_hold:
-							self.holding[0] = True
+					if (event.direction == 'left' and event.action == 'pressed'):
+						if not self.pressed[0]:
+							self.pressed[0] = True
+							configure.eventready[0] = True
+							self.holdtimers[0].logtime()
+						else:
+							if self.holdtimers[0].timelapsed() > self.thresh_hold:
+								self.holding[0] = True
 
-				# if (event.direction == 'left' and event.action == 'released'):
-				# 	self.holding[0] = False
-				# 	if self.pressed[0]:
-				# 		self.buttonlist[0] = True
-				# 		self.pressed[0] = False
-				# 	else:
-				# 		self.buttonlist[0] = False
+					# if (event.direction == 'left' and event.action == 'released'):
+					# 	self.holding[0] = False
+					# 	if self.pressed[0]:
+					# 		self.buttonlist[0] = True
+					# 		self.pressed[0] = False
+					# 	else:
+					# 		self.buttonlist[0] = False
 
-				if (event.direction == 'down' and event.action == 'pressed'):
-					if not self.pressed[1]:
-						self.pressed[1] = True
-						configure.eventready[0] = True
-						self.holdtimers[1].logtime()
-					else:
-						if self.holdtimers[1].timelapsed() > self.thresh_hold:
-							self.holding[1] = True
+					if (event.direction == 'down' and event.action == 'pressed'):
+						if not self.pressed[1]:
+							self.pressed[1] = True
+							configure.eventready[0] = True
+							self.holdtimers[1].logtime()
+						else:
+							if self.holdtimers[1].timelapsed() > self.thresh_hold:
+								self.holding[1] = True
 
-				# if (event.direction == 'down' and event.action == 'released'):
-				# 	self.holding[1] = False
-				# 	if self.pressed[1]:
-				# 		self.buttonlist[1] = True
-				# 		self.pressed[1] = False
-				# 	else:
-				# 		self.buttonlist[1] = False
+					# if (event.direction == 'down' and event.action == 'released'):
+					# 	self.holding[1] = False
+					# 	if self.pressed[1]:
+					# 		self.buttonlist[1] = True
+					# 		self.pressed[1] = False
+					# 	else:
+					# 		self.buttonlist[1] = False
 
-				if (event.direction == 'right' and event.action == 'pressed'):
-					if not self.pressed[2]:
-						self.pressed[2] = True
-						configure.eventready[0] = True
-						self.holdtimers[2].logtime()
-					else:
-						if self.holdtimers[2].timelapsed() > self.thresh_hold:
-							self.holding[2] = True
+					if (event.direction == 'right' and event.action == 'pressed'):
+						if not self.pressed[2]:
+							self.pressed[2] = True
+							configure.eventready[0] = True
+							self.holdtimers[2].logtime()
+						else:
+							if self.holdtimers[2].timelapsed() > self.thresh_hold:
+								self.holding[2] = True
 
 				# if (event.direction == 'right' and event.action == 'released'):
 				# 	self.holding[2] = False
