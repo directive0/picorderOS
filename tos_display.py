@@ -9,13 +9,6 @@ import pygame
 import time
 import os
 
-SAMPLE_SIZE = configure.samples
-GRAPH_WIDTH = 280
-GRAPH_HEIGHT = 182
-GRAPH_X = 18
-GRAPH_Y = 20
-GRAPH_X2 = GRAPH_X + GRAPH_WIDTH
-GRAPH_Y2 = GRAPH_Y + GRAPH_HEIGHT
 
 from plars import *
 from objects import *
@@ -26,6 +19,14 @@ if not configure.pc:
 		import os
 		# runs a CLI command to disable the raspberry pi's screen blanking
 		#os.system('xset -display :0 -dpms')
+
+SAMPLE_SIZE = configure.samples
+GRAPH_WIDTH = 280
+GRAPH_HEIGHT = 182
+GRAPH_X = 18
+GRAPH_Y = 20
+GRAPH_X2 = GRAPH_X + GRAPH_WIDTH
+GRAPH_Y2 = GRAPH_Y + GRAPH_HEIGHT
 
 os.environ['PYGAME_BLEND_ALPHA_SDL2'] = '1'
 # The following commands initiate a pygame environment.

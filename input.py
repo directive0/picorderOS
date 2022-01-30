@@ -24,6 +24,7 @@ print("Loading Unified Input Module")
 import time
 from objects import *
 
+
 # stores the number of buttons to be queried
 buttons = 16
 
@@ -51,6 +52,10 @@ if configure.tr109:
 	GPIO.setup(hallpin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	GPIO.setup(hallpin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+if configure.sensehat:
+	if configure.input_joystick:
+		from sense_hat import SenseHat
+		sense = SenseHat()
 
 # set up requirements for USB keyboard
 if configure.input_kb:
@@ -75,10 +80,6 @@ if configure.input_gpio:
 		GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
-	# To add:
-	# GPIO Battery Low
-
 
 
 # set up requirements for capacitive buttons using an mpr121
@@ -314,6 +315,58 @@ class Inputs(object):
 						self.pressed[i] = False
 					else:
 						self.buttonlist[i] = False
+
+		if configure.input_joystick:
+			for event in sense.stick.get_events():
+
+				if (event.direction == 'left' and event.action == 'pressed'):
+					if not self.pressed[0]:
+						self.pressed[0] = True
+						configure.eventready[0] = True
+						self.holdtimers[0].logtime()
+					else:
+						if self.holdtimers[0].timelapsed() > self.thresh_hold:
+							self.holding[0] = True
+				if (event.direction == 'left' and event.action == 'released'):
+					self.holding[0] = False
+					if self.pressed[0]:
+						self.buttonlist[0] = True
+						self.pressed[0] = False
+					else:
+						self.buttonlist[0] = False
+
+				if (event.direction == 'down' and event.action == 'pressed'):
+					if not self.pressed[1]:
+						self.pressed[1] = True
+						configure.eventready[0] = True
+						self.holdtimers[1].logtime()
+					else:
+						if self.holdtimers[1].timelapsed() > self.thresh_hold:
+							self.holding[1] = True
+				if (event.direction == 'down' and event.action == 'released'):
+					self.holding[1] = False
+					if self.pressed[1]:
+						self.buttonlist[1] = True
+						self.pressed[1] = False
+					else:
+						self.buttonlist[1] = False
+
+				if (event.direction == 'right' and event.action == 'pressed'):
+					if not self.pressed[2]:
+						self.pressed[2] = True
+						configure.eventready[0] = True
+						self.holdtimers[2].logtime()
+					else:
+						if self.holdtimers[2].timelapsed() > self.thresh_hold:
+							self.holding[2] = True
+				if (event.direction == 'right' and event.action == 'released'):
+					self.holding[2] = False
+					if self.pressed[2]:
+						self.buttonlist[2] = True
+						self.pressed[2] = False
+					else:
+						self.buttonlist[2] = False
+
 
 		if configure.input_cap_mpr121:
 			# Reads the touched capacitive elements

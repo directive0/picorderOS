@@ -47,6 +47,7 @@ class preferences(object):
 		self.input_gpio = False
 		self.input_cap_mpr121 = False
 		self.input_pcf8575 = False
+		self.input_joystick = True
 
 		# CAP1208 and sensitivity settings
 		self.input_cap1208 = False
@@ -110,7 +111,7 @@ class preferences(object):
 
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
-		self.leds = [True]
+		self.leds = [False]
 
 		# controls Moire pattern on tr-108
 		self.moire = [False]
@@ -159,7 +160,7 @@ class preferences(object):
 
 		# used to control refresh speed.
 		self.samplerate = [0]
-		self.samples = 11
+		self.samples = 16
 		self.displayinterval = [0]
 
 		# holds sensor data (issued by the sensor module at init)

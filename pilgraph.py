@@ -32,7 +32,7 @@ class graph_area(object):
 			self.samples = configure.samples
 		else:
 			self.samples = samples
-			
+
 		self.new = True
 		self.cycle = cycle
 		self.tock = timer()
