@@ -182,7 +182,7 @@ class Sensor(object):
 			self.bme_voc = Fragment(300000,1100000,"VOC","KOhm", "BME680")
 
 		if configure.pocket_geiger:
-			self.radiat = Fragment(0.0, 10000.0, "Radiation", "uSvh", "pocketgeiger")
+			self.radiat = Fragment(0.0, 10000.0, "Radiation", "urem/hr", "pocketgeiger")
 			self.radiation = RadiationWatch(configure.PG_SIG,configure.PG_NS)
 			self.radiation.setup()
 
@@ -210,7 +210,6 @@ class Sensor(object):
 	def tan_gen(self):
 		wavestep = math.tan(self.steptan)
 		self.steptan += .1
-		#print(wavestep)
 		return wavestep
 
 	def sin2_gen(self, offset = 0):
@@ -264,8 +263,10 @@ class Sensor(object):
 
 			data = self.radiation.status()
 			rad_data = float(data["uSvh"])
-			self.radiat.set(rad_data, timestamp)
 
+			# times 100 to convert to urem/h
+			self.radiat.set(rad_data*100, timestamp)
+			
 			sensorlist.append(self.radiat)
 
 		if configure.amg8833:
