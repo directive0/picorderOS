@@ -90,7 +90,7 @@ def shiftout(byte,board = 0):
         GPIO.output(PINS[board][1], 0)
 
         for x in range(8):
-                #Assigns logic to the pin based on the bit x
+                # Assigns logic to the pin based on the bit x
                 GPIO.output(PINS[board][0], (byte >> x) & 1)
 
                 # toggle the clock, first set the pin because it fails if I don't

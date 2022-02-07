@@ -26,6 +26,7 @@ from objects import *
 from modulated_em import *
 
 # Load default font.
+littlefont = ImageFont.truetype("assets/babs.otf",10)
 font = ImageFont.truetype("assets/babs.otf",13)
 titlefont = ImageFont.truetype("assets/babs.otf",16)
 bigfont = ImageFont.truetype("assets/babs.otf",20)
@@ -376,7 +377,7 @@ class StartUp(object):
 
 
 		self.title = LabelObj("PicorderOS " + configure.version,bigfont, colour = lcars_peach)
-		self.item = LabelObj(configure.boot_message,titlefont,colour = lcars_peach)
+		self.item = LabelObj(configure.boot_message,font,colour = lcars_peach)
 
 		# creates and interval timer for screen refresh.
 		self.interval = timer()
