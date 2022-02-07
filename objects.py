@@ -14,9 +14,9 @@ class preferences(object):
 		print("picorder.ini file is missing - making a new one. You'll want to edit to taste and restart.")
 		config = configparser.ConfigParser(allow_no_value=True)
 
-		config['SYSTEM'] = {'# Text displayed after "picorderOS" on title screen',None,
+		config['SYSTEM'] = {'# Text displayed after "picorderOS" on title screen':None,
 							'version':'v2',                               	# version number
-							'# Greeting displayed on title screen',None,
+							'# Greeting displayed on title screen':None,
 							'boot_message':'Initializing Sensor Array',   	# Initialization Message
 							'# Boot Delay is the time allowed to display the banner screen':None,
 							'boot_delay':'2',								# boot delay
