@@ -8,12 +8,6 @@ import json
 #	different Picorder screen modes.
 
 
-
-#	TO DO:
-
-#   - buffer trimming
-#	- JSON api
-
 import os
 import numpy
 import datetime
@@ -21,10 +15,14 @@ from array import *
 import pandas as pd
 import json
 
+import threading
 
 class PLARS(object):
 
 	def __init__(self):
+
+		# add a lock to avoid race conditions
+		self.lock = threading.Lock()
 
 		# PLARS opens a data frame at initialization.
 		# If the csv file exists it opens it, otherwise creates it.
@@ -34,30 +32,29 @@ class PLARS(object):
 		# create buffer
 		self.file_path = "data/datacore.csv"
 
-
-		if os.path.exists(self.file_path):
-			if configure.datalog:
-				self.core = pd.read_csv(self.file_path)
-		else:
-			if not os.path.exists("data"):
-				os.mkdir("data")
-			self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
-			self.core.to_csv(self.file_path)
+		if configure.recall[0]:
+			if os.path.exists(self.file_path):
+				if configure.datalog:
+					self.core = pd.read_csv(self.file_path)
+			else:
+				if not os.path.exists("data"):
+					os.mkdir("data")
+				self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
+				self.core.to_csv(self.file_path)
 
 
 		# Set floating point display to raw, instead of exponent
 		pd.set_option('display.float_format', '{:.7f}'.format)
 
 		#create a buffer object to hold screen data
-		self.buffer_size = 15
 		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
+
+		#create a buffer for wifi/bt data
+		self.buffer_em = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
 
 
 		self.timer = timer()
 
-	# provide status of database (how many entries, how many devices, size, length)
-	def status(self):
-		pass
 
 	def shutdown(self):
 		self.append_to_core(self.buffer)
@@ -80,63 +77,189 @@ class PLARS(object):
 	def append_to_core(self, data):
 		data.to_csv(self.file_path, mode='a', header=False)
 
-	# sets the size of the standard screen buffer
-	def set_buffer(self,size):
-		print("buffer size set to: ", size)
-		self.buffer_size = size
+	# returns a list of every EM transciever that was discovered last scan.
+	def get_recent_em_list(self):
+
+		# set the thread lock so other threads are unable to add data
+		self.lock.acquire()
+
+		# get the most recent ssids discovered
+		recent_em = self.get_em_recent()
+
+		# sort it by signal strength
+		recent_em.sort_values(by=['signal'], ascending = False)
+
+		# release the thread lock.
+		self.lock.release()
+
+		return recent_em.values.tolist()
+
+	def get_top_em_info(self):
+
+		#find the most recent timestamp to limit focus
+		focus = self.get_em_recent()
+
+		# find most powerful signal of the most recent transciever data
+		db_column = focus["signal"]
+		strongest = db_column.astype(int).max()
+
+		# Identify the SSID of the strongest signal.
+		self.identity = focus.loc[focus['signal'] == strongest]
+
+		# Return the SSID of the strongest signal as a list.
+		return self.identity.values.tolist()
+
+	def get_em_recent(self):
+		# find the most recent timestamp
+		time_column = self.buffer_em["timestamp"]
+		most_recent = time_column.max()
+
+		#limit focus to data from that timestamp
+		return self.buffer_em.loc[self.buffer_em['timestamp'] == most_recent]
+
+	def get_top_em_history(self, no = 5):
+		# returns a list of Db values for whatever SSID is currently the strongest.
+		# suitable to be fed into pilgraph for graphing.
+
+		# set the thread lock so other threads are unable to add data
+		self.lock.acquire()
+
+		#limit focus to data from that timestamp
+		focus = self.get_em_recent()
+
+		# find most powerful signal
+		db_column = focus["signal"]
+		strongest = db_column.astype(int).max()
+
+		# Identify the SSID of the strongest signal.
+		self.identity = focus.loc[focus['signal'] == strongest]
+
+
+		# prepare markers to pull data
+		# Wifi APs can have the same name and different paramaters
+		# I use MAC and frequency to individualize a signal
+		dev = self.identity["dev"].iloc[0]
+		frq = self.identity["frequency"].iloc[0]
+
+
+		# release the thread lock.
+		self.lock.release()
+
+		return self.get_recent_em(dev,frq, num = no)
+
+
+	def update_em(self,data):
+		#print("Updating EM Dataframe:")
+
+		newdata = pd.DataFrame(data, columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
+
+
+		# sets/requests the thread lock to prevent other threads reading data.
+		self.lock.acquire()
+
+
+		# appends the new data to the buffer
+		self.buffer_em = self.buffer_em.append(newdata, ignore_index=True)
+
+
+		self.lock.release()
+
 
 	# updates the data storage file with the most recent sensor values from each
-	# initialized sensor
+	# initialized sensor.
+	# Sensor data is taken in as Fragment() instance objects. Each one contains
+	# the a sensor value and context for it (scale, symbol, unit, etc).
 	def update(self,data):
 
-		try:
-			# creates a new dataframe for the new information to add to the buffer
-			newdata = pd.DataFrame(data,columns=['value','min','max','dsc','sym','dev','timestamp'])
+		# sets/requests the thread lock to prevent other threads reading data.
+		self.lock.acquire()
 
-			# appends the new data to the buffer
-			self.buffer = self.buffer.append(newdata, ignore_index=True)
+		#listbuilder:
+		fragdata = []
 
-			# if interval has elapsed trim the main buffer and dump old data to core.
-			if configure.datalog[0] and self.timer.timelapsed() > configure.logtime[0]:
+		for fragment in data:
+			#
+			item = fragment.get()
+			fragdata.append(item)
+
+
+		# creates a new dataframe to add new data to
+		newdata = pd.DataFrame(fragdata, columns=['value','min','max','dsc','sym','dev','timestamp'])
+
+
+		# appends the new data to the buffer
+		self.buffer = self.buffer.append(newdata, ignore_index=True)
+
+		# get buffer size to determine how many rows to remove from the end
+		currentsize = len(self.buffer)
+
+		targetsize = configure.buffer_size[0]
+
+		# determine difference between buffer and target size
+		length = currentsize - targetsize
+
+
+		if configure.trim_buffer[0]:
+			# if buffer is larger than double the buffer size
+			if length >= configure.buffer_size[0] * 2:
 				self.trimbuffer()
-				self.timer.logtime()
 
-		except:
-			print("Plars failed to update. Dumping data:")
-			print(data)
-			print("Dumping buffer:")
-			print(self.buffer)
+		# release the thread lock for other threads
+		self.lock.release()
 
+	def get_em(self,dev,frequency):
+		result = self.buffer_em.loc[self.buffer_em['dev'] == dev]
+		result2 = result.loc[result["frequency"] == frequency]
 
-
+		return result2
 
 	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
 	def get_sensor(self,dsc,dev):
 
-		try:
-			result = self.buffer.loc[self.buffer['dsc'] == dsc]
+		result = self.buffer[self.buffer["dsc"] == dsc]
 
-			result2 = result.loc[self.buffer['dev'] == dev]
-			return result2
-		except:
-			print("attempting to re-acquire sensor")
-			return self.get_sensor(dsc,dev)
+		result2 = result.loc[result['dev'] == dev]
+
+		return result2
+
 
 	def index_by_time(self,df, ascending = False):
 		df.sort_values(by=['timestamp'], ascending = ascending)
 		return df
 
-	# return a list of n most recent data from specific sensor defined by key
-	def get_recent(self, dsc, dev, num = 5):
 
-		# organize it by time.
-		self.index_by_time(self.buffer)
+	# return a list of n most recent data from specific ssid defined by keys
+	def get_recent_em(self, dev, frequency, num = 5):
+
 		# get a dataframe of just the requested sensor
-		untrimmed_data = self.get_sensor(dsc,dev)
+		untrimmed_data = self.get_em(dev,frequency)
+
 		# trim it to length (num).
 		trimmed_data = untrimmed_data.tail(num)
+
 		# return a list of the values
-		return trimmed_data['value'].tolist()
+		return trimmed_data['signal'].tolist()
+
+
+	# return a list of n most recent data from specific sensor defined by keys
+	def get_recent(self, dsc, dev, num = 5):
+
+		# set the thread lock so other threads are unable to add sensor data
+		self.lock.acquire()
+
+		# get a dataframe of just the requested sensor
+		untrimmed_data = self.get_sensor(dsc,dev)
+
+		# trim it to length (num).
+		trimmed_data = untrimmed_data.tail(num)
+
+		# return a list of the values
+		result = trimmed_data['value'].tolist()
+
+		# release the thread lock.
+		self.lock.release()
+
+		return result
 
 
 	def trimbuffer(self, save = True):
@@ -144,39 +267,23 @@ class PLARS(object):
 
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
-
-		targetsize = self.buffer_size
-
+		targetsize = configure.buffer_size[0]
 
 		# determine difference between buffer and target size
 		length = currentsize - targetsize
 
+		# make a new dataframe of the most recent data to keep using
+		newbuffer = self.buffer.tail(targetsize)
 
-		# if buffer is larger than target
-		if length > 0:
+		# slice off the rows outside the buffer and backup to disk
+		tocore = self.buffer.head(length)
 
-
-			# make a new dataframe of the most recent data to keep using
-			newbuffer = self.buffer.tail(targetsize)
-			test1 = newbuffer["timestamp"]
-
-
-			# slice off the rows outside the buffer and backup to disk
-			tocore = self.buffer.head(length)
-			
+		if configure.recall[0]:
 			self.append_to_core(tocore)
 
-			test2 = tocore["timestamp"]
+		# replace existing buffer with new trimmed buffer
+		self.buffer = newbuffer
 
-			# replace existing buffer with new trimmed buffer
-			self.buffer = newbuffer
-
-
-
-	# return a number of data from a specific sensor at a specific time interval
-	def get_timed(self, key, interval = 0, num = 5):
-		#load csv file as dataframe
-		pass
 
 	def emrg(self):
 		self.get_core()
@@ -184,11 +291,6 @@ class PLARS(object):
 
 	def convert_epoch(self, time):
 		return datetime.datetime.fromtimestamp(time)
-
-	# request accepts a JSON object and returns a JSON response. Obviously not working yet.
-	def request(self, request):
-		pass
-
 
 # Creates a plars database object as soon as it is loaded.
 plars = PLARS()

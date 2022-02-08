@@ -26,7 +26,13 @@ from plars import *
 class graph_area(object):
 
 
-	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1):
+	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0, samples = False):
+
+		if not samples:
+			self.samples = configure.samples
+		else:
+			self.samples = samples
+
 		self.new = True
 		self.cycle = cycle
 		self.tock = timer()
@@ -39,6 +45,7 @@ class graph_area(object):
 		self.dotw = 6
 		self.doth = 6
 		self.buff = array('f', [])
+		self.type = type
 
 		self.timeit = timer()
 
@@ -94,27 +101,6 @@ class graph_area(object):
 
 		return self.period
 
-	# the following appends data to the list.
-
-	def update(self, data):
-		# grabs the datalist
-		self.buff = self.dlist
-
-
-		# if the time elapsed has reached the set interval then collect data
-		if self.tock.timelapsed() >= self.cycle:
-
-			# we load new data from the caller
-			self.cleandata = data
-
-			#append it to our list of clean data
-			self.buff.append(self.cleandata)
-
-			#pop the oldest value off
-			# may remove this
-#			self.buff.pop(0)
-			self.tock.logtime()
-
 
 
 	# the following pairs the list of values with coordinates on the X axis.
@@ -122,22 +108,37 @@ class graph_area(object):
 	# if the auto flag is set then the class will autoscale the graph so that
 	# the highest and lowest currently displayed values are presented.
 	# takes in a list/array with length => span
-	def graphprep(self,datalist):
+	def graphprep(self, datalist, ranger = None):
 
-		# The starting X coordinate
+		index = configure.sensors[self.ident][0]
+
+		dsc,dev,sym,maxi,mini = configure.sensor_info[index]
+
+		# The starting X coordinate, the graph draws from right to left (new to old).
 		self.linepoint = self.spanx + self.x
 
+		# calculate how many pixels per sample the graph will take.
+		spacing = self.spanx / self.samples
+
 		# Spacing between each point.
-		self.jump = -1
+		self.jump = -spacing
 
 		self.newlist = []
 
-		# grabs the currently selected sensors range data
-		sourcelow = configure.sensor_info[configure.sensors[self.ident][0]][1]
+		# if this graph ISNT for WIFI.
+		if self.type == 0:
+			# grabs the currently selected sensors range data.
+			sourcelow = mini
+			sourcehigh = maxi
 
-		sourcehigh = configure.sensor_info[configure.sensors[self.ident][0]][2]
+			self.sourcerange = [sourcelow,sourcehigh]
+		#otherwise assume its for wifi.
+		else:
+			sourcelow = -90
 
-		self.sourcerange = [sourcelow,sourcehigh]
+			sourcehigh = -5
+
+			self.sourcerange = [sourcelow,sourcehigh]
 
 		# get the range of the data.
 		if len(datalist) > 0:
@@ -152,7 +153,7 @@ class graph_area(object):
 
 
 		# for each vertical bar in the graph size
-		for i in range(self.spanx):
+		for i in range(self.samples):
 
 			# if the cursor has data to write
 			if i < len(datalist):
@@ -173,7 +174,7 @@ class graph_area(object):
 				# append the current x position, with this new scaled data as the y positioning into the buffer
 				self.newlist.append((self.linepoint,scaledata))
 			else:
-				# write intensity as scaled zero
+				# If no data just write intensity as scaled zero
 				scaledata = abs(numpy.interp(sourcelow,self.sourcerange,self.targetrange))
 				self.newlist.append((self.linepoint,scaledata))
 
@@ -185,9 +186,8 @@ class graph_area(object):
 		return self.newlist
 
 
-	def render(self, draw, auto = True, dot = True):
+	def render(self, draw, auto = True, dot = True, ranger = None):
 
-		self.timeit.event("<------------------starting pilgraph")
 		self.auto = configure.auto[0]
 
 		# for PLARS we reduce the common identifier of our currently selected sensor
@@ -199,34 +199,33 @@ class graph_area(object):
 		# so every time through the loop PILgraph will pull the latest sensor
 		# settings.
 
-		dsc = configure.sensor_info[configure.sensors[self.ident][0]][3]
-		dev = configure.sensor_info[configure.sensors[self.ident][0]][5]
+		# standard pilgraph: takes DSC,DEV keypairs from screen drawer, asks
+		# plars for data, graphs it.
+		if self.type == 0:
 
-		self.timeit.post("pilgraph - getting sensor ")
+			index = configure.sensors[self.ident][0]
+			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
+			recent = plars.get_recent(dsc,dev,num = self.samples)
 
-		#preps the list by adding the X coordinate to every sensor value
-		recent = plars.get_recent(dsc,dev,num = self.spanx)
+		# EM pilgraph: pulls wifi data only.
+		elif self.type == 1:
+			recent = plars.get_top_em_history(no = self.samples)
 
-		self.timeit.post("pilgraph - acquiring recent sensor list")
+		# Testing a stream graph
+		elif self.type == 2:
+			recent = plars.get_recent(dsc,dev,num = self.samples)
 
 		cords = self.graphprep(recent)
-
-		self.timeit.post("pilgraph - parsing list into coordinates")
 
 		self.buff = recent
 
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
 
-		self.timeit.post("pilgraph - drew graph")
-
-
-
+		# draws the line dot.
 		if dot:
 			x1 = cords[0][0] - (self.dotw/2)
 			y1 = cords[0][1] - (self.doth/2)
 			x2 = cords[0][0] + (self.dotw/2)
 			y2 = cords[0][1] + (self.doth/2)
 			draw.ellipse([x1,y1,x2,y2],self.colour)
-
-		self.timeit.post("pilgraph - made dots")

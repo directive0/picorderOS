@@ -3,12 +3,14 @@
 # This display module uses Pygame to draw picorder routines to the screen.
 # It is built upon the original Picorder UI and is intended to be used for TOS
 # styled tricorders.
-print("Loading Pygame Screen")
+print("Loading 320x240 Duotronic Interface")
 # The following are some necessary modules for the Picorder.
 import pygame
 import time
+import os
 
 
+from plars import *
 from objects import *
 from input import *
 
@@ -16,8 +18,17 @@ if not configure.pc:
 	if configure.tr108:
 		import os
 		# runs a CLI command to disable the raspberry pi's screen blanking
-		os.system('xset -display :0 -dpms')
+		#os.system('xset -display :0 -dpms')
 
+SAMPLE_SIZE = configure.samples
+GRAPH_WIDTH = 280
+GRAPH_HEIGHT = 182
+GRAPH_X = 18
+GRAPH_Y = 20
+GRAPH_X2 = GRAPH_X + GRAPH_WIDTH
+GRAPH_Y2 = GRAPH_Y + GRAPH_HEIGHT
+
+os.environ['PYGAME_BLEND_ALPHA_SDL2'] = '1'
 # The following commands initiate a pygame environment.
 pygame.init()
 pygame.font.init()
@@ -30,7 +41,7 @@ pygame.display.set_caption('PicorderOS')
 # set the screen configuration
 resolution = (320,240)
 def_modes = 16
-refreshrate = 1
+refreshrate = 0
 
 # controls the margins to adjust for adjusting text positioning.
 marginright = 16
@@ -51,22 +62,11 @@ theme3 = [blue, white, red]
 themes = [theme1,theme2, theme3]
 themenames = ["alpha", "beta", "delta"]
 
-# The following are for LCARS colours from LCARScom.net
-lcars_orange = (255,153,0)
-lcars_pink = (204,153,204)
-lcars_blue = (153,153,204)
-lcars_red = (204,102,102)
-lcars_peach = (255,204,153)
-lcars_bluer = (153,153,255)
-lcars_orpeach = (255,153,102)
-lcars_pinker = (204,102,153)
-
-
 
 # The following lists/objects are for UI elements.
 titleFont = "assets/babs.otf"
 blueInsignia = pygame.image.load('assets/icon.png')
-pioslogo = pygame.image.load('assets/picorderOS_logo.png')
+pioslogo = pygame.image.load('assets/Med_Picorder_Logo.png')
 backplane = pygame.image.load('assets/background.png')
 backgraph = pygame.image.load('assets/backgraph.png')
 slidera = pygame.image.load('assets/slider.png')
@@ -75,7 +75,7 @@ status = "startup"
 last_status = "startup"
 
 # sets the icon for the program (will show up in docks/taskbars on PCs)
-pygame.display.set_icon(blueInsignia)
+#pygame.display.set_icon(blueInsignia)
 
 
 
@@ -107,7 +107,7 @@ class Label(object):
 		self.x = 0
 		self.y = 0
 		self.color = white
-		self.fontSize = 33
+		self.fontSize = 30
 		self.myfont = pygame.font.Font(titleFont, self.fontSize)
 		text = "hello"
 		self.size = self.myfont.size(text)
@@ -226,12 +226,13 @@ class SelectableLabel(Label):
 
 		label = self.myfont.render(self.content, 1, self.color)
 
+		dsc,dev,sym,maxi,mini = configure.sensor_info[self.oper[0]]
 
 		status_text = "dummy"
 		if self.special == 0:
 			status_text = str(self.oper[0])
 		elif self.special == 1:
-			status_text = configure.sensor_info[self.oper[0]][3]
+			status_text = dsc
 		elif self.special == 2:
 			status_text = themenames[self.oper[0]]
 
@@ -258,21 +259,6 @@ class Image(object):
 	def draw(self, surface):
 		surface.blit(self.Img, (self.x,self.y))
 
-# a bit ambitious. A function to draw scales for the slider screen
-def make_scale(high,low,grads,lrlow,lrhigh,lylow,lyhigh,grnlow,grnhigh,hylow,hyhigh,hrlow,hrhigh,labels):
-
-	# create a surface to save our background.
-
-	backSurface = pygame.display.set_mode(resolution)
-
-	# draw the lines from top to bottom
-
-	# draw the graduations
-
-
-	# draw labels
-
-	# r	eturn pygame screen
 
 # The following class is used to prepare sensordata for display on the graph.
 class graphlist(object):
@@ -289,22 +275,57 @@ class graphlist(object):
 
 	# the following appends data to the list.
 	def updatelist(self, data):
-		#grabs a simple 15 wide tuple for our values
+
 		#puts a new sensor value at the end
 		self.glist.append(data)
 		#pop the oldest value off
 		self.glist.pop(0)
 
-	# the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.
-	def graphprep(self,list):
-		linepoint = 15
-		jump = 2
-		self.newlist = []
-		for i in range(145):
-			self.newlist.append((linepoint,list[i]))
-			linepoint = linepoint + jump
+# the following pairs the list of values with coordinates on the X axis. The supplied variables are the starting X coordinates and spacing between each point.
+def graphprep(list):
+	linepoint = GRAPH_X
+	jump = GRAPH_WIDTH / SAMPLE_SIZE
+	newlist = []
 
-		return self.newlist
+	for i in range(SAMPLE_SIZE):
+		# if not enough data
+		if i > (len(list) - 1):
+			# make the data show as 0 scale. (y coord 110)
+			item = 110
+		else:
+			# otherwise just keep plotting the data provided.
+			item = list[i]
+
+		newlist.append((linepoint,item))
+		linepoint = linepoint + jump
+
+	return newlist
+
+# graphit is a quick tool to help prepare graphs by changing their data from
+# absolute values into scaled values for their pixel position on screen.
+def graphit(data, auto = True):
+
+	#grabs our databuffer object.
+	buffer = data
+
+
+	prep = []
+
+	for i in data:
+
+
+		if configure.auto[0]:
+			# autoscales the data.
+			data_high = max(buffer)
+			data_low = min(buffer)
+			# scales the data on the y axis.
+			prep.append(translate(i, data_low, data_high, GRAPH_Y2, GRAPH_Y))
+		else:
+			prep.append(translate(i, data_low, data_high, GRAPH_Y2, GRAPH_Y)) # <----need to fix total scale.
+
+
+	return graphprep(prep)
+
 
 # the following function runs the startup animation
 def startUp(surface,timeSinceStart):
@@ -319,14 +340,14 @@ def startUp(surface,timeSinceStart):
 	secTitle = Label()
 	secblurb = Label()
 
-	logoposx = (resolution[0]/2) - (226/2)
+	logoposx = (resolution[0]/2) - (98/2)
+
 	#sets out UI objects with the appropriate data
-	insignia.update(pioslogo, logoposx, 60)
-	#mainTitle.update("Picorder OS",25,22,181,titleFont,white)
-	#mainTitle.center(resolution[0],20,0,181)
-	secTitle.update(configure.version,19,37,210,titleFont,blue)
+	insignia.update(pioslogo, logoposx, 37)
+
+	secTitle.update("PicorderOS " + configure.version,19,37,210,titleFont,blue)
 	secTitle.center(resolution[0],20,0,190)
-	secblurb.update("Skurftronics - Toronto",15,37,210,titleFont,blue)
+	secblurb.update(configure.boot_message,15,37,210,titleFont,blue)
 	secblurb.center(resolution[0],20,0,210)
 
 	#writes our objects to the buffer
@@ -344,12 +365,13 @@ def startUp(surface,timeSinceStart):
 	secblurb.draw(surface)
 
 	pygame.display.flip()
+	elapsed = timenow - timeSinceStart
 
-	#waits for 2 seconds to elapse before returning the state that will take us to the sensor readout
-	if (timenow - timeSinceStart) < 2:
+	#waits for x seconds to elapse before returning the state that will take us to the sensor readout
+	if elapsed > configure.boot_delay and configure.sensor_ready[0]:
 	 return "mode_a"
 	else:
-	 return "ready"
+	 return "startup"
 
 # the following function displays version information about the program
 def about(surface):
@@ -390,36 +412,13 @@ def about(surface):
 	pygame.display.flip()
 
 
-# graphit is a quick tool to help prepare graphs
-def graphit(data,new, auto = True):
-
-	#puts a new sensor value at the end
-	data.updatelist(new[0])
-
-	#grabs our databuffer object.
-	buffer = data.grablist()
-
-	prep = []
-
-	data_high = max(buffer)
-	data_low = min(buffer)
-
-	for i in data.grablist():
-		if configure.auto[0]:
-			prep.append(translate(i, data_low, data_high, 204, 17))
-		else:
-			prep.append(translate(i, new[1], new[2], 204, 17))
-
-	return data.graphprep(prep)
-
-
 
 class Settings_Panel(object):
 
-	def __init__(self,surface,input):
+	def __init__(self,surface):
 
 		self.left_margin = 37
-		self.input = input
+
 		self.index = 0
 		self.surface = surface
 		self.labelstart = 47
@@ -481,20 +480,27 @@ class Settings_Panel(object):
 
 		result = "settings"
 
-		# pulls input information
-		keys = self.input.read()
+		if configure.eventready[0]:
 
-		if keys[0]:
-			self.index += 1
+			# The following code handles inputs and button presses.
+			keys = configure.eventlist[0]
 
-			if self.index > (len(self.options) - 1):
-				self.index = 0
+			# if a key is registering as pressed.
+			if keys[0]:
+				self.index += 1
 
-		if keys[1]:
-			self.options[self.index].toggle()
+				if self.index > (len(self.options) - 1):
+					self.index = 0
 
-		if keys[2]:
-			result = configure.last_status[0]
+			if keys[1]:
+				self.options[self.index].toggle()
+
+			if keys[2]:
+				result = configure.last_status[0]
+				configure.eventready[0] = False
+
+			configure.eventready[0] = False
+
 
 		return result
 
@@ -505,10 +511,9 @@ class Graph_Screen(object):
 
 	# Draws three graphs in a grid and three corresponding labels.
 
-	def __init__(self,surface,input):
+	def __init__(self,surface):
 
-		# initializes the input
-		self.input = input
+
 		# for long presses
 		self.input_timer = timer()
 		self.presstime = 5
@@ -530,7 +535,7 @@ class Graph_Screen(object):
 		# Draws Background gridplane
 		self.graphback = Image()
 		self.graphback.update(backgraph, 0, 0)
-		#self.graphback.draw(surface)
+
 
 		# Instantiates 3 labels for our readout
 		self.a_label = Label()
@@ -558,40 +563,101 @@ class Graph_Screen(object):
 		self.margin = 16
 
 
-	def frame(self,sensors):
-		# Because the graph screen is slow to update it needs to pop a reading onto screen as soon as it is initiated I draw a value once and wait for the interval to lapse for the next draw. Once the interval has lapsed pop another value on screen.
-		#Sets a black screen ready for our UI elements
 
+
+	def frame(self):
+		status  = "mode_a"
+
+		if configure.eventready[0]:
+
+			# The following code handles inputs and button presses.
+			keys = configure.eventlist[0]
+
+			# if a key is registering as pressed.
+			if keys[0]:
+				self.selection += 1
+				if self.selection > 3:
+					self.selection = 0
+
+			if keys[1]:
+				status =  "mode_b"
+				return status
+
+			if keys[2]:
+				configure.last_status[0] = "mode_a"
+				status = "settings"
+				configure.eventready[0] = False
+				return status
+
+			configure.eventready[0] = False
+
+
+		# grabs sensor info from settings for quick reference and display
+		sense_info_a = configure.sensor_info[configure.sensors[0][0]]
+		sense_info_b = configure.sensor_info[configure.sensors[1][0]]
+		sense_info_c = configure.sensor_info[configure.sensors[2][0]]
+
+
+		#Sets a black screen ready for our UI elements
 		self.surface.fill(black)
 
 		#draws Background gridplane
 		self.graphback.draw(self.surface)
 
+		# resolves the key items (dsc and dev) for the targeted sensor, for plars to use.
+		# creates a "senseslice"; an up to date data fragment for each configured sensor
+
+		senseslice = []
+		data_a = []
+		data_b = []
+		data_c = []
+		datas = [data_a,data_b,data_c]
+
+		for i in range(3):
+
+			# determines the sensor keys for each of the three main sensors
+			this_index = int(configure.sensors[i][0])
+
+			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
+
+			datas[i] = plars.get_recent(dsc,dev,num = SAMPLE_SIZE)
+
+
+			# if data capture is failed, replace with 47 for diagnostic
+			if len(datas[i]) == 0:
+				datas[i] = [47]
+
+			item = datas[i]
+
+			senseslice.append([item[0], dsc, dev, sym, mini, maxi])
+
+
 		#converts data to float
-		a_newest = float(sensors[configure.sensor1[0]][0])
-		b_newest = float(sensors[configure.sensor2[0]][0])
-		c_newest = float(sensors[configure.sensor3[0]][0])
+
+		a_newest = float(senseslice[0][0])
+		b_newest = float(senseslice[1][0])
+		c_newest = float(senseslice[2][0])
 		newests = [a_newest,b_newest,c_newest]
 
-		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
-		a_cords = graphit(self.data_a,sensors[configure.sensor1[0]])
-		b_cords = graphit(self.data_b,sensors[configure.sensor2[0]])
-		c_cords = graphit(self.data_c,sensors[configure.sensor3[0]])
-		cords = [a_cords,b_cords,c_cords]
 
-		a_content = str(int(a_newest))
+
+
+
+		a_content = "{:.2f}".format(a_newest)
 		a_color = themes[configure.theme[0]][0]
-		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],30,marginleft,205,titleFont,a_color)
+		self.a_label.update(a_content + senseslice[0][3],27,marginleft,205,titleFont,a_color)
 
-		b_content = str(int(b_newest))
+
+		b_content = "{:.2f}".format(b_newest)
 		b_color = themes[configure.theme[0]][1]
-		self.b_label.update( b_content + sensors[configure.sensor2[0]][4],30,114,205,titleFont,b_color)
-		self.b_label.center(resolution[0],31,0,205)
+		self.b_label.update( b_content + senseslice[1][3],27,114,205,titleFont,b_color)
+		self.b_label.center(resolution[0],27,0,205)
 
-		c_content = str(int(c_newest))
+
+		c_content = "{:.2f}".format(c_newest)
 		c_color = themes[configure.theme[0]][2]
-		#c_position = resolution[0] - (self.c_label.get_size(c_content + sensors[configure.sensor3[0]][4])+ marginright)
-		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],30,marginright,205,titleFont,c_color)
+
+		self.c_label.update(c_content + senseslice[2][3],27,marginright,205,titleFont,c_color)
 		self.c_label.r_align(320 - marginright ,205)
 		contents = [a_content,b_content,c_content]
 
@@ -603,22 +669,19 @@ class Graph_Screen(object):
 		intery= (21)
 
 
-		## Interval timer to control refresh
-		#intervaltime = float(self.drawinterval.timelapsed())
-		#persec = 60 / intervaltime
-		#lapse = format(persec, '.2f')
-		#self.drawinterval.logtime()
-		#intervaltext = (lapse + ' sps')
-		#self.intervallabel.update(intervaltext,30,interx,intery,titleFont,white)
-		#self.intervallabelshadow.update(intervaltext, 30, interx + 2, intery + 2 ,titleFont,(100,100,100))
-
+		# updates the data storage object and retrieves a fresh graph ready to store the positions of each segment for the line drawing
+		a_cords = graphit(datas[0])
+		b_cords = graphit(datas[1])
+		c_cords = graphit(datas[2])
+		cords = [a_cords,b_cords,c_cords]
 
 		if not configure.auto[0]:
-			a_slide = translate(a_newest, sensors[configure.sensor1[0]][1], sensors[configure.sensor1[0]][2], 194, 7)
 
-			b_slide = translate(b_newest, sensors[configure.sensor2[0]][1], sensors[configure.sensor2[0]][2], 194, 7)
+			a_slide = translate(a_newest, senseslice[0][4], senseslice[0][5], GRAPH_Y2, GRAPH_Y)
 
-			c_slide = translate(c_newest, sensors[configure.sensor3[0]][1], sensors[configure.sensor3[0]][2], 194, 7)
+			b_slide = translate(b_newest, senseslice[1][2], senseslice[1][5], GRAPH_Y2, GRAPH_Y)
+
+			c_slide = translate(c_newest, senseslice[2][2], senseslice[2][5], GRAPH_Y2, GRAPH_Y)
 
 			self.slider1.update(sliderb, 283, a_slide)
 			self.slider2.update(sliderb, 283, b_slide)
@@ -631,25 +694,33 @@ class Graph_Screen(object):
 		sliders = [self.slider1,self.slider2,self.slider3]
 
 		if self.selection == 0:
+
 			#draw the lines
-			pygame.draw.lines(self.surface, a_color, False, a_cords, 2)
-			self.slider1.draw(self.surface)
+			pygame.draw.lines(self.surface, c_color, False, c_cords, 2)
+			self.slider3.draw(self.surface)
 
 			pygame.draw.lines(self.surface, b_color, False, b_cords, 2)
 			self.slider2.draw(self.surface)
 
-			pygame.draw.lines(self.surface, c_color, False, c_cords, 2)
-			self.slider3.draw(self.surface)
+			pygame.draw.lines(self.surface, a_color, False, a_cords, 2)
+			self.slider1.draw(self.surface)
+
 
 			# draws the labels
 			self.a_label.draw(self.surface)
 			self.b_label.draw(self.surface)
 			self.c_label.draw(self.surface)
 
+
+
 		# this checks if we are viewing a sensor individually and graphing it alone.
+		# if individually:
 		if self.selection != 0:
 			# we make a variable carrying the index of the currently selected item.
 			this = self.selection - 1
+
+			# we grab information for it.
+			sym, dsc = senseslice[this][3],senseslice[this][1]
 
 			# we collect its default colour based off our theme
 			this_color = themes[configure.theme[0]][this]
@@ -659,11 +730,11 @@ class Graph_Screen(object):
 			pygame.draw.lines(self.surface, this_color, False, focus_cords, 2)
 			focus_slider.draw(self.surface)
 
-			self.focus_label.update(configure.sensor_info[configure.sensors[this][0]][3],30,283,205,titleFont,this_color)
+			self.focus_label.update(dsc,30,283,205,titleFont,this_color)
 			self.focus_label.r_align(320 - marginright ,205)
 			self.focus_label.draw(self.surface)
 
-			self.a_label.update(contents[this] + sensors[configure.sensors[this][0]][4],30,15,205,titleFont,this_color)
+			self.a_label.update(contents[this] + sym,30,15,205,titleFont,this_color)
 			self.a_label.draw(self.surface)
 
 		# draws the interval label (indicates refresh rate)
@@ -671,32 +742,8 @@ class Graph_Screen(object):
 		#self.intervallabel.draw(self.surface)
 
 		#draws UI to frame buffer
+		pygame.display.update()
 
-
-		pygame.display.flip()
-
-		status  = "mode_a"
-
-
-		# The following code handles inputs and button presses.
-		keys = self.input.read()
-		#print("keys reading as: ", keys)
-		# if a key is registering as pressed.
-		if keys[0]:
-			self.selection += 1
-			if self.selection > 3:
-				self.selection = 0
-
-		if self.input.holding[0]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
-
-		if keys[1]:
-			status =  "mode_b"
-
-		if keys[2]:
-			configure.last_status[0] = "mode_a"
-			status = "settings"
 
 		return status
 
@@ -705,9 +752,8 @@ class Graph_Screen(object):
 
 
 
-
 class Slider_Screen(object):
-	def __init__(self, surface,input):
+	def __init__(self, surface):
 		# This function draws the main 3-slider interface, modelled after McCoy's tricorder in "Plato's Stepchildren". It displays temperature, humidity and pressure.
 		self.surface = surface
 
@@ -733,28 +779,73 @@ class Slider_Screen(object):
 
 
 
-	def frame(self,sensors):
+	def frame(self):
+		#set status for return to main
+		status  = "mode_b"
+
+
+		if configure.eventready[0]:
+
+			# The following code handles inputs and button presses.
+			keys = configure.eventlist[0]
+
+			# if a key is registering as pressed.
+			if keys[0]:
+				status =  "mode_a"
+				return status
+
+			if keys[1]:
+				status =  "mode_b"
+
+			if keys[2]:
+				configure.last_status[0] = "mode_b"
+				status = "settings"
+				configure.eventready[0] = False
+				return status
+
+			configure.eventready[0] = False
+
+		senseslice = []
+
+		for i in range(3):
+
+			# determines the sensor keys for each of the three main sensors
+			this_index = int(configure.sensors[i][0])
+
+			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
+
+
+			item = plars.get_recent(dsc,dev,num = 1)
+
+			if len(item) > 0:
+				senseslice.append([item[0], sym, mini, maxi])
+			else:
+				senseslice.append([47, sym, mini, maxi])
 
 		#converts data to float
-		a_newest = float(sensors[configure.sensor1[0]][0])
-		b_newest = float(sensors[configure.sensor2[0]][0])
-		c_newest = float(sensors[configure.sensor3[0]][0])
-
+		a_newest = float(senseslice[0][0])
+		b_newest = float(senseslice[1][0])
+		c_newest = float(senseslice[2][0])
+		newests = [a_newest,b_newest,c_newest]
 
 
 		# data labels
 		a_content = str(int(a_newest))
-		self.a_label.update(a_content + sensors[configure.sensor1[0]][4],19,47,215,titleFont,yellow)
+		self.a_label.update(a_content + senseslice[0][1],19,47,215,titleFont,yellow)
 		b_content = str(int(b_newest))
-		self.b_label.update(b_content + sensors[configure.sensor2[0]][4],19,152,215,titleFont,yellow)
+		self.b_label.update(b_content + senseslice[1][1],19,152,215,titleFont,yellow)
 		c_content = str(int(c_newest))
-		self.c_label.update(c_content + sensors[configure.sensor3[0]][4],19,254,215,titleFont,yellow)
+		self.c_label.update(c_content + senseslice[2][1],19,254,215,titleFont,yellow)
 
 		# slider data adjustment
 		# the routine takes the raw sensor data and converts it to screen coordinates to move the sliders
-		a_slide = translate(float(sensors[configure.sensor1[0]][0]), sensors[configure.sensor1[0]][1], sensors[configure.sensor1[0]][2], 204, 15)
-		b_slide = translate(float(sensors[configure.sensor2[0]][0]), sensors[configure.sensor2[0]][1], sensors[configure.sensor2[0]][2], 204, 15)
-		c_slide = translate(float(sensors[configure.sensor3[0]][0]), sensors[configure.sensor3[0]][1], sensors[configure.sensor3[0]][2], 204, 15)
+		# determines the sensor keys for each of the three main sensors
+
+
+
+		a_slide = translate(senseslice[0][0], senseslice[0][2], senseslice[0][3], 204, 15)
+		b_slide = translate(senseslice[1][0], senseslice[1][2], senseslice[1][3], 204, 15)
+		c_slide = translate(senseslice[2][0], senseslice[2][2], senseslice[2][3], 204, 15)
 
 		# Updates our UI objects with data parsed from sensor/weather
 		self.backPlane.update(backplane, 0, 0)
@@ -773,33 +864,19 @@ class Slider_Screen(object):
 		self.b_label.draw(self.surface)
 		self.c_label.draw(self.surface)
 
+		pygame.display.update()
 		# draws UI to frame buffer
-		#if (rot.read() == True): < can flip screen if necessary
-		#surface.blit(pygame.transform.rotate(surface, 180), (0, 0))
-		status  = "mode_b"
-
-		keys = self.input.read()
-
-		if keys[0]:
-			status =  "mode_a"
-
-		if keys[2]:
-			configure.last_status[0] = "mode_b"
-			status = "settings"
-
-
-		pygame.display.flip()
-		#tock.timed = time.time()
-
-			#returns state to main loop
 		return status
-
-
 # A basic screen object. Is given parameters and displays them on a number of preset panels
 class Screen(object):
 
 	def __init__(self):
 		screenSize = resolution
+
+		# The following commands initiate a pygame environment.
+		pygame.init()
+		pygame.font.init()
+		pygame.display.set_caption('PicorderOS')
 
 		# I forget, probably colour depth?
 		smodes = pygame.display.list_modes(def_modes)
@@ -812,17 +889,18 @@ class Screen(object):
 		else:
 			# on the picorder use this option (Fullscreen).
 			flags = pygame.FULLSCREEN | pygame.SCALED
-			self.surface = pygame.display.set_mode(screenSize, flags)
+			self.surface = pygame.display.set_mode(screenSize, flags, display=0)
 			pygame.event.set_blocked(pygame.MOUSEMOTION)
 			pygame.mouse.set_visible(False)
 
 
 		self.timed = time.time()
-		self.input = Inputs()
-		self.graphscreen = Graph_Screen(self.surface,self.input)
-		self.slidescreen = Slider_Screen(self.surface,self.input)
-		self.settings_screen = Settings_Panel(self.surface,self.input)
+		self.graphscreen = Graph_Screen(self.surface)
+		self.slidescreen = Slider_Screen(self.surface)
+		self.settings_screen = Settings_Panel(self.surface)
 
+	def get_size(self):
+		return SAMPLE_SIZE
 
 	def startup_screen(self,start_time):
 		status = startUp(self.surface,start_time)
@@ -832,12 +910,12 @@ class Screen(object):
 		status = about()
 		return status
 
-	def slider_screen(self,sensors):
-		status = self.slidescreen.frame(sensors)
+	def slider_screen(self):
+		status = self.slidescreen.frame()
 		return status
 
-	def graph_screen(self,sensors):
-		status = self.graphscreen.frame(sensors)
+	def graph_screen(self):
+		status = self.graphscreen.frame()
 		return status
 
 	def settings(self):
