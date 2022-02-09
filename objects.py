@@ -44,6 +44,7 @@ class preferences(object):
 							'cap_mpr121':'no',
 							'pcf8575':'no',
 							'cap1208':'no',
+							'sensehat_joystick':'no',
 							'capsensitivity':'50'}							# Used only if cap1208 is 'yes'
 
 		config['PIN ASSIGNMENTS'] = {'#I2C pins':None,
@@ -149,6 +150,7 @@ class preferences(object):
 		self.input_gpio = self.str2bool(config['INPUT']['gpio'])
 		self.input_cap_mpr121 = self.str2bool(config['INPUT']['cap_mpr121'])
 		self.input_pcf8575 = self.str2bool(config['INPUT']['pcf8575'])
+		self.input_joystick = self.str2bool(config['INPUT']['sensehat_joystick'])
 
 		# CAP1208 and sensitivity settings
 		self.input_cap1208 = self.str2bool(config['INPUT']['cap1208'])
