@@ -1,5 +1,5 @@
 <p align="center">
-![Logo](https://raw.githubusercontent.com/directive0/picorderOS/master/assets/Picorder_Logo.png?raw=true "PicorderOS Logo")
+  <img width="203" height="273" src="https://raw.githubusercontent.com/directive0/picorderOS/master/assets/Picorder_Logo.png?raw=true">
 </p>
 
 # PicorderOS
@@ -8,14 +8,33 @@ a set of python components that provide functionality for a Raspberry Pi based [
 
 For further information please visit my [Wiki](https://squaredwave.com/wiki/index.php?title=PicorderOS)
 
+## Installation:
+
+A requirements file is included, it can be used to install all the necessary python modules through pip.
+
+```
+python3 -m pip -r requirements.txt
+```
+
+A fresh Raspberry Pi OS image can usually be initialized to work with picorderOS with the following installation commands:
+
+```
+sudo apt-get update
+
+sudo apt-get upgrade
+
+sudo apt-get install libatlas-base-dev libsdl2-dev libopenjp2-7-dev libtiff5 python3-pandas python3-psutil
+
+pip3 install --upgrade colour luma.lcd luma.emulator adafruit-circuitpython-bme680 sense-hat adafruit-circuitpython-mpr121 pygame==2.0.0
+
+```
+
 ## Usage:
 At present picorderOS supports a number of displays, sensors, and inputs. The user can mix and match their desired picorder load out by editing the objects.py preferences file.
 
 The software is started with ```python3 main.py``` from the project folder, which starts the main loop. The main loop handles display directly, various ancillary elements like input detection, LED sequencing, and audio playback run as separate threads and communicate via flags set in the ```objects.py``` module.
 
 PicorderOS will generate an INI file on creation called ```picorder.ini```. By editing this file certain flags can be set for specific Picorder builds. Any sensors or peripherals not physically present must be turned off before picorderOS will run properly.
-
-PicorderOS uses a module called PLARS (Picorder Library Access and Retrieval) to catalogue and organize each sensor reading into a pandas dataframe. PLARS then provides it to screen drawing modules as requested.
 
 ## Requirements:
 Depending on hardware configuration picorderOS uses a number of exotic modules to operate:
@@ -38,25 +57,6 @@ Depending on your choice of screen you may need:
 - [Pygame](https://www.pygame.org/wiki/GettingStarted) (For framebuffer screens)
 - [Luma.lcd](https://pypi.org/project/luma.lcd/) (For a range of LCD options)
 
-## Installation:
 
-A requirements file is included, it can be used to install all the necessary python modules through pip.
-
-```
-python3 -m pip -r requirements.txt
-```
-
-A fresh Raspberry Pi OS image can usually be initialized to work with picorderOS with the following installation commands:
-
-```
-sudo apt-get update
-
-sudo apt-get upgrade
-
-sudo apt-get install libatlas-base-dev libsdl2-dev libopenjp2-7-dev libtiff5 python3-pandas python3-psutil
-
-pip3 install --upgrade colour luma.lcd luma.emulator adafruit-circuitpython-bme680 sense-hat adafruit-circuitpython-mpr121 pygame==2.0.0
-
-```
 
 Some experimentation may be necessary. PicorderOS is provided as free software and comes with no guarantee or warranty. This software is not to be used outside federation space, and is not suitable for use in environments that do not obey established laws of physics. Using this software could cause timeline damage, rocks exploding out of consoles, or blue barrels. Do not use PicorderOS if you have recently tested positive for Andorian Flu.
