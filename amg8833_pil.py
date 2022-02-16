@@ -5,6 +5,23 @@ import math
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
+
+
+# from https://learn.adafruit.com/adafruit-amg8833-8x8-thermal-camera-sensor/raspberry-pi-thermal-camera
+# interpolates the data into a smoothed screen res
+import numpy as np
+from scipy.interpolate import griddata
+from colour import Color
+
+
+# some utility functions
+def constrain(val, min_val, max_val):
+	return min(max_val, max(min_val, val))
+
+
+def map_value(x, in_min, in_max, out_min, out_max):
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
@@ -22,12 +39,42 @@ lcars_pinker = (204,102,153)
 standard_blue = (0,0,255)
 standard_red = (255,0,0)
 
-cool = Color("blue")
-hot = Color("red")
+# low range of the sensor (this will be blue on the screen)
+MINTEMP = -2.0
+
+# high range of the sensor (this will be red on the screen)
+MAXTEMP = 150.0
+
+# how many color values we can have
+COLORDEPTH = 1024
+
+# pylint: disable=invalid-slice-index
+points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0, 64)]
+grid_x, grid_y = np.mgrid[0:7:32j, 0:7:32j]
+# pylint: enable=invalid-slice-index
+# sensor is an 8x8 grid so lets do a square
+height = 133
+width = 71
+
+# the list of colors we can choose from
+cool = Color(rgb=(0.0, 0.0, 0.0)) #Color("blue")
+hot = Color(rgb=(0.8, 0.4, 0.6))#"red")
+#blue = Color("indigo")
+colors = list(cool.range_to(hot, COLORDEPTH))
+
+# create the array of colors
+colors = [(int(c.red * 255), int(c.green * 255), int(c.blue * 255)) for c in colors]
+
+displayPixelWidth = width / 30
+displayPixelHeight = height / 30
+
+
 colrange = list(cool.range_to(hot, 256))
 
 rotate = False
-flip = True
+fliplr = False
+flipud = True
+
 from objects import *
 
 import sensors
@@ -43,7 +90,7 @@ if configure.amg8833:
 
 #some utility functions
 def constrain(val, min_val, max_val):
-    return min(max_val, max(min_val, val))
+	return min(max_val, max(min_val, val))
 
 def map(x, in_min, in_max, out_min, out_max):
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
@@ -77,7 +124,6 @@ class ThermalPixel(object):
 
 
 	def update(self,value,high,low,surface):
-		#print("value is ", value)
 
 		if configure.auto[0]:
 			color = map(value, low, high, 0, 254)
@@ -87,26 +133,20 @@ class ThermalPixel(object):
 			color = 255
 		if color < 0:
 			color = 0
-		#colorindex = int(color)
+
 		colorindex = int(color)
-		#print("color index is ",colorindex)
+
 		temp = colrange[colorindex].rgb
-		#print(temp)
+
 		red = int(temp[0] * 255.0)
 		green = int(temp[1] * 255.0)
 		blue = int(temp[2] * 255.0)
-
-		#print(red,green,blue)
 
 		self.count += 1
 
 		if self.count > 255:
 			self.count = 0
 
-		#if value == low:
-			#print("lowest found, coloring: ", color)
-
-		#surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (int(color),int(color),int(color)), outline=None)
 		surface.rectangle([(self.x, self.y), (self.x + self.w, self.y + self.h)], fill = (red,green,blue), outline=None)
 
 class ThermalColumns(object):
@@ -145,8 +185,6 @@ class ThermalRows(object):
 		for i in range(8):
 			self.pixels[i].update(data[i],high, low, surface)
 
-
-
 class ThermalGrid(object):
 
 	def __init__(self,x,y,w,h):
@@ -168,12 +206,12 @@ class ThermalGrid(object):
 		self.update()
 
 	def push(self,surface):
-
-		for i in range(8):
-			self.rows[i].update(self.data[i],self.high,self.low,surface)
-
-
-    # Function to draw a pretty pattern to the display for demonstration.
+		if not configure.interpolate[0]:
+			for i in range(8):
+				self.rows[i].update(self.data[i],self.high,self.low,surface)
+		else:
+			self.interpolate(surface)
+	# Function to draw a pretty pattern to the display for demonstration.
 	def animate(self):
 
 		self.dummy = makegrid(random = False)
@@ -192,22 +230,60 @@ class ThermalGrid(object):
 		self.ticks = self.ticks+1
 		return self.dummy
 
+	def interpolate(self, surface):
+
+		height = self.w
+		width = self.h
+		displayPixelWidth = width / 30
+		displayPixelHeight = height / 30
+
+		if configure.auto[0]:
+			# low range of the sensor (this will be blue on the screen)
+			mintemp = self.low
+			# high range of the sensor (this will be red on the screen)
+			maxtemp = self.high
+		else:
+			mintemp = MINTEMP
+			maxtemp = MAXTEMP
+
+		pixels = []
+
+		for row in self.data:
+			pixels = pixels + list(row)
+		pixels = [map_value(p, mintemp, maxtemp, 0, COLORDEPTH - 1) for p in pixels]
+
+		# perform interpolation
+		bicubic = griddata(points, pixels, (grid_x, grid_y), method="cubic")
+
+		# draw everything
+		for ix, row in enumerate(bicubic):
+			for jx, pixel in enumerate(row):
+				x = self.x + (displayPixelHeight * ix)
+				y = self.y + (displayPixelWidth * jx)
+				x2 = x + displayPixelHeight
+				y2 = y + displayPixelWidth
+				surface.rectangle([(x, y), (x2, y2)], fill = colors[constrain(int(pixel), 0, COLORDEPTH - 1)], outline=None)
 
 	def update(self):
+
 		if configure.amg8833:
 			self.data = amg.pixels
 		else:
-			self.data = self.animate()#makegrid()
+			self.data = self.animate()
 
 		if rotate:
-			self.data = list(reversed(list(zip(*self.data))))
+			self.data = np.transpose(self.data).tolist()
 
-		if flip:
-			self.data = list(zip(*self.data[::-1]))
+		if fliplr:
+			self.data = np.fliplr(self.data).tolist()
+
+		if flipud:
+			self.data = np.flipud(self.data).tolist()
 
 		thisaverage = 0
 		rangemax = []
 		rangemin = []
+
 		for i in range(8):
 
 			for j in range(8):
@@ -219,11 +295,8 @@ class ThermalGrid(object):
 			rangemax.append(thismax)
 
 		self.average = thisaverage / (8*8)
-		#print("Average: ", self.average, ", ", "High: ", self.high,", ","Low: ", self.low)
-
 
 		self.high = max(rangemax)
 		self.low = min(rangemin)
 
 		return self.average, self.high, self.low
-		#print(rangesmax)
