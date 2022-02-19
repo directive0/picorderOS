@@ -10,6 +10,12 @@ print("Unified Display Module loading")
 import sys
 import logging
 
+# remove this part and replace with display
+from luma.core.interface.serial import spi
+from luma.core.render import canvas
+from luma.lcd.device import st7735
+from luma.emulator.device import pygame
+
 from luma.core import cmdline, error
 
 
@@ -69,3 +75,6 @@ def get_device(actual_args=None):
     except error.Error as e:
         parser.error(e)
         return None
+
+class GenericDisplay(object):
+    pass

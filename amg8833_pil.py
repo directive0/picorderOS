@@ -1,4 +1,5 @@
 print("Loading AMG8833 Thermal Camera Module")
+# changed.
 #import pygame
 import random
 import math

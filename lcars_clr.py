@@ -23,7 +23,6 @@ from pilgraph import *
 from amg8833_pil import *
 from plars import *
 from objects import *
-
 from modulated_em import *
 
 # Load default font.
