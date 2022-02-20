@@ -66,7 +66,7 @@ def Main():
 
 		if configure.display == 0:
 			dotscreen = NokiaScreen()
-		if configure.display == 1:
+		if configure.display == 1 or configure.display == 2:
 			colourscreen = ColourScreen()
 			colourscreen.start_up()
 
@@ -131,7 +131,7 @@ def Main():
 
 					if configure.display == 0:
 						configure.status[0] = dotscreen.push(data)
-					if configure.display == 1:
+					if configure.display == 1 or configure.display == 2:
 						configure.status[0] = colourscreen.graph_screen()
 
 			if configure.status[0] == "mode_b":
@@ -147,7 +147,7 @@ def Main():
 				if configure.tr109:
 					if configure.display == 0:
 						configure.status[0] = dotscreen.push(data)
-					if configure.display == 1:
+					if configure.display == 1 or configure.display == 2:
 						configure.status[0] = colourscreen.em_screen()
 
 			if configure.status[0] == "mode_c":
@@ -167,7 +167,7 @@ def Main():
 				if configure.tr109:
 					if configure.display == 0:
 						configure.status[0] = dotscreen.push()
-					if configure.display == 1:
+					if configure.display == 1 or configure.display == 2:
 						configure.status[0] = colourscreen.settings()
 
 			# Handles the poweroff screen
@@ -176,7 +176,7 @@ def Main():
 				if configure.tr109:
 					if configure.display == 0:
 						configure.status[0] = dotscreen.push()
-					if configure.display == 1:
+					if configure.display == 1 or configure.display == 2:
 						configure.status[0] = colourscreen.powerdown()
 
 			if configure.status[0] == "shutdown":
