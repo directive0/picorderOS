@@ -7,7 +7,7 @@ import time
 
 from operator import itemgetter
 
-if configure.display = 1:
+if configure.display == 1:
 	# remove this part and replace with display
 	from luma.core.interface.serial import spi
 	from luma.core.render import canvas
@@ -27,7 +27,7 @@ if configure.display = 1:
 		device = pygame(width = 160, height = 128)
 
 # for TFT24T screens
-elif configure.display = 2:
+elif configure.display == 2:
 	# Details pulled from https://github.com/BehindTheSciences/ili9341_SPI_TouchScreen_LCD_Raspberry-Pi/blob/master/BTS-ili9341-touch-calibration.py
 	from lib_tft24T import TFT24T
 	import RPi.GPIO as GPIO
@@ -987,7 +987,7 @@ class ColourScreen(object):
 
 	def __init__(self):
 
-		if configure.display = 2
+		if configure.display == 2
 			self.surface = TFT.draw()
 
 		# instantiates an image and uses it in a draw object.
@@ -1072,11 +1072,11 @@ class ColourScreen(object):
 		thisimage = self.newimage.convert(mode = "RGB")
 
 		# the following is only for screens that use Luma.LCD
-		if configure.display = 1:
+		if configure.display == 1:
 			device.display(thisimage)
 
 		# the following is only for TFT24T screens
-		elif configure.display = 2:
+		elif configure.display == 2:
 			 # Resize the image and rotate it so it's 240x320 pixels.
 			thisimage = self.newimage.rotate(90,0,1).resize((240, 320))
 			# Draw the image on the display hardware.
