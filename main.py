@@ -40,11 +40,8 @@ if configure.tr108:
 # for the TR-109 there are two display modes supported.
 if configure.tr109:
 
-	if configure.display == 2:
-		from lcars_clr_ili9341 import *
-
 	# 1.8" TFT colour LCD
-	if configure.display == 1:
+	if configure.display == 1 or configure.display == 2:
 		from lcars_clr import *
 
 	# Nokia 5110 black and white dot matrix screen.

@@ -1,16 +1,47 @@
 #!/usr/bin/env python
 # This module controls the st7735 type screens
 print("Loading 160x128 LCARS Interface")
+from objects import *
 import math
 import time
 
 from operator import itemgetter
 
-# remove this part and replace with display
-from luma.core.interface.serial import spi
-from luma.core.render import canvas
-from luma.lcd.device import st7735
-from luma.emulator.device import pygame
+if configure.display = 1:
+	# remove this part and replace with display
+	from luma.core.interface.serial import spi
+	from luma.core.render import canvas
+	from luma.lcd.device import st7735
+	from luma.emulator.device import pygame
+
+	# Raspberry Pi hardware SPI config:
+	DC = 23
+	RST = 24
+	SPI_PORT = 0
+	SPI_DEVICE = 0
+
+	if not configure.pc:
+		serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST) ,bus_speed_hz=32000000)
+		device = st7735(serial, width = 160, height = 128, mode = "RGB")
+	else:
+		device = pygame(width = 160, height = 128)
+
+# for TFT24T screens
+elif configure.display = 2:
+	# Details pulled from https://github.com/BehindTheSciences/ili9341_SPI_TouchScreen_LCD_Raspberry-Pi/blob/master/BTS-ili9341-touch-calibration.py
+	from lib_tft24T import TFT24T
+	import RPi.GPIO as GPIO
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setwarnings(False)
+	import spidev
+	DC = 24
+	RST = 25
+	LED = 15
+	PEN = 26
+	TFT = TFT24T(spidev.SpiDev(), GPIO)
+	# Initialize display and touch.
+	TFT.initLCD(DC, RST, LED)
+
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
@@ -22,7 +53,8 @@ from PIL import ImageDraw
 from pilgraph import *
 from amg8833_pil import *
 from plars import *
-from objects import *
+
+
 from modulated_em import *
 
 # Load default font.
@@ -35,20 +67,10 @@ giantfont = ImageFont.truetype("assets/babs.otf",30)
 # Load assets
 logo = Image.open('assets/picorderOS_logo.png')
 
-# Raspberry Pi hardware SPI config:
-DC = 23
-RST = 24
-SPI_PORT = 0
-SPI_DEVICE = 0
-
-TRANSITION = [False]
 
 
-if not configure.pc:
-	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST) ,bus_speed_hz=32000000)
-	device = st7735(serial, width = 160, height = 128, mode = "RGB")
-else:
-	device = pygame(width = 160, height = 128)
+
+
 
 
 # Standard LCARS colours
@@ -605,6 +627,9 @@ class EMFrame(object):
 
 		return status
 
+
+
+
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
 
@@ -962,6 +987,9 @@ class ColourScreen(object):
 
 	def __init__(self):
 
+		if configure.display = 2
+			self.surface = TFT.draw()
+
 		# instantiates an image and uses it in a draw object.
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
 		self.blankimage = Image.open('assets/lcarsframeblank.png')
@@ -1042,4 +1070,15 @@ class ColourScreen(object):
 
 	def pixdrw(self):
 		thisimage = self.newimage.convert(mode = "RGB")
-		device.display(thisimage)
+
+		# the following is only for screens that use Luma.LCD
+		if configure.display = 1:
+			device.display(thisimage)
+
+		# the following is only for TFT24T screens
+		elif configure.display = 2:
+			 # Resize the image and rotate it so it's 240x320 pixels.
+			thisimage = self.newimage.rotate(90,0,1).resize((240, 320))
+			# Draw the image on the display hardware.
+			self.surface.pasteimage(thisimage,(0,0))
+			TFT.display()
