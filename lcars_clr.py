@@ -21,7 +21,7 @@ if configure.display == 1:
 	SPI_DEVICE = 0
 
 	if not configure.pc:
-		serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST) ,bus_speed_hz=32000000)
+		serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
 		device = st7735(serial, width = 160, height = 128, mode = "RGB")
 	else:
 		device = pygame(width = 160, height = 128)
