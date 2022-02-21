@@ -128,9 +128,9 @@ def resetleds():
 # # This way you can just manually set them as you please.
 def screen_on():
 	if configure.tr109:
-		if configure.display == 0:
+		if configure.display == 1:
 			GPIO.output(sc_led, GPIO.HIGH)
-		elif configure.display == 1:
+		elif configure.display == 2:
 			GPIO.output(sc_led, GPIO.LOW)
 
 def leda_on():
