@@ -775,14 +775,14 @@ class Video_Screen(object):
                 return self.status
 
             if keys[1]:
-                status =  "mode_d"
+                status =  "mode_c"
                 print("Button 2")
                 configure.eventready[0] = False
                 return self.status
 
 
             if keys[2]:
-                configure.last_status[0] = "mode_d"
+                configure.last_status[0] = "mode_c"
                 print("Button 3")
                 status = "settings"
                 configure.eventready[0] = False
@@ -841,7 +841,9 @@ class Slider_Screen(object):
 				return status
 
 			if keys[1]:
-				status =  "mode_b"
+				status =  "mode_c"
+				configure.eventready[0] = False
+				return status
 
 			if keys[2]:
 				configure.last_status[0] = "mode_b"
@@ -962,6 +964,10 @@ class Screen(object):
 
 	def graph_screen(self):
 		status = self.graphscreen.frame()
+		return status
+
+	def video_screen(self):
+		status = self.videoscreen.frame()
 		return status
 
 	def settings(self):
