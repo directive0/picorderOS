@@ -796,7 +796,7 @@ class Video_Screen(object):
         #draws UI to frame buffer
         pygame.display.update()
 
-        return status
+        return self.status
 
 
 class Slider_Screen(object):
