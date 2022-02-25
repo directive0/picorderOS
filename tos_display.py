@@ -944,6 +944,7 @@ class Screen(object):
 
 		self.timed = time.time()
 		self.graphscreen = Graph_Screen(self.surface)
+		self.videoscreen = Video_Screen(self.surface)
 		self.slidescreen = Slider_Screen(self.surface)
 		self.settings_screen = Settings_Panel(self.surface)
 
