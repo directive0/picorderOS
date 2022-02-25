@@ -71,6 +71,7 @@ backplane = pygame.image.load('assets/background.png')
 backgraph = pygame.image.load('assets/backgraph.png')
 slidera = pygame.image.load('assets/slider.png')
 sliderb = pygame.image.load('assets/slider2.png')
+videobg = pygame.image.load('assets/videobg.png')
 status = "startup"
 last_status = "startup"
 
