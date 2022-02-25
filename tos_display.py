@@ -581,6 +581,7 @@ class Graph_Screen(object):
 
 			if keys[1]:
 				status =  "mode_b"
+				configure.eventready[0] = False
 				return status
 
 			if keys[2]:
@@ -750,6 +751,51 @@ class Graph_Screen(object):
 	def visible(self,item,option):
 		self.visibility[item] = option
 
+#experimental video screen written by scifi.radio from the mycorder discord
+class Video_Screen(object):
+    def __init__(self,surface):
+        self.status = "mode_c"
+        self.surface = surface
+        self.videobg = Image()
+        self.videobg.update(videobg, 0,0)
+
+
+    def frame(self):
+        self.status = "mode_c"
+        if configure.eventready[0]:
+
+        # The following code handles inputs and button presses.
+            keys = configure.eventlist[0]
+
+            # if a key is registering as pressed.
+            if keys[0]:
+                print("Button 1")
+                status = "mode_b"
+                configure.eventready[0] = False
+                return self.status
+
+            if keys[1]:
+                status =  "mode_d"
+                print("Button 2")
+                configure.eventready[0] = False
+                return self.status
+
+
+            if keys[2]:
+                configure.last_status[0] = "mode_d"
+                print("Button 3")
+                status = "settings"
+                configure.eventready[0] = False
+                return self.status
+
+            configure.eventready[0] = False
+
+        #draws Background gridplane
+        self.videobg.draw(self.surface)
+        #draws UI to frame buffer
+        pygame.display.update()
+
+        return status
 
 
 class Slider_Screen(object):
