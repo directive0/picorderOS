@@ -771,12 +771,12 @@ class Video_Screen(object):
             # if a key is registering as pressed.
             if keys[0]:
                 print("Button 1")
-                status = "mode_b"
+                self.status = "mode_b"
                 configure.eventready[0] = False
                 return self.status
 
             if keys[1]:
-                status =  "mode_c"
+                self.status =  "mode_c"
                 print("Button 2")
                 configure.eventready[0] = False
                 return self.status
@@ -785,7 +785,7 @@ class Video_Screen(object):
             if keys[2]:
                 configure.last_status[0] = "mode_c"
                 print("Button 3")
-                status = "settings"
+                self.status = "settings"
                 configure.eventready[0] = False
                 return self.status
 
