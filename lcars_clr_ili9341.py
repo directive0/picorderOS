@@ -22,22 +22,14 @@ from lib_tft24T import TFT24T
 import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
-
 import spidev
-from time import sleep
-
 DC = 24
 RST = 25
 LED = 15
 PEN = 26
-
 TFT = TFT24T(spidev.SpiDev(), GPIO)
-
 # Initialize display and touch.
 TFT.initLCD(DC, RST, LED)
-
-
-
 
 
 # Load default font.
@@ -623,9 +615,46 @@ class MultiFrame(object):
 
 
 		return status
-# governs the screen drawing of the entire program. Everything flows through Screen.
-# Screen instantiates a draw object and passes it the image background.
-# Screen monitors button presses and passes flags for interface updates to the draw object.
+
+
+class StartUp(object):
+	def __init__(self):
+		self.titlex = 0
+		self.titley = 77
+		self.labely = 102
+		self.jump = 22
+
+		self.graphcycle = 0
+		self.decimal = 1
+
+		self.divider = 47
+		self.labely = 102
+
+
+		self.title = LabelObj("PicorderOS " + configure.version,bigfont, colour = lcars_peach)
+		self.item = LabelObj(configure.boot_message,font,colour = lcars_peach)
+
+		# creates and interval timer for screen refresh.
+		self.interval = timer()
+		self.interval.logtime()
+
+	def push(self, draw):
+
+		draw.bitmap((59,15),logo)
+		#draw the frame heading
+		self.title.center(self.titley,0,160,draw)
+
+		#draw the title and version
+		self.item.center(self.titley+self.jump,0, 160,draw)
+
+
+		if self.interval.timelapsed() > configure.boot_delay and configure.sensor_ready[0]:
+			status = "mode_a"
+		else:
+			status = "startup"
+
+
+		return status
 
 class ThermalFrame(object):
 	def __init__(self):
@@ -752,19 +781,24 @@ class ColourScreen(object):
 		self.powerdown_frame = PowerDown()
 
 
-	def get_size(self):
-		return self.multi_frame.get_x()
-
-	def graph_screen(self):
-
-		self.newimage = self.image.copy()
+	def start_up(self):
+		self.newimage = self.burgerfull.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-		self.status = self.multi_frame.push(self.draw)
+		self.status = self.startup_frame.push(self.draw)
 
 		self.pixdrw()
 
 		return self.status
 
+	def get_size(self):
+		return self.multi_frame.get_x()
+
+	def graph_screen(self):
+		self.newimage = self.image.copy()
+		self.draw = ImageDraw.Draw(self.newimage)
+		self.status = self.multi_frame.push(self.draw)
+		self.pixdrw()
+		return self.status
 
 	def thermal_screen(self):
 		self.newimage = self.image.copy()

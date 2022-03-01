@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 # This module controls the st7735 type screens
 print("Loading 160x128 LCARS Interface")
+from objects import *
 import math
 import time
 
 from operator import itemgetter
 
-# remove this part and replace with display
-from luma.core.interface.serial import spi
-from luma.core.render import canvas
-from luma.lcd.device import st7735
-from luma.emulator.device import pygame
+from display import GenericDisplay
+
+device = GenericDisplay()
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
@@ -22,7 +21,7 @@ from PIL import ImageDraw
 from pilgraph import *
 from amg8833_pil import *
 from plars import *
-from objects import *
+
 
 from modulated_em import *
 
@@ -36,20 +35,10 @@ giantfont = ImageFont.truetype("assets/babs.otf",30)
 # Load assets
 logo = Image.open('assets/picorderOS_logo.png')
 
-# Raspberry Pi hardware SPI config:
-DC = 23
-RST = 24
-SPI_PORT = 0
-SPI_DEVICE = 0
-
-TRANSITION = [False]
 
 
-if not configure.pc:
-	serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)# ,bus_speed_hz=24000000)
-	device = st7735(serial, width = 160, height = 128, mode = "RGB")
-else:
-	device = pygame(width = 160, height = 128)
+
+
 
 
 # Standard LCARS colours
@@ -606,6 +595,9 @@ class EMFrame(object):
 
 		return status
 
+
+
+
 # Controls the LCARS frame, measures the label and makes sure the top frame bar has the right spacing.
 class MultiFrame(object):
 
@@ -962,6 +954,9 @@ class ThermalFrame(object):
 class ColourScreen(object):
 
 	def __init__(self):
+
+		if configure.display == 2:
+			self.surface = TFT.draw()
 
 		# instantiates an image and uses it in a draw object.
 		self.image = Image.open('assets/lcarsframe.png')#.convert('1')

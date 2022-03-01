@@ -119,10 +119,11 @@ if configure.input_cap1208:
 
 if configure.input_pcf8575:
 	from pcf8575 import PCF8575
-	i2c_port_num = 0
+	i2c_port_num = 1
 	pcf_address = 0x20
 	pcf = PCF8575(i2c_port_num, pcf_address)
 
+	button_table = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,0,3,2,4]
 
 # the input class receives and relays control events for user interaction
 class Inputs(object):
@@ -190,7 +191,7 @@ class Inputs(object):
 			# if the alert pin is brought LOW
 			if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
 
-				print("touch received")
+				#print("touch received")
 
 				# collect the event list from the chip
 				reading = cap1208.get_input_status()
@@ -401,8 +402,10 @@ class Inputs(object):
 		if configure.input_pcf8575:
 
 			if not configure.eventready[0]:
-				print("button state = ", pcf.port)
-				for this, button in enumerate(pcf.port):
+				this_frame = list(pcf.port)
+
+				for this, button in enumerate(this_frame):
+
 					# if an item is pressed
 					if not button:
 
@@ -410,14 +413,17 @@ class Inputs(object):
 						if not self.pressed[this]:
 
 							# mark it in the pressed list
-							print("pad press registered")
-							self.pressed[this] = True
+							print("pad press registered at ", this)
+							print("raising an event at address ", button_table[this])
+
+							self.pressed[button_table[this]] = True
 							configure.eventready[0] = True
 							configure.beep_ready[0] = True
 					else:
-						self.pressed[this] = False
+						self.pressed[button_table[this]] = False
 
 		configure.eventlist[0] = self.pressed
+
 
 	def keypress(self):
 		pygame.event.get()
