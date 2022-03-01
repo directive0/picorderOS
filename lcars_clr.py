@@ -9,7 +9,7 @@ from operator import itemgetter
 
 from display import GenericDisplay
 
-display = GenericDisplay()
+device = GenericDisplay()
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
