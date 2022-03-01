@@ -1,6 +1,7 @@
 print("Unified Display Module loading")
 import sys
 import logging
+from objects import *
 
 if configure.display == 1:
 	from luma.core.interface.serial import spi
