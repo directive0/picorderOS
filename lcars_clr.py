@@ -959,7 +959,7 @@ class ColourScreen(object):
 			self.surface = TFT.draw()
 
 		# instantiates an image and uses it in a draw object.
-		self.image = Image.open('assets/lcarsframe.png')#.convert('1')
+		self.image = Image.open('assets/lcarsframe.png')
 		self.blankimage = Image.open('assets/lcarsframeblank.png')
 		self.tbar = Image.open('assets/lcarssplitframe.png')
 		self.burger = Image.open('assets/lcarsburgerframe.png')
