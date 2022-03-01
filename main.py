@@ -112,7 +112,7 @@ def Main():
 
 
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
-			if (configure.status[0] == "mode_a"):
+			if configure.status[0] == "mode_a":
 
 				# the following is only run if the tr108 flag is set
 				if configure.tr108:
@@ -152,7 +152,14 @@ def Main():
 					if configure.display == 1:
 						configure.status[0] = colourscreen.thermal_screen()
 
-			if (configure.status[0] == "settings"):
+				if configure.tr108:
+					configure.status[0] = PyScreen.video_screen()
+					if not configure.pc:
+						leda_on()
+						ledb_on()
+						ledc_off()
+
+			if configure.status[0] == "settings":
 
 				if configure.tr108:
 					configure.status[0] = PyScreen.settings()
@@ -168,7 +175,7 @@ def Main():
 						configure.status[0] = colourscreen.settings()
 
 			# Handles the poweroff screen
-			if (configure.status[0] == "poweroff"):
+			if configure.status[0] == "poweroff":
 
 				if configure.tr109:
 					if configure.display == 0:

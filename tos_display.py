@@ -71,6 +71,7 @@ backplane = pygame.image.load('assets/background.png')
 backgraph = pygame.image.load('assets/backgraph.png')
 slidera = pygame.image.load('assets/slider.png')
 sliderb = pygame.image.load('assets/slider2.png')
+videobg = pygame.image.load('assets/videobg.png')
 status = "startup"
 last_status = "startup"
 
@@ -581,6 +582,7 @@ class Graph_Screen(object):
 
 			if keys[1]:
 				status =  "mode_b"
+				configure.eventready[0] = False
 				return status
 
 			if keys[2]:
@@ -750,6 +752,51 @@ class Graph_Screen(object):
 	def visible(self,item,option):
 		self.visibility[item] = option
 
+#experimental video screen written by scifi.radio from the mycorder discord
+class Video_Screen(object):
+    def __init__(self,surface):
+        self.status = "mode_c"
+        self.surface = surface
+        self.videobg = Image()
+        self.videobg.update(videobg, 0,0)
+
+
+    def frame(self):
+        self.status = "mode_c"
+        if configure.eventready[0]:
+
+        # The following code handles inputs and button presses.
+            keys = configure.eventlist[0]
+
+            # if a key is registering as pressed.
+            if keys[0]:
+                print("Button 1")
+                self.status = "mode_b"
+                configure.eventready[0] = False
+                return self.status
+
+            if keys[1]:
+                self.status =  "mode_c"
+                print("Button 2")
+                configure.eventready[0] = False
+                return self.status
+
+
+            if keys[2]:
+                configure.last_status[0] = "mode_c"
+                print("Button 3")
+                self.status = "settings"
+                configure.eventready[0] = False
+                return self.status
+
+            configure.eventready[0] = False
+
+        #draws Background gridplane
+        self.videobg.draw(self.surface)
+        #draws UI to frame buffer
+        pygame.display.update()
+
+        return self.status
 
 
 class Slider_Screen(object):
@@ -795,7 +842,9 @@ class Slider_Screen(object):
 				return status
 
 			if keys[1]:
-				status =  "mode_b"
+				status =  "mode_c"
+				configure.eventready[0] = False
+				return status
 
 			if keys[2]:
 				configure.last_status[0] = "mode_b"
@@ -896,6 +945,7 @@ class Screen(object):
 
 		self.timed = time.time()
 		self.graphscreen = Graph_Screen(self.surface)
+		self.videoscreen = Video_Screen(self.surface)
 		self.slidescreen = Slider_Screen(self.surface)
 		self.settings_screen = Settings_Panel(self.surface)
 
@@ -916,6 +966,10 @@ class Screen(object):
 
 	def graph_screen(self):
 		status = self.graphscreen.frame()
+		return status
+
+	def video_screen(self):
+		status = self.videoscreen.frame()
 		return status
 
 	def settings(self):

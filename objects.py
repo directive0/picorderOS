@@ -29,7 +29,10 @@ class preferences(object):
 		config['SENSORS'] =  {'# Only TR-108 uses SenseHat':None,
 							'sensehat':'yes',								# Only TR-108 uses this
 							'system_vitals':'yes',
+							'# BME680 Raw Values':None,
 							'bme':'no',
+							'# BME680 VOC BSEC':None,
+							'bme_bsec':'no',
 							'amg8833':'no',
 							'pocket_geiger':'no',
 							'# IR Infrared Imaging':None,

@@ -2,8 +2,8 @@ print("Loading Python IL Module")
 
 
 # PILgraph provides an object (graphlist) that will draw a new graph each frame.
-# It was written to contain memory of the previous sensor readings, but this
-# feature is no longer necessary.
+# It was written to contain all the previous sensor readings, but this
+# feature is no longer necessary as PLARS now handles all data history.
 
 # To do:
 # - request from PLARS the N most recent values for the sensor assigned to this identifier
@@ -11,8 +11,11 @@ print("Loading Python IL Module")
 
 
 # it is initialized with:
-# - a graph identifier so it knows which sensor to grab data for
-# -
+# - ident: a graph identifier so it knows which sensor to grab data for
+# - graphcoords: list containing the top left x,y coordinates
+# - graphspan: list containing the x and y span in pixels
+# - cycle: time per division of the graph (not working)
+# - 
 
 from objects import *
 from PIL import Image
@@ -28,20 +31,26 @@ class graph_area(object):
 
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0, samples = False):
 
+		# if a samplesize is provided use it, otherwise grab global setting.
 		if not samples:
 			self.samples = configure.samples
 		else:
 			self.samples = samples
 
-		self.new = True
 		self.cycle = cycle
-		self.tock = timer()
-		self.tock.logtime()
+
+
 		self.glist = array('f', [])
 		self.dlist = array('f', [])
+
 		self.colour = colour
+
+		#controls auto scaling (set by global variable at render)
 		self.auto = True
+
+		# controls width
 		self.width = width
+
 		self.dotw = 6
 		self.doth = 6
 		self.buff = array('f', [])
@@ -201,8 +210,9 @@ class graph_area(object):
 
 		# standard pilgraph: takes DSC,DEV keypairs from screen drawer, asks
 		# plars for data, graphs it.
-		if self.type == 0:
 
+		# Standard graph
+		if self.type == 0:
 			index = configure.sensors[self.ident][0]
 			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
 			recent = plars.get_recent(dsc,dev,num = self.samples)
@@ -211,12 +221,12 @@ class graph_area(object):
 		elif self.type == 1:
 			recent = plars.get_top_em_history(no = self.samples)
 
-		# Testing a stream graph
+		# Testing a new graph
 		elif self.type == 2:
 			recent = plars.get_recent(dsc,dev,num = self.samples)
 
-		cords = self.graphprep(recent)
 
+		cords = self.graphprep(recent)
 		self.buff = recent
 
 		# draws the line graph
