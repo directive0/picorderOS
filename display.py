@@ -1,80 +1,62 @@
-    args = parser.parse_args(actual_args)
-
-# -*- coding: utf-8 -*-
-# Originally found: https://github.com/rm-hull/luma.examples/blob/master/examples/demo_opts.py
-# Modified for PicorderOS
-# Copyright (c) 2014-18 Richard Hull and contributors
-# See LICENSE.rst for details.
-
 print("Unified Display Module loading")
 import sys
 import logging
 
-# remove this part and replace with display
-from luma.core.interface.serial import spi
-from luma.core.render import canvas
-from luma.lcd.device import st7735
-from luma.emulator.device import pygame
+if configure.display == 1:
+	from luma.core.interface.serial import spi
+	from luma.core.render import canvas
+	from luma.lcd.device import st7735
+	from luma.emulator.device import pygame
 
-from luma.core import cmdline, error
+	# Raspberry Pi hardware SPI config:
+	DC = 23
+	RST = 24
+	SPI_PORT = 0
+	SPI_DEVICE = 0
 
+	if not configure.pc:
+		serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
+		device = st7735(serial, width = 160, height = 128, mode = "RGB")
+	else:
+		device = pygame(width = 160, height = 128)
 
-# logging
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)-15s - %(message)s'
-)
-# ignore PIL debug messages
-logging.getLogger('PIL').setLevel(logging.ERROR)
-
-
-def display_settings(device, args):
-    """
-    Display a short summary of the settings.
-    :rtype: str
-    """
-    iface = ''
-    display_types = cmdline.get_display_types()
-    if args.display not in display_types['emulator']:
-        iface = 'Interface: {}\n'.format(args.interface)
-
-    lib_name = cmdline.get_library_for_display_type(args.display)
-    if lib_name is not None:
-        lib_version = cmdline.get_library_version(lib_name)
-    else:
-        lib_name = lib_version = 'unknown'
-
-    import luma.core
-    version = 'luma.{} {} (luma.core {})'.format(
-        lib_name, lib_version, luma.core.__version__)
-
-    return 'Version: {}\nDisplay: {}\n{}Dimensions: {} x {}\n{}'.format(
-        version, args.display, iface, device.width, device.height, '-' * 60)
-
-
-def get_device(actual_args=None):
-    """
-    Create device from command-line arguments and return it.
-    """
-    if actual_args is None:
-        actual_args = sys.argv[1:]
-    parser = cmdline.create_parser(description='luma.examples arguments')
-    args = parser.parse_args(actual_args)
-
-    if args.config:
-        # load config from file
-        config = cmdline.load_config(args.config)
-        args = parser.parse_args(config + actual_args)
-
-    # create device
-    try:
-        device = cmdline.create_device(args)
-        print(display_settings(device, args))
-        return device
-
-    except error.Error as e:
-        parser.error(e)
-        return None
+# for TFT24T screens
+elif configure.display == 2:
+	# Details pulled from https://github.com/BehindTheSciences/ili9341_SPI_TouchScreen_LCD_Raspberry-Pi/blob/master/BTS-ili9341-touch-calibration.py
+	from lib_tft24T import TFT24T
+	import RPi.GPIO as GPIO
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setwarnings(False)
+	import spidev
+	DC = 24
+	RST = 25
+	LED = 15
+	PEN = 26
+	device = TFT24T(spidev.SpiDev(), GPIO)
+	# Initialize display and touch.
+	TFT.initLCD(DC, RST, LED)
 
 class GenericDisplay(object):
-    pass
+
+    def __init__(self
+
+        # lib_tft24 screens require us to create a drawing surface for the screen
+        # and add to it.
+		if configure.display == 2:
+			self.surface = device.draw()
+
+
+    # Display takes a PILlow based drawobject and pushes it to screen.
+    def display(self,frame):
+
+		# the following is only for screens that use Luma.LCD
+		if configure.display == 1:
+			device.display(frame)
+
+		# the following is only for TFT24T screens
+		elif configure.display == 2:
+			 # Resize the image and rotate it so it's 240x320 pixels.
+			frame = frame.rotate(90,0,1).resize((240, 320))
+			# Draw the image on the display hardware.
+			self.surface.pasteimage(frame,(0,0))
+			device.display()
