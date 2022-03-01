@@ -38,16 +38,16 @@ elif configure.display == 2:
 
 class GenericDisplay(object):
 
-    def __init__(self):
+	def __init__(self):
 
-        # lib_tft24 screens require us to create a drawing surface for the screen
-        # and add to it.
+		# lib_tft24 screens require us to create a drawing surface for the screen
+		# and add to it.
 		if configure.display == 2:
 			self.surface = device.draw()
 
 
-    # Display takes a PILlow based drawobject and pushes it to screen.
-    def display(self,frame):
+	# Display takes a PILlow based drawobject and pushes it to screen.
+	def display(self,frame):
 
 		# the following is only for screens that use Luma.LCD
 		if configure.display == 1:
