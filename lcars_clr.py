@@ -617,7 +617,7 @@ class EMFrame(object):
 				print(frequency,",",strength)
 
 				screenpos = numpy.interp(frequency,(2.412, 2.462),(14, 145))
-				lineheight = numpy.interp(strength, (-60, 0), (103, 49))
+				lineheight = numpy.interp(strength, (-100, 0), (103, 49))
 				this_ssid = (name,screenpos,lineheight)
 				items_list.append(this_ssid)
 
@@ -625,8 +625,8 @@ class EMFrame(object):
 			#draw.rounded_rectangle((6,43,153,103), outline = lcars_bluer)
 
 			#for each item in item_list
-			for ssid in items_list:
-				cords = ((ssid[1],103),(ssid[1],ssid[2]))
+			for item in items_list:
+				cords = ((item[1],103),(item[1],item[2]))
 				draw.line(cords,lcars_bluer,1)
 
 
