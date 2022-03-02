@@ -521,7 +521,7 @@ class EMFrame(object):
 
 		self.list = Label_List(22,35, colour = lcars_peach)
 
-
+		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
 	def push(self, draw):
 
@@ -600,6 +600,9 @@ class EMFrame(object):
 		# displays each SSID as a line segment. Its position along the x is
 		# determined by frequency. Its height by its signal strength.
 
+			# change Background
+
+			draw = ImageDraw.Draw(self.burgerfull)
 
 			#grab EM list
 
