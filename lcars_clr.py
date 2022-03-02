@@ -602,7 +602,7 @@ class EMFrame(object):
 
 			# change Background
 
-			draw.pasteimage(self.burgerfull,(0,0))
+			draw.bitmap(self.burgerfull,(0,0))
 
 			#grab EM list
 
