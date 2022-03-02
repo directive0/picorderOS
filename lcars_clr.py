@@ -611,7 +611,7 @@ class EMFrame(object):
 				name = str(ssid[0])
 				strength = str(ssid[1])
 				frequency = ssid[3]
-				frequency = int(frequency.replace(' GHz', ''))
+				frequency = float(frequency.replace(' GHz', ''))
 
 				print(frequency,",",strength)
 				screenpos = translate(frequency, 2.412, 2.462, 14, 145)
