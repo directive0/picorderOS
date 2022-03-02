@@ -610,7 +610,7 @@ class EMFrame(object):
 			for ssid in em_list:
 				name = str(ssid[0])
 				strength = str(ssid[1])
-				frequency = ssid[2]
+				frequency = ssid[3]
 				frequency = int(frequency.replace(' GHz', ''))
 
 				print(frequency,",",strength)
