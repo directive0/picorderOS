@@ -620,7 +620,7 @@ class EMFrame(object):
 				items_list.append(this_ssid)
 
 			#draw round rect background
-			draw.rounded_rectangle((6,43,153,103), outline = lcars_bluer)
+			#draw.rounded_rectangle((6,43,153,103), outline = lcars_bluer)
 
 			#for each item in item_list
 			for ssid in items_list:
