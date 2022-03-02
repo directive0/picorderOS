@@ -541,7 +541,7 @@ class EMFrame(object):
 			if keys[1]:
 				self.selection += 1
 
-				if self.selection >= 2:
+				if self.selection >= 3:
 					self.selection = 0
 				pass
 
@@ -570,7 +570,7 @@ class EMFrame(object):
 			self.signal_frequency.push(20,92,draw, string = info[3])
 			self.signal_mac.push(20,111, draw, string = info[6])
 
-		if self.selection == 2:
+		if self.selection == 1:
 
 			# list to hold the data labels
 			list_for_labels = []
@@ -595,7 +595,7 @@ class EMFrame(object):
 			# assign each list element and its
 
 		# frequency intensity map
-		if self.selection == 1:
+		if self.selection == 2:
 		# returns the data necessary for freq_intensity map with EM.
 		# displays each SSID as a line segment. Its position along the x is
 		# determined by frequency. Its height by its signal strength.
@@ -617,7 +617,6 @@ class EMFrame(object):
 				frequency = ssid[3]
 				frequency = float(frequency.replace(' GHz', ''))
 
-				print(frequency,",",strength)
 
 				screenpos = numpy.interp(frequency,(2.412, 2.462),(14, 145))
 				lineheight = numpy.interp(strength, (-100, 0), (103, 49))
