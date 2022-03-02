@@ -182,8 +182,8 @@ class Sensor(object):
 			self.bme_voc = Fragment(300000,1100000,"VOC","KOhm", "BME680")
 			#self.voc_procc = subprocess.Popen(['./bsec_bme680'], stdout=subprocess.PIPE)
 
-			if configure.bme_bsec:
-				self.bme_bsec = Fragment(-40,85,"Quality",self.deg_sym + "Q", "BME680")
+			#if configure.bme_bsec:
+			#	self.bme_bsec = Fragment(-40,85,"Quality",self.deg_sym + "Q", "BME680")
 
 		if configure.pocket_geiger:
 			self.radiat = Fragment(0.0, 10000.0, "Radiation", "urem/hr", "pocketgeiger")
