@@ -15,7 +15,7 @@ print("Loading Python IL Module")
 # - graphcoords: list containing the top left x,y coordinates
 # - graphspan: list containing the x and y span in pixels
 # - cycle: time per division of the graph (not working)
-# - 
+# -
 
 from objects import *
 from PIL import Image
@@ -193,6 +193,8 @@ class graph_area(object):
 
 
 		return self.newlist
+
+
 
 
 	def render(self, draw, auto = True, dot = True, ranger = None):

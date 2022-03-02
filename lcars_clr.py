@@ -569,7 +569,7 @@ class EMFrame(object):
 			self.signal_frequency.push(20,92,draw, string = info[3])
 			self.signal_mac.push(20,111, draw, string = info[6])
 
-		if self.selection == 1:
+		if self.selection == 2:
 
 			# list to hold the data labels
 			list_for_labels = []
@@ -592,6 +592,39 @@ class EMFrame(object):
 			self.list.update(list_for_labels,draw)
 
 			# assign each list element and its
+
+		# frequency intensity map
+		if self.selection == 1:
+		# returns the data necessary for freq_intensity map with EM.
+		# displays each SSID as a line segment. Its position along the x is
+		# determined by frequency. Its height by its signal strength.
+
+
+			#grab EM list
+
+			#'ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'
+
+			em_list = plars.get_recent_em_list()
+			items_list = []
+
+			for ssid in em_list:
+				name = str(ssid[0])
+				strength = str(ssid[1])
+				frequency = str(ssid[2])
+				screenpos = translate(frequency, 2.412, 2.462, 14, 145)
+				lineheight = translate(strength, -60, 0, 103, 49)
+				this_ssid = (name,screenpos,lineheight)
+				items_list.append(this_ssid)
+
+			#draw round rect background
+			draw.rounded_rectangle((6,43,153,103), outline = lcars_bluer)
+
+			#for each item in item_list
+			for ssid in items_list:
+				cords = ((ssid[1],103),(ssid[1],ssid[2]))
+				draw.line(cords,lcars_bluer,1)
+
+
 
 		return status
 
