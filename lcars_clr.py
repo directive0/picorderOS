@@ -12,6 +12,7 @@ from display import GenericDisplay
 device = GenericDisplay()
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
+import numpy
 import PIL.ImageOps
 from PIL import Image
 from PIL import ImageFont
@@ -609,13 +610,14 @@ class EMFrame(object):
 
 			for ssid in em_list:
 				name = str(ssid[0])
-				strength = (ssid[1])
+				strength = ssid[1]
 				frequency = ssid[3]
 				frequency = float(frequency.replace(' GHz', ''))
 
 				print(frequency,",",strength)
-				screenpos = translate(frequency, 2.412, 2.462, 14, 145)
-				lineheight = translate(strength, -60, 0, 103, 49)
+
+				screenpos = numpy.interp(frequency,(2.412, 2.462),(14, 145))
+				lineheight = numpy.interp(strength, (-60, 0), (103, 49))
 				this_ssid = (name,screenpos,lineheight)
 				items_list.append(this_ssid)
 
