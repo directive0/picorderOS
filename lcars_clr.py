@@ -602,7 +602,7 @@ class EMFrame(object):
 
 			# change Background
 
-			draw = ImageDraw.Draw(self.burgerfull)
+			draw.pasteimage(self.burgerfull,(0,0))
 
 			#grab EM list
 
