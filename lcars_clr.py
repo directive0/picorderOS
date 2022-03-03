@@ -619,7 +619,7 @@ class EMFrame(object):
 
 			#draw labels
 			self.title.string = "EM Channel Scan"
-			self.title.center(12,0,320,draw)
+			self.title.center(12,0,160,draw)
 
 			#grab EM list
 			unsorted_em_list = plars.get_recent_em_list()
@@ -656,7 +656,7 @@ class EMFrame(object):
 					draw.ellipse([x1,y1,x2,y2],lcars_peach)
 
 					# draw the strongest signals name, top center
-					self.signal_name_sm.center(26,0,320,draw)
+					self.signal_name_sm.center(26,0,160,draw)
 
 					# put strength at lower left
 					strength_string = str(item[3]) + " DB"
