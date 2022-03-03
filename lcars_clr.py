@@ -643,7 +643,7 @@ class EMFrame(object):
 				screenpos = numpy.interp(frequency,(2.412, 2.462),(24, 152))
 
 				# determine y coordinate
-				lineheight = numpy.interp(strength, (-100, 0), (129, 55))
+				lineheight = numpy.interp(strength, (-100, 0), (127, 55))
 
 				# package into list
 				this_ssid = (name,screenpos,lineheight,strength,frequency)
@@ -654,7 +654,7 @@ class EMFrame(object):
 			for index, item in enumerate(items_list):
 
 				# determine dot coordinates.
-				cords = ((item[1],128),(item[1],item[2]))
+				cords = ((item[1],127),(item[1],item[2]))
 				x1 = cords[1][0] - (6/2)
 				y1 = cords[1][1] - (6/2)
 				x2 = cords[1][0] + (6/2)
@@ -669,7 +669,7 @@ class EMFrame(object):
 					name = item[0]
 					trunc_name = name[:16] + (name[16:] and '..')
 					# draw the strongest signals name, top center
-					self.signal_name_sm.push(19,35,draw,string = trunc_name)
+					self.signal_name_sm.push(19,34,draw,string = trunc_name)
 
 					# put strength at lower left
 					strength_string = str(item[3]) + " DB"
@@ -677,7 +677,7 @@ class EMFrame(object):
 
 					# put frequency at lower right
 					self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
-					self.signal_frequency_sm.r_align(157,36,draw)
+					self.signal_frequency_sm.r_align(157,37,draw)
 
 				# otherwise just draw the line and dot in the usual color
 				else:
