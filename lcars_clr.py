@@ -578,6 +578,7 @@ class EMFrame(object):
 			# grab EM list
 			em_list = plars.get_recent_em_list()
 
+			#sort it so strongest is first
 			sorted_em_list = sorted(em_list, key=itemgetter(1), reverse = True)
 
 			# prepare a list of the data received for display
@@ -607,8 +608,12 @@ class EMFrame(object):
 			#grab EM list
 
 			#'ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'
+			unsorted_em_list = plars.get_recent_em_list()
 
-			em_list = plars.get_recent_em_list()
+			# sort it so strongest is first.
+			em_list = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)
+
+
 			items_list = []
 
 			for ssid in em_list:
@@ -627,9 +632,22 @@ class EMFrame(object):
 			#draw.rounded_rectangle((6,43,153,103), outline = lcars_bluer)
 
 			#for each item in item_list
-			for item in items_list:
+			for index, item in enumerate(item_list):
 				cords = ((item[1],103),(item[1],item[2]))
-				draw.line(cords,lcars_bluer,1)
+				x1 = cords[2][0] - (6/2)
+				y1 = cords[2][1] - (6/2)
+				x2 = cords[2][0] + (6/2)
+				y2 = cords[2][1] + (6/2)
+				if index == 0:
+					draw.line(cords,lcars_peach,1)
+					draw.ellipse([x1,y1,x2,y2],lcars_peach)
+					self.signal_name.push(20,35,draw, string = item[0])
+
+
+				else:
+					draw.line(cords,lcars_bluer,1)
+					draw.ellipse([x1,y1,x2,y2],lcars_bluer)
+
 
 
 
