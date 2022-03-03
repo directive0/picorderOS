@@ -515,8 +515,13 @@ class EMFrame(object):
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 
 		self.signal_name = LabelObj("SSID",bigfont, colour = lcars_peach)
+		self.signal_name_sm = LabelObj("SSID",font, colour = lcars_peach)
+
 		self.signal_strength = LabelObj("ST",giantfont, colour = lcars_peach)
+		self.signal_strength_sm = LabelObj("ST",font, colour = lcars_peach)
+
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
+		self.signal_frequency_sm = LabelObj("FQ",font, colour = lcars_peach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 
 		self.list = Label_List(22,35, colour = lcars_peach)
@@ -555,6 +560,7 @@ class EMFrame(object):
 
 		self.wifi.update_plars()
 
+		# details on strongest wifi network.
 		if self.selection == 0:
 
 			# grab EM data from plars
@@ -564,12 +570,15 @@ class EMFrame(object):
 			self.Signal_Graph.render(draw)
 			self.title.string = "Dominant Transciever"
 			self.title.r_align(self.labelxr,self.titley,draw)
+
 			self.signal_name.push(20,35,draw, string = info[0])
+
 			self.signal_strength.string = str(info[1]) + " DB"
 			self.signal_strength.r_align(self.labelxr,92,draw)
 			self.signal_frequency.push(20,92,draw, string = info[3])
 			self.signal_mac.push(20,111, draw, string = info[6])
 
+		#list of all wifi ssids
 		if self.selection == 1:
 
 			# list to hold the data labels
@@ -605,17 +614,23 @@ class EMFrame(object):
 			draw.rectangle((0,0,320,240),(0,0,0))
 			draw.bitmap((0,0),self.burgerfull)
 
-			#grab EM list
+			#draw round rect background
+			draw.rectangle((6,43,153,103), outline = lcars_blue)
 
-			#'ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'
+			#draw labels
+			self.title.string = "EM Channel Scan"
+			self.title.center(12,80,160,draw)
+
+			#grab EM list
 			unsorted_em_list = plars.get_recent_em_list()
 
 			# sort it so strongest is first.
 			em_list = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)
 
-
+			# create a list to hold just the info we need for the screen.
 			items_list = []
 
+			#filter info into items_list
 			for ssid in em_list:
 				name = str(ssid[0])
 				strength = ssid[1]
@@ -625,11 +640,9 @@ class EMFrame(object):
 
 				screenpos = numpy.interp(frequency,(2.412, 2.462),(14, 145))
 				lineheight = numpy.interp(strength, (-100, 0), (103, 49))
-				this_ssid = (name,screenpos,lineheight)
+				this_ssid = (name,screenpos,lineheight,strength,frequency)
 				items_list.append(this_ssid)
 
-			#draw round rect background
-			#draw.rounded_rectangle((6,43,153,103), outline = lcars_bluer)
 
 			#for each item in item_list
 			for index, item in enumerate(items_list):
@@ -641,9 +654,16 @@ class EMFrame(object):
 				if index == 0:
 					draw.line(cords,lcars_peach,1)
 					draw.ellipse([x1,y1,x2,y2],lcars_peach)
-					self.signal_name.push(20,35,draw, string = item[0])
 
+					# draw the strongest signals name, top center
+					self.signal_name_sm.center(26,80,160,draw)
 
+					# put strength at lower left
+					strength_string = str(info[1]) + " DB"
+					self.signal_strength_sm.push(6,107,draw,string = strength_string)
+
+					# put frequency at lower right
+					self.signal_frequency_sm.r_align(73,107,draw)
 				else:
 					draw.line(cords,lcars_bluer,1)
 					draw.ellipse([x1,y1,x2,y2],lcars_bluer)
