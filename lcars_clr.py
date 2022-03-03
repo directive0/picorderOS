@@ -634,10 +634,10 @@ class EMFrame(object):
 			#for each item in item_list
 			for index, item in enumerate(items_list):
 				cords = ((item[1],103),(item[1],item[2]))
-				x1 = cords[2][0] - (6/2)
-				y1 = cords[2][1] - (6/2)
-				x2 = cords[2][0] + (6/2)
-				y2 = cords[2][1] + (6/2)
+				x1 = cords[1][0] - (6/2)
+				y1 = cords[1][1] - (6/2)
+				x2 = cords[1][0] + (6/2)
+				y2 = cords[1][1] + (6/2)
 				if index == 0:
 					draw.line(cords,lcars_peach,1)
 					draw.ellipse([x1,y1,x2,y2],lcars_peach)
