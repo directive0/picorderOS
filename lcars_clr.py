@@ -518,10 +518,10 @@ class EMFrame(object):
 		self.signal_name_sm = LabelObj("SSID",font, colour = lcars_peach)
 
 		self.signal_strength = LabelObj("ST",giantfont, colour = lcars_peach)
-		self.signal_strength_sm = LabelObj("ST",font, colour = lcars_peach)
+		self.signal_strength_sm = LabelObj("ST",littlefont, colour = lcars_peach)
 
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
-		self.signal_frequency_sm = LabelObj("FQ",font, colour = lcars_peach)
+		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_peach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 
 		self.list = Label_List(22,35, colour = lcars_peach)
@@ -654,7 +654,7 @@ class EMFrame(object):
 			for index, item in enumerate(items_list):
 
 				# determine dot coordinates.
-				cords = ((item[1],129),(item[1],item[2]))
+				cords = ((item[1],128),(item[1],item[2]))
 				x1 = cords[1][0] - (6/2)
 				y1 = cords[1][1] - (6/2)
 				x2 = cords[1][0] + (6/2)
