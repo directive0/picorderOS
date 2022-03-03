@@ -640,7 +640,7 @@ class EMFrame(object):
 				frequency = float(frequency.replace(' GHz', ''))
 
 				# determing x coordinate
-				screenpos = numpy.interp(frequency,(2.412, 2.462),(24, 152))
+				screenpos = numpy.interp(frequency,(2.412, 2.462),(25, 151))
 
 				# determine y coordinate
 				lineheight = numpy.interp(strength, (-100, 0), (126, 55))
