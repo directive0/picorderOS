@@ -611,8 +611,9 @@ class EMFrame(object):
 		# determined by frequency. Its height by its signal strength.
 
 			# change Background
+			draw._image = self.burgerfull
 			draw.rectangle((0,0,320,240),(0,0,0))
-			draw.bitmap((0,0),self.burgerfull)
+			#draw.bitmap((0,0), )
 
 			#draw round rect background
 			draw.rectangle((6,43,153,103), outline = lcars_blue)
