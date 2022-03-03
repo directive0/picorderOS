@@ -654,7 +654,7 @@ class EMFrame(object):
 			for index, item in enumerate(items_list):
 
 				# determine dot coordinates.
-				cords = ((item[1],103),(item[1],item[2]))
+				cords = ((item[1],129),(item[1],item[2]))
 				x1 = cords[1][0] - (6/2)
 				y1 = cords[1][1] - (6/2)
 				x2 = cords[1][0] + (6/2)
