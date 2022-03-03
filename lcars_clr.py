@@ -659,7 +659,7 @@ class EMFrame(object):
 					self.signal_name_sm.center(26,80,160,draw)
 
 					# put strength at lower left
-					strength_string = str(info[1]) + " DB"
+					strength_string = str(item[1]) + " DB"
 					self.signal_strength_sm.push(6,107,draw,string = strength_string)
 
 					# put frequency at lower right
