@@ -620,7 +620,7 @@ class EMFrame(object):
 			draw.rectangle((17,49,158,109), outline = lcars_blue)
 
 			#draw labels
-			self.title.string = "EM Channel Scan"
+			self.title.string = "EM Channel Analysis"
 			self.title.r_align(self.labelxr,self.titley,draw)
 
 			#grab EM list
