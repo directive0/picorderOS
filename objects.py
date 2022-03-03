@@ -3,7 +3,7 @@
 # Special thanks to SCIFI.radio for their work on the INI loader!
 
 import time, configparser
-from os.path import exists
+import os
 
 
 class preferences(object):
