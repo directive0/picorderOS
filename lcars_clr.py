@@ -659,7 +659,7 @@ class EMFrame(object):
 
 					# draw the strongest signals name, top center
 					self.signal_name_sm.string = item[0]
-					self.signal_name_sm.center(36,23,152,draw)
+					self.signal_name_sm.center(36,17,158,draw)
 
 					# put strength at lower left
 					strength_string = str(item[3]) + " DB"
