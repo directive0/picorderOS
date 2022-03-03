@@ -641,7 +641,7 @@ class EMFrame(object):
 
 
 				screenpos = numpy.interp(frequency,(2.412, 2.462),(23, 152))
-				lineheight = numpy.interp(strength, (-100, 0), (109, 58))
+				lineheight = numpy.interp(strength, (-100, 0), (108, 58))
 				this_ssid = (name,screenpos,lineheight,strength,frequency)
 				items_list.append(this_ssid)
 
