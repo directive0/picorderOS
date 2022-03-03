@@ -105,11 +105,14 @@ class preferences(object):
 	# Initializes the parameters for the program.
 	def __init__(self):
 		print("Loading Global Objects")
-		if not exists("picorder.ini"):
-			self.createMissingINI('picorder.ini')
+
+		file = os.path.join(os.path.dirname(__file__), "picorder.ini")
+
+		if not exists(file):
+			self.createMissingINI(file)
 
 		config=configparser.ConfigParser()
-		config.read('picorder.ini')
+		config.read(file)
 
 		# Sets the variables for boot up
 		self.version = config['SYSTEM']['version']
