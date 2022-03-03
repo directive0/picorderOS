@@ -617,7 +617,7 @@ class EMFrame(object):
 			#draw.bitmap((0,0), )
 
 			#draw round rect background
-			draw.rectangle((17,49,158,109), outline = lcars_blue)
+			draw.rectangle((18,49,158,109), outline = lcars_blue)
 
 			#draw labels
 			self.title.string = "EM Channel Analysis"
@@ -640,7 +640,7 @@ class EMFrame(object):
 				frequency = float(frequency.replace(' GHz', ''))
 
 
-				screenpos = numpy.interp(frequency,(2.412, 2.462),(23, 152))
+				screenpos = numpy.interp(frequency,(2.412, 2.462),(24, 152))
 				lineheight = numpy.interp(strength, (-100, 0), (108, 58))
 				this_ssid = (name,screenpos,lineheight,strength,frequency)
 				items_list.append(this_ssid)
@@ -663,7 +663,7 @@ class EMFrame(object):
 
 					# put strength at lower left
 					strength_string = str(item[3]) + " DB"
-					self.signal_strength_sm.push(18,114,draw,string = strength_string)
+					self.signal_strength_sm.push(19,114,draw,string = strength_string)
 
 					# put frequency at lower right
 					self.signal_frequency_sm.string = str(item[4]) + " GHZ"
