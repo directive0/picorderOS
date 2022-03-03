@@ -97,7 +97,7 @@ class preferences(object):
 							'# Turns data logging on - data is written to data/datacore.csv':None,
 							'datalog':'no',
 							'doordetection':'yes'}
-		with open('picorder.ini','w') as configfile:
+		with open(filepath,'w') as configfile:
 			config.write(configfile)
 			print("New INI file is ready.")
 
