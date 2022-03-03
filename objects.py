@@ -2,8 +2,7 @@
 # This module holds the initialization and global variables for the program.
 # Special thanks to SCIFI.radio for their work on the INI loader!
 
-import time, configparser
-from os.path import exists, join
+import time, configparser, os.path 
 
 
 class preferences(object):
@@ -108,7 +107,7 @@ class preferences(object):
 
 		file = os.path.join(os.path.dirname(__file__), "picorder.ini")
 
-		if not exists(file):
+		if not os.path.exists(file):
 			self.createMissingINI(file)
 
 		config=configparser.ConfigParser()
