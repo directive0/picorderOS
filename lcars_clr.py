@@ -617,7 +617,7 @@ class EMFrame(object):
 			#draw.bitmap((0,0), )
 
 			#draw round rect background
-			draw.rectangle((18,49,158,109), outline = lcars_blue)
+			draw.rectangle((18,49,158,126), outline = lcars_blue)
 
 			#draw labels
 			self.title.string = "EM Channel Analysis"
@@ -639,35 +639,47 @@ class EMFrame(object):
 				frequency = ssid[3]
 				frequency = float(frequency.replace(' GHz', ''))
 
-
+				# determing x coordinate
 				screenpos = numpy.interp(frequency,(2.412, 2.462),(24, 152))
-				lineheight = numpy.interp(strength, (-100, 0), (108, 58))
+
+				# determine y coordinate
+				lineheight = numpy.interp(strength, (-100, 0), (129, 55))
+
+				# package into list
 				this_ssid = (name,screenpos,lineheight,strength,frequency)
 				items_list.append(this_ssid)
 
 
 			#for each item in item_list
 			for index, item in enumerate(items_list):
+
+				# determine dot coordinates.
 				cords = ((item[1],103),(item[1],item[2]))
 				x1 = cords[1][0] - (6/2)
 				y1 = cords[1][1] - (6/2)
 				x2 = cords[1][0] + (6/2)
 				y2 = cords[1][1] + (6/2)
+
+				# if this is the strongest singal draw labels and change colour.
 				if index == 0:
 					draw.line(cords,lcars_peach,1)
 					draw.ellipse([x1,y1,x2,y2],lcars_peach)
 
+
+					name = item[0]
+					trunc_name = name[:16] + (name[16:] and '..')
 					# draw the strongest signals name, top center
-					self.signal_name_sm.string = item[0]
-					self.signal_name_sm.center(36,17,141,draw)
+					self.signal_name_sm.push(19,35,draw,string = trunc_name)
 
 					# put strength at lower left
 					strength_string = str(item[3]) + " DB"
-					self.signal_strength_sm.push(19,114,draw,string = strength_string)
+					#self.signal_strength_sm.push(19,114,draw,string = strength_string)
 
 					# put frequency at lower right
-					self.signal_frequency_sm.string = str(item[4]) + " GHZ"
-					self.signal_frequency_sm.r_align(157,114,draw)
+					self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
+					self.signal_frequency_sm.r_align(157,36,draw)
+
+				# otherwise just draw the line and dot in the usual color
 				else:
 					draw.line(cords,lcars_bluer,1)
 					draw.ellipse([x1,y1,x2,y2],lcars_bluer)
