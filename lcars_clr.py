@@ -640,7 +640,7 @@ class EMFrame(object):
 				frequency = float(frequency.replace(' GHz', ''))
 
 
-				screenpos = numpy.interp(frequency,(2.412, 2.462),(21, 154))
+				screenpos = numpy.interp(frequency,(2.412, 2.462),(23, 152))
 				lineheight = numpy.interp(strength, (-100, 0), (109, 58))
 				this_ssid = (name,screenpos,lineheight,strength,frequency)
 				items_list.append(this_ssid)
@@ -659,7 +659,7 @@ class EMFrame(object):
 
 					# draw the strongest signals name, top center
 					self.signal_name_sm.string = item[0]
-					self.signal_name_sm.center(37,0,160,draw)
+					self.signal_name_sm.center(36,23,152,draw)
 
 					# put strength at lower left
 					strength_string = str(item[3]) + " DB"
