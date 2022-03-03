@@ -632,7 +632,7 @@ class EMFrame(object):
 			#draw.rounded_rectangle((6,43,153,103), outline = lcars_bluer)
 
 			#for each item in item_list
-			for index, item in enumerate(item_list):
+			for index, item in enumerate(items_list):
 				cords = ((item[1],103),(item[1],item[2]))
 				x1 = cords[2][0] - (6/2)
 				y1 = cords[2][1] - (6/2)
