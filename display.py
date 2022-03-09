@@ -72,12 +72,12 @@ class GenericDisplay(object):
 		if configure.display == 2:
 			self.surface = device.draw()
 
-		parent_conn,child_conn = Pipe()
-		display_process = Process(target=DisplayFunction, args=(child_conn,))
-		display_process.start()
+		self.parent_conn,child_conn = Pipe()
+		self.display_process = Process(target=DisplayFunction, args=(child_conn,))
+		self.display_process.start()
 
 
 
 	# Display takes a PILlow based drawobject and pushes it to screen.
 	def display(self,frame):
-		parent_conn.recv(frame)
+		self.parent_conn.send(frame)
