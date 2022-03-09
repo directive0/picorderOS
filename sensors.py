@@ -419,6 +419,7 @@ def threaded_sensor():
 
 			timed.logtime()
 			data = parent_conn.recv()
+			print(data)
 			plars.update(data)
 
 	sense_process.terminate()
