@@ -3,7 +3,7 @@ import time
 from plars import *
 import math
 import numpy
-
+from multiprocessing import Process,Queue,Pipe
 # the following is a sensor module for use with the PicorderOS
 print("Loading Unified Sensor Module")
 
@@ -395,6 +395,12 @@ class MLX90614():
 		data = self.read_reg(self.MLX90614_TOBJ1)
 		return self.data_to_temp(data)
 
+def sensor_process(conn):
+	sensors = Sensor()
+
+	while True:
+		conn.send(sensors.get())
+
 def threaded_sensor():
 
 	sensors = Sensor()
@@ -404,11 +410,15 @@ def threaded_sensor():
 
 	timed = timer()
 
+	parent_conn,child_conn = Pipe()
+	sense_process = Process(target=sensor_process, args=(child_conn,))
 
 	while not configure.status == "quit":
 
 		if timed.timelapsed() > configure.samplerate[0]:
 
 			timed.logtime()
-			data = sensors.get()
+			data = parent_conn.recv()
 			plars.update(data)
+
+	sense_process.terminate()
