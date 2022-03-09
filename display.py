@@ -46,18 +46,18 @@ def DisplayFunction(q):
 	if configure.display == 2:
 		surface = device.draw()
 
+	while True:
+		# the following is only for screens that use Luma.LCD
+		if configure.display == 1:
+			device.display(q.get())
 
-	# the following is only for screens that use Luma.LCD
-	if configure.display == 1:
-		device.display(q.get())
-
-	# the following is only for TFT24T screens
-	elif configure.display == 2:
-		 # Resize the image and rotate it so it's 240x320 pixels.
-		frame = frame.rotate(90,0,1).resize((240, 320))
-		# Draw the image on the display hardware.
-		surface.pasteimage(q.get(),(0,0))
-		device.display()
+		# the following is only for TFT24T screens
+		elif configure.display == 2:
+			 # Resize the image and rotate it so it's 240x320 pixels.
+			frame = frame.rotate(90,0,1).resize((240, 320))
+			# Draw the image on the display hardware.
+			surface.pasteimage(q.get(),(0,0))
+			device.display()
 
 # a class to control the connected display. It serves as a transmission between
 # the main drawing program and the possible connected screen. A range of screens
