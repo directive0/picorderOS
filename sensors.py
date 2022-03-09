@@ -412,6 +412,7 @@ def threaded_sensor():
 
 	parent_conn,child_conn = Pipe()
 	sense_process = Process(target=sensor_process, args=(child_conn,))
+	sense_process.start()
 
 	while not configure.status == "quit":
 
