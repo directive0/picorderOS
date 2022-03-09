@@ -74,7 +74,7 @@ class GenericDisplay(object):
 
 		parent_conn,child_conn = Pipe()
 		display_process = Process(target=DisplayFunction, args=(child_conn,))
-		sense_process.start()
+		display_process.start()
 
 
 
