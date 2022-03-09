@@ -40,23 +40,23 @@ elif configure.display == 2:
 
 # a function intended to be run as a process so as to offload the computation
 # of the screen rendering from the GIL.
-def DisplayFunction(conn):
+def DisplayFunction(q):
 	# lib_tft24 screens require us to create a drawing surface for the screen
 	# and add to it.
 	if configure.display == 2:
-		self.surface = device.draw()
+		surface = device.draw()
 
 
 	# the following is only for screens that use Luma.LCD
 	if configure.display == 1:
-		device.display(conn.recv())
+		device.display(q.get())
 
 	# the following is only for TFT24T screens
 	elif configure.display == 2:
 		 # Resize the image and rotate it so it's 240x320 pixels.
 		frame = frame.rotate(90,0,1).resize((240, 320))
 		# Draw the image on the display hardware.
-		self.surface.pasteimage(conn.recv(),(0,0))
+		surface.pasteimage(q.get(),(0,0))
 		device.display()
 
 # a class to control the connected display. It serves as a transmission between
@@ -72,12 +72,12 @@ class GenericDisplay(object):
 		if configure.display == 2:
 			self.surface = device.draw()
 
-		self.parent_conn,child_conn = Pipe()
-		self.display_process = Process(target=DisplayFunction, args=(child_conn,))
+		self.q = Queue()
+		self.display_process = Process(target=DisplayFunction, args=(self.q))
 		self.display_process.start()
 
 
 
 	# Display takes a PILlow based drawobject and pushes it to screen.
 	def display(self,frame):
-		self.parent_conn.send(frame)
+		self.q.put(frame)
