@@ -73,7 +73,7 @@ class GenericDisplay(object):
 			self.surface = device.draw()
 
 		self.q = Queue()
-		self.display_process = Process(target=DisplayFunction, args=(self.q))
+		self.display_process = Process(target=DisplayFunction, args=(self.q,))
 		self.display_process.start()
 
 
