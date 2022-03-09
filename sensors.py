@@ -395,10 +395,13 @@ class MLX90614():
 		data = self.read_reg(self.MLX90614_TOBJ1)
 		return self.data_to_temp(data)
 
+# function to use the sensor class as a process.
 def sensor_process(conn):
+	#init sensors
 	sensors = Sensor()
 
 	while True:
+		#constantly grab sensors.
 		conn.send(sensors.get())
 
 def threaded_sensor():
