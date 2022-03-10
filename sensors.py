@@ -180,9 +180,10 @@ class Sensor(object):
 			self.bme_humi = Fragment(0,100,"Hygrometer", "%", "BME680")
 			self.bme_press = Fragment(300,1100,"Barometer","hPa", "BME680")
 			self.bme_voc = Fragment(300000,1100000,"VOC","KOhm", "BME680")
-			#self.voc_procc = subprocess.Popen(['./bsec_bme680'], stdout=subprocess.PIPE)
+
 
 			#if configure.bme_bsec:
+			#self.voc_procc = subprocess.Popen(['./bsec_bme680'], stdout=subprocess.PIPE)
 			#	self.bme_bsec = Fragment(-40,85,"Quality",self.deg_sym + "Q", "BME680")
 
 		if configure.pocket_geiger:

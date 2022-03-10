@@ -25,6 +25,7 @@ from PIL import ImageDraw
 import numpy
 from array import *
 from plars import *
+from multiprocessing import Process,Queue,Pipe
 
 class graph_area(object):
 
@@ -228,6 +229,7 @@ class graph_area(object):
 			recent = plars.get_recent(dsc,dev,num = self.samples)
 
 
+		
 		cords = self.graphprep(recent)
 		self.buff = recent
 
