@@ -27,6 +27,42 @@ from array import *
 from plars import *
 from multiprocessing import Process,Queue,Pipe
 
+# function to calculate onscreen coordinates of graph pixels as a process.
+def graph_prep_process(conn,samples,datalist,auto,newrange,targetrange,sourcerange,linepoint,jump):
+	# for each vertical bar in the graph size
+	for i in range(samples):
+
+		newlist = []
+
+		# if the cursor has data to write
+		if i < len(datalist):
+
+			# gives me an index within the current length of the datalist
+			# goes from the most recent data backwards
+			# so the graph prints from left-right: oldest-newest data.
+			indexer = (len(datalist) - i) - 1
+
+			# if auto scaling is on
+			if auto == True:
+				# take the sensor value received and map it against the on screen limits
+				scaledata = abs(numpy.interp(datalist[indexer],newrange,targetrange))
+			else:
+				# use the sensors stated limits as the range.
+				scaledata = abs(numpy.interp(datalist[indexer],sourcerange,targetrange))
+
+			# append the current x position, with this new scaled data as the y positioning into the buffer
+			newlist.append((linepoint,scaledata))
+		else:
+			# If no data just write intensity as scaled zero
+			scaledata = abs(numpy.interp(sourcelow,sourcerange,targetrange))
+			newlist.append((linepoint,scaledata))
+
+		# increment the cursor
+		linepoint = linepoint + jump
+
+	conn.put(newlist)
+
+
 class graph_area(object):
 
 
@@ -133,7 +169,7 @@ class graph_area(object):
 		# Spacing between each point.
 		self.jump = -spacing
 
-		self.newlist = []
+
 
 		# if this graph ISNT for WIFI.
 		if self.type == 0:
@@ -162,38 +198,13 @@ class graph_area(object):
 
 
 
-		# for each vertical bar in the graph size
-		for i in range(self.samples):
+		q = Queue()
+		prep_process = Process(target=graph_prep_process, args=(q,self.samples,datalist,self.auto,self.newrange,self.targetrange,self.sourcerange,self.linepoint,self.jump,))
+		prep_process.start()
+		result = q.get()
+		prep_process.join()
 
-			# if the cursor has data to write
-			if i < len(datalist):
-
-				# gives me an index within the current length of the datalist
-				# goes from the most recent data backwards
-				# so the graph prints from left-right: oldest-newest data.
-				indexer = (len(datalist) - i) - 1
-
-				# if auto scaling is on
-				if self.auto == True:
-					# take the sensor value received and map it against the on screen limits
-					scaledata = abs(numpy.interp(datalist[indexer],self.newrange,self.targetrange))
-				else:
-					# use the sensors stated limits as the range.
-					scaledata = abs(numpy.interp(datalist[indexer],self.sourcerange,self.targetrange))
-
-				# append the current x position, with this new scaled data as the y positioning into the buffer
-				self.newlist.append((self.linepoint,scaledata))
-			else:
-				# If no data just write intensity as scaled zero
-				scaledata = abs(numpy.interp(sourcelow,self.sourcerange,self.targetrange))
-				self.newlist.append((self.linepoint,scaledata))
-
-
-			# increment the cursor
-			self.linepoint = self.linepoint + self.jump
-
-
-		return self.newlist
+		return result
 
 
 
@@ -229,7 +240,7 @@ class graph_area(object):
 			recent = plars.get_recent(dsc,dev,num = self.samples)
 
 
-		
+
 		cords = self.graphprep(recent)
 		self.buff = recent
 
