@@ -1,5 +1,7 @@
 print("Loading Picorder Library Access and Retrieval System Module")
 from objects import *
+from multiprocessing import Process,Queue,Pipe
+
 
 import json
 
@@ -16,6 +18,31 @@ import pandas as pd
 import json
 
 import threading
+
+# Broken out functions for use with processing:
+
+# organizes and returns a list of data as a multiprocess.
+def get_recent_proc(conn,buffer,dsc,dev,num):
+
+			result = buffer[buffer["dsc"] == dsc]
+
+			result2 = result.loc[result['dev'] == dev]
+
+			untrimmed_data = self.get_sensor(dsc,dev) result2
+
+			# trim it to length (num).
+			trimmed_data = untrimmed_data.tail(num)
+
+			# return a list of the values
+			result = trimmed_data['value'].tolist()
+
+			conn.put(result)
+
+
+
+
+
+
 
 class PLARS(object):
 
@@ -247,14 +274,13 @@ class PLARS(object):
 		# set the thread lock so other threads are unable to add sensor data
 		self.lock.acquire()
 
-		# get a dataframe of just the requested sensor
-		untrimmed_data = self.get_sensor(dsc,dev)
-
-		# trim it to length (num).
-		trimmed_data = untrimmed_data.tail(num)
+		q = Queue()
+		get_process = Process(target=get_recent_proc, args=(q,self.buffer,dsc,dev,num,))
+		get_process.start()
 
 		# return a list of the values
-		result = trimmed_data['value'].tolist()
+		result = q.get()
+		get_process.join()
 
 		# release the thread lock.
 		self.lock.release()
