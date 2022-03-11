@@ -201,8 +201,9 @@ class graph_area(object):
 		q = Queue()
 		prep_process = Process(target=graph_prep_process, args=(q,self.samples,datalist,self.auto,self.newrange,self.targetrange,self.sourcerange,self.linepoint,self.jump,sourcelow,))
 		prep_process.start()
-		result = q.get()
+
 		prep_process.join()
+		result = q.get()
 
 		return result
 
