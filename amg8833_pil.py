@@ -88,13 +88,6 @@ if configure.amg8833:
 
 
 
-#some utility functions
-def constrain(val, min_val, max_val):
-	return min(max_val, max(min_val, val))
-
-def map(x, in_min, in_max, out_min, out_max):
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-
 # create an 8x8 array for testing purposes. Displays random 'sensor data'.
 def makegrid(random = True):
 	dummyvalue = []
@@ -126,9 +119,11 @@ class ThermalPixel(object):
 	def update(self,value,high,low,surface):
 
 		if configure.auto[0]:
-			color = map(value, low, high, 0, 254)
+
+			color = numpy.interp(value,(low,high),(0,254))
 		else:
-			color = map(value, 0, 80, 0, 254)
+			color = numpy.interp(value,(0,80),(0,254))
+
 		if color > 255:
 			color = 255
 		if color < 0:
@@ -250,7 +245,7 @@ class ThermalGrid(object):
 
 		for row in self.data:
 			pixels = pixels + list(row)
-		pixels = [map_value(p, mintemp, maxtemp, 0, COLORDEPTH - 1) for p in pixels]
+		pixels = [numpy.interp(p,(mintemp,maxtemp),(0,COLORDEPTH - 1)) for p in pixels]
 
 		# perform interpolation
 		bicubic = griddata(points, pixels, (grid_x, grid_y), method="cubic")

@@ -12,7 +12,7 @@ from queue import Queue
 from threading import Thread
 
 
-os.environ['SDL_AUDIODRIVER'] = 'dsp'
+os.environ['SDL_AUDIODRIVER'] = 'alsa'
 
 from objects import *
 from sensors import *
