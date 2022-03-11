@@ -26,9 +26,7 @@ def get_recent_proc(conn,buffer,dsc,dev,num):
 
 			result = buffer[buffer["dsc"] == dsc]
 
-			result2 = result.loc[result['dev'] == dev]
-
-			untrimmed_data = self.get_sensor(dsc,dev) result2
+			untrimmed_data = result.loc[result['dev'] == dev]
 
 			# trim it to length (num).
 			trimmed_data = untrimmed_data.tail(num)
