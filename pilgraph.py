@@ -28,7 +28,7 @@ from plars import *
 from multiprocessing import Process,Queue,Pipe
 
 # function to calculate onscreen coordinates of graph pixels as a process.
-def graph_prep_process(conn,samples,datalist,auto,newrange,targetrange,sourcerange,linepoint,jump):
+def graph_prep_process(conn,samples,datalist,auto,newrange,targetrange,sourcerange,linepoint,jump,sourcelow):
 	# for each vertical bar in the graph size
 	for i in range(samples):
 
@@ -199,7 +199,7 @@ class graph_area(object):
 
 
 		q = Queue()
-		prep_process = Process(target=graph_prep_process, args=(q,self.samples,datalist,self.auto,self.newrange,self.targetrange,self.sourcerange,self.linepoint,self.jump,))
+		prep_process = Process(target=graph_prep_process, args=(q,self.samples,datalist,self.auto,self.newrange,self.targetrange,self.sourcerange,self.linepoint,self.jump,sourcelow,))
 		prep_process.start()
 		result = q.get()
 		prep_process.join()
