@@ -2,6 +2,7 @@ print("Loading AMG8833 Thermal Camera Module")
 #import pygame
 import random
 import math
+import numpy
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
