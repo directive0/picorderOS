@@ -307,7 +307,7 @@ def graphprep(list):
 	return newlist
 
 # graphit is a quick tool to help prepare graphs by changing their data from
-# absolute values into scaled values for their pixel position on screen.
+# true values into scaled values for their pixel position on screen.
 def graphit(data, auto = True):
 
 	#grabs our databuffer object.
@@ -324,9 +324,9 @@ def graphit(data, auto = True):
 			data_high = max(buffer)
 			data_low = min(buffer)
 			# scales the data on the y axis.
-			prep.append(translate(i, data_low, data_high, GRAPH_Y2, GRAPH_Y))
+			prep.append(numpy.interp(i, (data_low, data_high), (GRAPH_Y2, GRAPH_Y)))
 		else:
-			prep.append(translate(i, data_low, data_high, GRAPH_Y2, GRAPH_Y)) # <----need to fix total scale.
+			prep.append(numpy.interp(i, (data_low, data_high), (GRAPH_Y2, GRAPH_Y))) # <----need to fix total scale.
 
 
 	return graphprep(prep)
