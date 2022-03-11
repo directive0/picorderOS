@@ -698,12 +698,12 @@ class MultiFrame(object):
 	def __init__(self):
 
 		# Sets the topleft origin of the graph
-		self.graphx = 18
+		self.graphx = 20
 		self.graphy = 25
 		self.samples = configure.samples
 
 		# Sets the x and y span of the graph
-		self.gspanx = 135
+		self.gspanx = 133
 		self.gspany = 69
 
 		self.graphcycle = 0
