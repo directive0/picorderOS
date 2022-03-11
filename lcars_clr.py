@@ -698,7 +698,7 @@ class MultiFrame(object):
 	def __init__(self):
 
 		# Sets the topleft origin of the graph
-		self.graphx = 20
+		self.graphx = 21
 		self.graphy = 25
 		self.samples = configure.samples
 
@@ -709,7 +709,7 @@ class MultiFrame(object):
 		self.graphcycle = 0
 
 		self.marginleft = 23
-		self.marginright= 133
+		self.marginright= 132
 
 		# sets the background image for the display
 		self.back = Image.open('assets/lcarsframe.png')
