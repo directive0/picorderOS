@@ -29,10 +29,11 @@ from multiprocessing import Process,Queue,Pipe
 
 # function to calculate onscreen coordinates of graph pixels as a process.
 def graph_prep_process(conn,samples,datalist,auto,newrange,targetrange,sourcerange,linepoint,jump,sourcelow):
+	newlist = []
 	# for each vertical bar in the graph size
 	for i in range(samples):
 
-		newlist = []
+
 
 		# if the cursor has data to write
 		if i < len(datalist):
