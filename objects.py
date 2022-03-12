@@ -93,9 +93,9 @@ class preferences(object):
 							'# Autoranging of graphs':None,
 							'autoranging':'yes',							# Auto ranging of graphs
 							'mode_a_graph_width':'280',						# graph width for TR108 mode_a
-							'mode_a_graph_height':'182',					# graph height for TR108 mode_a\
+							'mode_a_graph_height':'160',					# graph height for TR108 mode_a\
 							'mode_a_x_offset':18,							# x offset for TR108 mode_a
-							'mode_a_y_offset':20,							# y offset for TR108 mode_a
+							'mode_a_y_offset':31,							# y offset for TR108 mode_a
 							'# Interpolate Temperature':None,
 							'interpolate':'yes',							# Interpolate temperature
 							'samplerate':'0',
