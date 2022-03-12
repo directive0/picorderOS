@@ -78,7 +78,8 @@ class preferences(object):
 							'PG_NS':'21'}
 
 		config['OUTPUT'] = {'display':'1',
-							'LED_timer':'0.2'}
+							'LED_timer':'0.2',
+							}
 
 		config['GLOBALS'] = {'# Controls whether LEDs are active':None,
 							'leds':'yes',
@@ -91,6 +92,10 @@ class preferences(object):
 							'sleep':'yes',									# If sleep is True the lights will respond to hall effect sensors
 							'# Autoranging of graphs':None,
 							'autoranging':'yes',							# Auto ranging of graphs
+							'mode_a_graph_width':'280',						# graph width for TR108 mode_a
+							'mode_a_graph_height':'182',					# graph height for TR108 mode_a\
+							'mode_a_x_offset':18,							# x offset for TR108 mode_a
+							'mode_a_y_offset':20,							# y offset for TR108 mode_a
 							'# Interpolate Temperature':None,
 							'interpolate':'yes',							# Interpolate temperature
 							'samplerate':'0',
@@ -234,6 +239,11 @@ class preferences(object):
 		# controls auto ranging of graphs
 		self.auto = [self.str2bool(config['GLOBALS']['autoranging'])]
 
+        # controls sizes and offsets for mode_a on TR108
+		self.mode_a_graph_width = int(config['GLOBALS']['mode_a_graph_width'])
+		self.mode_a_graph_height = int(config['GLOBALS']['mode_a_graph_height'])
+		self.mode_a_x_offset = int(config['GLOBALS']['mode_a_x_offset'])
+		self.mode_a_y_offset = int(config['GLOBALS']['mode_a_y_offset'])
 		# holds theme state for UI
 		self.theme = [0]
 
