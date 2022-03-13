@@ -340,6 +340,11 @@ class Sensor(object):
 
 		return sensorlist
 
+	def end(self):
+		if configure.pocket_geiger:
+			self.radiation.close()
+
+
 class MLX90614():
 
 	MLX90614_RAWIR1=0x04
@@ -413,7 +418,7 @@ def threaded_sensor():
 	configure.sensor_ready[0] = True
 
 	timed = timer()
-
+	sensors.end()
 	parent_conn,child_conn = Pipe()
 	sense_process = Process(target=sensor_process, args=(child_conn,))
 	sense_process.start()
