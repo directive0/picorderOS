@@ -2,8 +2,7 @@
 # This module holds the initialization and global variables for the program.
 # Special thanks to SCIFI.radio for their work on the INI loader!
 
-import time, configparser
-from os.path import exists
+import time, configparser, os.path 
 
 
 class preferences(object):
@@ -98,18 +97,21 @@ class preferences(object):
 							'# Turns data logging on - data is written to data/datacore.csv':None,
 							'datalog':'no',
 							'doordetection':'yes'}
-		with open('picorder.ini','w') as configfile:
+		with open(filepath,'w') as configfile:
 			config.write(configfile)
 			print("New INI file is ready.")
 
 	# Initializes the parameters for the program.
 	def __init__(self):
 		print("Loading Global Objects")
-		if not exists("picorder.ini"):
-			self.createMissingINI('picorder.ini')
+
+		file = os.path.join(os.path.dirname(__file__), "picorder.ini")
+
+		if not os.path.exists(file):
+			self.createMissingINI(file)
 
 		config=configparser.ConfigParser()
-		config.read('picorder.ini')
+		config.read(file)
 
 		# Sets the variables for boot up
 		self.version = config['SYSTEM']['version']
