@@ -879,7 +879,7 @@ class MultiFrame(object):
 
 			item = datas[i]
 
-			senseslice.append([item[0], dsc, dev, sym, mini, maxi])
+			senseslice.append([item[-1], dsc, dev, sym, mini, maxi])
 
 
 
