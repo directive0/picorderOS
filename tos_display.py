@@ -619,23 +619,26 @@ class Graph_Screen(object):
 		data_c = []
 		datas = [data_a,data_b,data_c]
 
+		#gathers the data for all three sensors currently selected for each slot.
 		for i in range(3):
 
 			# determines the sensor keys for each of the three main sensors
 			this_index = int(configure.sensors[i][0])
 
+			# grabs the sensor metadata for display
 			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
+			# grabs sensor data
 			datas[i] = plars.get_recent(dsc,dev,num = SAMPLE_SIZE)
 
 
-			# if data capture is failed, replace with 47 for diagnostic
+			# if data capture has failed, replace with 47 for diagnostic
 			if len(datas[i]) == 0:
 				datas[i] = [47]
 
 			item = datas[i]
 
-			senseslice.append([item[0], dsc, dev, sym, mini, maxi])
+			senseslice.append([item[-1], dsc, dev, sym, mini, maxi])
 
 
 		#converts data to float
