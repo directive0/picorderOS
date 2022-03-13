@@ -8,7 +8,6 @@ print("PicorderOS - Alpha")
 print("Loading Components")
 
 import os
-from queue import Queue
 from threading import Thread
 
 
