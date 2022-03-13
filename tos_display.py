@@ -5,14 +5,18 @@
 # styled tricorders.
 print("Loading 320x240 Duotronic Interface")
 # The following are some necessary modules for the Picorder.
-import pygame
-import time
-import os
+from asyncio import sleep
+from pickle import FALSE
+import pygame, time, os
+from pyvidplayer import Video
 
 
+os.environ["SDL_VIDEO_CENTERED"] = "1"
+from pathlib import Path
 from plars import *
 from objects import *
 from input import *
+
 
 if not configure.pc:
 	if configure.tr108:
@@ -21,10 +25,10 @@ if not configure.pc:
 		#os.system('xset -display :0 -dpms')
 
 SAMPLE_SIZE = configure.samples
-GRAPH_WIDTH = 280
-GRAPH_HEIGHT = 182
-GRAPH_X = 18
-GRAPH_Y = 20
+GRAPH_WIDTH = configure.mode_a_graph_width
+GRAPH_HEIGHT = configure.mode_a_graph_height
+GRAPH_X = configure.mode_a_x_offset
+GRAPH_Y = configure.mode_a_y_offset
 GRAPH_X2 = GRAPH_X + GRAPH_WIDTH
 GRAPH_Y2 = GRAPH_Y + GRAPH_HEIGHT
 
@@ -759,10 +763,20 @@ class Video_Screen(object):
         self.surface = surface
         self.videobg = Image()
         self.videobg.update(videobg, 0,0)
-
+        self.running = False
+        self.paused = False
+        self.clock = pygame.time.Clock()
 
     def frame(self):
         self.status = "mode_c"
+        if not self.running:
+            self.running = True    
+            self.clip = Video('assets/ekmd.mov')
+            self.clip.set_size(resolution)
+            pygame.mixer.quit()
+            
+        self.clock.tick(60)
+        
         if configure.eventready[0]:
 
         # The following code handles inputs and button presses.
@@ -773,11 +787,21 @@ class Video_Screen(object):
                 print("Button 1")
                 self.status = "mode_b"
                 configure.eventready[0] = False
+                self.running = False
+                self.clip.close()
                 return self.status
 
             if keys[1]:
                 self.status =  "mode_c"
-                print("Button 2")
+                self.clip.toggle_pause()
+                if self.paused:
+                    self.paused = False
+                    print("Resume")
+                else:
+                    self.paused = True
+                    print("Paused")
+				# We would use this to set mode_d instead of 
+				# toggling a pause were we to get a mode_d
                 configure.eventready[0] = False
                 return self.status
 
@@ -786,15 +810,20 @@ class Video_Screen(object):
                 configure.last_status[0] = "mode_c"
                 print("Button 3")
                 self.status = "settings"
+                self.running = False
                 configure.eventready[0] = False
+                
                 return self.status
 
             configure.eventready[0] = False
 
         #draws Background gridplane
         self.videobg.draw(self.surface)
+        self.clip.draw(self.surface,(0,0), force_draw=FALSE)
         #draws UI to frame buffer
         pygame.display.update()
+        if not self.clip.active:
+            self.clip.restart()
 
         return self.status
 
