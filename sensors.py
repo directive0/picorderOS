@@ -3,7 +3,7 @@ import time
 from plars import *
 import math
 import numpy
-
+from multiprocessing import Process,Queue,Pipe
 # the following is a sensor module for use with the PicorderOS
 print("Loading Unified Sensor Module")
 
@@ -180,10 +180,11 @@ class Sensor(object):
 			self.bme_humi = Fragment(0,100,"Hygrometer", "%", "BME680")
 			self.bme_press = Fragment(300,1100,"Barometer","hPa", "BME680")
 			self.bme_voc = Fragment(300000,1100000,"VOC","KOhm", "BME680")
-			self.voc_procc = subprocess.Popen(['./bsec_bme680'], stdout=subprocess.PIPE)
 
-			if configure.bme_bsec:
-				self.bme_bsec = Fragment(-40,85,"Quality",self.deg_sym + "Q", "BME680")
+
+			#if configure.bme_bsec:
+			#self.voc_procc = subprocess.Popen(['./bsec_bme680'], stdout=subprocess.PIPE)
+			#	self.bme_bsec = Fragment(-40,85,"Quality",self.deg_sym + "Q", "BME680")
 
 		if configure.pocket_geiger:
 			self.radiat = Fragment(0.0, 10000.0, "Radiation", "urem/hr", "pocketgeiger")
@@ -339,6 +340,11 @@ class Sensor(object):
 
 		return sensorlist
 
+	def end(self):
+		if configure.pocket_geiger:
+			self.radiation.close()
+
+
 class MLX90614():
 
 	MLX90614_RAWIR1=0x04
@@ -395,6 +401,15 @@ class MLX90614():
 		data = self.read_reg(self.MLX90614_TOBJ1)
 		return self.data_to_temp(data)
 
+# function to use the sensor class as a process.
+def sensor_process(conn):
+	#init sensors
+	sensors = Sensor()
+
+	while True:
+		#constantly grab sensors.
+		conn.send(sensors.get())
+
 def threaded_sensor():
 
 	sensors = Sensor()
@@ -403,12 +418,18 @@ def threaded_sensor():
 	configure.sensor_ready[0] = True
 
 	timed = timer()
-
+	sensors.end()
+	parent_conn,child_conn = Pipe()
+	sense_process = Process(target=sensor_process, args=(child_conn,))
+	sense_process.start()
 
 	while not configure.status == "quit":
 
 		if timed.timelapsed() > configure.samplerate[0]:
 
 			timed.logtime()
-			data = sensors.get()
+			data = parent_conn.recv()
+			#print(data)
 			plars.update(data)
+
+	sense_process.terminate()

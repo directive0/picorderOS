@@ -5,14 +5,18 @@
 # styled tricorders.
 print("Loading 320x240 Duotronic Interface")
 # The following are some necessary modules for the Picorder.
-import pygame
-import time
-import os
+from asyncio import sleep
+from pickle import FALSE
+import pygame, time, os
+from pyvidplayer import Video
 
 
+os.environ["SDL_VIDEO_CENTERED"] = "1"
+from pathlib import Path
 from plars import *
 from objects import *
 from input import *
+
 
 if not configure.pc:
 	if configure.tr108:
@@ -303,7 +307,7 @@ def graphprep(list):
 	return newlist
 
 # graphit is a quick tool to help prepare graphs by changing their data from
-# absolute values into scaled values for their pixel position on screen.
+# true values into scaled values for their pixel position on screen.
 def graphit(data, auto = True):
 
 	#grabs our databuffer object.
@@ -320,9 +324,9 @@ def graphit(data, auto = True):
 			data_high = max(buffer)
 			data_low = min(buffer)
 			# scales the data on the y axis.
-			prep.append(translate(i, data_low, data_high, GRAPH_Y2, GRAPH_Y))
+			prep.append(numpy.interp(i, (data_low, data_high), (GRAPH_Y2, GRAPH_Y)))
 		else:
-			prep.append(translate(i, data_low, data_high, GRAPH_Y2, GRAPH_Y)) # <----need to fix total scale.
+			prep.append(numpy.interp(i, (data_low, data_high), (GRAPH_Y2, GRAPH_Y))) # <----need to fix total scale.
 
 
 	return graphprep(prep)
@@ -615,23 +619,26 @@ class Graph_Screen(object):
 		data_c = []
 		datas = [data_a,data_b,data_c]
 
+		#gathers the data for all three sensors currently selected for each slot.
 		for i in range(3):
 
 			# determines the sensor keys for each of the three main sensors
 			this_index = int(configure.sensors[i][0])
 
+			# grabs the sensor metadata for display
 			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
+			# grabs sensor data
 			datas[i] = plars.get_recent(dsc,dev,num = SAMPLE_SIZE)
 
 
-			# if data capture is failed, replace with 47 for diagnostic
+			# if data capture has failed, replace with 47 for diagnostic
 			if len(datas[i]) == 0:
 				datas[i] = [47]
 
 			item = datas[i]
 
-			senseslice.append([item[0], dsc, dev, sym, mini, maxi])
+			senseslice.append([item[-1], dsc, dev, sym, mini, maxi])
 
 
 		#converts data to float
@@ -759,10 +766,21 @@ class Video_Screen(object):
         self.surface = surface
         self.videobg = Image()
         self.videobg.update(videobg, 0,0)
-
+        self.running = False
+        self.paused = False
+        self.clock = pygame.time.Clock()
 
     def frame(self):
         self.status = "mode_c"
+        if not self.running:
+            self.running = True
+            self.clip = Video('assets/ekmd.mov')
+            self.clip.set_size(resolution)
+            self.clip.restart()
+
+
+        self.clock.tick(60)
+
         if configure.eventready[0]:
 
         # The following code handles inputs and button presses.
@@ -773,11 +791,19 @@ class Video_Screen(object):
                 print("Button 1")
                 self.status = "mode_b"
                 configure.eventready[0] = False
+                self.running = False
+                self.clip.close()
                 return self.status
 
             if keys[1]:
                 self.status =  "mode_c"
-                print("Button 2")
+                self.clip.toggle_pause()
+                if self.paused:
+                    self.paused = False
+                    print("Resume")
+                else:
+                    self.paused = True
+                    print("Paused")
                 configure.eventready[0] = False
                 return self.status
 
@@ -786,15 +812,20 @@ class Video_Screen(object):
                 configure.last_status[0] = "mode_c"
                 print("Button 3")
                 self.status = "settings"
+                self.running = False
                 configure.eventready[0] = False
+
                 return self.status
 
             configure.eventready[0] = False
 
         #draws Background gridplane
         self.videobg.draw(self.surface)
+        self.clip.draw(self.surface,(0,0), force_draw=FALSE)
         #draws UI to frame buffer
         pygame.display.update()
+        if not self.clip.active:
+            self.clip.restart()
 
         return self.status
 

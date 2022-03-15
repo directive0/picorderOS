@@ -8,10 +8,10 @@ print("PicorderOS - Alpha")
 print("Loading Components")
 
 import os
-from queue import Queue
 from threading import Thread
 
-os.environ['SDL_AUDIODRIVER'] = 'dsp'
+
+os.environ['SDL_AUDIODRIVER'] = 'alsa'
 
 from objects import *
 from sensors import *
@@ -73,6 +73,7 @@ def Main():
 	#start the sensor loop
 	sensor_thread = Thread(target = threaded_sensor, args = ())
 	sensor_thread.start()
+
 
 	if configure.leds[0]:
 		# seperate thread for LED lighting.

@@ -12,6 +12,7 @@ from display import GenericDisplay
 device = GenericDisplay()
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
+import numpy
 import PIL.ImageOps
 from PIL import Image
 from PIL import ImageFont
@@ -514,13 +515,18 @@ class EMFrame(object):
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 
 		self.signal_name = LabelObj("SSID",bigfont, colour = lcars_peach)
+		self.signal_name_sm = LabelObj("SSID",font, colour = lcars_peach)
+
 		self.signal_strength = LabelObj("ST",giantfont, colour = lcars_peach)
+		self.signal_strength_sm = LabelObj("ST",littlefont, colour = lcars_peach)
+
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
+		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_peach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 
 		self.list = Label_List(22,35, colour = lcars_peach)
 
-
+		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
 	def push(self, draw):
 
@@ -540,7 +546,7 @@ class EMFrame(object):
 			if keys[1]:
 				self.selection += 1
 
-				if self.selection >= 2:
+				if self.selection >= 3:
 					self.selection = 0
 				pass
 
@@ -554,6 +560,7 @@ class EMFrame(object):
 
 		self.wifi.update_plars()
 
+		# details on strongest wifi network.
 		if self.selection == 0:
 
 			# grab EM data from plars
@@ -563,12 +570,15 @@ class EMFrame(object):
 			self.Signal_Graph.render(draw)
 			self.title.string = "Dominant Transciever"
 			self.title.r_align(self.labelxr,self.titley,draw)
+
 			self.signal_name.push(20,35,draw, string = info[0])
+
 			self.signal_strength.string = str(info[1]) + " DB"
 			self.signal_strength.r_align(self.labelxr,92,draw)
 			self.signal_frequency.push(20,92,draw, string = info[3])
 			self.signal_mac.push(20,111, draw, string = info[6])
 
+		#list of all wifi ssids
 		if self.selection == 1:
 
 			# list to hold the data labels
@@ -577,6 +587,7 @@ class EMFrame(object):
 			# grab EM list
 			em_list = plars.get_recent_em_list()
 
+			#sort it so strongest is first
 			sorted_em_list = sorted(em_list, key=itemgetter(1), reverse = True)
 
 			# prepare a list of the data received for display
@@ -593,6 +604,89 @@ class EMFrame(object):
 
 			# assign each list element and its
 
+		# frequency intensity map
+		if self.selection == 2:
+		# returns the data necessary for freq_intensity map with EM.
+		# displays each SSID as a line segment. Its position along the x is
+		# determined by frequency. Its height by its signal strength.
+
+			# change Background
+
+			#draw.rectangle((0,0,320,240),(0,0,0))
+			draw._image = self.burgerfull
+			#draw.bitmap((0,0), )
+
+			#draw round rect background
+			draw.rectangle((18,49,158,126), outline = lcars_blue)
+
+			#draw labels
+			self.title.string = "EM Channel Analysis"
+			self.title.r_align(self.labelxr,self.titley,draw)
+
+			#grab EM list
+			unsorted_em_list = plars.get_recent_em_list()
+
+			# sort it so strongest is first.
+			em_list = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)
+
+			# create a list to hold just the info we need for the screen.
+			items_list = []
+
+			#filter info into items_list
+			for ssid in em_list:
+				name = str(ssid[0])
+				strength = ssid[1]
+				frequency = ssid[3]
+				frequency = float(frequency.replace(' GHz', ''))
+
+				# determing x coordinate
+				screenpos = numpy.interp(frequency,(2.412, 2.462),(25, 151))
+
+				# determine y coordinate
+				lineheight = numpy.interp(strength, (-100, 0), (126, 55))
+
+				# package into list
+				this_ssid = (name,screenpos,lineheight,strength,frequency)
+				items_list.append(this_ssid)
+
+
+			#for each item in item_list
+			for index, item in enumerate(items_list):
+
+				# determine dot coordinates.
+				cords = ((item[1],126),(item[1],item[2]))
+				x1 = cords[1][0] - (6/2)
+				y1 = cords[1][1] - (6/2)
+				x2 = cords[1][0] + (6/2)
+				y2 = cords[1][1] + (6/2)
+
+				# if this is the strongest singal draw labels and change colour.
+				if index == 0:
+					draw.line(cords,lcars_peach,1)
+					draw.ellipse([x1,y1,x2,y2],lcars_peach)
+
+
+					name = item[0]
+					trunc_name = name[:16] + (name[16:] and '..')
+					# draw the strongest signals name, top center
+					self.signal_name_sm.push(19,34,draw,string = trunc_name)
+
+					# put strength at lower left
+					strength_string = str(item[3]) + " DB"
+					#self.signal_strength_sm.push(19,114,draw,string = strength_string)
+
+					# put frequency at lower right
+					self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
+					self.signal_frequency_sm.r_align(157,37,draw)
+
+				# otherwise just draw the line and dot in the usual color
+				else:
+					draw.line(cords,lcars_bluer,1)
+					draw.ellipse([x1,y1,x2,y2],lcars_bluer)
+
+
+
+
 		return status
 
 
@@ -604,18 +698,18 @@ class MultiFrame(object):
 	def __init__(self):
 
 		# Sets the topleft origin of the graph
-		self.graphx = 18
+		self.graphx = 21
 		self.graphy = 25
 		self.samples = configure.samples
 
 		# Sets the x and y span of the graph
-		self.gspanx = 135
+		self.gspanx = 133
 		self.gspany = 69
 
 		self.graphcycle = 0
 
 		self.marginleft = 23
-		self.marginright= 133
+		self.marginright= 132
 
 		# sets the background image for the display
 		self.back = Image.open('assets/lcarsframe.png')
@@ -785,7 +879,7 @@ class MultiFrame(object):
 
 			item = datas[i]
 
-			senseslice.append([item[0], dsc, dev, sym, mini, maxi])
+			senseslice.append([item[-1], dsc, dev, sym, mini, maxi])
 
 
 
