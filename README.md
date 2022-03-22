@@ -23,6 +23,8 @@ sudo apt-get update
 
 sudo apt-get upgrade
 
+sudo apt install libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-net-2.0-0 libsdl2-ttf-2.0-0
+
 sudo apt-get install libatlas-base-dev libsdl2-dev libopenjp2-7-dev libtiff5 python3-pandas python3-psutil
 
 pip3 install --upgrade colour luma.lcd luma.emulator adafruit-circuitpython-bme680 sense-hat adafruit-circuitpython-mpr121 pygame==2.0.0
