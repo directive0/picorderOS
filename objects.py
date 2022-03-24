@@ -11,7 +11,7 @@ class preferences(object):
   		return v.lower() in ("yes", "true", "t", "1")
 
 	def createMissingINI(self,filepath):
-		print("picorder.ini file is missing - making a new one. You'll want to edit to taste and restart.")
+		print("config.ini file is missing - making a new one. You'll want to edit to taste and restart.")
 		config = configparser.ConfigParser(allow_no_value=True)
 
 		config['SYSTEM'] = {'# Text displayed after "picorderOS" on title screen':None,
@@ -108,7 +108,7 @@ class preferences(object):
 	# Initializes the parameters for the program.
 	def __init__(self):
 		print("Loading Global Objects")
-		if not exists("picorder.ini"):
+		if not exists("config.ini"):
 			self.createMissingINI('config.ini')
 
 		config=configparser.ConfigParser()
