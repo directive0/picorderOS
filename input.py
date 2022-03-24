@@ -108,8 +108,7 @@ if configure.input_cap1208:
 	GPIO.setmode(GPIO.BCM)
 
 
-	interrupt_pin = 0
-	GPIO.setup(interrupt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+	GPIO.setup(configure.ALERTPIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	GPIO.add_event_detect(interrupt_pin, GPIO.BOTH)
 
 

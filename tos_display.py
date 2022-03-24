@@ -17,12 +17,11 @@ from plars import *
 from objects import *
 from input import *
 
+from modulated_em import *
 
 if not configure.pc:
 	if configure.tr108:
 		import os
-		# runs a CLI command to disable the raspberry pi's screen blanking
-		#os.system('xset -display :0 -dpms')
 
 SAMPLE_SIZE = configure.samples
 GRAPH_WIDTH = 280
@@ -508,6 +507,220 @@ class Settings_Panel(object):
 
 
 		return result
+
+
+class EMFrame(object):
+	def __init__(self, surface):
+
+		self.wifi = Wifi_Scan()
+
+		self.graphcycle = 0
+
+		# Sets the topleft origin of the graph
+		self.graphx = 20
+		self.graphy = 58
+
+		# Pygame drawing surface.
+		self.surface = surface
+
+
+		# Sets the x and y span of the graph
+		self.gspanx = 135
+		self.gspany = 29
+		self.titlex = 23
+		self.titley = 2
+
+		self.high = 0
+		self.low = 0
+		self.average = 0
+		self.labely = 4
+		self.labelxr = 156
+
+
+		self.selection = 0
+
+		# create our graph_screen
+		self.Signal_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, lcars_pink, width = 2, type = 1, samples = 45)
+
+		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
+
+		self.signal_name = LabelObj("SSID",bigfont, colour = lcars_peach)
+		self.signal_name_sm = LabelObj("SSID",font, colour = lcars_peach)
+
+		self.signal_strength = LabelObj("ST",giantfont, colour = lcars_peach)
+		self.signal_strength_sm = LabelObj("ST",littlefont, colour = lcars_peach)
+
+		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
+		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_peach)
+		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
+
+		self.list = Label_List(22,35, colour = lcars_peach)
+
+		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
+
+	def push(self, draw):
+
+		status  = "mode_b"
+
+		# input handling
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
+
+
+			# ------------- Input handling -------------- #
+			if keys[0]:
+				status  = "mode_a"
+				configure.eventready[0] = False
+				return status
+
+			if keys[1]:
+				self.selection += 1
+
+				if self.selection >= 3:
+					self.selection = 0
+				pass
+
+			if keys[2]:
+				status = "settings"
+				configure.last_status[0] = "mode_b"
+				configure.eventready[0] = False
+				return status
+
+			configure.eventready[0] = False
+
+		self.wifi.update_plars()
+
+		# details on strongest wifi network.
+		if self.selection == 0:
+
+			# grab EM data from plars
+			info = plars.get_top_em_info()[0]
+
+			# draw screen elements
+			self.Signal_Graph.render(draw)
+			self.title.string = "Dominant Transciever"
+			self.title.r_align(self.labelxr,self.titley,draw)
+
+			self.signal_name.push(20,35,draw, string = info[0])
+
+			self.signal_strength.string = str(info[1]) + " DB"
+			self.signal_strength.r_align(self.labelxr,92,draw)
+			self.signal_frequency.push(20,92,draw, string = info[3])
+			self.signal_mac.push(20,111, draw, string = info[6])
+
+		#list of all wifi ssids
+		if self.selection == 1:
+
+			# list to hold the data labels
+			list_for_labels = []
+
+			# grab EM list
+			em_list = plars.get_recent_em_list()
+
+			#sort it so strongest is first
+			sorted_em_list = sorted(em_list, key=itemgetter(1), reverse = True)
+
+			# prepare a list of the data received for display
+			for ssid in sorted_em_list:
+				name = str(ssid[0])
+				strength = str(ssid[1])
+
+				label = strength + " dB • " + name
+
+				list_for_labels.append(label)
+			self.title.string = "Modulated EM Scan"
+			self.title.r_align(self.labelxr,self.titley,draw)
+			self.list.update(list_for_labels,draw)
+
+			# assign each list element and its
+
+		# frequency intensity map
+		if self.selection == 2:
+		# returns the data necessary for freq_intensity map with EM.
+		# displays each SSID as a line segment. Its position along the x is
+		# determined by frequency. Its height by its signal strength.
+
+			# change Background
+
+			#draw.rectangle((0,0,320,240),(0,0,0))
+			draw._image = self.burgerfull
+			#draw.bitmap((0,0), )
+
+			#draw round rect background
+			draw.rectangle((18,49,158,126), outline = lcars_blue)
+
+			#draw labels
+			self.title.string = "EM Channel Analysis"
+			self.title.r_align(self.labelxr,self.titley,draw)
+
+			#grab EM list
+			unsorted_em_list = plars.get_recent_em_list()
+
+			# sort it so strongest is first.
+			em_list = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)
+
+			# create a list to hold just the info we need for the screen.
+			items_list = []
+
+			#filter info into items_list
+			for ssid in em_list:
+				name = str(ssid[0])
+				strength = ssid[1]
+				frequency = ssid[3]
+				frequency = float(frequency.replace(' GHz', ''))
+
+				# determing x coordinate
+				screenpos = numpy.interp(frequency,(2.412, 2.462),(25, 151))
+
+				# determine y coordinate
+				lineheight = numpy.interp(strength, (-100, 0), (126, 55))
+
+				# package into list
+				this_ssid = (name,screenpos,lineheight,strength,frequency)
+				items_list.append(this_ssid)
+
+
+			#for each item in item_list
+			for index, item in enumerate(items_list):
+
+				# determine dot coordinates.
+				cords = ((item[1],126),(item[1],item[2]))
+				x1 = cords[1][0] - (6/2)
+				y1 = cords[1][1] - (6/2)
+				x2 = cords[1][0] + (6/2)
+				y2 = cords[1][1] + (6/2)
+
+				# if this is the strongest singal draw labels and change colour.
+				if index == 0:
+					draw.line(cords,lcars_peach,1)
+					draw.ellipse([x1,y1,x2,y2],lcars_peach)
+
+
+					name = item[0]
+					trunc_name = name[:16] + (name[16:] and '..')
+					# draw the strongest signals name, top center
+					self.signal_name_sm.push(19,34,draw,string = trunc_name)
+
+					# put strength at lower left
+					strength_string = str(item[3]) + " DB"
+					#self.signal_strength_sm.push(19,114,draw,string = strength_string)
+
+					# put frequency at lower right
+					self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
+					self.signal_frequency_sm.r_align(157,37,draw)
+
+				# otherwise just draw the line and dot in the usual color
+				else:
+					draw.line(cords,lcars_bluer,1)
+					draw.ellipse([x1,y1,x2,y2],lcars_bluer)
+
+
+
+
+		return status
+
+
+
 
 
 # The graph screen object is a self contained screen that is fed the surface
