@@ -101,7 +101,7 @@ class preferences(object):
 							'# Turns data logging on - data is written to data/datacore.csv':None,
 							'datalog':'no',
 							'doordetection':'yes'}
-		with open('picorder.ini','w') as configfile:
+		with open('config.ini','w') as configfile:
 			config.write(configfile)
 			print("New INI file is ready.")
 
@@ -109,10 +109,10 @@ class preferences(object):
 	def __init__(self):
 		print("Loading Global Objects")
 		if not exists("picorder.ini"):
-			self.createMissingINI('picorder.ini')
+			self.createMissingINI('config.ini')
 
 		config=configparser.ConfigParser()
-		config.read('picorder.ini')
+		config.read('config.ini')
 
 		# Sets the variables for boot up
 		self.version = config['SYSTEM']['version']
