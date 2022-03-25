@@ -354,8 +354,8 @@ class SettingsFrame(object):
 
 class LoadingFrame(object):
 	def __init__(self):
-		self.caption = LabelObj("Loading...",bigfont,colour = lcars_peach)
-		self.titley = 77
+		self.caption = LabelObj("Loading...",giantfont,colour = lcars_peach)
+		self.titley = 40
 
 	def push(self, draw, status):
 		#draw the frame heading
@@ -1090,16 +1090,16 @@ class ColourScreen(object):
 		self.newimage.paste(self.logo,(59,15))
 		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.startup_frame.push(self.draw)
-
 		self.pixdrw()
 
 		return self.status
 
 	# simple frame to let user know new info is loading while waiting.
 	def loading(self):
-		base = self.burgerfull.copy()
-		self.draw = ImageDraw.Draw(base)
+		self.newimage = self.burgerfull.copy()
+		self.draw = ImageDraw.Draw(self.newimage)
 		self.status = self.loading_frame.push(self.draw,self.status)
+
 		self.pixdrw()
 		return self.status
 
@@ -1108,7 +1108,6 @@ class ColourScreen(object):
 		self.draw = ImageDraw.Draw(self.newimage)
 
 		last_status = self.status
-
 		self.status = self.multi_frame.push(self.draw)
 
 		if self.status == last_status:
