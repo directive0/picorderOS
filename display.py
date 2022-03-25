@@ -5,7 +5,6 @@ from objects import *
 from multiprocessing import Process,Queue,Pipe
 import signal
 
-exit_event = threading.event
 
 if configure.display == 1:
 	from luma.core.interface.serial import spi
