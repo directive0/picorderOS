@@ -1114,7 +1114,7 @@ class ColourScreen(object):
 		if self.status == last_status:
 			self.pixdrw()
 		else:
-			loading()
+			self.loading()
 
 		return self.status
 
@@ -1127,7 +1127,7 @@ class ColourScreen(object):
 		if self.status == last_status:
 			self.pixdrw()
 		else:
-			loading()
+			self.loading()
 		return self.status
 
 	def thermal_screen(self):
@@ -1141,7 +1141,7 @@ class ColourScreen(object):
 		if self.status == last_status:
 			self.pixdrw()
 		else:
-			loading()
+			self.loading()
 
 		return self.status
 
@@ -1154,7 +1154,7 @@ class ColourScreen(object):
 		if self.status == last_status:
 			self.pixdrw()
 		else:
-			loading()
+			self.loading()
 		return self.status
 
 	def powerdown(self):
