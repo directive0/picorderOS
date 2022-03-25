@@ -1099,7 +1099,7 @@ class ColourScreen(object):
 	def loading(self):
 		base = self.burgerfull.copy()
 		self.draw = ImageDraw.Draw(base)
-		self.status = self.loading_frame.push(self.draw,status)
+		self.status = self.loading_frame.push(self.draw,self.status)
 		self.pixdrw()
 		return self.status
 
