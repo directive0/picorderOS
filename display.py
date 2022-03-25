@@ -54,7 +54,7 @@ def DisplayFunction(q):
 		payload = q.get()
 
 		# add an event to handle shutdown.
-		if payload = "quit":
+		if payload == "quit":
 			pass
 
 		# the following is only for screens that use Luma.LCD
