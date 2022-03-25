@@ -33,8 +33,7 @@ titlefont = ImageFont.truetype("assets/babs.otf",16)
 bigfont = ImageFont.truetype("assets/babs.otf",20)
 giantfont = ImageFont.truetype("assets/babs.otf",30)
 
-# Load assets
-logo = Image.open('assets/picorderOS_logo.png')
+
 
 
 
@@ -353,6 +352,17 @@ class SettingsFrame(object):
 
 		return status
 
+class LoadingFrame(object):
+	def __init__(self):
+		self.caption = LabelObj("Loading...",bigfont,colour = lcars_peach)
+		self.titley = 77
+
+	def push(self, draw, status):
+		#draw the frame heading
+		self.caption.center(self.titley,0,160,draw)
+
+		return status
+
 class StartUp(object):
 	def __init__(self):
 		self.titlex = 0
@@ -376,7 +386,7 @@ class StartUp(object):
 
 	def push(self, draw):
 
-		draw.bitmap((59,15),logo)
+
 		#draw the frame heading
 		self.title.center(self.titley,0,160,draw)
 
@@ -548,7 +558,7 @@ class EMFrame(object):
 
 				if self.selection >= 3:
 					self.selection = 0
-				pass
+
 
 			if keys[2]:
 				status = "settings"
@@ -1058,6 +1068,8 @@ class ColourScreen(object):
 		self.tbar = Image.open('assets/lcarssplitframe.png')
 		self.burger = Image.open('assets/lcarsburgerframe.png')
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
+		# Load assets
+		self.logo = Image.open('assets/picorderOS_logo.png')
 
 		self.status = "mode_a"
 
@@ -1067,6 +1079,7 @@ class ColourScreen(object):
 		self.powerdown_frame = PowerDown()
 		self.em_frame = EMFrame()
 		self.startup_frame = StartUp()
+		self.loading_frame = LoadingFrame()
 
 
 	def get_size(self):
@@ -1074,14 +1087,21 @@ class ColourScreen(object):
 
 	def start_up(self):
 		self.newimage = self.burgerfull.copy()
+		self.newimage.paste(self.logo,(59,15))
 		self.draw = ImageDraw.Draw(self.newimage)
-
 		self.status = self.startup_frame.push(self.draw)
 
 		self.pixdrw()
 
 		return self.status
 
+	# simple frame to let user know new info is loading.
+	def loading(self):
+		base = self.burgerfull.copy()
+		self.draw = ImageDraw.Draw(base)
+		self.status = self.loading_frame.push(self.draw,status)
+		self.pixdrw()
+		return self.status
 
 	def graph_screen(self):
 		self.newimage = self.image.copy()
@@ -1093,14 +1113,21 @@ class ColourScreen(object):
 
 		if self.status == last_status:
 			self.pixdrw()
+		else:
+			loading()
 
 		return self.status
 
 	def em_screen(self):
 		self.newimage = self.tbar.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
+		last_status = self.status
 		self.status = self.em_frame.push(self.draw)
-		self.pixdrw()
+
+		if self.status == last_status:
+			self.pixdrw()
+		else:
+			loading()
 		return self.status
 
 	def thermal_screen(self):
@@ -1113,14 +1140,21 @@ class ColourScreen(object):
 
 		if self.status == last_status:
 			self.pixdrw()
+		else:
+			loading()
 
 		return self.status
 
 	def settings(self):
 		self.newimage = self.burger.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
+		last_status = self.status
 		self.status = self.settings_frame.push(self.draw)
-		self.pixdrw()
+
+		if self.status == last_status:
+			self.pixdrw()
+		else:
+			loading()
 		return self.status
 
 	def powerdown(self):
