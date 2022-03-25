@@ -1095,7 +1095,7 @@ class ColourScreen(object):
 
 		return self.status
 
-	# simple frame to let user know new info is loading.
+	# simple frame to let user know new info is loading while waiting.
 	def loading(self):
 		base = self.burgerfull.copy()
 		self.draw = ImageDraw.Draw(base)
