@@ -3,6 +3,9 @@ import sys
 import logging
 from objects import *
 from multiprocessing import Process,Queue,Pipe
+import signal
+
+exit_event = threading.event
 
 if configure.display == 1:
 	from luma.core.interface.serial import spi
@@ -47,16 +50,23 @@ def DisplayFunction(q):
 		surface = device.draw()
 
 	while True:
+
+		payload = q.get()
+
+		# add an event to handle shutdown.
+		if payload = "quit":
+			pass
+
 		# the following is only for screens that use Luma.LCD
 		if configure.display == 1:
-			device.display(q.get())
+			device.display(payload)
 
 		# the following is only for TFT24T screens
 		elif configure.display == 2:
 			 # Resize the image and rotate it so it's 240x320 pixels.
 			frame = frame.rotate(90,0,1).resize((240, 320))
 			# Draw the image on the display hardware.
-			surface.pasteimage(q.get(),(0,0))
+			surface.pasteimage(payload,(0,0))
 			device.display()
 
 # a class to control the connected display. It serves as a transmission between
@@ -75,7 +85,6 @@ class GenericDisplay(object):
 		self.q = Queue()
 		self.display_process = Process(target=DisplayFunction, args=(self.q,))
 		self.display_process.start()
-
 
 
 	# Display takes a PILlow based drawobject and pushes it to screen.
