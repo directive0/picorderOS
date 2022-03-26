@@ -364,7 +364,7 @@ class LoadingFrame(object):
 
 	def push(self, draw, status):
 
-		this_caption = random.choice(self.caption)
+		this_caption = random.choice(self.captions)
 		#draw the frame heading
 		self.caption.string = this_caption
 		self.caption.center(self.titley,0,160,draw)
