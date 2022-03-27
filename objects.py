@@ -84,7 +84,7 @@ class preferences(object):
 							'leds':'yes',
 							'# Enables the moire pattern on the SenseHat LED matrix - TR-108 only':None,
 							'moire':'no',
-							'# Enables audio playback':None,
+							'# Enables audio playback (videos will not play without this)':None,
 							'audio':'no',									# Enables audio playback
 							'alarm':'no',
 							'# If sleep is "yes" then lights will respond to Hall Effect sensors':None,
@@ -100,7 +100,13 @@ class preferences(object):
 							'displayinterval':'0',
 							'# Turns data logging on - data is written to data/datacore.csv':None,
 							'datalog':'no',
-							'doordetection':'yes'}
+							'doordetection':'yes',
+							'# Settings for mode_a Graph Screen on TR-108':None,
+							'graph_width':'280',
+							'graph_height':'182',
+							'graph_x':'18',
+							'graph_y':'20'}
+							
 		with open('config.ini','w') as configfile:
 			config.write(configfile)
 			print("New INI file is ready.")
@@ -287,6 +293,12 @@ class preferences(object):
 		self.dr_closed = [False]
 		self.dr_opening = [False]
 		self.dr_closing = [False]
+
+		# Settings for mode_a Graph_Screen for TR108
+		self.graph_width = int(config['GLOBALS']['graph_width'])
+		self.graph_height = int(config['GLOBALS']['graph_height'])
+		self.graph_x = int(config['GLOBALS']['graph_x'])
+		self.graph_y = int(config['GLOBALS']['graph_y'])
 
 
 # create a shared object for global variables and settings.

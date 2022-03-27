@@ -24,10 +24,10 @@ if not configure.pc:
 		import os
 
 SAMPLE_SIZE = configure.samples
-GRAPH_WIDTH = 280
-GRAPH_HEIGHT = 182
-GRAPH_X = 18
-GRAPH_Y = 20
+GRAPH_WIDTH = configure.graph_width #280
+GRAPH_HEIGHT = configure.graph_height #182
+GRAPH_X = configure.graph_x #18
+GRAPH_Y = configure.graph_y #20
 GRAPH_X2 = GRAPH_X + GRAPH_WIDTH
 GRAPH_Y2 = GRAPH_Y + GRAPH_HEIGHT
 
@@ -973,7 +973,7 @@ class Graph_Screen(object):
 		self.visibility[item] = option
 
 #experimental video screen written by scifi.radio from the mycorder discord
-class Video_Screen(object):
+class EdithKeeler_Screen(object):
     def __init__(self,surface):
         self.status = "mode_c"
         self.surface = surface
@@ -1189,7 +1189,7 @@ class Screen(object):
 
 		self.timed = time.time()
 		self.graphscreen = Graph_Screen(self.surface)
-		self.videoscreen = Video_Screen(self.surface)
+		self.edithkeelerscreen = EdithKeeler_Screen(self.surface)
 		self.slidescreen = Slider_Screen(self.surface)
 		self.settings_screen = Settings_Panel(self.surface)
 
@@ -1212,8 +1212,8 @@ class Screen(object):
 		status = self.graphscreen.frame()
 		return status
 
-	def video_screen(self):
-		status = self.videoscreen.frame()
+	def edithkeeler_screen(self):
+		status = self.edithkeelerscreen.frame()
 		return status
 
 	def settings(self):
