@@ -356,18 +356,19 @@ class SettingsFrame(object):
 # a simple frame that tells the user that the picorder is loading another screen.
 class LoadingFrame(object):
 
-	captions = ["working", "accessing", "initializing", "computing","calculating"]
+	captions = ["working", "accessing", "initializing", "computing", "calculating"]
 
 	def __init__(self):
-		self.caption = LabelObj("working",giantfont,colour = lcars_peach)
+		self.annunciator = LabelObj("Stand By",giantfont,colour = lcars_peach)
+		self.caption = LabelObj("47",bigfont,colour = lcars_peach)
 		self.titley = 40
+		self.captiony = 60
 
 	def push(self, draw, status):
 
-		this_caption = random.choice(self.captions)
-		#draw the frame heading
-		self.caption.string = this_caption
-		self.caption.center(self.titley,0,160,draw)
+		self.caption.string = random.choice(self.captions)
+		self.annunciator.center(self.titley,0,160,draw)
+		self.caption.center(self.captiony,0,160,draw)
 
 		return status
 
