@@ -12,6 +12,7 @@ from display import GenericDisplay
 device = GenericDisplay()
 
 # Load up the image library stuff to help draw bitmaps to push to the screen
+import random
 import numpy
 import PIL.ImageOps
 from PIL import Image
@@ -352,13 +353,20 @@ class SettingsFrame(object):
 
 		return status
 
+# a simple frame that tells the user that the picorder is loading another screen.
 class LoadingFrame(object):
+
+	captions = ["working", "accessing", "initializing", "computing","calculating"]
+
 	def __init__(self):
-		self.caption = LabelObj("Loading...",giantfont,colour = lcars_peach)
+		self.caption = LabelObj("working",giantfont,colour = lcars_peach)
 		self.titley = 40
 
 	def push(self, draw, status):
+
+		this_caption = random.choice(self.captions)
 		#draw the frame heading
+		self.caption.string = this_caption
 		self.caption.center(self.titley,0,160,draw)
 
 		return status
