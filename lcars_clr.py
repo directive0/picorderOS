@@ -361,8 +361,8 @@ class LoadingFrame(object):
 	def __init__(self):
 		self.annunciator = LabelObj("Stand By",giantfont,colour = lcars_peach)
 		self.caption = LabelObj("47",bigfont,colour = lcars_peach)
-		self.titley = 40
-		self.captiony = 60
+		self.titley = 20
+		self.captiony = 65
 
 	def push(self, draw, status):
 
