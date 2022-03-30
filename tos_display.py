@@ -17,17 +17,16 @@ from plars import *
 from objects import *
 from input import *
 
-from modulated_em import *
 
 if not configure.pc:
 	if configure.tr108:
 		import os
 
 SAMPLE_SIZE = configure.samples
-GRAPH_WIDTH = configure.graph_width #280
-GRAPH_HEIGHT = configure.graph_height #182
-GRAPH_X = configure.graph_x #18
-GRAPH_Y = configure.graph_y #20
+GRAPH_WIDTH = configure.mode_a_graph_width
+GRAPH_HEIGHT = configure.mode_a_graph_height
+GRAPH_X = configure.mode_a_x_offset
+GRAPH_Y = configure.mode_a_y_offset
 GRAPH_X2 = GRAPH_X + GRAPH_WIDTH
 GRAPH_Y2 = GRAPH_Y + GRAPH_HEIGHT
 
@@ -986,14 +985,13 @@ class EdithKeeler_Screen(object):
     def frame(self):
         self.status = "mode_c"
         if not self.running:
-            self.running = True
+            self.running = True    
             self.clip = Video('assets/ekmd.mov')
             self.clip.set_size(resolution)
-            self.clip.restart()
-
-
+            pygame.mixer.quit()
+            
         self.clock.tick(60)
-
+        
         if configure.eventready[0]:
 
         # The following code handles inputs and button presses.
@@ -1017,6 +1015,8 @@ class EdithKeeler_Screen(object):
                 else:
                     self.paused = True
                     print("Paused")
+				# We would use this to set mode_d instead of 
+				# toggling a pause were we to get a mode_d
                 configure.eventready[0] = False
                 return self.status
 
@@ -1027,7 +1027,7 @@ class EdithKeeler_Screen(object):
                 self.status = "settings"
                 self.running = False
                 configure.eventready[0] = False
-
+                
                 return self.status
 
             configure.eventready[0] = False
