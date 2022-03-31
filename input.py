@@ -374,29 +374,32 @@ class Inputs(object):
 							self.buttonlist[2] = False
 
 		if configure.input_cap_mpr121:
-			# Reads the touched capacitive elements
-			touched = mpr121.touched_pins
 
-			# runs a loop to check each possible button
-			for i in range(len(touched)):
+			if configure.eventready[0] == False:
+				# Reads the touched capacitive elements
+				touched = mpr121.touched_pins
 
-				# if the button has not been registered as pressed
-				if touched[i]:  # button pressed
-					if not self.pressed[i]:
-						self.pressed[i] = True
-						self.holdtimers[i].logtime()
-					else:
+				# runs a loop to check each possible button
+				for i in range(len(touched)):
 
-						if self.holdtimers[i].timelapsed() > self.thresh_hold:
-							self.holding[i] = True
+					# if the button has not been registered as pressed
+					if touched[i]:  # button pressed
+						if not self.pressed[i]:
+							self.pressed[i] = True
+							configure.eventready[0] = True
+							self.holdtimers[i].logtime()
+						else:
 
-				if not touched[i]:
-					self.holding[i] = False
-					if self.pressed[i]:
-						self.buttonlist[i] = True
-						self.pressed[i] = False
-					else:
-						self.buttonlist[i] = False
+							if self.holdtimers[i].timelapsed() > self.thresh_hold:
+								self.holding[i] = True
+
+					if not touched[i]:
+						self.holding[i] = False
+						if self.pressed[i]:
+							self.buttonlist[i] = True
+							self.pressed[i] = False
+						else:
+							self.buttonlist[i] = False
 
 		if configure.input_pcf8575:
 
