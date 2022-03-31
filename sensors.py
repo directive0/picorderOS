@@ -187,7 +187,7 @@ class Sensor(object):
 			#	self.bme_bsec = Fragment(-40,85,"Quality",self.deg_sym + "Q", "BME680")
 
 		if configure.pocket_geiger:
-			self.radiat = Fragment(0.0, 10000.0, "Radiation", "urem/hr", "pocketgeiger")
+			self.radiat = Fragment(0.0, 10000.0, "Radiation", "ur/h", "pocketgeiger")
 			self.radiation = RadiationWatch(configure.PG_SIG,configure.PG_NS)
 			self.radiation.setup()
 
@@ -416,6 +416,7 @@ def sensor_process(conn):
 def threaded_sensor():
 
 	sensors = Sensor()
+
 	sensors.get()
 	configure.buffer_size[0] = configure.graph_size[0]*len(configure.sensor_info)
 	configure.sensor_ready[0] = True

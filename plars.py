@@ -40,8 +40,6 @@ def get_recent_proc(conn,buffer,dsc,dev,num):
 
 
 
-
-
 class PLARS(object):
 
 	def __init__(self):
@@ -232,6 +230,27 @@ class PLARS(object):
 		# release the thread lock for other threads
 		self.lock.release()
 
+
+	# return a list of n most recent data from specific sensor defined by keys
+	def get_recent(self, dsc, dev, num = 5):
+
+		# set the thread lock so other threads are unable to add sensor data
+		self.lock.acquire()
+
+		q = Queue()
+		get_process = Process(target=get_recent_proc, args=(q,self.buffer,dsc,dev,num,))
+		get_process.start()
+
+		# return a list of the values
+		result = q.get()
+		get_process.join()
+
+		# release the thread lock.
+		self.lock.release()
+
+		return result
+
+
 	def get_em(self,dev,frequency):
 		result = self.buffer_em.loc[self.buffer_em['dev'] == dev]
 		result2 = result.loc[result["frequency"] == frequency]
@@ -266,24 +285,6 @@ class PLARS(object):
 		return trimmed_data['signal'].tolist()
 
 
-	# return a list of n most recent data from specific sensor defined by keys
-	def get_recent(self, dsc, dev, num = 5):
-
-		# set the thread lock so other threads are unable to add sensor data
-		self.lock.acquire()
-
-		q = Queue()
-		get_process = Process(target=get_recent_proc, args=(q,self.buffer,dsc,dev,num,))
-		get_process.start()
-
-		# return a list of the values
-		result = q.get()
-		get_process.join()
-
-		# release the thread lock.
-		self.lock.release()
-
-		return result
 
 
 	def trimbuffer(self, save = True):
@@ -315,6 +316,12 @@ class PLARS(object):
 
 	def convert_epoch(self, time):
 		return datetime.datetime.fromtimestamp(time)
+
+# create a process that can run seperately and handle requests
+def plars_process(q_in, q_out):
+	plars = PLARS()
+
+
 
 # Creates a plars database object as soon as it is loaded.
 plars = PLARS()

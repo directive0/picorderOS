@@ -27,7 +27,7 @@ class preferences(object):
 							'tr109':'no'}									# Running a TR-109 simulation - mutually exclusive with tr108
 
 		config['SENSORS'] =  {'# Only TR-108 uses SenseHat':None,
-							'sensehat':'yes',								# Only TR-108 uses this
+							'sensehat':'no',								# Only TR-108 uses this
 							'system_vitals':'yes',
 							'# BME680 Raw Values':None,
 							'bme':'no',
@@ -111,7 +111,7 @@ class preferences(object):
 							'graph_height':'182',
 							'graph_x':'18',
 							'graph_y':'20'}
-							
+
 		with open('config.ini','w') as configfile:
 			config.write(configfile)
 			print("New INI file is ready.")

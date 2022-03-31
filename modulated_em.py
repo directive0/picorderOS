@@ -14,12 +14,15 @@ class Wifi_Scan(object):
         pass
 
     def get_list(self):
-        try:
-            ap_list = list(Cell.all('wlan0'))
-        except Exception as e:
-            print("Wifi failed: ", e)
-            ap_list = []
-        return ap_list
+
+		if self.timed.timelapsed() > configure.samplerate[0]:
+			self.timed.logtime()
+            try:
+                ap_list = list(Cell.all('wlan0'))
+            except Exception as e:
+                print("Wifi failed: ", e)
+                ap_list = []
+            return ap_list
 
     def get_info(self,selection):
         ap_list = self.update()
