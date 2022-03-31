@@ -4,8 +4,11 @@ print("Loading Modulated EM Network Analysis")
 from wifi import Cell, Scheme
 import time
 from plars import *
+from objects import *
 
 class Wifi_Scan(object):
+
+    timed = timer()
 
     def __init__(self):
         pass

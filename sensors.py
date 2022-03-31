@@ -405,10 +405,13 @@ class MLX90614():
 def sensor_process(conn):
 	#init sensors
 	sensors = Sensor()
+	timed = timer()
 
 	while True:
-		#constantly grab sensors.
-		conn.send(sensors.get())
+		if timed.timelapsed() > configure.samplerate[0]:
+			#constantly grab sensors.
+			conn.send(sensors.get())
+			timed.logtime()
 
 def threaded_sensor():
 
@@ -417,7 +420,7 @@ def threaded_sensor():
 	configure.buffer_size[0] = configure.graph_size[0]*len(configure.sensor_info)
 	configure.sensor_ready[0] = True
 
-	timed = timer()
+
 	sensors.end()
 	parent_conn,child_conn = Pipe()
 	sense_process = Process(target=sensor_process, args=(child_conn,))
@@ -425,11 +428,8 @@ def threaded_sensor():
 
 	while not configure.status == "quit":
 
-		if timed.timelapsed() > configure.samplerate[0]:
-
-			timed.logtime()
-			data = parent_conn.recv()
-			#print(data)
-			plars.update(data)
+		data = parent_conn.recv()
+		#print(data)
+		plars.update(data)
 
 	sense_process.terminate()
