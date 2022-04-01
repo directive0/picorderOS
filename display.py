@@ -43,18 +43,21 @@ elif configure.display == 2:
 # a function intended to be run as a process so as to offload the computation
 # of the screen rendering from the GIL.
 def DisplayFunction(q):
+
+	go = True
 	# lib_tft24 screens require us to create a drawing surface for the screen
 	# and add to it.
 	if configure.display == 2:
 		surface = device.draw()
 
-	while True:
+	while go:
 
 		payload = q.get()
 
 		# add an event to handle shutdown.
 		if payload == "quit":
-			pass
+			device.cleanup()
+			go = False
 
 		# the following is only for screens that use Luma.LCD
 		if configure.display == 1:
@@ -89,3 +92,6 @@ class GenericDisplay(object):
 	# Display takes a PILlow based drawobject and pushes it to screen.
 	def display(self,frame):
 		self.q.put(frame)
+
+	def cleanup(self):
+		self.q.put("quit")
