@@ -302,7 +302,7 @@ class SettingsFrame(object):
 		return oper
 
 
-	xdef push(self, draw):
+	def push(self, draw):
 
 		status = "settings"
 
