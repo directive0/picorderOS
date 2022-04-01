@@ -37,7 +37,7 @@ def get_recent_proc(conn,buffer,dsc,dev,num):
 	conn.put(result)
 
 
-def upate_proc(conn,buffer,data):
+def update_proc(conn,buffer,data):
 	#listbuilder:
 	fragdata = []
 
