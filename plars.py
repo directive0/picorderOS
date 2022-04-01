@@ -229,7 +229,8 @@ class PLARS(object):
 
 
 		q = Queue()
-		get_process = Process(target=update_proc, args=(q, self.buffer, data))
+
+		get_process = Process(target=update_proc, args=(q, self.buffer, data,))
 		get_process.start()
 
 		# return a list of the values
