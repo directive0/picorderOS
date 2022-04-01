@@ -24,20 +24,50 @@ import threading
 # organizes and returns a list of data as a multiprocess.
 def get_recent_proc(conn,buffer,dsc,dev,num):
 
-			result = buffer[buffer["dsc"] == dsc]
+	result = buffer[buffer["dsc"] == dsc]
 
-			untrimmed_data = result.loc[result['dev'] == dev]
+	untrimmed_data = result.loc[result['dev'] == dev]
 
-			# trim it to length (num).
-			trimmed_data = untrimmed_data.tail(num)
+	# trim it to length (num).
+	trimmed_data = untrimmed_data.tail(num)
 
-			# return a list of the values
-			result = trimmed_data['value'].tolist()
+	# return a list of the values
+	result = trimmed_data['value'].tolist()
 
-			conn.put(result)
+	conn.put(result)
 
 
+def upate_proc(conn,buffer,data):
+	#listbuilder:
+	fragdata = []
 
+	for fragment in data:
+		#
+		item = fragment.get()
+		fragdata.append(item)
+
+
+	# creates a new dataframe to add new data to
+	newdata = pd.DataFrame(fragdata, columns=['value','min','max','dsc','sym','dev','timestamp'])
+
+
+	# appends the new data to the buffer
+	result = buffer.append(newdata, ignore_index=True)
+
+	# get buffer size to determine how many rows to remove from the end
+	#currentsize = len(self.buffer)
+
+	#targetsize = configure.buffer_size[0]
+
+	# determine difference between buffer and target size
+	#length = currentsize - targetsize
+
+
+	# if configure.trim_buffer[0]:
+	# 	# if buffer is larger than double the buffer size
+	# 	if length >= configure.buffer_size[0] * 2:
+	# 		self.trimbuffer()
+	conn.put(result)
 
 
 class PLARS(object):
@@ -197,35 +227,17 @@ class PLARS(object):
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
 
-		#listbuilder:
-		fragdata = []
 
-		for fragment in data:
-			#
-			item = fragment.get()
-			fragdata.append(item)
+		q = Queue()
+		get_process = Process(target=update_proc, args=(q, self.buffer, data))
+		get_process.start()
 
-
-		# creates a new dataframe to add new data to
-		newdata = pd.DataFrame(fragdata, columns=['value','min','max','dsc','sym','dev','timestamp'])
-
+		# return a list of the values
+		result = q.get()
+		get_process.join()
 
 		# appends the new data to the buffer
-		self.buffer = self.buffer.append(newdata, ignore_index=True)
-
-		# get buffer size to determine how many rows to remove from the end
-		currentsize = len(self.buffer)
-
-		targetsize = configure.buffer_size[0]
-
-		# determine difference between buffer and target size
-		length = currentsize - targetsize
-
-
-		if configure.trim_buffer[0]:
-			# if buffer is larger than double the buffer size
-			if length >= configure.buffer_size[0] * 2:
-				self.trimbuffer()
+		self.buffer = result
 
 		# release the thread lock for other threads
 		self.lock.release()
