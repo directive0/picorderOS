@@ -11,7 +11,7 @@ class Video:
         self.path = path
         
         if exists(path):
-            self.video = MediaPlayer(path)
+            self.video = MediaPlayer(path,out_fmt='yuv420p',infbuf=True,thread_lib='SDL',fast=True)
             info = self.get_file_data()
             
             self.duration = info["duration"]
