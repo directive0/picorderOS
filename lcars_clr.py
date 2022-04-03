@@ -578,7 +578,7 @@ class EMFrame(object):
 			configure.eventready[0] = False
 
 		self.wifi.update_plars()
-		if len(plars.get_top_em_info()) > 1:
+		if len(plars.get_top_em_info()) < 1:
 			self.selection = -1
 
 		# details on strongest wifi network.
