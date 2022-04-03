@@ -584,11 +584,6 @@ class EMFrame(object):
 		# details on strongest wifi network.
 		if self.selection == -1:
 
-			# grab EM data from plars
-			info = plars.get_top_em_info()[0]
-
-			# draw screen elements
-			self.Signal_Graph.render(draw)
 			self.title.string = "No SSIDs Detected"
 			self.title.r_align(self.labelxr,self.titley,draw)
 
