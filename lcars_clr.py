@@ -578,6 +578,20 @@ class EMFrame(object):
 			configure.eventready[0] = False
 
 		self.wifi.update_plars()
+		if len(plars.get_top_em_info()) > 1:
+			self.selection = -1
+
+		# details on strongest wifi network.
+		if self.selection == -1:
+
+			# grab EM data from plars
+			info = plars.get_top_em_info()[0]
+
+			# draw screen elements
+			self.Signal_Graph.render(draw)
+			self.title.string = "No SSIDs Detected"
+			self.title.r_align(self.labelxr,self.titley,draw)
+
 
 		# details on strongest wifi network.
 		if self.selection == 0:

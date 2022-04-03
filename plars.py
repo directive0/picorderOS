@@ -36,7 +36,7 @@ def get_recent_proc(conn,buffer,dsc,dev,num):
 
 	conn.put(result)
 
-
+# updates the dataframe buffer as a multiprocess.
 def update_proc(conn,buffer,data):
 	#listbuilder:
 	fragdata = []
@@ -52,7 +52,7 @@ def update_proc(conn,buffer,data):
 
 
 	# appends the new data to the buffer
-	result = buffer.append(newdata, ignore_index=True)
+	result = pd.concat([newdata,buffer], ignore_index=True)
 
 	# get buffer size to determine how many rows to remove from the end
 	#currentsize = len(self.buffer)
