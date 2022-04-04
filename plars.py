@@ -54,19 +54,7 @@ def update_proc(conn,buffer,data):
 	# appends the new data to the buffer
 	result = pd.concat([newdata,buffer], ignore_index=True)
 
-	# get buffer size to determine how many rows to remove from the end
-	#currentsize = len(self.buffer)
 
-	#targetsize = configure.buffer_size[0]
-
-	# determine difference between buffer and target size
-	#length = currentsize - targetsize
-
-
-	# if configure.trim_buffer[0]:
-	# 	# if buffer is larger than double the buffer size
-	# 	if length >= configure.buffer_size[0] * 2:
-	# 		self.trimbuffer()
 	conn.put(result)
 
 
@@ -240,6 +228,20 @@ class PLARS(object):
 		# appends the new data to the buffer
 		self.buffer = result
 
+		# get buffer size to determine how many rows to remove from the end
+		currentsize = len(self.buffer)
+
+		targetsize = configure.buffer_size[0]
+
+		# determine difference between buffer and target size
+		length = currentsize - targetsize
+
+
+		if configure.trim_buffer[0]:
+			# if buffer is larger than double the buffer size
+			if length >= configure.buffer_size[0] * 2:
+				self.trimbuffer()
+				
 		# release the thread lock for other threads
 		self.lock.release()
 
