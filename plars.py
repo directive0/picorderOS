@@ -74,9 +74,9 @@ class PLARS(object):
 		# create buffer
 		self.file_path = "data/datacore.csv"
 
-		if configure.recall[0]:
+		if configure.datalog[0]:
 			if os.path.exists(self.file_path):
-				if configure.datalog:
+				if configure.recall[0]:
 					self.core = pd.read_csv(self.file_path)
 			else:
 				if not os.path.exists("data"):
@@ -319,7 +319,7 @@ class PLARS(object):
 		# slice off the rows outside the buffer and backup to disk
 		tocore = self.buffer.head(length)
 
-		if configure.recall[0]:
+		if configure.datalog[0]:
 			self.append_to_core(tocore)
 
 		# replace existing buffer with new trimmed buffer
