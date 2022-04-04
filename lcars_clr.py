@@ -232,7 +232,8 @@ class SelectableLabel(LabelObj):
 class SettingsFrame(object):
 	def __init__(self):
 
-		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Audio",configure.audio],["Alarm",configure.alarm], ["Auto Range",configure.auto], ["LEDs", configure.leds],["Power Off","poweroff"]]
+		# Each page represents a setting that can be adjusted.
+		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Audio",configure.audio],["Alarm",configure.alarm], ["Auto Range",configure.auto], ["LEDs", configure.leds],["Log Data",self.datalog],["Power Off","poweroff"]]
 
 		# Sets the topleft origin of the graph
 		self.graphx = 23
