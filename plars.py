@@ -26,6 +26,7 @@ def get_recent_proc(conn,buffer,dsc,dev,num):
 
 	result = buffer[buffer["dsc"] == dsc]
 
+
 	untrimmed_data = result.loc[result['dev'] == dev]
 
 	# trim it to length (num).
@@ -52,7 +53,7 @@ def update_proc(conn,buffer,data):
 
 
 	# appends the new data to the buffer
-	result = pd.concat([newdata,buffer], ignore_index=True)
+	result = pd.concat([buffer,newdata], ignore_index=True)
 
 
 	conn.put(result)
@@ -241,7 +242,7 @@ class PLARS(object):
 			# if buffer is larger than double the buffer size
 			if length >= configure.buffer_size[0] * 2:
 				self.trimbuffer()
-				
+
 		# release the thread lock for other threads
 		self.lock.release()
 
