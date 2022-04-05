@@ -284,7 +284,7 @@ class preferences(object):
 		self.samples = int(config['GLOBALS']['samples'])
 
 		self.samplerate=[float(config['GLOBALS']['samplerate'])]
-		self.displayinterval=[0]
+		self.displayinterval=[float(config['GLOBALS']['displayinterval'])]
 
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []

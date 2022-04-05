@@ -34,14 +34,6 @@ titlefont = ImageFont.truetype("assets/babs.otf",16)
 bigfont = ImageFont.truetype("assets/babs.otf",20)
 giantfont = ImageFont.truetype("assets/babs.otf",30)
 
-
-
-
-
-
-
-
-
 # Standard LCARS colours
 lcars_orange = (255,153,0)
 lcars_pink = (204,153,204)
@@ -679,8 +671,8 @@ class EMFrame(object):
 				items_list.append(this_ssid)
 
 
-			#for each item in item_list
-			for index, item in enumerate(items_list):
+			#for each item in item_list, in reverse order
+			for index, item in reversed(list(enumerate(items_list))):
 
 				# determine dot coordinates.
 				cords = ((item[1],126),(item[1],item[2]))
