@@ -88,6 +88,7 @@ class preferences(object):
 							'video':'yes',
 							'# Enables audio playback (videos will not play without this)':None,
 							'audio':'no',									# Enables audio playback
+							'video':'no',
 							'alarm':'no',
 							'# If sleep is "yes" then lights will respond to Hall Effect sensors':None,
 							'sleep':'yes',									# If sleep is True the lights will respond to hall effect sensors
