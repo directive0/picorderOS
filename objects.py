@@ -85,6 +85,7 @@ class preferences(object):
 							'leds':'yes',
 							'# Enables the moire pattern on the SenseHat LED matrix - TR-108 only':None,
 							'moire':'no',
+							'video':'yes',
 							'# Enables audio playback (videos will not play without this)':None,
 							'audio':'no',									# Enables audio playback
 							'alarm':'no',
@@ -235,6 +236,8 @@ class preferences(object):
 
 		# enables sound effect playback
 		self.audio = [self.str2bool(config['GLOBALS']['audio'])]
+
+		self.video = [self.str2bool(config['GLOBALS']['video'])]
 
 		# turns alarms on/off
 		self.alarm = [self.str2bool(config['GLOBALS']['alarm'])]
