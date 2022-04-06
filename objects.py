@@ -237,7 +237,7 @@ class preferences(object):
 		# enables sound effect playback
 		self.audio = [self.str2bool(config['GLOBALS']['audio'])]
 
-		self.video = [self.str2bool(config['GLOBALS']['video'])]
+		self.video = self.str2bool(config['GLOBALS']['video'])
 
 		# turns alarms on/off
 		self.alarm = [self.str2bool(config['GLOBALS']['alarm'])]
