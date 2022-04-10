@@ -75,7 +75,8 @@ if configure.tr109:
 	GPIO.setup(configure.PIN_LATCH2, GPIO.OUT)
 	GPIO.setup(configure.PIN_CLOCK2, GPIO.OUT)
 
-	GPIO.setup(sc_led, GPIO.OUT)
+	if configure.display not 2:
+		GPIO.setup(sc_led, GPIO.OUT)
 
 
 # delivers data to the shift register
@@ -126,8 +127,6 @@ def screen_on():
 	if configure.tr109:
 		if configure.display == 1:
 			GPIO.output(sc_led, GPIO.HIGH)
-		elif configure.display == 2:
-			GPIO.output(sc_led, GPIO.LOW)
 
 def leda_on():
 	GPIO.output(led1, GPIO.HIGH)
@@ -156,8 +155,7 @@ def ledd_off():
 def screen_off():
 	if configure.tr109:
 		GPIO.output(sc_led, GPIO.LOW)
-	elif configure.display == 2:
-		GPIO.output(sc_led, GPIO.HIGH)
+
 
 # The following class drives the ABGD ripple animation for the tr-109.
 class ripple(object):
