@@ -75,7 +75,7 @@ if configure.tr109:
 	GPIO.setup(configure.PIN_LATCH2, GPIO.OUT)
 	GPIO.setup(configure.PIN_CLOCK2, GPIO.OUT)
 
-	if configure.display not 2:
+	if configure.display != 2:
 		GPIO.setup(sc_led, GPIO.OUT)
 
 
