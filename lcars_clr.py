@@ -1070,9 +1070,6 @@ class ColourScreen(object):
 
 	def __init__(self):
 
-		if configure.display == 2:
-			self.surface = device.draw()
-
 		# instantiates an image and uses it in a draw object.
 		self.image = Image.open('assets/lcarsframe.png')
 		self.blankimage = Image.open('assets/lcarsframeblank.png')
