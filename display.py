@@ -38,7 +38,7 @@ elif configure.display == 2:
 	PEN = 26
 	device = TFT24T(spidev.SpiDev(), GPIO)
 	# Initialize display and touch.
-	TFT.initLCD(DC, RST, LED)
+	device.initLCD(DC, RST, LED)
 
 # a function intended to be run as a process so as to offload the computation
 # of the screen rendering from the GIL.
