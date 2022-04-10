@@ -59,11 +59,7 @@ if configure.tr108:
 
 # loads the pin configurations and modes for the tr-109 (shift register based)
 if configure.tr109:
-	# Pin Definitons:
-	led1 = 16 #19 # Broadcom pin 19
-	led2 = 20 #6 # Broadcom pin 13
-	led3 = 6 #20
-	led4 = 19 #16
+
 	sc_led = 15
 
 	# Pin Setup:
@@ -130,6 +126,8 @@ def screen_on():
 	if configure.tr109:
 		if configure.display == 1:
 			GPIO.output(sc_led, GPIO.HIGH)
+		elif configure.display == 2:
+			GPIO.output(sc_led, GPIO.LOW)
 
 def leda_on():
 	GPIO.output(led1, GPIO.HIGH)
@@ -158,7 +156,8 @@ def ledd_off():
 def screen_off():
 	if configure.tr109:
 		GPIO.output(sc_led, GPIO.LOW)
-
+	elif configure.display == 2:
+		GPIO.output(sc_led, GPIO.HIGH)
 
 # The following class drives the ABGD ripple animation for the tr-109.
 class ripple(object):

@@ -78,12 +78,6 @@ def DisplayFunction(q):
 class GenericDisplay(object):
 
 	def __init__(self):
-
-		# lib_tft24 screens require us to create a drawing surface for the screen
-		# and add to it.
-		if configure.display == 2:
-			self.surface = device.draw()
-
 		self.q = Queue()
 		self.display_process = Process(target=DisplayFunction, args=(self.q,))
 		self.display_process.start()
