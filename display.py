@@ -66,9 +66,9 @@ def DisplayFunction(q):
 		# the following is only for TFT24T screens
 		elif configure.display == 2:
 			 # Resize the image and rotate it so it's 240x320 pixels.
-			frame = frame.rotate(90,0,1).resize((240, 320))
+			frame = payload.rotate(90,0,1).resize((240, 320))
 			# Draw the image on the display hardware.
-			surface.pasteimage(payload,(0,0))
+			surface.pasteimage(frame,(0,0))
 			device.display()
 
 # a class to control the connected display. It serves as a transmission between
