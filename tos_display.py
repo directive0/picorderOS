@@ -9,8 +9,6 @@ from asyncio import sleep
 from pickle import FALSE
 import pygame, time, os
 
-if configure.video:
-	from pyvidplayer import Video
 
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"
@@ -18,6 +16,9 @@ from pathlib import Path
 from plars import *
 from objects import *
 from input import *
+
+if configure.video:
+	from pyvidplayer import Video
 
 
 if not configure.pc:
