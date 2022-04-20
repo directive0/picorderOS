@@ -12,6 +12,7 @@ def get_hostname():
 	return hostname
 
 def get_IP():
+	hostname = socket.gethostname()
 	IPAddr = socket.gethostbyname(hostname)
 
 
