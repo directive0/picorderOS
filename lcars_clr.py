@@ -274,7 +274,7 @@ class MasterSystemsDisplay(object):
 		#draw the frame heading
 		self.title.push(self.titlex,self.titley,draw)
 		self.C_Label.r_align(156,self.labely,draw)
-		self.status_list.update(load_list(),draw)
+		self.status_list.update(self.load_list(),draw)
 
 		return status
 
