@@ -129,7 +129,8 @@ class Inputs(object):
 
 	def __init__(self):
 
-
+		self.calibrate_timeout = 30
+		self.timed = timer()
 		# lists for hold behaviour tracking
 		self.holding = []
 		self.holdtimers = []

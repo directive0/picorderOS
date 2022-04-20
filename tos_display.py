@@ -8,7 +8,7 @@ print("Loading 320x240 Duotronic Interface")
 from asyncio import sleep
 from pickle import FALSE
 import pygame, time, os
-from pyvidplayer import Video
+
 
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"
@@ -16,6 +16,9 @@ from pathlib import Path
 from plars import *
 from objects import *
 from input import *
+
+if configure.video:
+	from pyvidplayer import Video
 
 
 if not configure.pc:
@@ -985,13 +988,13 @@ class EdithKeeler_Screen(object):
     def frame(self):
         self.status = "mode_c"
         if not self.running:
-            self.running = True    
+            self.running = True
             self.clip = Video('assets/ekmd.mov')
             self.clip.set_size(resolution)
             pygame.mixer.quit()
-            
+
         self.clock.tick(60)
-        
+
         if configure.eventready[0]:
 
         # The following code handles inputs and button presses.
@@ -1015,7 +1018,7 @@ class EdithKeeler_Screen(object):
                 else:
                     self.paused = True
                     print("Paused")
-				# We would use this to set mode_d instead of 
+				# We would use this to set mode_d instead of
 				# toggling a pause were we to get a mode_d
                 configure.eventready[0] = False
                 return self.status
@@ -1027,7 +1030,7 @@ class EdithKeeler_Screen(object):
                 self.status = "settings"
                 self.running = False
                 configure.eventready[0] = False
-                
+
                 return self.status
 
             configure.eventready[0] = False
@@ -1212,7 +1215,7 @@ class Screen(object):
 		status = self.graphscreen.frame()
 		return status
 
-	def edithkeeler_screen(self):
+	def video_screen(self):
 		status = self.edithkeelerscreen.frame()
 		return status
 

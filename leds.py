@@ -59,11 +59,7 @@ if configure.tr108:
 
 # loads the pin configurations and modes for the tr-109 (shift register based)
 if configure.tr109:
-	# Pin Definitons:
-	led1 = 16 #19 # Broadcom pin 19
-	led2 = 20 #6 # Broadcom pin 13
-	led3 = 6 #20
-	led4 = 19 #16
+
 	sc_led = 15
 
 	# Pin Setup:
@@ -79,7 +75,8 @@ if configure.tr109:
 	GPIO.setup(configure.PIN_LATCH2, GPIO.OUT)
 	GPIO.setup(configure.PIN_CLOCK2, GPIO.OUT)
 
-	GPIO.setup(sc_led, GPIO.OUT)
+	if configure.display != 2:
+		GPIO.setup(sc_led, GPIO.OUT)
 
 
 # delivers data to the shift register

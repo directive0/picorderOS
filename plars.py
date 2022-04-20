@@ -26,6 +26,7 @@ def get_recent_proc(conn,buffer,dsc,dev,num):
 
 	result = buffer[buffer["dsc"] == dsc]
 
+
 	untrimmed_data = result.loc[result['dev'] == dev]
 
 	# trim it to length (num).
@@ -52,21 +53,9 @@ def update_proc(conn,buffer,data):
 
 
 	# appends the new data to the buffer
-	result = pd.concat([newdata,buffer], ignore_index=True)
-
-	# get buffer size to determine how many rows to remove from the end
-	#currentsize = len(self.buffer)
-
-	#targetsize = configure.buffer_size[0]
-
-	# determine difference between buffer and target size
-	#length = currentsize - targetsize
+	result = pd.concat([buffer,newdata], ignore_index=True)
 
 
-	# if configure.trim_buffer[0]:
-	# 	# if buffer is larger than double the buffer size
-	# 	if length >= configure.buffer_size[0] * 2:
-	# 		self.trimbuffer()
 	conn.put(result)
 
 
@@ -85,9 +74,9 @@ class PLARS(object):
 		# create buffer
 		self.file_path = "data/datacore.csv"
 
-		if configure.recall[0]:
+		if configure.datalog[0]:
 			if os.path.exists(self.file_path):
-				if configure.datalog:
+				if configure.recall[0]:
 					self.core = pd.read_csv(self.file_path)
 			else:
 				if not os.path.exists("data"):
@@ -240,6 +229,20 @@ class PLARS(object):
 		# appends the new data to the buffer
 		self.buffer = result
 
+		# get buffer size to determine how many rows to remove from the end
+		currentsize = len(self.buffer)
+
+		targetsize = configure.buffer_size[0]
+
+		# determine difference between buffer and target size
+		length = currentsize - targetsize
+
+
+		if configure.trim_buffer[0]:
+			# if buffer is larger than double the buffer size
+			if length >= configure.buffer_size[0] * 2:
+				self.trimbuffer()
+
 		# release the thread lock for other threads
 		self.lock.release()
 
@@ -316,7 +319,7 @@ class PLARS(object):
 		# slice off the rows outside the buffer and backup to disk
 		tocore = self.buffer.head(length)
 
-		if configure.recall[0]:
+		if configure.datalog[0]:
 			self.append_to_core(tocore)
 
 		# replace existing buffer with new trimmed buffer

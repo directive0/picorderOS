@@ -85,8 +85,11 @@ class preferences(object):
 							'leds':'yes',
 							'# Enables the moire pattern on the SenseHat LED matrix - TR-108 only':None,
 							'moire':'no',
+							'video':'yes',
 							'# Enables audio playback (videos will not play without this)':None,
 							'audio':'no',									# Enables audio playback
+                                                        '# Enables video player capabilities':None,
+							'video':'no',
 							'alarm':'no',
 							'# If sleep is "yes" then lights will respond to Hall Effect sensors':None,
 							'sleep':'yes',									# If sleep is True the lights will respond to hall effect sensors
@@ -237,6 +240,9 @@ class preferences(object):
 		# enables sound effect playback
 		self.audio = [self.str2bool(config['GLOBALS']['audio'])]
 
+                # enables video playback library
+		self.video = [self.str2bool(config['GLOBALS']['video'])]
+
 		# turns alarms on/off
 		self.alarm = [self.str2bool(config['GLOBALS']['alarm'])]
 
@@ -285,7 +291,7 @@ class preferences(object):
 		self.samples = int(config['GLOBALS']['samples'])
 
 		self.samplerate=[float(config['GLOBALS']['samplerate'])]
-		self.displayinterval=[0]
+		self.displayinterval=[float(config['GLOBALS']['displayinterval'])]
 
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []

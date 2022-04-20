@@ -154,7 +154,10 @@ def Main():
 						configure.status[0] = colourscreen.thermal_screen()
 
 				if configure.tr108:
-					configure.status[0] = PyScreen.video_screen()
+					if configure.video:
+						configure.status[0] = PyScreen.video_screen()
+					else:
+						configure.status[0] = PyScreen.slider_screen()
 					if not configure.pc:
 						leda_on()
 						ledb_on()

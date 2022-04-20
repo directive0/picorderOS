@@ -38,7 +38,7 @@ elif configure.display == 2:
 	PEN = 26
 	device = TFT24T(spidev.SpiDev(), GPIO)
 	# Initialize display and touch.
-	TFT.initLCD(DC, RST, LED)
+	device.initLCD(DC, RST, LED)
 
 # a function intended to be run as a process so as to offload the computation
 # of the screen rendering from the GIL.
@@ -66,9 +66,9 @@ def DisplayFunction(q):
 		# the following is only for TFT24T screens
 		elif configure.display == 2:
 			 # Resize the image and rotate it so it's 240x320 pixels.
-			frame = frame.rotate(90,0,1).resize((240, 320))
+			frame = payload.rotate(90,0,1).resize((240, 320))
 			# Draw the image on the display hardware.
-			surface.pasteimage(payload,(0,0))
+			surface.pasteimage(frame,(0,0))
 			device.display()
 
 # a class to control the connected display. It serves as a transmission between
@@ -78,12 +78,6 @@ def DisplayFunction(q):
 class GenericDisplay(object):
 
 	def __init__(self):
-
-		# lib_tft24 screens require us to create a drawing surface for the screen
-		# and add to it.
-		if configure.display == 2:
-			self.surface = device.draw()
-
 		self.q = Queue()
 		self.display_process = Process(target=DisplayFunction, args=(self.q,))
 		self.display_process.start()
