@@ -178,6 +178,12 @@ def Main():
 					if configure.display == 1 or configure.display == 2:
 						configure.status[0] = colourscreen.settings()
 
+			if configure.status[0] == "msd":
+
+				if configure.tr109:
+					if configure.display == 1 or configure.display == 2:
+						configure.status[0] = colourscreen.msd()
+
 			# Handles the poweroff screen
 			if configure.status[0] == "poweroff":
 

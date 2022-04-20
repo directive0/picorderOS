@@ -252,7 +252,7 @@ class MasterSystemsDisplay(object):
 		return status_list
 
 
-	def push(self):
+	def push(self,draw):
 		status = "msd"
 
 		if configure.eventready[0]:
@@ -274,7 +274,9 @@ class MasterSystemsDisplay(object):
 		#draw the frame heading
 		self.title.push(self.titlex,self.titley,draw)
 		self.C_Label.r_align(156,self.labely,draw)
+		self.status_list.update(load_list(),draw)
 
+		return status
 
 class SettingsFrame(object):
 	def __init__(self):
@@ -1145,7 +1147,7 @@ class ColourScreen(object):
 		self.em_frame = EMFrame()
 		self.startup_frame = StartUp()
 		self.loading_frame = LoadingFrame()
-
+		self.msd_frame = MasterSystemsDisplay()
 
 	def get_size(self):
 		return self.multi_frame.samples
@@ -1214,6 +1216,18 @@ class ColourScreen(object):
 		self.draw = ImageDraw.Draw(self.newimage)
 		last_status = self.status
 		self.status = self.settings_frame.push(self.draw)
+
+		if self.status == last_status:
+			self.pixdrw()
+		else:
+			self.loading()
+		return self.status
+
+	def msd(self):
+		self.newimage = self.burger.copy()
+		self.draw = ImageDraw.Draw(self.newimage)
+		last_status = self.status
+		self.status = self.msd_frame.push(self.draw)
 
 		if self.status == last_status:
 			self.pixdrw()
