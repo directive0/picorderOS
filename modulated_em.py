@@ -5,7 +5,7 @@ from wifi import Cell, Scheme
 import time
 from plars import *
 from objects import *
-import sockets
+import socket
 
 def get_hostname():
 	hostname = socket.gethostname()
