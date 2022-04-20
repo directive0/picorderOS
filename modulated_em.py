@@ -5,6 +5,17 @@ from wifi import Cell, Scheme
 import time
 from plars import *
 from objects import *
+import sockets
+
+def get_hostname():
+	hostname = socket.gethostname()
+	return hostname
+
+def get_IP():
+	IPAddr = socket.gethostbyname(hostname)
+
+
+
 
 class Wifi_Scan(object):
 
@@ -28,6 +39,7 @@ class Wifi_Scan(object):
 
 		if selection <= (len(ap_list)-1):
 			return (ap_list[selection].ssid, int(ap_list[selection].signal), ap_list[selection].quality, ap_list[selection].frequency, ap_list[selection].bitrates, ap_list[selection].encrypted, ap_list[selection].channel, ap_list[selection].address, ap_list[selection].mode)
+
 
 	def dump_data(self):
 		ap_list = self.get_list()

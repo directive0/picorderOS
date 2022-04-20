@@ -105,6 +105,7 @@ class preferences(object):
 							'displayinterval':'0',
 							'# Turns data logging on - data is written to data/datacore.csv':None,
 							'datalog':'no',
+							'trim_buffer':'yes',
 							'doordetection':'yes',
 							'# Settings for mode_a Graph Screen on TR-108':None,
 							'graph_width':'280',
@@ -274,7 +275,7 @@ class preferences(object):
 
 		# sets data logging mode.
 		self.datalog = [self.str2bool(config['GLOBALS']['datalog'])]
-		self.trim_buffer = [True]
+		self.trim_buffer = [self.str2bool(config['GLOBALS']['trim_buffer'])]
 		self.buffer_size = [0]
 		self.graph_size = [0]
 		self.logtime = [60]

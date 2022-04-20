@@ -228,17 +228,66 @@ class SelectableLabel(LabelObj):
 		surface.blit(label, (self.x, self.y))
 		surface.blit(state, (pos, self.y))
 
+# serves as a screen to show the current status of the picorder
+class MasterSystemsDisplay(object):
+
+	def __init__(self):
+		self.title = None
+		self.status_list = None
+		#self.draw = draw
+		self.titlex = 2
+		self.titley = 11
+		self.labely = 114
+
+
+		# the set labels for the screen
+		self.title = LabelObj("Master Systems Display",bigfont)
+
+
+
+		# three input cue labels
+		self.C_Label = LabelObj("Exit",font, colour = lcars_orpeach)
+
+		self.status_list = Label_List(22,35, colour = lcars_peach)
+
+	def load_list(self):
+
+		# pulls data from the modulated_em.py
+		ip_str = "IP: " + get_IP()
+		host_str = "Hostname: " + get_hostname()
+
+		status_list = [ip_str, host_str]
+		return status_list
+
+
+	def push(self):
+		status = "msd"
+
+		if configure.eventready[0]:
+			keys = configure.eventlist[0]
+
+			if keys[0]:
+				pass
+
+			if keys[1]:
+				pass
+
+			if keys[2]:
+				status = 'settings'
+				return status
+
+			configure.eventready[0] = False
+
+
+		#draw the frame heading
+		self.title.push(self.titlex,self.titley,draw)
+		self.C_Label.r_align(156,self.labely,draw)
+
 
 class SettingsFrame(object):
 	def __init__(self):
 
-		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Audio",configure.audio],["Alarm",configure.alarm], ["Auto Range",configure.auto], ["LEDs", configure.leds],["Power Off","poweroff"]]
-
-		# Sets the topleft origin of the graph
-		self.graphx = 23
-		self.graphy = 24
-
-		self.status_raised = False
+		self.pages = [["Sensor 1",configure.sensor1], ["Sensor 2", configure.sensor2], ["Sensor 3",configure.sensor3], ["Audio",configure.audio],["Alarm",configure.alarm], ["Auto Range",configure.auto],]["Trim Buffer", configure.trim_buffer] ["LEDs", configure.leds],["Power Off","poweroff"],["Master Systems Display","msd"]]
 
 		# Sets the x and y span of the graph
 		self.gspanx = 133
