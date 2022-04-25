@@ -23,13 +23,10 @@ if configure.audio[0]:
 
 # This part loads the appropriate modules depending on which preference flags are set.
 
-# If we are NOT just running on a computer for development or demo purposes.
-if not configure.pc:
-	# load up the LED indicator module
+# load up the LED indicator module
+if configure.leds:
 	from leds import *
-else:
-	# otherwise load up the demonstration and dummy modules that emulate sensors and pass GPIO signals without requiring any real GPIO.
-	from gpiodummy import *
+
 
 # The following are only loaded in TR-108 mode
 if configure.tr108:
@@ -75,13 +72,13 @@ def Main():
 	sensor_thread.start()
 
 
-	if configure.leds[0]:
-		# seperate thread for LED lighting.
+	# if leds enabled start the event monitor for inputs
+	if configure.leds:
 		led_thread = Thread(target = ripple_async, args = ())
 		led_thread.start()
 
 
-	#start the event monitor
+
 	input_thread = Thread(target = threaded_input, args = ())
 	input_thread.start()
 
@@ -196,8 +193,13 @@ def Main():
 			if configure.status[0] == "shutdown":
 				print("Shut Down!")
 				configure.status[0] = "quit"
-				resetleds()
-				cleangpio()
+
+				if configure.leds:
+					resetleds()
+
+				if configure.input_gpio:
+					cleangpio()
+
 				os.system("sudo shutdown -h now")
 
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
@@ -208,10 +210,13 @@ def Main():
 	print("Main Loop Shutting Down")
 
 	# The following calls are for cleanup and just turn "off" any GPIO
-	resetleds()
-	cleangpio()
+	if configure.leds:
+		resetleds()
+
+	if configure.input_gpio:
+		cleangpio()
+
 	plars.shutdown()
-	#print("Quit reached")
 
 
 # the following call starts our program and begins the loop.

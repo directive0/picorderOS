@@ -281,16 +281,16 @@ class MasterSystemsDisplay(object):
 class SettingsFrame(object):
 	def __init__(self):
 
-		self.pages = [["Sensor 1",configure.sensor1],
+		self.pages = [["Sensor 1", configure.sensor1],
 						["Sensor 2", configure.sensor2],
-						["Sensor 3",configure.sensor3],
-						["Audio",configure.audio],
-						["Alarm",configure.alarm],
-						["Auto Range",configure.auto],
+						["Sensor 3", configure.sensor3],
+						["Audio", configure.audio],
+						["Alarm", configure.alarm],
+						["Auto Range", configure.auto],
 						["Trim Buffer", configure.trim_buffer],
-						["LEDs", configure.leds],
-						["Power Off","poweroff"],
-						["Master Systems Display","msd"]]
+						["LEDs", configure.leds_on],
+						["Power Off", "poweroff"],
+						["Master Systems Display", "msd"]]
 
 		# Sets the x and y span of the graph
 		self.gspanx = 133
@@ -456,7 +456,7 @@ class StartUp(object):
 		self.item.center(self.titley+self.jump,0, 160,draw)
 
 
-		if self.interval.timelapsed() > configure.boot_delay and configure.sensor_ready[0]:
+		if self.interval.timelapsed() > configure.boot_delay:
 			status = "mode_a"
 		else:
 			status = "startup"

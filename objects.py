@@ -232,7 +232,10 @@ class preferences(object):
 
 
 		# flags control the onboard LEDS. Easy to turn them off if need be.
-		self.leds = [self.str2bool(config['GLOBALS']['leds'])] # was True
+		self.leds = self.str2bool(config['GLOBALS']['leds']) # was True
+
+		# global variable to enable/disable lights at will.
+		self.leds_on = [True]
 
 		# controls Moire pattern on tr-108
 		self.moire = [self.str2bool(config['GLOBALS']['moire'])] # was True

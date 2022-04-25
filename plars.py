@@ -99,7 +99,8 @@ class PLARS(object):
 
 
 	def shutdown(self):
-		self.append_to_core(self.buffer)
+		if configure.datalog[0]:
+			self.append_to_core(self.buffer)
 
 	# gets the latest CSV file
 	def get_core(self):

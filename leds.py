@@ -204,7 +204,7 @@ class ripple(object):
 
 		# if lights are engaged this block of code will run the animation, or else
 		# turn them off.
-		if self.lights and configure.leds[0]:
+		if self.lights and configure.leds_on[0]:
 
 			if configure.tr109:
 				if self.beat > 3:
