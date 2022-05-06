@@ -247,8 +247,9 @@ class MasterSystemsDisplay(object):
 		# pulls data from the modulated_em.py
 		ip_str = "IP: " + get_IP()
 		host_str = "Hostname: " + get_hostname()
+		sense_ready = "Sensors Avl: " + len(configure.sensor_info)
 
-		status_list = [ip_str, host_str]
+		status_list = [ip_str, host_str, sense_ready]
 		return status_list
 
 
@@ -276,7 +277,7 @@ class MasterSystemsDisplay(object):
 		#draw the frame heading
 		self.title.push(self.titlex,self.titley,draw)
 		self.C_Label.r_align(156,self.labely,draw)
-		self.status_list.update(self.	load_list(),draw)
+		self.status_list.update(self.load_list(),draw)
 
 		return status
 
@@ -286,13 +287,13 @@ class SettingsFrame(object):
 		self.pages = [["Sensor 1", configure.sensor1],
 						["Sensor 2", configure.sensor2],
 						["Sensor 3", configure.sensor3],
+						["Picorder Info", "msd"],
 						["Audio", configure.audio],
+						["LEDs", configure.leds_on],
 						["Alarm", configure.alarm],
 						["Auto Range", configure.auto],
 						["Trim Buffer", configure.trim_buffer],
-						["LEDs", configure.leds_on],
-						["Power Off", "poweroff"],
-						["Master Systems Display", "msd"]]
+						["Power Off", "poweroff"]]
 
 		# Sets the x and y span of the graph
 		self.gspanx = 133
@@ -458,7 +459,7 @@ class StartUp(object):
 		self.item.center(self.titley+self.jump,0, 160,draw)
 
 
-		if self.interval.timelapsed() > configure.boot_delay:
+		if self.interval.timelapsed() > configure.boot_delay and configure.sensor_ready[0]:
 			status = "mode_a"
 		else:
 			status = "startup"

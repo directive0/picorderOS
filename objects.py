@@ -6,6 +6,7 @@ import time, configparser
 from os.path import exists
 
 
+
 class preferences(object):
 	def str2bool(self,v):
   		return v.lower() in ("yes", "true", "t", "1")
