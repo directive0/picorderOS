@@ -243,7 +243,8 @@ class MasterSystemsDisplay(object):
 		self.status_list = Label_List(2,33, colour = lcars_peach)
 
 		if not configure.pc:
-			self.model = os.popen("cat /proc/device-tree/model").readline()
+			text = os.popen("cat /proc/device-tree/model").readline()
+			self.model = text.rstrip("\x00")
 		else:
 			self.model = "Unknown"
 
