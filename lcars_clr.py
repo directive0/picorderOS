@@ -266,7 +266,9 @@ class MasterSystemsDisplay(object):
 
 			if keys[2]:
 				status = 'settings'
+				configure.eventready[0] = False
 				return status
+
 
 			configure.eventready[0] = False
 
