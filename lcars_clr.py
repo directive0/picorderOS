@@ -58,6 +58,8 @@ class LabelObj(object):
 		self.colour = colour
 
 
+	# to center the text you need to give it the y position, the starting x pos
+	# and the width. Also the draw object.
 	def center(self,y,x,w,draw):
 		size = self.font.getsize(self.string)
 		xmid = x + w/2
@@ -228,7 +230,7 @@ class MasterSystemsDisplay(object):
 		self.status_list = None
 		#self.draw = draw
 		self.titlex = 2
-		self.titley = 10
+		self.titley = 11
 		self.labely = 114
 
 
@@ -257,6 +259,7 @@ class MasterSystemsDisplay(object):
 		sense_ready = "Sensors Avl:  " + str(len(configure.sensor_info))
 		model_name = "CPU:  " + self.model
 
+
 		status_list = [model_name, ip_str, host_str, sense_ready]
 		return status_list
 
@@ -283,7 +286,7 @@ class MasterSystemsDisplay(object):
 
 
 		#draw the frame heading
-		self.title.push(self.titlex,self.titley,draw)
+		self.title.push(self.titley,0,128,draw)
 		self.C_Label.r_align(156,self.labely,draw)
 		self.status_list.update(self.load_list(),draw)
 
