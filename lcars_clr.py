@@ -228,26 +228,26 @@ class MasterSystemsDisplay(object):
 		self.status_list = None
 		#self.draw = draw
 		self.titlex = 2
-		self.titley = 11
+		self.titley = 10
 		self.labely = 114
 
 
 		# the set labels for the screen
-		self.title = LabelObj("Master Systems Display",bigfont)
+		self.title = LabelObj("Master Systems Display",titlefont)
 
 
 
 		# three input cue labels
 		self.C_Label = LabelObj("Exit",font, colour = lcars_orpeach)
 
-		self.status_list = Label_List(22,35, colour = lcars_peach)
+		self.status_list = Label_List(2,33, colour = lcars_peach)
 
 	def load_list(self):
 
 		# pulls data from the modulated_em.py
-		ip_str = "IP: " + get_IP()
-		host_str = "Hostname: " + get_hostname()
-		sense_ready = "Sensors Avl: " + len(configure.sensor_info)
+		ip_str = "IP:  " + get_IP()
+		host_str = "Hostname:  " + get_hostname()
+		sense_ready = "Sensors Avl:  " + len(configure.sensor_info)
 
 		status_list = [ip_str, host_str, sense_ready]
 		return status_list
