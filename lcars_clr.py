@@ -242,14 +242,21 @@ class MasterSystemsDisplay(object):
 
 		self.status_list = Label_List(2,33, colour = lcars_peach)
 
+		if not configure.pc:
+			self.model = os.popen("cat /proc/device-tree/model").readline()
+		else:
+			self.model = "Unknown"
+
+
 	def load_list(self):
 
 		# pulls data from the modulated_em.py
 		ip_str = "IP:  " + get_IP()
 		host_str = "Hostname:  " + get_hostname()
-		sense_ready = "Sensors Avl:  " + len(configure.sensor_info)
+		sense_ready = "Sensors Avl:  " + str(len(configure.sensor_info))
+		model_name = "CPU:  " + self.model
 
-		status_list = [ip_str, host_str, sense_ready]
+		status_list = [model_name, ip_str, host_str, sense_ready]
 		return status_list
 
 
