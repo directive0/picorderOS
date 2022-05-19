@@ -120,6 +120,20 @@ class PLARS(object):
 	def append_to_core(self, data):
 		data.to_csv(self.file_path, mode='a', header=False)
 
+
+	def get_recent_bt_list(self):
+		# set the thread lock so other threads are unable to add data
+		self.lock.acquire()
+
+		# get the most recent ssids discovered
+		recent_em = self.get_em_recent()
+
+		# release the thread lock.
+		self.lock.release()
+
+		return recent_em.values.tolist()
+
+
 	# returns a list of every EM transciever that was discovered last scan.
 	def get_recent_em_list(self):
 
@@ -153,12 +167,23 @@ class PLARS(object):
 		return self.identity.values.tolist()
 
 	def get_em_recent(self):
+		wifi_buffer = self.buffer_em.loc[self.buffer_em['dsc'] == "wifi"]
+
 		# find the most recent timestamp
-		time_column = self.buffer_em["timestamp"]
+		time_column = wifi_buffer["timestamp"]
 		most_recent = time_column.max()
 
 		#limit focus to data from that timestamp
-		return self.buffer_em.loc[self.buffer_em['timestamp'] == most_recent]
+		return wifi_buffer.loc[wifi_buffer['timestamp'] == most_recent]
+
+	def get_bt_recent(self):
+		bt_buffer = self.buffer_em.loc[self.buffer_em['dsc'] == "bluetooth"]
+		# find the most recent timestamp
+		time_column = bt_buffer["timestamp"]
+		most_recent = time_column.max()
+
+		#limit focus to data from that timestamp
+		return bt_buffer.loc[bt_buffer['timestamp'] == most_recent]
 
 	def get_top_em_history(self, no = 5):
 		# returns a list of Db values for whatever SSID is currently the strongest.

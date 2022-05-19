@@ -243,6 +243,7 @@ class MasterSystemsDisplay(object):
 		# A list of all the cool data.
 		self.status_list = Label_List(2,33, colour = lcars_peach)
 
+		# grabs the RPI model info
 		if not configure.pc:
 			text = os.popen("cat /proc/device-tree/model").readline()
 			self.model = text.rstrip("\x00")
@@ -253,6 +254,7 @@ class MasterSystemsDisplay(object):
 	def load_list(self):
 
 		# pulls data from the modulated_em.py
+		wifi = "SSID: " + get_ssid()
 		ip_str = "IP:  " + get_IP()
 		host_str = "Hostname:  " + get_hostname()
 		sense_ready = "Sensors Avl:  " + str(len(configure.sensor_info))
@@ -572,6 +574,7 @@ class EMFrame(object):
 	def __init__(self):
 
 		self.wifi = Wifi_Scan()
+		self.bt = BT_Scan()
 
 		self.graphcycle = 0
 
@@ -613,6 +616,11 @@ class EMFrame(object):
 
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
+	def draw_title(self,title):
+		self.title.string = title
+		self.title.r_align(self.labelxr,self.titley,draw)
+
+
 	def push(self, draw):
 
 		status  = "mode_b"
@@ -631,7 +639,7 @@ class EMFrame(object):
 			if keys[1]:
 				self.selection += 1
 
-				if self.selection >= 3:
+				if self.selection >= 4:
 					self.selection = 0
 
 
@@ -643,16 +651,19 @@ class EMFrame(object):
 
 			configure.eventready[0] = False
 
-		self.wifi.update_plars()
+		if self.selection <= 2:
+			self.wifi.update_plars()
+		if self.selection >= 3:
+			self.bt.update_plars()
+
 		if len(plars.get_top_em_info()) < 1:
 			self.selection = -1
 
-		# details on strongest wifi network.
+		# if no wifi available.
 		if self.selection == -1:
 
 			self.title.string = "No SSIDs Detected"
 			self.title.r_align(self.labelxr,self.titley,draw)
-
 
 		# details on strongest wifi network.
 		if self.selection == 0:
@@ -662,8 +673,8 @@ class EMFrame(object):
 
 			# draw screen elements
 			self.Signal_Graph.render(draw)
-			self.title.string = "Dominant Transciever"
-			self.title.r_align(self.labelxr,self.titley,draw)
+
+			self.draw_title("Dominant Transciever")
 
 			self.signal_name.push(20,35,draw, string = info[0])
 
@@ -674,6 +685,8 @@ class EMFrame(object):
 
 		#list of all wifi ssids
 		if self.selection == 1:
+
+			self.draw_title("Modulated EM Scan")
 
 			# list to hold the data labels
 			list_for_labels = []
@@ -692,8 +705,9 @@ class EMFrame(object):
 				label = strength + " dB • " + name
 
 				list_for_labels.append(label)
-			self.title.string = "Modulated EM Scan"
-			self.title.r_align(self.labelxr,self.titley,draw)
+
+
+
 			self.list.update(list_for_labels,draw)
 
 			# assign each list element and its
@@ -714,8 +728,7 @@ class EMFrame(object):
 			draw.rectangle((18,49,158,126), outline = lcars_blue)
 
 			#draw labels
-			self.title.string = "EM Channel Analysis"
-			self.title.r_align(self.labelxr,self.titley,draw)
+			self.draw_title("EM Channel Analysis")
 
 			#grab EM list
 			unsorted_em_list = plars.get_recent_em_list()
@@ -778,7 +791,30 @@ class EMFrame(object):
 					draw.line(cords,lcars_bluer,1)
 					draw.ellipse([x1,y1,x2,y2],lcars_bluer)
 
+		# bluetooth list
+		if self.selection == 3:
+			self.draw_title("Modulated BT Scan")
 
+			# list to hold the data labels
+			list_for_labels = []
+
+			# grab EM list
+			bt_list = plars.get_recent_bt_list()
+
+
+			# prepare a list of the data received for display
+			if len(bt_list) > 0:
+				for bt in bt_list:
+					name = str(bt[0])
+					address = str(bt[6])
+
+					label = name + " - " address
+
+					list_for_labels.append(label)
+
+
+
+			self.list.update(list_for_labels,draw)
 
 
 		return status

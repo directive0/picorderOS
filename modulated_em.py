@@ -1,16 +1,18 @@
 # PicorderOS Wifi Module Proto
-print("Loading Modulated EM Network Analysis")
+print("Loading Modulated EM Signal Analysis")
 
 from wifi import Cell, Scheme
 import time
 from plars import *
 from objects import *
 import socket
+from bluetooth import *
 
 def get_hostname():
 	hostname = socket.gethostname()
 	return hostname
 
+# returns the current IP or an error
 def get_IP():
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -19,10 +21,11 @@ def get_IP():
 		IPAddr = s.getsockname()[0]
 	except:
 		IPAddr = "No IP Found"
-		
+
 	return IPAddr
 
-
+def get_ssid():
+	return os.popen("iwgetid").readline()
 
 class Wifi_Scan(object):
 
@@ -55,7 +58,7 @@ class Wifi_Scan(object):
 	def plars_package(self, ap_list):
 		timestamp = time.time()
 		ap_fragments = []
-							#'ssid','signal','quality','frequency','encrypted','channel','address','mode','dsc','timestamp']
+
 		for ap in ap_list:
 			details = [ap.ssid, ap.signal, ap.quality, ap.frequency, ap.encrypted, ap.channel, ap.address, ap.mode, 'wifi', timestamp]
 			ap_fragments.append(details)
@@ -97,5 +100,27 @@ class Wifi_Scan(object):
 
 class BT_Scan(object):
 
+	timed = timer()
+
 	def __init__(self):
 		pass
+
+	def get_list(self):
+		return nearby_devices = discover_devices(lookup_names = True, lookup_class = True)
+
+	def dump_data(self):
+		bt_list = self.get_list()
+		return self.plars_package(bt_list)
+
+	def plars_package(self, bt_list):
+		timestamp = time.time()
+		bt_fragments = []
+
+		for bt in bt_list:
+			details = [bt[1], "n/a", "n/a", "n/a", "n/a", "n/a", bt[0], bt[2], 'bluetooth', timestamp]
+			bt_fragments.append(details)
+
+		return bt_fragments
+
+	def update_plars(self):
+		plars.update_em(self.dump_data())
