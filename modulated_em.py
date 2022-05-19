@@ -106,7 +106,7 @@ class BT_Scan(object):
 		pass
 
 	def get_list(self):
-		return nearby_devices = discover_devices(lookup_names = True, lookup_class = True)
+		return discover_devices(lookup_names = True, lookup_class = True)
 
 	def dump_data(self):
 		bt_list = self.get_list()
