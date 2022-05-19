@@ -728,7 +728,7 @@ class EMFrame(object):
 			draw.rectangle((18,49,158,126), outline = lcars_blue)
 
 			#draw labels
-			self.draw_title("EM Channel Analysis")
+			self.draw_title("EM Channel Analysis", draw)
 
 			#grab EM list
 			unsorted_em_list = plars.get_recent_em_list()
