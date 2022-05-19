@@ -808,7 +808,7 @@ class EMFrame(object):
 					name = str(bt[0])
 					address = str(bt[6])
 
-					label = name + " - " address
+					label = name + " - " + address
 
 					list_for_labels.append(label)
 
