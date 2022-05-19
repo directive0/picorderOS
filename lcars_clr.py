@@ -616,7 +616,7 @@ class EMFrame(object):
 
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
-	def draw_title(self,title):
+	def draw_title(self,title, draw):
 		self.title.string = title
 		self.title.r_align(self.labelxr,self.titley,draw)
 
@@ -674,7 +674,7 @@ class EMFrame(object):
 			# draw screen elements
 			self.Signal_Graph.render(draw)
 
-			self.draw_title("Dominant Transciever")
+			self.draw_title("Dominant Transciever", draw)
 
 			self.signal_name.push(20,35,draw, string = info[0])
 
@@ -686,7 +686,7 @@ class EMFrame(object):
 		#list of all wifi ssids
 		if self.selection == 1:
 
-			self.draw_title("Modulated EM Scan")
+			self.draw_title("Modulated EM Scan", draw)
 
 			# list to hold the data labels
 			list_for_labels = []
@@ -793,7 +793,7 @@ class EMFrame(object):
 
 		# bluetooth list
 		if self.selection == 3:
-			self.draw_title("Modulated BT Scan")
+			self.draw_title("Modulated BT Scan", draw)
 
 			# list to hold the data labels
 			list_for_labels = []
