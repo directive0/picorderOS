@@ -126,7 +126,7 @@ class PLARS(object):
 		self.lock.acquire()
 
 		# get the most recent ssids discovered
-		recent_em = self.get_em_recent()
+		recent_em = self.get_bt_recent()
 
 		# release the thread lock.
 		self.lock.release()
