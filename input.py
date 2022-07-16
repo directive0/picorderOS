@@ -60,6 +60,7 @@ if configure.sensehat:
 # set up requirements for USB keyboard
 if configure.input_kb:
 	import pygame
+	pygame.init()
 
 # set up requirements for GPIO based inputs
 if configure.input_gpio:
