@@ -653,6 +653,7 @@ class EMFrame(object):
 
 		if self.selection <= 2:
 			self.wifi.update_plars()
+
 		if self.selection >= 3:
 			self.bt.update_plars()
 
@@ -694,21 +695,22 @@ class EMFrame(object):
 			# grab EM list
 			em_list = plars.get_recent_em_list()
 
-			#sort it so strongest is first
-			sorted_em_list = sorted(em_list, key=itemgetter(1), reverse = True)
+			if len(em_list) > 0:
+				#sort it so strongest is first
+				sorted_em_list = sorted(em_list, key=itemgetter(1), reverse = True)
 
-			# prepare a list of the data received for display
-			for ssid in sorted_em_list:
-				name = str(ssid[0])
-				strength = str(ssid[1])
+				# prepare a list of the data received for display
+				for ssid in sorted_em_list:
+					name = str(ssid[0])
+					strength = str(ssid[1])
 
-				label = strength + " dB • " + name
+					label = strength + " dB • " + name
 
-				list_for_labels.append(label)
+					list_for_labels.append(label)
 
 
 
-			self.list.update(list_for_labels,draw)
+				self.list.update(list_for_labels,draw)
 
 			# assign each list element and its
 
@@ -733,63 +735,65 @@ class EMFrame(object):
 			#grab EM list
 			unsorted_em_list = plars.get_recent_em_list()
 
-			# sort it so strongest is first.
-			em_list = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)
+			if len(unsorted_em_list) > 0:
 
-			# create a list to hold just the info we need for the screen.
-			items_list = []
+				# sort it so strongest is first.
+				em_list = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)
 
-			#filter info into items_list
-			for ssid in em_list:
-				name = str(ssid[0])
-				strength = ssid[1]
-				frequency = ssid[3]
-				frequency = float(frequency.replace(' GHz', ''))
+				# create a list to hold just the info we need for the screen.
+				items_list = []
 
-				# determing x coordinate
-				screenpos = numpy.interp(frequency,(2.412, 2.462),(25, 151))
+				#filter info into items_list
+				for ssid in em_list:
+					name = str(ssid[0])
+					strength = ssid[1]
+					frequency = ssid[3]
+					frequency = float(frequency.replace(' GHz', ''))
 
-				# determine y coordinate
-				lineheight = numpy.interp(strength, (-100, 0), (126, 55))
+					# determing x coordinate
+					screenpos = numpy.interp(frequency,(2.412, 2.462),(25, 151))
 
-				# package into list
-				this_ssid = (name,screenpos,lineheight,strength,frequency)
-				items_list.append(this_ssid)
+					# determine y coordinate
+					lineheight = numpy.interp(strength, (-100, 0), (126, 55))
 
-
-			#for each item in item_list, in reverse order
-			for index, item in reversed(list(enumerate(items_list))):
-
-				# determine dot coordinates.
-				cords = ((item[1],126),(item[1],item[2]))
-				x1 = cords[1][0] - (6/2)
-				y1 = cords[1][1] - (6/2)
-				x2 = cords[1][0] + (6/2)
-				y2 = cords[1][1] + (6/2)
-
-				# if this is the strongest singal draw labels and change colour.
-				if index == 0:
-					draw.line(cords,lcars_peach,1)
-					draw.ellipse([x1,y1,x2,y2],lcars_peach)
+					# package into list
+					this_ssid = (name,screenpos,lineheight,strength,frequency)
+					items_list.append(this_ssid)
 
 
-					name = item[0]
-					trunc_name = name[:16] + (name[16:] and '..')
-					# draw the strongest signals name, top center
-					self.signal_name_sm.push(19,34,draw,string = trunc_name)
+				#for each item in item_list, in reverse order
+				for index, item in reversed(list(enumerate(items_list))):
 
-					# put strength at lower left
-					strength_string = str(item[3]) + " DB"
-					#self.signal_strength_sm.push(19,114,draw,string = strength_string)
+					# determine dot coordinates.
+					cords = ((item[1],126),(item[1],item[2]))
+					x1 = cords[1][0] - (6/2)
+					y1 = cords[1][1] - (6/2)
+					x2 = cords[1][0] + (6/2)
+					y2 = cords[1][1] + (6/2)
 
-					# put frequency at lower right
-					self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
-					self.signal_frequency_sm.r_align(157,37,draw)
+					# if this is the strongest singal draw labels and change colour.
+					if index == 0:
+						draw.line(cords,lcars_peach,1)
+						draw.ellipse([x1,y1,x2,y2],lcars_peach)
 
-				# otherwise just draw the line and dot in the usual color
-				else:
-					draw.line(cords,lcars_bluer,1)
-					draw.ellipse([x1,y1,x2,y2],lcars_bluer)
+
+						name = item[0]
+						trunc_name = name[:16] + (name[16:] and '..')
+						# draw the strongest signals name, top center
+						self.signal_name_sm.push(19,34,draw,string = trunc_name)
+
+						# put strength at lower left
+						strength_string = str(item[3]) + " DB"
+						#self.signal_strength_sm.push(19,114,draw,string = strength_string)
+
+						# put frequency at lower right
+						self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
+						self.signal_frequency_sm.r_align(157,37,draw)
+
+					# otherwise just draw the line and dot in the usual color
+					else:
+						draw.line(cords,lcars_bluer,1)
+						draw.ellipse([x1,y1,x2,y2],lcars_bluer)
 
 		# bluetooth list
 		if self.selection == 3:

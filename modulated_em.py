@@ -59,14 +59,16 @@ class Wifi_Scan(object):
 		timestamp = time.time()
 		ap_fragments = []
 
-		for ap in ap_list:
-			details = [ap.ssid, ap.signal, ap.quality, ap.frequency, ap.encrypted, ap.channel, ap.address, ap.mode, 'wifi', timestamp]
-			ap_fragments.append(details)
+		if len(ap_list) > 0
+			for ap in ap_list:
+				details = [ap.ssid, ap.signal, ap.quality, ap.frequency, ap.encrypted, ap.channel, ap.address, ap.mode, 'wifi', timestamp]
+				ap_fragments.append(details)
+		else:
+			ap_fragments = None
 
 		return ap_fragments
 
 	def get_strongest_ssid(self):
-
 		list = self.get_list()
 		strengths = []
 
@@ -83,7 +85,11 @@ class Wifi_Scan(object):
 		return details
 
 	def update_plars(self):
-		plars.update_em(self.dump_data())
+		data = self.dump_data()
+		if data != None:
+			plars.update_em(data)
+		else:
+			print("Wifi Data not logged")
 
 	def get_ssid_list(self):
 
