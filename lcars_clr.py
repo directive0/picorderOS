@@ -674,11 +674,8 @@ class EMFrame(object):
 
 			# draw screen elements
 			self.Signal_Graph.render(draw)
-
 			self.draw_title("Dominant Transciever", draw)
-
 			self.signal_name.push(20,35,draw, string = info[0])
-
 			self.signal_strength.string = str(info[1]) + " DB"
 			self.signal_strength.r_align(self.labelxr,92,draw)
 			self.signal_frequency.push(20,92,draw, string = info[3])
@@ -702,17 +699,13 @@ class EMFrame(object):
 				# prepare a list of the data received for display
 				for ssid in sorted_em_list:
 					name = str(ssid[0])
-					strength = str(ssid[1])
-
+					strength = str(ssid[1]
 					label = strength + " dB • " + name
-
 					list_for_labels.append(label)
 
-
-
+				# update the list onscreen
 				self.list.update(list_for_labels,draw)
 
-			# assign each list element and its
 
 		# frequency intensity map
 		if self.selection == 2:
