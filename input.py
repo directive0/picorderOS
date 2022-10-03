@@ -122,6 +122,7 @@ if configure.input_pcf8575:
 	pcf_address = 0x20
 	pcf = PCF8575(i2c_port_num, pcf_address)
 
+
 	button_table = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,0,3,2,4]
 
 # the input class receives and relays control events for user interaction
