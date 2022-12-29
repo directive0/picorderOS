@@ -92,7 +92,7 @@ class preferences(object):
 							'video':'yes',
 							'# Enables audio playback (videos will not play without this)':None,
 							'audio':'no',									# Enables audio playback
-                                                        '# Enables video player capabilities':None,
+                            '# Enables video player capabilities':None,
 							'video':'no',
 							'alarm':'no',
 							'# If sleep is "yes" then lights will respond to Hall Effect sensors':None,
@@ -100,7 +100,7 @@ class preferences(object):
 							'# Autoranging of graphs':None,
 							'autoranging':'yes',							# Auto ranging of graphs
 							'mode_a_graph_width':'280',						# graph width for TR108 mode_a
-							'mode_a_graph_height':'160',					# graph height for TR108 mode_a\
+							'mode_a_graph_height':'160',					# graph height for TR108 mode_a
 							'mode_a_x_offset':18,							# x offset for TR108 mode_a
 							'mode_a_y_offset':31,							# y offset for TR108 mode_a
 							'# Interpolate Temperature':None,
@@ -247,7 +247,11 @@ class preferences(object):
 		# enables sound effect playback
 		self.audio = [self.str2bool(config['GLOBALS']['audio'])]
 
-                # enables video playback library
+		# enables or disables the warble sound effect specifically 
+		# ('cause beeps and clicks are less obnoxious).
+		self.warble = [True]
+
+        # enables video playback library
 		self.video = [self.str2bool(config['GLOBALS']['video'])]
 
 		# turns alarms on/off

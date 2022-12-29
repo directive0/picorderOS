@@ -2,7 +2,9 @@ print("Unified Display Module loading")
 
 # Serves as a transmission between the various display types and
 # the different picorder front ends. Runs the display drawing as a process so
-# it can be run concurrently.
+# it can be run concurrently with whatever screen based system the picorder is running.
+
+# (so far only works with tr-109 and LCARS based trics)
 
 
 import sys
@@ -17,7 +19,7 @@ if configure.display == 1:
 	from luma.core.render import canvas
 	from luma.lcd.device import st7735
 	from luma.emulator.device import pygame
-``
+
 	# Raspberry Pi hardware SPI config:
 	DC = 23
 	RST = 24
