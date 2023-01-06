@@ -102,7 +102,7 @@ class GenericDisplay(object):
 	# Display takes a PILlow based drawobject and pushes it to screen.
 	def display(self,frame):
 		self.q.put(frame)
-		emu_input.read()
+
 
 	def cleanup(self):
 		self.q.put("quit")
