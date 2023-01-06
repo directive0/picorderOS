@@ -182,8 +182,6 @@ def Main():
 					if configure.display == 1 or configure.display == 2:
 						configure.status[0] = colourscreen.msd()
 
-			if watchdog.timelapsed > configure.watchdog_timeout:
-				pass
 
 			# Handles the poweroff screen
 			if configure.status[0] == "poweroff":
