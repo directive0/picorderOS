@@ -27,7 +27,8 @@ class preferences(object):
 							'tr108':'yes',									# Running a TR-108 simulation - mutually exclusive with tr109
 							'tr109':'no',									# Running a TR-109 simulation - mutually exclusive with tr108
 							'# Set the timeout for the watchdog (For crash recovery)':None,
-							'watchdog_timeout':'7',}
+							'watchdog_timeout':'7',							# Timeout period for the watchdog timer to detect crashes.
+							}
 
 
 		config['SENSORS'] =  {'# Only TR-108 uses SenseHat':None,
