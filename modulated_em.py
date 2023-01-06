@@ -131,39 +131,3 @@ class BT_Scan(object):
 	def update_plars(self):
 		plars.update_em(self.dump_data())
 
-
-# function to use the sensor class as a process.
-def em_process(conn):
-
-	#init sensors
-	em = Wifi_Scan()
-	bt = BT_Scan()
-	timed = timer()
-
-	while True:
-		if timed.timelapsed() > configure.samplerate[0]:
-			#constantly grab sensors.
-			conn.send(sensors.get())
-			timed.logtime()
-
-def threaded_sensor():
-
-	sensors = Sensor()
-
-	sensors.get()
-	configure.buffer_size[0] = configure.graph_size[0]*len(configure.sensor_info)
-	configure.sensor_ready[0] = True
-
-
-	sensors.end()
-	parent_conn,child_conn = Pipe()
-	sense_process = Process(target=sensor_process, args=(child_conn,))
-	sense_process.start()
-
-	while not configure.status == "quit":
-
-		data = parent_conn.recv()
-		#print(data)
-		plars.update(data)
-
-	sense_process.terminate()
