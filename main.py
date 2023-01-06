@@ -93,9 +93,6 @@ def Main():
 
 	print("Main Loop Starting")
 
-	#set up the watchdog timer for crash detection:
-	watchdog = Timer()
-
 	# Main loop. Break when status is "quit".
 	while configure.status[0] != "quit":
 

@@ -26,8 +26,6 @@ class preferences(object):
 							'# Select either TR-108, or TR-109. You must choose only one.':None,
 							'tr108':'yes',									# Running a TR-108 simulation - mutually exclusive with tr109
 							'tr109':'no',									# Running a TR-109 simulation - mutually exclusive with tr108
-							'# Set the timeout for the watchdog (For crash recovery)':None,
-							'watchdog_timeout':'7',							# Timeout period for the watchdog timer to detect crashes.
 							}
 
 
@@ -329,9 +327,6 @@ class preferences(object):
 		self.graph_x = int(config['GLOBALS']['graph_x'])
 		self.graph_y = int(config['GLOBALS']['graph_y'])
 
-		# watchdog timer to see if the screen draw has failed.
-		self.watchdog_timeout = int(config['GLOBALS']['watchdog_timeout'])
-		self.watchdog = [False]
 
 
 # create a shared object for global variables and settings.
