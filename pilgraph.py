@@ -10,12 +10,8 @@ print("Loading Python IL Module")
 
 
 
-# it is initialized with:
-# - ident: a graph identifier so it knows which sensor to grab data for
-# - graphcoords: list containing the top left x,y coordinates
-# - graphspan: list containing the x and y span in pixels
-# - cycle: time per division of the graph (not working)
-# -
+
+
 
 from objects import *
 from PIL import Image
@@ -65,6 +61,10 @@ def graph_prep_process(conn,samples,datalist,auto,newrange,targetrange,sourceran
 
 
 class graph_area(object):
+# it is initialized with:
+# - ident: a graph identifier number so it knows which currently selected graphable sensor (0-2) this graph is
+# - graphcoords: list containing the top left x,y coordinates
+# - graphspan: list containing the x and y span in pixels
 
 
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0, samples = False):
