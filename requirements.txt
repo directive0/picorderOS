@@ -2,8 +2,8 @@ adafruit_amg88xx
 Adafruit_Blinka
 adafruit_circuitpython_bme680
 adafruit_circuitpython_mpr121
+adafruit_mlx90614
 adafruit_mpr121
-bluetooth
 board
 Cap1xxx
 colour
@@ -15,9 +15,11 @@ luma.emulator
 luma.lcd
 numpy
 pandas
+pcf8575
 Pillow
 PiPocketGeiger
 psutil
+PyBluez
 pygame>=2.1.0
 scipy
 sense_hat
