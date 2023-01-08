@@ -59,7 +59,7 @@ class Wifi_Scan(object):
 		timestamp = time.time()
 		ap_fragments = []
 
-		if len(ap_list) > 0:
+		if ap_list != None and len(ap_list) > 0:
 			for ap in ap_list:
 				details = [ap.ssid, ap.signal, ap.quality, ap.frequency, ap.encrypted, ap.channel, ap.address, ap.mode, 'wifi', timestamp]
 				ap_fragments.append(details)
