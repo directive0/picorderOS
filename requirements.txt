@@ -1,8 +1,8 @@
 adafruit_amg88xx
 Adafruit_Blinka
 adafruit_circuitpython_bme680
+adafruit-circuitpython-mlx90614
 adafruit_circuitpython_mpr121
-adafruit_mlx90614
 adafruit_mpr121
 board
 Cap1xxx
