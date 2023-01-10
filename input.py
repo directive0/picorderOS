@@ -187,223 +187,232 @@ class Inputs(object):
 					configure.dr_closing[0] = True
 			else:
 				self.door_was_open = True
+		else:
+			configure.dr_open[0] = True
 
-		# event handling for cap1208
-		if configure.input_cap1208:
 
-			# if the alert pin is brought LOW
-			if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
+		# to avoid spurrious inputs we only poll for events on door open
+		if configure.dr_open[0]:
+			# event handling for cap1208
+			if configure.input_cap1208:
 
-				#print("touch received")
+				# if the alert pin is brought LOW
+				if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
 
-				# collect the event list from the chip
-				reading = cap1208.get_input_status()
+					#print("touch received")
 
-				# for each item in that event list
-				for iteration, input in enumerate(reading):
+					# collect the event list from the chip
+					reading = cap1208.get_input_status()
 
-					# if an item is pressed
-					if input == "press":
-						# mark it in the pressed list
-						self.pressed[iteration] = True
-						# raise the eventready flag
-						configure.eventready[0] = True
-						# raise the sound effect flag
-						configure.beep_ready[0] = True
-					else:
-						# if an item is marked "released"
-						if input == "release":
-							# if it was previously marked pressed
-							if self.pressed[iteration] == True:
-								# ignore it
-								self.pressed[iteration] = False
+					# for each item in that event list
+					for iteration, input in enumerate(reading):
+
+						# if an item is pressed
+						if input == "press":
+							# mark it in the pressed list
+							self.pressed[iteration] = True
+							# raise the eventready flag
+							configure.eventready[0] = True
+							# raise the sound effect flag
+							configure.beep_ready[0] = True
+						else:
+							# if an item is marked "released"
+							if input == "release":
+								# if it was previously marked pressed
+								if self.pressed[iteration] == True:
+									# ignore it
+									self.pressed[iteration] = False
+								else:
+									# if it wasn't marked pressed last time (was missed)
+									configure.eventready[0] = True
+									self.pressed[iteration] = True
+									configure.beep_ready[0] = True
+							# else mark it not pressed
 							else:
-								# if it wasn't marked pressed last time (was missed)
-								configure.eventready[0] = True
-								self.pressed[iteration] = True
-								configure.beep_ready[0] = True
-						# else mark it not pressed
-						else:
-							self.pressed[iteration] = False
+								self.pressed[iteration] = False
 
 
 
-				#clear Alert pin
-				cap1208.clear_interrupt()
+					#clear Alert pin
+					cap1208.clear_interrupt()
 
-				configure.eventlist[0] = self.pressed
+					configure.eventlist[0] = self.pressed
 
-				# return the pressed data
-				return self.pressed
+					# return the pressed data
+					return self.pressed
 
-			else:
-				# otherwise just return a line of negatives.
-				return self.clear
+				else:
+					# otherwise just return a line of negatives.
+					return self.clear
 
-		# event handling for system (USB) keyboards
-		if configure.input_kb:
+			# event handling for system (USB) keyboards
+			if configure.input_kb:
 
-			event = keyboard.read_event()
-			# for each item in that event list
+				print("Reading Event List")
 
-			for i in range(keys)-1:
-
-				# button pressed 
-				if event.event_type == keyboard.KEY_DOWN and event.name == keys[i]:
-					# if the button has not been registered as pressed
-					if not self.pressed[i]:
-
-						self.pressed[i] = True
-
-						# raise the eventready flag
-						configure.eventready[0] = True
-
-						# raise the sound effect flag
-						configure.beep_ready[0] = True
+				event = keyboard.read_event()
+				# for each item in that event list
+				print("List: ", str(event))
 
 
-				if event.event_type == keyboard.KEY_UP and event.name == keys[i]:
 
-					if self.pressed[i]:
-						self.buttonlist[i] = True
-						self.pressed[i] = False
-					else:
-						self.buttonlist[i] = False
-			
+				for i in range(len(keys))-1:
 
-		# event handling for GPIO
-		if configure.input_gpio:
+					# button pressed 
+					if event.event_type == keyboard.KEY_DOWN and event.name == keys[i]:
+						# if the button has not been registered as pressed
+						if not self.pressed[i]:
 
-			for i in range(3):
+							self.pressed[i] = True
 
-				# if the button has not been registered as pressed
-				if GPIO.input(pins[i]) == 0:  # button pressed
-					if not self.pressed[i]:
-						self.pressed[i] = True
-						configure.eventlist[0] = True
-
-
-				if GPIO.input(pins[i]) == 1:
-
-					if self.pressed[i]:
-						self.buttonlist[i] = True
-						self.pressed[i] = False
-					else:
-						self.buttonlist[i] = False
-
-		# event handling for SenseHat joystick
-		if configure.sensehat and configure.input_joystick:
-
-			if configure.eventready[0] == False:
-
-				for event in sense.stick.get_events():
-
-					if (event.direction == 'left' and event.action == 'pressed'):
-						if not self.pressed[0]:
-							self.pressed[0] = True
+							# raise the eventready flag
 							configure.eventready[0] = True
-							self.holdtimers[0].logtime()
+
+							# raise the sound effect flag
+							configure.beep_ready[0] = True
+
+
+					if event.event_type == keyboard.KEY_UP and event.name == keys[i]:
+
+						if self.pressed[i]:
+							self.buttonlist[i] = True
+							self.pressed[i] = False
 						else:
-							if self.holdtimers[0].timelapsed() > self.thresh_hold:
-								self.holding[0] = True
+							self.buttonlist[i] = False
+				
+			# event handling for GPIO
+			if configure.input_gpio:
 
-					if (event.direction == 'left' and event.action == 'released'):
-						self.holding[0] = False
-						if self.pressed[0]:
-							self.buttonlist[0] = True
-							self.pressed[0] = False
-						else:
-							self.buttonlist[0] = False
-
-					if (event.direction == 'down' and event.action == 'pressed'):
-						if not self.pressed[1]:
-							self.pressed[1] = True
-							configure.eventready[0] = True
-							self.holdtimers[1].logtime()
-						else:
-							if self.holdtimers[1].timelapsed() > self.thresh_hold:
-								self.holding[1] = True
-
-					if (event.direction == 'down' and event.action == 'released'):
-						self.holding[1] = False
-						if self.pressed[1]:
-							self.buttonlist[1] = True
-							self.pressed[1] = False
-						else:
-							self.buttonlist[1] = False
-
-					if (event.direction == 'right' and event.action == 'pressed'):
-						if not self.pressed[2]:
-							self.pressed[2] = True
-							configure.eventready[0] = True
-							self.holdtimers[2].logtime()
-						else:
-							if self.holdtimers[2].timelapsed() > self.thresh_hold:
-								self.holding[2] = True
-
-					if (event.direction == 'right' and event.action == 'released'):
-						self.holding[2] = False
-						if self.pressed[2]:
-							self.buttonlist[2] = True
-							self.pressed[2] = False
-						else:
-							self.buttonlist[2] = False
-
-		# event handling for mpr121
-		if configure.input_cap_mpr121:
-
-			if configure.eventready[0] == False:
-				# Reads the touched capacitive elements
-				touched = mpr121.touched_pins
-
-				# runs a loop to check each possible button
-				for i in range(len(touched)):
+				for i in range(3):
 
 					# if the button has not been registered as pressed
-					if touched[i]:  # button pressed
+					if GPIO.input(pins[i]) == 0:  # button pressed
 						if not self.pressed[i]:
 							self.pressed[i] = True
-							configure.eventready[0] = True
-							self.holdtimers[i].logtime()
-						else:
+							configure.eventlist[0] = True
 
-							if self.holdtimers[i].timelapsed() > self.thresh_hold:
-								self.holding[i] = True
 
-					if not touched[i]:
-						self.holding[i] = False
+					if GPIO.input(pins[i]) == 1:
+
 						if self.pressed[i]:
 							self.buttonlist[i] = True
 							self.pressed[i] = False
 						else:
 							self.buttonlist[i] = False
 
-		# event handling for pcf8575
-		if configure.input_pcf8575:
+			# event handling for SenseHat joystick
+			if configure.sensehat and configure.input_joystick:
 
-			if not configure.eventready[0]:
-				this_frame = list(pcf.port)
+				if configure.eventready[0] == False:
 
-				for this, button in enumerate(this_frame):
+					for event in sense.stick.get_events():
 
-					# if an item is pressed
-					if not button:
+						if (event.direction == 'left' and event.action == 'pressed'):
+							if not self.pressed[0]:
+								self.pressed[0] = True
+								configure.eventready[0] = True
+								self.holdtimers[0].logtime()
+							else:
+								if self.holdtimers[0].timelapsed() > self.thresh_hold:
+									self.holding[0] = True
 
-						#if it wasn't pressed last time
-						if not self.pressed[this]:
+						if (event.direction == 'left' and event.action == 'released'):
+							self.holding[0] = False
+							if self.pressed[0]:
+								self.buttonlist[0] = True
+								self.pressed[0] = False
+							else:
+								self.buttonlist[0] = False
 
-							# mark it in the pressed list
-							print("pad press registered at ", this)
-							print("raising an event at address ", button_table[this])
+						if (event.direction == 'down' and event.action == 'pressed'):
+							if not self.pressed[1]:
+								self.pressed[1] = True
+								configure.eventready[0] = True
+								self.holdtimers[1].logtime()
+							else:
+								if self.holdtimers[1].timelapsed() > self.thresh_hold:
+									self.holding[1] = True
 
-							self.pressed[button_table[this]] = True
-							configure.eventready[0] = True
-							configure.beep_ready[0] = True
-					else:
-						self.pressed[button_table[this]] = False
+						if (event.direction == 'down' and event.action == 'released'):
+							self.holding[1] = False
+							if self.pressed[1]:
+								self.buttonlist[1] = True
+								self.pressed[1] = False
+							else:
+								self.buttonlist[1] = False
 
-		# adds any new events to the eventlist
-		configure.eventlist[0] = self.pressed
+						if (event.direction == 'right' and event.action == 'pressed'):
+							if not self.pressed[2]:
+								self.pressed[2] = True
+								configure.eventready[0] = True
+								self.holdtimers[2].logtime()
+							else:
+								if self.holdtimers[2].timelapsed() > self.thresh_hold:
+									self.holding[2] = True
+
+						if (event.direction == 'right' and event.action == 'released'):
+							self.holding[2] = False
+							if self.pressed[2]:
+								self.buttonlist[2] = True
+								self.pressed[2] = False
+							else:
+								self.buttonlist[2] = False
+
+			# event handling for mpr121
+			if configure.input_cap_mpr121:
+
+				if configure.eventready[0] == False:
+					# Reads the touched capacitive elements
+					touched = mpr121.touched_pins
+
+					# runs a loop to check each possible button
+					for i in range(len(touched)):
+
+						# if the button has not been registered as pressed
+						if touched[i]:  # button pressed
+							if not self.pressed[i]:
+								self.pressed[i] = True
+								configure.eventready[0] = True
+								self.holdtimers[i].logtime()
+							else:
+
+								if self.holdtimers[i].timelapsed() > self.thresh_hold:
+									self.holding[i] = True
+
+						if not touched[i]:
+							self.holding[i] = False
+							if self.pressed[i]:
+								self.buttonlist[i] = True
+								self.pressed[i] = False
+							else:
+								self.buttonlist[i] = False
+
+			# event handling for pcf8575
+			if configure.input_pcf8575:
+
+				if not configure.eventready[0]:
+					this_frame = list(pcf.port)
+
+					for this, button in enumerate(this_frame):
+
+						# if an item is pressed
+						if not button:
+
+							#if it wasn't pressed last time
+							if not self.pressed[this]:
+
+								# mark it in the pressed list
+								print("pad press registered at ", this)
+								print("raising an event at address ", button_table[this])
+
+								self.pressed[button_table[this]] = True
+								configure.eventready[0] = True
+								configure.beep_ready[0] = True
+						else:
+							self.pressed[button_table[this]] = False
+
+			# adds any new events to the eventlist
+			configure.eventlist[0] = self.pressed
 
 
 	def keypress(self):
