@@ -256,7 +256,7 @@ class Inputs(object):
 
 
 
-				for i in range(len(keys))-1:
+				for i in int(range(len(keys)))-1:
 
 					# button pressed 
 					if event.event_type == keyboard.KEY_DOWN and event.name == keys[i]:
