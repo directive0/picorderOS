@@ -258,10 +258,17 @@ class Inputs(object):
 
 				for i in range(len(keys)-1):
 
+					if event.event_type == keyboard.KEY_DOWN:
+
+						print("event name is: ", event.name)
+
 					# button pressed 
 					if event.event_type == keyboard.KEY_DOWN and event.name == keys[i]:
+
 						# if the button has not been registered as pressed
 						if not self.pressed[i]:
+
+							print("A button was pressed")
 
 							self.pressed[i] = True
 
