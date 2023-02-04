@@ -44,11 +44,14 @@ def threaded_audio():
 
             # controls the main tricorder sound loop
             if configure.dr_open[0]:
-                if not warble.is_playing():
+                if not warble.is_playing() and configure.warble[0]:
                     warble = scansound.play()
             else:
                 if warble.is_playing():
                     warble.stop()
+            
+            if not configure.warble[0]:
+                warble.stop()
 
             if configure.alarm_ready[0]:
                 if not alarm.is_playing():

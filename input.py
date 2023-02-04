@@ -17,7 +17,7 @@ print("Loading Unified Input Module")
 # The TR-108 only has 3 buttons
 
 # Max number of buttons
-#	0	1	 2  	3  	4	5	6		7				8			9		10			11	  12	13	14
+#	0	1	 2    3  	4	 5	6		7				8			9		10			11	  12  13  14
 # geo, met, bio, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
 
 
@@ -59,7 +59,8 @@ if configure.sensehat:
 
 # set up requirements for USB keyboard
 if configure.input_kb:
-	import pygame
+	import keyboard
+	keys = ['left','down','right']
 
 # set up requirements for GPIO based inputs
 if configure.input_gpio:
@@ -121,6 +122,7 @@ if configure.input_pcf8575:
 	i2c_port_num = 1
 	pcf_address = 0x20
 	pcf = PCF8575(i2c_port_num, pcf_address)
+
 
 	button_table = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,0,3,2,4]
 
@@ -186,6 +188,7 @@ class Inputs(object):
 			else:
 				self.door_was_open = True
 
+		# event handling for cap1208
 		if configure.input_cap1208:
 
 			# if the alert pin is brought LOW
@@ -237,67 +240,38 @@ class Inputs(object):
 				# otherwise just return a line of negatives.
 				return self.clear
 
+		# event handling for system (USB) keyboards
 		if configure.input_kb:
 
-			key = self.keypress()
+			event = keyboard.read_event()
+			# for each item in that event list
 
-			# key was pressed
-			if configure.eventready[0] == False:
-				if key[pygame.K_LEFT]:
-						if not self.pressed[0]:
-							self.pressed[0] = True
-							configure.eventready[0] = True
-							self.holdtimers[0].logtime()
-						else:
-							if self.holdtimers[0].timelapsed() > self.thresh_hold:
-								self.holding[0] = True
+			for i in range(keys)-1:
 
-				if not key[pygame.K_LEFT]:
-					self.holding[0] = False
-					if self.pressed[0]:
-						self.buttonlist[0] = True
-						self.pressed[0] = False
+				# button pressed 
+				if event.event_type == keyboard.KEY_DOWN and event.name == keys[i]:
+					# if the button has not been registered as pressed
+					if not self.pressed[i]:
+
+						self.pressed[i] = True
+
+						# raise the eventready flag
+						configure.eventready[0] = True
+
+						# raise the sound effect flag
+						configure.beep_ready[0] = True
+
+
+				if event.event_type == keyboard.KEY_UP and event.name == keys[i]:
+
+					if self.pressed[i]:
+						self.buttonlist[i] = True
+						self.pressed[i] = False
 					else:
-						self.buttonlist[0] = False
+						self.buttonlist[i] = False
+			
 
-
-				if key[pygame.K_DOWN]:
-						if not self.pressed[1]:
-							self.pressed[1] = True
-							configure.eventready[0] = True
-							self.holdtimers[1].logtime()
-						else:
-
-							if self.holdtimers[1].timelapsed() > self.thresh_hold:
-								self.holding[1] = True
-
-				if not key[pygame.K_DOWN]:
-					self.holding[1] = False
-					if self.pressed[1]:
-						self.buttonlist[1] = True
-						self.pressed[1] = False
-					else:
-						self.buttonlist[1] = False
-
-
-				if key[pygame.K_RIGHT]:
-						if not self.pressed[2]:
-							self.pressed[2] = True
-							configure.eventready[0] = True
-							self.holdtimers[2].logtime()
-						else:
-
-							if self.holdtimers[2].timelapsed() > self.thresh_hold:
-								self.holding[2] = True
-
-				if not key[pygame.K_RIGHT]:
-					self.holding[2] = False
-					if self.pressed[2]:
-						self.buttonlist[2] = True
-						self.pressed[2] = False
-					else:
-						self.buttonlist[2] = False
-
+		# event handling for GPIO
 		if configure.input_gpio:
 
 			for i in range(3):
@@ -317,6 +291,7 @@ class Inputs(object):
 					else:
 						self.buttonlist[i] = False
 
+		# event handling for SenseHat joystick
 		if configure.sensehat and configure.input_joystick:
 
 			if configure.eventready[0] == False:
@@ -374,6 +349,7 @@ class Inputs(object):
 						else:
 							self.buttonlist[2] = False
 
+		# event handling for mpr121
 		if configure.input_cap_mpr121:
 
 			if configure.eventready[0] == False:
@@ -402,6 +378,7 @@ class Inputs(object):
 						else:
 							self.buttonlist[i] = False
 
+		# event handling for pcf8575
 		if configure.input_pcf8575:
 
 			if not configure.eventready[0]:
@@ -425,6 +402,7 @@ class Inputs(object):
 					else:
 						self.pressed[button_table[this]] = False
 
+		# adds any new events to the eventlist
 		configure.eventlist[0] = self.pressed
 
 
@@ -434,8 +412,6 @@ class Inputs(object):
 		key = pygame.key.get_pressed()
 
 		return key
-
-
 
 def threaded_input():
 

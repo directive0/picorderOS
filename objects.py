@@ -25,7 +25,9 @@ class preferences(object):
 							'pc':'no',       								# emulating the hardware on a PC?
 							'# Select either TR-108, or TR-109. You must choose only one.':None,
 							'tr108':'yes',									# Running a TR-108 simulation - mutually exclusive with tr109
-							'tr109':'no'}									# Running a TR-109 simulation - mutually exclusive with tr108
+							'tr109':'no',									# Running a TR-109 simulation - mutually exclusive with tr108
+							}
+
 
 		config['SENSORS'] =  {'# Only TR-108 uses SenseHat':None,
 							'sensehat':'no',								# Only TR-108 uses this
@@ -89,7 +91,7 @@ class preferences(object):
 							'video':'yes',
 							'# Enables audio playback (videos will not play without this)':None,
 							'audio':'no',									# Enables audio playback
-                                                        '# Enables video player capabilities':None,
+                            '# Enables video player capabilities':None,
 							'video':'no',
 							'alarm':'no',
 							'# If sleep is "yes" then lights will respond to Hall Effect sensors':None,
@@ -97,7 +99,7 @@ class preferences(object):
 							'# Autoranging of graphs':None,
 							'autoranging':'yes',							# Auto ranging of graphs
 							'mode_a_graph_width':'280',						# graph width for TR108 mode_a
-							'mode_a_graph_height':'160',					# graph height for TR108 mode_a\
+							'mode_a_graph_height':'160',					# graph height for TR108 mode_a
 							'mode_a_x_offset':18,							# x offset for TR108 mode_a
 							'mode_a_y_offset':31,							# y offset for TR108 mode_a
 							'# Interpolate Temperature':None,
@@ -244,7 +246,11 @@ class preferences(object):
 		# enables sound effect playback
 		self.audio = [self.str2bool(config['GLOBALS']['audio'])]
 
-                # enables video playback library
+		# enables or disables the warble sound effect specifically 
+		# ('cause beeps and clicks are less obnoxious).
+		self.warble = [True]
+
+        # enables video playback library
 		self.video = [self.str2bool(config['GLOBALS']['video'])]
 
 		# turns alarms on/off
@@ -320,6 +326,7 @@ class preferences(object):
 		self.graph_height = int(config['GLOBALS']['graph_height'])
 		self.graph_x = int(config['GLOBALS']['graph_x'])
 		self.graph_y = int(config['GLOBALS']['graph_y'])
+
 
 
 # create a shared object for global variables and settings.

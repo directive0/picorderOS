@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# PicorderOS Alpha --------------------------------- December 2021
+# PicorderOS Alpha --------------------------------- Dec 2022
 # Created by Chris Barrett ------------------------- directive0
 # For my sister, a real life Beverly Crusher.
 
@@ -46,6 +46,7 @@ if configure.tr109:
 		from lcars_bw import *
 
 
+
 # the following function is our main loop, it contains all the flow for our program.
 def Main():
 
@@ -67,6 +68,7 @@ def Main():
 		configure.graph_size[0] = colourscreen.get_size()
 
 	start_time = time.time()
+
 	#start the sensor loop
 	sensor_thread = Thread(target = threaded_sensor, args = ())
 	sensor_thread.start()
@@ -107,7 +109,6 @@ def Main():
 
 				if configure.tr108:
 					configure.status[0] = PyScreen.startup_screen(start_time)
-
 
 			# The rest of these loops all handle a different mode, switched by buttons within the functions.
 			if configure.status[0] == "mode_a":
@@ -180,6 +181,7 @@ def Main():
 				if configure.tr109:
 					if configure.display == 1 or configure.display == 2:
 						configure.status[0] = colourscreen.msd()
+
 
 			# Handles the poweroff screen
 			if configure.status[0] == "poweroff":

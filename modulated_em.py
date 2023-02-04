@@ -130,3 +130,4 @@ class BT_Scan(object):
 
 	def update_plars(self):
 		plars.update_em(self.dump_data())
+

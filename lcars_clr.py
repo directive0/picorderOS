@@ -296,11 +296,15 @@ class MasterSystemsDisplay(object):
 class SettingsFrame(object):
 	def __init__(self):
 
+		# pages are a description string and an item to change. 
+		# If a boolean it will toggle it. 
+		# First 3 items are reserved for graph items.
 		self.pages = [["Sensor 1", configure.sensor1],
 						["Sensor 2", configure.sensor2],
 						["Sensor 3", configure.sensor3],
 						["Picorder Info", "msd"],
 						["Audio", configure.audio],
+						["Warble", configure.warble],
 						["LEDs", configure.leds_on],
 						["Alarm", configure.alarm],
 						["Auto Range", configure.auto],

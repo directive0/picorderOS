@@ -1,4 +1,12 @@
 print("Unified Display Module loading")
+
+# Serves as a transmission between the various display types and
+# the different picorder front ends. Runs the display drawing as a process so
+# it can be run concurrently with whatever screen based system the picorder is running.
+
+# (so far only works with tr-109 and LCARS based trics)
+
+
 import sys
 import logging
 from objects import *
@@ -22,7 +30,11 @@ if configure.display == 1:
 		serial = spi(port = SPI_PORT, device = SPI_DEVICE, gpio_DC = DC, gpio_RST = RST)
 		device = st7735(serial, width = 160, height = 128, mode = "RGB")
 	else:
+		# if the user has selected the emulated display we
+		# load the display as a pygame window.
 		device = pygame(width = 160, height = 128)
+		# we need something to handle input and send it back to the input handler.
+
 
 # for TFT24T screens
 elif configure.display == 2:
@@ -42,9 +54,12 @@ elif configure.display == 2:
 
 # a function intended to be run as a process so as to offload the computation
 # of the screen rendering from the GIL.
+# takes "q" - a frame of data for the display (PIL imagedraw object)
 def DisplayFunction(q):
 
+	# an initiation bit for the process
 	go = True
+
 	# lib_tft24 screens require us to create a drawing surface for the screen
 	# and add to it.
 	if configure.display == 2:
@@ -87,5 +102,8 @@ class GenericDisplay(object):
 	def display(self,frame):
 		self.q.put(frame)
 
+
 	def cleanup(self):
 		self.q.put("quit")
+
+
