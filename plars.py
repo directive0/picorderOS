@@ -14,6 +14,9 @@ import os
 import numpy
 import datetime
 from array import *
+
+
+import polars as pl
 import pandas as pd
 import json
 
@@ -24,9 +27,10 @@ import threading
 # organizes and returns a list of data as a multiprocess.
 def get_recent_proc(conn,buffer,dsc,dev,num):
 
+	# take the buffer and only return the rows that use the desired dsc
 	result = buffer[buffer["dsc"] == dsc]
 
-
+	# take the result and only select data from this device.
 	untrimmed_data = result.loc[result['dev'] == dev]
 
 	# trim it to length (num).
@@ -81,18 +85,21 @@ class PLARS(object):
 			else:
 				if not os.path.exists("data"):
 					os.mkdir("data")
-				self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
-				self.core.to_csv(self.file_path)
+				#self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
+				self.core = pl.DataFrame(schema=['value','min','max','dsc','sym','dev','timestamp'])
+
+				#self.core.to_csv(self.file_path)
+				self.core.write_csv(self.file_path)
 
 
 		# Set floating point display to raw, instead of exponent
-		pd.set_option('display.float_format', '{:.7f}'.format)
+		#pd.set_option('display.float_format', '{:.7f}'.format)
 
 		#create a buffer object to hold screen data
-		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
+		self.buffer = pl.DataFrame(schema=['value','min','max','dsc','sym','dev','timestamp'])
 
 		#create a buffer for wifi/bt data
-		self.buffer_em = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
+		self.buffer_em = pl.DataFrame(schema=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
 
 
 		self.timer = timer()
@@ -122,6 +129,7 @@ class PLARS(object):
 
 
 	def get_recent_bt_list(self):
+
 		# set the thread lock so other threads are unable to add data
 		self.lock.acquire()
 
@@ -150,6 +158,7 @@ class PLARS(object):
 		self.lock.release()
 
 		return recent_em.values.tolist()
+
 
 	def get_top_em_info(self):
 
