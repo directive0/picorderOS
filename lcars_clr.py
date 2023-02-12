@@ -1002,9 +1002,6 @@ class MultiFrame(object):
 
 
 
-
-
-
 		# Draws the Title
 		if self.selection != 0:
 			this = self.selection - 1
@@ -1014,30 +1011,6 @@ class MultiFrame(object):
 
 		self.title.push(self.titlex,self.titley,draw)
 
-		# for i in range(3):
-
-		# 	# determines the sensor keys for each of the three main sensors
-		# 	this_index = int(configure.sensors[i][0])
-
-		# 	dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
-
-		# 	datas[i] = plars.get_recent(dsc,dev,num = 1)
-
-
-
-		# 	if len(datas[i]) == 0:
-		# 		datas[i] = [47]
-
-		# 	item = datas[i]
-
-		# 	senseslice.append([item[-1], dsc, dev, sym, mini, maxi])
-
-
-
-		# # Grabs the current sensor reading
-		# self.A_Data = senseslice[0][0]#configure.sensor_data[configure.sensor1[0]][0]
-		# self.B_Data = senseslice[1][0]#configure.sensor_data[configure.sensor2[0]][0]
-		# self.C_Data = senseslice[2][0]#configure.sensor_data[configure.sensor3[0]][0]
 
 		# turns each channel on individually
 		if self.selection == 0:
