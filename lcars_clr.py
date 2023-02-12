@@ -810,7 +810,7 @@ class EMFrame(object):
 
 						# put frequency at lower right
 						self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
-						self.signal_frequency_sm.r_align(157,102,draw)
+						self.signal_frequency_sm.r_align(157,94,draw)
 
 					# otherwise just draw the line and dot in the usual color
 					else:
