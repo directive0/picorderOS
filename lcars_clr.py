@@ -730,7 +730,7 @@ class EMFrame(object):
 			#draw.bitmap((0,0), )
 
 			#draw round rect background
-			draw.rectangle((18,49,158,126), outline = lcars_blue)
+			draw.rounded_rectangle((18,49,158,126), outline = lcars_blue, width = 2, radius = 3)
 
 			#draw labels
 			self.draw_title("EM Channel Analysis", draw)

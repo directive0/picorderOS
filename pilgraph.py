@@ -241,7 +241,7 @@ class graph_area(object):
 			if len(recent) == 0:
 				return_value = 47
 			else:
-				return_value = recent[0]
+				return_value = recent[-1]
 
 		# EM pilgraph: pulls wifi data only.
 		elif self.type == 1:
