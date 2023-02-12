@@ -769,10 +769,10 @@ class EMFrame(object):
 
 					# determine dot coordinates.
 					cords = ((item[1],126),(item[1],item[2]))
-					x1 = cords[1][0] - (6/2)
-					y1 = cords[1][1] - (6/2)
-					x2 = cords[1][0] + (6/2)
-					y2 = cords[1][1] + (6/2)
+					x1 = cords[1][0] - (3)
+					y1 = cords[1][1] - (3)
+					x2 = cords[1][0] + (3)
+					y2 = cords[1][1] + (3)
 
 					# if this is the strongest singal draw labels and change colour.
 					if index == 0:
@@ -1000,30 +1000,7 @@ class MultiFrame(object):
 		data_c = []
 		datas = [data_a,data_b,data_c]
 
-		for i in range(3):
 
-			# determines the sensor keys for each of the three main sensors
-			this_index = int(configure.sensors[i][0])
-
-			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
-
-			datas[i] = plars.get_recent(dsc,dev,num = 1)
-
-
-
-			if len(datas[i]) == 0:
-				datas[i] = [47]
-
-			item = datas[i]
-
-			senseslice.append([item[-1], dsc, dev, sym, mini, maxi])
-
-
-
-		# Grabs the current sensor reading
-		self.A_Data = senseslice[0][0]#configure.sensor_data[configure.sensor1[0]][0]
-		self.B_Data = senseslice[1][0]#configure.sensor_data[configure.sensor2[0]][0]
-		self.C_Data = senseslice[2][0]#configure.sensor_data[configure.sensor3[0]][0]
 
 
 
@@ -1037,24 +1014,48 @@ class MultiFrame(object):
 
 		self.title.push(self.titlex,self.titley,draw)
 
+		# for i in range(3):
+
+		# 	# determines the sensor keys for each of the three main sensors
+		# 	this_index = int(configure.sensors[i][0])
+
+		# 	dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
+
+		# 	datas[i] = plars.get_recent(dsc,dev,num = 1)
+
+
+
+		# 	if len(datas[i]) == 0:
+		# 		datas[i] = [47]
+
+		# 	item = datas[i]
+
+		# 	senseslice.append([item[-1], dsc, dev, sym, mini, maxi])
+
+
+
+		# # Grabs the current sensor reading
+		# self.A_Data = senseslice[0][0]#configure.sensor_data[configure.sensor1[0]][0]
+		# self.B_Data = senseslice[1][0]#configure.sensor_data[configure.sensor2[0]][0]
+		# self.C_Data = senseslice[2][0]#configure.sensor_data[configure.sensor3[0]][0]
 
 		# turns each channel on individually
 		if self.selection == 0:
 
-			self.C_Graph.render(self.draw)
-			self.B_Graph.render(self.draw)
-			self.A_Graph.render(self.draw)
+			self.C_Data = self.C_Graph.render(self.draw)
+			self.B_Data = self.B_Graph.render(self.draw)
+			self.A_Data = self.A_Graph.render(self.draw)
 
 
 
 		if self.selection == 1:
-			self.A_Graph.render(self.draw)
+			self.A_Data = self.A_Graph.render(self.draw)
 
 		if self.selection == 2:
-			self.B_Graph.render(self.draw)
+			self.B_Data = self.B_Graph.render(self.draw)
 
 		if self.selection == 3:
-			self.C_Graph.render(self.draw)
+			self.C_Data =  self.C_Graph.render(self.draw)
 
 
 		self.labels()

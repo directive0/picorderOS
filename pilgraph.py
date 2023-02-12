@@ -213,6 +213,9 @@ class graph_area(object):
 
 	def render(self, draw, auto = True, dot = True, ranger = None):
 
+
+		return_value = 0
+
 		self.auto = configure.auto[0]
 
 		# for PLARS we reduce the common identifier of our currently selected sensor
@@ -232,6 +235,17 @@ class graph_area(object):
 			index = configure.sensors[self.ident][0]
 			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
 			recent = plars.get_recent(dsc,dev,num = self.samples)
+
+			# for returning last value on multigraph
+			lastvalue = recent
+			if lastvalue is None:
+				return_value = 47
+			else:
+				return_value = lastvalue
+
+			return value = datas[i]
+
+
 
 		# EM pilgraph: pulls wifi data only.
 		elif self.type == 1:
@@ -257,3 +271,6 @@ class graph_area(object):
 			x2 = cords[0][0] + (self.dotw/2)
 			y2 = cords[0][1] + (self.doth/2)
 			draw.ellipse([x1,y1,x2,y2],self.colour)
+
+
+		return return_value

@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-# PicorderOS Alpha --------------------------------- Dec 2022
+# PicorderOS --------------------------------------------- 2023
 # Created by Chris Barrett ------------------------- directive0
 # For my sister, a real life Beverly Crusher.
 
-print("PicorderOS - Alpha")
+print("PicorderOS")
 print("Loading Components")
 
 import os
