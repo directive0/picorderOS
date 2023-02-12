@@ -615,6 +615,8 @@ class EMFrame(object):
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
 		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_peach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
+		
+		self.stat_no = LabelObj("00",font, colour = lcars_red)
 
 		self.list = Label_List(22,35, colour = lcars_peach)
 
@@ -677,7 +679,7 @@ class EMFrame(object):
 			info = plars.get_top_em_info()[0]
 
 			# draw screen elements
-			self.Signal_Graph.render(draw)
+			graphval = self.Signal_Graph.render(draw)
 
 			self.draw_title("Dominant Transciever", draw)
 
@@ -687,6 +689,7 @@ class EMFrame(object):
 			self.signal_strength.r_align(self.labelxr,92,draw)
 			self.signal_frequency.push(20,92,draw, string = info[3])
 			self.signal_mac.push(20,111, draw, string = info[6])
+			
 
 		#list of all wifi ssids
 		if self.selection == 1:
@@ -725,9 +728,9 @@ class EMFrame(object):
 
 			# value to store visualization envelope
 			vizX1 = 18
-			vizY1 = 49
+			vizY1 = 80
 			vizX2 = 158
-			vizY2 = 100
+			vizY2 = 126
 
 			ballsize = 6
 
@@ -752,6 +755,10 @@ class EMFrame(object):
 				# create a list to hold just the info we need for the screen.
 				items_list = []
 
+				#stats
+				noossids = len(em_list)
+
+
 				#filter info into items_list
 				for ssid in em_list:
 					name = str(ssid[0])
@@ -769,7 +776,7 @@ class EMFrame(object):
 					this_ssid = (name,screenpos,lineheight,strength,frequency)
 					items_list.append(this_ssid)
 
-
+				# draw lines and balls
 				#for each item in item_list, in reverse order
 				for index, item in reversed(list(enumerate(items_list))):
 
@@ -789,8 +796,13 @@ class EMFrame(object):
 
 						name = item[0]
 						trunc_name = name[:16] + (name[16:] and '..')
-						# draw the strongest signals name, top center
-						self.signal_name_sm.push(19,34,draw,string = trunc_name)
+
+
+						self.stat_no.push(19,34,draw,string = str(noossids))
+
+
+						# draw the strongest signals name
+						self.signal_name_sm.push(19,57,draw,string = trunc_name)
 
 						# put strength at lower left
 						strength_string = str(item[3]) + " DB"
@@ -798,7 +810,7 @@ class EMFrame(object):
 
 						# put frequency at lower right
 						self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
-						self.signal_frequency_sm.r_align(157,37,draw)
+						self.signal_frequency_sm.r_align(157,60,draw)
 
 					# otherwise just draw the line and dot in the usual color
 					else:
