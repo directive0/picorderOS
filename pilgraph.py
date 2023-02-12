@@ -237,11 +237,11 @@ class graph_area(object):
 			recent = plars.get_recent(dsc,dev,num = self.samples)
 
 			# for returning last value on multigraph
-			lastvalue = recent[0]
-			if lastvalue is None:
+			lastvalue = recent
+			if len(recent) == 0:
 				return_value = 47
 			else:
-				return_value = lastvalue[0]
+				return_value = recent[0]
 
 		# EM pilgraph: pulls wifi data only.
 		elif self.type == 1:

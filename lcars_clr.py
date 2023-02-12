@@ -1000,6 +1000,15 @@ class MultiFrame(object):
 		data_c = []
 		datas = [data_a,data_b,data_c]
 
+		for i in range(3):
+
+			# determines the sensor keys for each of the three main sensors
+			this_index = int(configure.sensors[i][0])
+
+			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
+
+			senseslice.append(["47", dsc, dev, sym, mini, maxi])
+
 
 
 		# Draws the Title
