@@ -723,14 +723,20 @@ class EMFrame(object):
 		# displays each SSID as a line segment. Its position along the x is
 		# determined by frequency. Its height by its signal strength.
 
-			# change Background
+			# value to store visualization envelope
+			vizX1 = 18
+			vizY1 = 49
+			vizX2 = 158
+			vizY2 = 100
 
+			ballsize = 6
+
+			# change Background
 			#draw.rectangle((0,0,320,240),(0,0,0))
 			draw._image = self.burgerfull
-			#draw.bitmap((0,0), )
 
 			#draw round rect background
-			draw.rounded_rectangle((18,49,158,126), outline = lcars_blue, width = 2, radius = 3)
+			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 2, radius = 3)
 
 			#draw labels
 			self.draw_title("EM Channel Analysis", draw)
@@ -754,10 +760,10 @@ class EMFrame(object):
 					frequency = float(frequency.replace(' GHz', ''))
 
 					# determing x coordinate
-					screenpos = numpy.interp(frequency,(2.412, 2.462),(25, 151))
+					screenpos = numpy.interp(frequency,(2.412, 2.462),(vizX1 + ballsize, vizX2 - ballsize))
 
 					# determine y coordinate
-					lineheight = numpy.interp(strength, (-100, 0), (126, 55))
+					lineheight = numpy.interp(strength, (-100, 0), (vizY2, vizY1 + ballsize))
 
 					# package into list
 					this_ssid = (name,screenpos,lineheight,strength,frequency)
@@ -768,11 +774,12 @@ class EMFrame(object):
 				for index, item in reversed(list(enumerate(items_list))):
 
 					# determine dot coordinates.
-					cords = ((item[1],126),(item[1],item[2]))
-					x1 = cords[1][0] - (3)
-					y1 = cords[1][1] - (3)
-					x2 = cords[1][0] + (3)
-					y2 = cords[1][1] + (3)
+					cords = ((item[1],vizY2),(item[1],item[2]))
+					radius = ballsize/2
+					x1 = cords[1][0] - (radius)
+					y1 = cords[1][1] - (radius)
+					x2 = cords[1][0] + (radius)
+					y2 = cords[1][1] + (radius)
 
 					# if this is the strongest singal draw labels and change colour.
 					if index == 0:
