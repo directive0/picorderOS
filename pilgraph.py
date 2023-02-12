@@ -243,10 +243,6 @@ class graph_area(object):
 			else:
 				return_value = lastvalue
 
-			return value = datas[i]
-
-
-
 		# EM pilgraph: pulls wifi data only.
 		elif self.type == 1:
 			recent = plars.get_top_em_history(no = self.samples)
