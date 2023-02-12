@@ -177,68 +177,76 @@ class Inputs(object):
 
 				configure.dr_open[0] = True
 			else:
+				# door is closed
 				self.door_was_closed = True
+				configure.dr_opening[0] = True
 				configure.dr_open[0] = False
 
 			# lower hall, 0 = door open
 			if GPIO.input(hallpin2) == 1:
+				# door is closed
 				if self.door_was_open == True:
+					# door is closing
 					self.door_was_open = False
 					configure.dr_closing[0] = True
 			else:
+				# door is open
+				configure.dr_opening[0] = False
+				configure.dr_closing[0] = False
 				self.door_was_open = True
 
 		# event handling for cap1208
 		if configure.input_cap1208:
 
-			# if the alert pin is brought LOW
-			if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
+			# if the door is open, the picorder is deployed and ready for input.
+			if configure.dr_open[0] and not configure.dr_closing[0] and not configure.dr_opening[0]:
+				# if the alert pin is brought LOW
+				if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
 
-				#print("touch received")
+					# collect the event list from the chip
+					reading = cap1208.get_input_status()
 
-				# collect the event list from the chip
-				reading = cap1208.get_input_status()
+					# for each item in that event list
+					for iteration, input in enumerate(reading):
 
-				# for each item in that event list
-				for iteration, input in enumerate(reading):
-
-					# if an item is pressed
-					if input == "press":
-						# mark it in the pressed list
-						self.pressed[iteration] = True
-						# raise the eventready flag
-						configure.eventready[0] = True
-						# raise the sound effect flag
-						configure.beep_ready[0] = True
-					else:
-						# if an item is marked "released"
-						if input == "release":
-							# if it was previously marked pressed
-							if self.pressed[iteration] == True:
-								# ignore it
-								self.pressed[iteration] = False
-							else:
-								# if it wasn't marked pressed last time (was missed)
-								configure.eventready[0] = True
-								self.pressed[iteration] = True
-								configure.beep_ready[0] = True
-						# else mark it not pressed
+						# if an item is pressed
+						if input == "press":
+							# mark it in the pressed list
+							self.pressed[iteration] = True
+							# raise the eventready flag
+							configure.eventready[0] = True
+							# raise the sound effect flag
+							configure.beep_ready[0] = True
 						else:
-							self.pressed[iteration] = False
+							# if an item is marked "released"
+							if input == "release":
+								# if it was previously marked pressed
+								if self.pressed[iteration] == True:
+									# ignore it
+									self.pressed[iteration] = False
+								else:
+									# if it wasn't marked pressed last time (was missed)
+									configure.eventready[0] = True
+									self.pressed[iteration] = True
+									configure.beep_ready[0] = True
+							# else mark it not pressed
+							else:
+								self.pressed[iteration] = False
 
+					# clear Alert pin
+					cap1208.clear_interrupt()
 
+					# fill the payload to send back to the querying entity
+					configure.eventlist[0] = self.pressed
 
-				#clear Alert pin
-				cap1208.clear_interrupt()
-
-				configure.eventlist[0] = self.pressed
-
-				# return the pressed data
-				return self.pressed
-
+					# return the pressed data
+					return self.pressed
+				else:
+					# otherwise just return a line of negatives.
+					return self.clear
 			else:
-				# otherwise just return a line of negatives.
-				return self.clear
+				#if the door is close ignore any presses.
+				cap1208.clear_interrupt()
 
 		# event handling for system (USB) keyboards
 		if configure.input_kb:
