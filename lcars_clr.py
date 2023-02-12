@@ -616,7 +616,7 @@ class EMFrame(object):
 		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_peach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 		
-		self.stat_no = LabelObj("00",font, colour = lcars_red)
+		self.stat_no = LabelObj("00",font, colour = lcars_pinker)
 
 		self.list = Label_List(22,35, colour = lcars_peach)
 
@@ -728,9 +728,9 @@ class EMFrame(object):
 
 			# value to store visualization envelope
 			vizX1 = 18
-			vizY1 = 80
+			vizY1 = 50
 			vizX2 = 158
-			vizY2 = 126
+			vizY2 = 90
 
 			ballsize = 6
 
@@ -739,7 +739,7 @@ class EMFrame(object):
 			draw._image = self.burgerfull
 
 			#draw round rect background
-			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 2, radius = 3)
+			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_pinker, width = 2, radius = 3)
 
 			#draw labels
 			self.draw_title("EM Channel Analysis", draw)
@@ -798,11 +798,11 @@ class EMFrame(object):
 						trunc_name = name[:16] + (name[16:] and '..')
 
 
-						self.stat_no.push(19,34,draw,string = str(noossids))
+						self.stat_no.push(19,94,draw,string = str(noossids)+" found")
 
 
 						# draw the strongest signals name
-						self.signal_name_sm.push(19,57,draw,string = trunc_name)
+						self.signal_name_sm.push(20,35,draw,string = trunc_name)
 
 						# put strength at lower left
 						strength_string = str(item[3]) + " DB"
@@ -810,7 +810,7 @@ class EMFrame(object):
 
 						# put frequency at lower right
 						self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
-						self.signal_frequency_sm.r_align(157,60,draw)
+						self.signal_frequency_sm.r_align(157,102,draw)
 
 					# otherwise just draw the line and dot in the usual color
 					else:
