@@ -179,27 +179,23 @@ class Inputs(object):
 			else:
 				# door is closed
 				self.door_was_closed = True
-				configure.dr_opening[0] = True
 				configure.dr_open[0] = False
 
 			# lower hall, 0 = door open
 			if GPIO.input(hallpin2) == 1:
 				# door is closed
 				if self.door_was_open == True:
-					# door is closing
 					self.door_was_open = False
 					configure.dr_closing[0] = True
 			else:
 				# door is open
-				configure.dr_opening[0] = False
-				configure.dr_closing[0] = False
 				self.door_was_open = True
 
 		# event handling for cap1208
 		if configure.input_cap1208:
 
 			# if the door is open, the picorder is deployed and ready for input.
-			if configure.dr_open[0] and not configure.dr_closing[0] and not configure.dr_opening[0]:
+			if configure.dr_open[0]:
 				# if the alert pin is brought LOW
 				if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
 
