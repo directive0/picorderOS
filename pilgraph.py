@@ -241,8 +241,12 @@ class graph_area(object):
 			timecalc = []
 			for item in recent:
 				timecalc.append(item[-1])
-			
-			self.timelength = max(timecalc) - min(timecalc)
+
+			if len(timecalc) > 0:			
+				self.timelength = max(timecalc) - min(timecalc)
+			else:
+				self.timelength = 0
+
 
 			# for returning last value on multigraph
 			if len(recent) == 0:
