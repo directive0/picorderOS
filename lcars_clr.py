@@ -808,7 +808,7 @@ class EMFrame(object):
 
 
 						# draw the strongest signals name
-						self.signal_name_sm.push(20,81,draw,string = trunc_name)
+						self.signal_name_sm.push(20,80,draw,string = trunc_name)
 
 						# put strength at lower left
 						strength_string = str(item[3]) + " DB"
@@ -835,7 +835,7 @@ class EMFrame(object):
 
 			
 			self.overlapping_no.string = str(len(overlapping))
-			self.overlapping_no.r_align(14,98,draw)
+			self.overlapping_no.r_align(14,97,draw)
 
 			if len(overlapping) > 1:
 				del overlapping[0]
@@ -900,7 +900,7 @@ class MultiFrame(object):
 	def __init__(self):
 
 		# Sets the topleft origin of the graph
-		self.graphx = 21
+		self.graphx = 22
 		self.graphy = 25
 		self.samples = configure.samples
 
@@ -956,6 +956,10 @@ class MultiFrame(object):
 		self.focus_high_Label = LabelObj("test",font, colour = lcars_peach)
 		self.focus_low_Label = LabelObj("test",font, colour = lcars_bluer)
 		self.focus_mean_Label = LabelObj("test",font, colour = lcars_pinker)
+
+		self.indicatorA = LabelObj("00",littlefont, colour = (0,0,0))
+		self.indicatorB = LabelObj("00",littlefont, colour = (0,0,0))
+
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
@@ -1106,7 +1110,8 @@ class MultiFrame(object):
 
 
 		self.labels()
-
+		self.indicatorA = self.arrangelabel(str(self.A_Graph.timelength))
+		self.indicatorA.r_align(14,67,draw)
 
 
 

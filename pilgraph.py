@@ -100,6 +100,8 @@ class graph_area(object):
 		self.datalow = 0
 		self.newrange = (self.datalow,self.datahigh)
 
+		self.timelength = 0
+
 		# stores the graph identifier, there are three on the multiframe
 		self.ident = ident
 
@@ -236,8 +238,9 @@ class graph_area(object):
 			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
 			recent = plars.get_recent(dsc,dev,num = self.samples)
 
+			self.timelength = max([sublist[-1] for sublist in recent]) - min
+
 			# for returning last value on multigraph
-			lastvalue = recent
 			if len(recent) == 0:
 				return_value = 47
 			else:
