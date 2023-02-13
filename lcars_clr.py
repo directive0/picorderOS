@@ -616,6 +616,7 @@ class EMFrame(object):
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 		
 		self.stat_no = LabelObj("00",littlefont, colour = (0,0,0))
+		self.overlapping_no = LabelObj("00",littlefont, colour = (0,0,0))
 
 		self.list = Label_List(22,35, colour = lcars_peach)
 
@@ -829,6 +830,8 @@ class EMFrame(object):
 			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 2, radius = 4)
 
 			label_list = []
+			self.overlapping_no.string = str(len(overlapping))
+			self.overlapping_no.r_align(14,98,draw)
 
 			if len(overlapping) > 0:
 				for ssid in overlapping:
@@ -851,7 +854,7 @@ class EMFrame(object):
 					this_ssid = (name,strength)
 					label_list.append(this_ssid)
 				self.overlap_list.colour = lcars_blue
-				
+
 			self.overlap_list.update(label_list,draw)
 
 				
