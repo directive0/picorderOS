@@ -615,7 +615,7 @@ class EMFrame(object):
 		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_pink)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 		
-		self.stat_no = LabelObj("00",font, colour = (0,0,0))
+		self.stat_no = LabelObj("00",littlefont, colour = (0,0,0))
 
 		self.list = Label_List(22,35, colour = lcars_peach)
 
@@ -802,7 +802,7 @@ class EMFrame(object):
 
 						focus_freq = item[4]
 
-						self.stat_no.push(11,41,draw,string = str(noossids))
+						self.stat_no.r_align(14,67,draw,string = str(noossids))
 
 
 						# draw the strongest signals name
@@ -828,17 +828,23 @@ class EMFrame(object):
 			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 2, radius = 4)
 
 			label_list = []
-			for ssid in overlapping:
-				name = str(ssid[0])
-				strength = ssid[1]
-				frequency = ssid[4]
 
-				# package into list
-				this_ssid = (name,strength,frequency)
-				label_list.append(this_ssid)
-			
+			if len(overlapping) > 0:
+				for ssid in overlapping:
+					name = str(ssid[0])
+					strength = ssid[1]
+					frequency = ssid[4]
 
-			self.overlap_list.update(label_list,draw)
+					# package into list
+					this_ssid = (name,strength)
+					label_list.append(this_ssid)
+				
+				self.overlap_list.colour = lcars_pink
+				self.overlap_list.update(label_list,draw)
+			else:
+				self.overlap_list.colour = lcars_blue
+				label_list = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)
+				self.overlap_list.update(label_list,draw)
 
 				
 
