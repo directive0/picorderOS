@@ -901,7 +901,7 @@ class MultiFrame(object):
 
 		# Sets the topleft origin of the graph
 		self.graphx = 22
-		self.graphy = 26
+		self.graphy = 25
 		self.samples = configure.samples
 
 		# Sets the x and y span of the graph
@@ -1011,7 +1011,7 @@ class MultiFrame(object):
 
 			adjusted = self.arrangelabel(raw, '.2f')
 			self.focus_Label.string = adjusted
-			self.focus_Label.r_align(156,self.titley,self.draw)
+			self.focus_Label.r_align(156,self.titley-2,self.draw)
 
 			self.focus_high_Label.string = "max " + self.arrangelabel(str(this_bundle.get_high()), '.1f')
 			self.focus_high_Label.push(23,self.labely,self.draw)
