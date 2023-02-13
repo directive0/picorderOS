@@ -825,7 +825,7 @@ class EMFrame(object):
 						draw.line(cords,lcars_bluer,1)
 						draw.ellipse([x1,y1,x2,y2],lcars_bluer)
 
-				self.overlap_list.update(list_for_labels,draw)
+				
 
 		# bluetooth list
 		if self.selection == 3:
@@ -859,8 +859,8 @@ class EMFrame(object):
 				this_ssid = (name,screenpos,lineheight,strength,frequency)
 				label_list.append(this_ssid)
 
+			self.overlap_list.update(label_list,draw)
 
-			self.list.update(label_list,draw)
 
 
 		return status
