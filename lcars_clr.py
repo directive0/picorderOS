@@ -832,7 +832,7 @@ class EMFrame(object):
 
 			if len(overlapping) > 0:
 				for ssid in overlapping:
-					name = str(ssid[0])
+					name = ssid[0]
 					strength = ssid[1]
 					frequency = ssid[4]
 
@@ -841,11 +841,18 @@ class EMFrame(object):
 					label_list.append(this_ssid)
 				
 				self.overlap_list.colour = lcars_pink
-				self.overlap_list.update(label_list,draw)
 			else:
+				for ssid in sorted(unsorted_em_list, key=itemgetter(1), reverse = True):
+					name = ssid[0]
+					strength = ssid[1]
+					frequency = ssid[4]
+
+					# package into list
+					this_ssid = (name,strength)
+					label_list.append(this_ssid)
 				self.overlap_list.colour = lcars_blue
-				label_list = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)
-				self.overlap_list.update(label_list,draw)
+				
+			self.overlap_list.update(label_list,draw)
 
 				
 
