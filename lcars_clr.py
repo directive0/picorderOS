@@ -825,6 +825,20 @@ class EMFrame(object):
 						draw.line(cords,lcars_bluer,1)
 						draw.ellipse([x1,y1,x2,y2],lcars_bluer)
 
+
+			label_list = []
+			for ssid in overlapping:
+				name = str(ssid[0])
+				strength = ssid[1]
+				frequency = ssid[3]
+				frequency = float(frequency.replace(' GHz', ''))
+
+				# package into list
+				this_ssid = (name,screenpos,lineheight,strength,frequency)
+				label_list.append(this_ssid)
+
+			self.overlap_list.update(label_list,draw)
+
 				
 
 		# bluetooth list
@@ -847,19 +861,6 @@ class EMFrame(object):
 					label = name + " - " + address
 
 					list_for_labels.append(label)
-
-			label_list = []
-			for ssid in overlapping:
-				name = str(ssid[0])
-				strength = ssid[1]
-				frequency = ssid[3]
-				frequency = float(frequency.replace(' GHz', ''))
-
-				# package into list
-				this_ssid = (name,screenpos,lineheight,strength,frequency)
-				label_list.append(this_ssid)
-
-			self.overlap_list.update(label_list,draw)
 
 
 
