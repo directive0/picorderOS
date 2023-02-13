@@ -1110,7 +1110,7 @@ class MultiFrame(object):
 
 		self.labels()
 		self.indicatorA.string = self.arrangelabel(str(self.A_Graph.timelength))
-		self.indicatorA.r_align(16,34,draw)
+		self.indicatorA.r_align(18,33,draw)
 
 
 
