@@ -821,8 +821,6 @@ class EMFrame(object):
 
 					# otherwise just draw the line and dot in the usual color
 					else:
-						if item[4] == focus_freq:
-							overlapping.append(item)
 						draw.line(cords,lcars_blue,1)
 						draw.ellipse([x1,y1,x2,y2],lcars_blue)
 
@@ -830,6 +828,11 @@ class EMFrame(object):
 			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 2, radius = 4)
 
 			label_list = []
+
+			for item in items_list:
+				if item[4] == focus_freq:
+					overlapping.append(item)
+
 			self.overlapping_no.string = str(len(overlapping))
 			self.overlapping_no.r_align(14,98,draw)
 
