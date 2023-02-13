@@ -831,7 +831,6 @@ class EMFrame(object):
 				name = str(ssid[0])
 				strength = ssid[1]
 				frequency = ssid[4]
-				frequency = float(frequency.replace(' GHz', ''))
 
 				# package into list
 				this_ssid = (name,screenpos,lineheight,strength,frequency)
