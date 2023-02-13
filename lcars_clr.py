@@ -620,6 +620,8 @@ class EMFrame(object):
 
 		self.list = Label_List(22,35, colour = lcars_peach)
 
+		self.overlap_list = Label_List(20,103, colour = lcars_orange)
+
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
 	def draw_title(self,title, draw):
@@ -714,7 +716,7 @@ class EMFrame(object):
 					label = strength + " dB • " + name
 
 					list_for_labels.append(label)
-
+				
 
 
 				self.list.update(list_for_labels,draw)
@@ -733,6 +735,9 @@ class EMFrame(object):
 			vizY2 = 90
 
 			ballsize = 6
+
+			focus_freq = 0
+			overlapping = []
 
 			# change Background
 			#draw.rectangle((0,0,320,240),(0,0,0))
@@ -797,8 +802,9 @@ class EMFrame(object):
 						name = item[0]
 						trunc_name = name[:16] + (name[16:] and '..')
 
+						focus_freq = item[4]
 
-						self.stat_no.push(19,94,draw,string = str(noossids)+" found")
+						self.stat_no.push(21,93,draw,string = str(noossids)+" detected")
 
 
 						# draw the strongest signals name
@@ -809,13 +815,17 @@ class EMFrame(object):
 						#self.signal_strength_sm.push(19,114,draw,string = strength_string)
 
 						# put frequency at lower right
-						self.signal_frequency_sm.string = str(item[4]) + " GHZ" + ", " + strength_string
+						self.signal_frequency_sm.string = str(focus_freq) + " GHZ" + ", " + strength_string
 						self.signal_frequency_sm.r_align(157,94,draw)
 
+					if item[4] == focus_freq:
+						overlapping.append(item)
 					# otherwise just draw the line and dot in the usual color
 					else:
 						draw.line(cords,lcars_bluer,1)
 						draw.ellipse([x1,y1,x2,y2],lcars_bluer)
+
+				self.overlap_list.update(list_for_labels,draw)
 
 		# bluetooth list
 		if self.selection == 3:
@@ -838,9 +848,19 @@ class EMFrame(object):
 
 					list_for_labels.append(label)
 
+			label_list = []
+			for ssid in overlapping:
+				name = str(ssid[0])
+				strength = ssid[1]
+				frequency = ssid[3]
+				frequency = float(frequency.replace(' GHz', ''))
+
+				# package into list
+				this_ssid = (name,screenpos,lineheight,strength,frequency)
+				label_list.append(this_ssid)
 
 
-			self.list.update(list_for_labels,draw)
+			self.list.update(label_list,draw)
 
 
 		return status
