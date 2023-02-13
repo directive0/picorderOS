@@ -24,8 +24,8 @@ class preferences(object):
 							'# Emulating the hardware on a PC?':None,
 							'pc':'no',       								# emulating the hardware on a PC?
 							'# Select either TR-108, or TR-109. You must choose only one.':None,
-							'tr108':'yes',									# Running a TR-108 simulation - mutually exclusive with tr109
-							'tr109':'no',									# Running a TR-109 simulation - mutually exclusive with tr108
+							'tr108':'no',									# Running a TR-108 simulation - mutually exclusive with tr109
+							'tr109':'yes',									# Running a TR-109 simulation - mutually exclusive with tr108
 							}
 
 
@@ -33,23 +33,23 @@ class preferences(object):
 							'sensehat':'no',								# Only TR-108 uses this
 							'system_vitals':'yes',
 							'# BME680 Raw Values':None,
-							'bme':'no',
+							'bme':'yes',
 							'# BME680 VOC BSEC':None,
 							'bme_bsec':'no',
-							'amg8833':'no',
+							'amg8833':'yes',
 							'pocket_geiger':'no',
 							'# IR Infrared Imaging':None,
 							'ir_thermo':'no',								# IR infrared imaging
 							'envirophat':'no',
 							'# Only TR-109 uses this':None,
-							'EM':'no'}										# Only TR-109 uses this
+							'EM':'yes'}										# Only TR-109 uses this
 
 		config['INPUT'] =    {'# Controls which input method is active (Choose only one)':None,
 							'kb':'no',
 							'gpio':'no',
 							'cap_mpr121':'no',
 							'pcf8575':'no',
-							'cap1208':'no',
+							'cap1208':'yes',
 							'sensehat_joystick':'no',
 							'capsensitivity':'50'}							# Used only if cap1208 is 'yes'
 
@@ -81,6 +81,7 @@ class preferences(object):
 							'PG_NS':'21'}
 
 		config['OUTPUT'] = {'display':'1',
+							'# Indicator LED Animations':None,
 							'LED_timer':'0.2',
 							}
 
@@ -88,9 +89,11 @@ class preferences(object):
 							'leds':'yes',
 							'# Enables the moire pattern on the SenseHat LED matrix - TR-108 only':None,
 							'moire':'no',
-							'video':'yes',
+							'video':'no',
 							'# Enables audio playback (videos will not play without this)':None,
-							'audio':'no',									# Enables audio playback
+							'audio':'yes',									# Enables audio playback
+							'# Enables warble playback':None,
+							'warble':'yes',									# Enables audio playback
                             '# Enables video player capabilities':None,
 							'video':'no',
 							'alarm':'no',
@@ -104,9 +107,9 @@ class preferences(object):
 							'mode_a_y_offset':31,							# y offset for TR108 mode_a
 							'# Interpolate Temperature':None,
 							'interpolate':'yes',							# Interpolate temperature
-							'samplerate':'0',
+							'samplerate':'.2',
 							'# Affects graphing density':None,
-							'samples':'16',
+							'samples':'64',
 							'# Currently not used':None,
 							'displayinterval':'0',
 							'# Turns data logging on - data is written to data/datacore.csv':None,
@@ -238,7 +241,7 @@ class preferences(object):
 		self.leds = self.str2bool(config['GLOBALS']['leds']) # was True
 
 		# global variable to enable/disable lights at will.
-		self.leds_on = [True]
+		self.leds_on =  = int(config['GLOBALS']['mode_a_graph_width'])
 
 		# controls Moire pattern on tr-108
 		self.moire = [self.str2bool(config['GLOBALS']['moire'])] # was True
@@ -248,7 +251,7 @@ class preferences(object):
 
 		# enables or disables the warble sound effect specifically 
 		# ('cause beeps and clicks are less obnoxious).
-		self.warble = [True]
+		self.warble = [self.str2bool(config['GLOBALS']['warble'])]
 
         # enables video playback library
 		self.video = [self.str2bool(config['GLOBALS']['video'])]
