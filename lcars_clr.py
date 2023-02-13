@@ -107,6 +107,8 @@ class Label_List(object):
 
 		self.font = ofont
 
+		self.colour = colour
+
 
 	# draws the list of items as a text list.
 	def update(self, items, draw):
