@@ -236,16 +236,7 @@ class graph_area(object):
 		if self.type == 0:
 			index = configure.sensors[self.ident][0]
 			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
-			recent = plars.get_recent(dsc,dev,num = self.samples)
-
-			timecalc = []
-			for item in recent:
-				timecalc.append(item[-1])
-
-			if len(timecalc) > 0:			
-				self.timelength = max(timecalc) - min(timecalc)
-			else:
-				self.timelength = 0
+			recent, self.timelength = plars.get_recent(dsc,dev,num = self.samples, time = True)
 
 
 			# for returning last value on multigraph

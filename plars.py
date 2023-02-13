@@ -33,7 +33,9 @@ def get_recent_proc(conn,buffer,dsc,dev,num):
 	trimmed_data = untrimmed_data.tail(num)
 
 	# return a list of the values
-	result = trimmed_data['value'].tolist()
+	values = trimmed_data['value'].tolist()
+	times = trimmed_data['timestamp'].tolist()
+	result = [values,times]
 
 	conn.put(result)
 
@@ -274,7 +276,7 @@ class PLARS(object):
 
 
 	# return a list of n most recent data from specific sensor defined by keys
-	def get_recent(self, dsc, dev, num = 5):
+	def get_recent(self, dsc, dev, num = 5, time = False):
 
 		# set the thread lock so other threads are unable to add sensor data
 		self.lock.acquire()
@@ -290,7 +292,16 @@ class PLARS(object):
 		# release the thread lock.
 		self.lock.release()
 
-		return result
+		values = result[0]
+
+		timelength = 0
+
+		if len(result[1]) > 0:			
+			timelength = max(result[1]) - min(result[1])
+
+
+
+		return values, timelength
 
 
 	def get_em(self,dev,frequency):

@@ -1092,7 +1092,6 @@ class MultiFrame(object):
 
 		# turns each channel on individually
 		if self.selection == 0:
-
 			self.C_Data = self.C_Graph.render(self.draw)
 			self.B_Data = self.B_Graph.render(self.draw)
 			self.A_Data = self.A_Graph.render(self.draw)
