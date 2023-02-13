@@ -238,7 +238,7 @@ class graph_area(object):
 			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
 			recent = plars.get_recent(dsc,dev,num = self.samples)
 
-			self.timelength = max([sublist[-1] for sublist in recent]) - min
+			self.timelength = max([sublist[-1] for sublist in recent]) - min([sublist[-1] for sublist in recent])
 
 			# for returning last value on multigraph
 			if len(recent) == 0:
