@@ -833,10 +833,12 @@ class EMFrame(object):
 				if item[4] == focus_freq:
 					overlapping.append(item)
 
+			
 			self.overlapping_no.string = str(len(overlapping))
 			self.overlapping_no.r_align(14,98,draw)
 
-			if len(overlapping) > 0:
+			if len(overlapping) > 1:
+				del overlapping[0]
 				for ssid in overlapping:
 					name = ssid[0]
 					strength = ssid[1]
@@ -848,7 +850,9 @@ class EMFrame(object):
 				
 				self.overlap_list.colour = lcars_pink
 			else:
-				for ssid in sorted(unsorted_em_list, key=itemgetter(1), reverse = True):
+				thislist = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)
+				del thislist[0]
+				for ssid in thislist:
 					name = ssid[0]
 					strength = ssid[1]
 					frequency = ssid[4]
