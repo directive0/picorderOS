@@ -37,7 +37,7 @@ giantfont = ImageFont.truetype("assets/babs.otf",30)
 # Standard LCARS colours
 lcars_orange = (255,153,0)
 lcars_pink = (204,153,204)
-lcars_blue = (153,153,204)
+lcars_blue = (153,153,208)
 lcars_red = (204,102,102)
 lcars_peach = (255,204,153)
 lcars_bluer = (153,153,255)
@@ -612,14 +612,14 @@ class EMFrame(object):
 		self.signal_strength_sm = LabelObj("ST",littlefont, colour = lcars_peach)
 
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
-		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_peach)
+		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_pink)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 		
-		self.stat_no = LabelObj("00",font, colour = lcars_pinker)
+		self.stat_no = LabelObj("00",font, colour = (0,0,0))
 
 		self.list = Label_List(22,35, colour = lcars_peach)
 
-		self.overlap_list = Label_List(20,104, colour = lcars_orange, ofont = littlefont)
+		self.overlap_list = Label_List(20,93, colour = lcars_blue, ofont = littlefont)
 
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
@@ -728,10 +728,10 @@ class EMFrame(object):
 		# determined by frequency. Its height by its signal strength.
 
 			# value to store visualization envelope
-			vizX1 = 18
-			vizY1 = 50
-			vizX2 = 158
-			vizY2 = 90
+			vizX1 = 20
+			vizY1 = 36
+			vizX2 = 157
+			vizY2 = 77
 
 			ballsize = 6
 
@@ -742,8 +742,7 @@ class EMFrame(object):
 			#draw.rectangle((0,0,320,240),(0,0,0))
 			draw._image = self.burgerfull
 
-			#draw round rect background
-			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_pinker, width = 2, radius = 3)
+
 
 			#draw labels
 			self.draw_title("EM Channel Analysis", draw)
@@ -803,11 +802,11 @@ class EMFrame(object):
 
 						focus_freq = item[4]
 
-						self.stat_no.push(21,93,draw,string = str(noossids)+" detected")
+						self.stat_no.push(11,41,draw,string = str(noossids))
 
 
 						# draw the strongest signals name
-						self.signal_name_sm.push(20,35,draw,string = trunc_name)
+						self.signal_name_sm.push(20,81,draw,string = trunc_name)
 
 						# put strength at lower left
 						strength_string = str(item[3]) + " DB"
@@ -815,15 +814,18 @@ class EMFrame(object):
 
 						# put frequency at lower right
 						self.signal_frequency_sm.string = str(focus_freq) + " GHZ" + ", " + strength_string
-						self.signal_frequency_sm.r_align(157,94,draw)
+						self.signal_frequency_sm.r_align(153,84,draw)
 
-					if item[4] == focus_freq:
-						overlapping.append(item)
+
 					# otherwise just draw the line and dot in the usual color
 					else:
-						draw.line(cords,lcars_bluer,1)
-						draw.ellipse([x1,y1,x2,y2],lcars_bluer)
+						if item[4] == focus_freq:
+							overlapping.append(item)
+						draw.line(cords,lcars_blue,1)
+						draw.ellipse([x1,y1,x2,y2],lcars_blue)
 
+			#draw round rect background
+			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 2, radius = 4)
 
 			label_list = []
 			for ssid in overlapping:
@@ -832,8 +834,9 @@ class EMFrame(object):
 				frequency = ssid[4]
 
 				# package into list
-				this_ssid = (name,screenpos,lineheight,strength,frequency)
+				this_ssid = (name,strength,frequency)
 				label_list.append(this_ssid)
+			
 
 			self.overlap_list.update(label_list,draw)
 
