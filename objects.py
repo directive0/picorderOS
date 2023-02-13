@@ -241,7 +241,7 @@ class preferences(object):
 		self.leds = self.str2bool(config['GLOBALS']['leds']) # was True
 
 		# global variable to enable/disable lights at will.
-		self.leds_on =  = int(config['GLOBALS']['mode_a_graph_width'])
+		self.leds_on = [True]
 
 		# controls Moire pattern on tr-108
 		self.moire = [self.str2bool(config['GLOBALS']['moire'])] # was True
