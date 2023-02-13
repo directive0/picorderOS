@@ -802,7 +802,8 @@ class EMFrame(object):
 
 						focus_freq = item[4]
 
-						self.stat_no.r_align(14,67,draw,string = str(noossids))
+						self.stat_no.string = str(noossids)
+						self.stat_no.r_align(14,67,draw)
 
 
 						# draw the strongest signals name
