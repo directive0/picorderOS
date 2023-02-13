@@ -90,7 +90,7 @@ class LabelObj(object):
 # on update provide list of items to display, and draw object to draw to.
 class Label_List(object):
 
-	def __init__(self, x, y, colour = None):
+	def __init__(self, x, y, colour = lcars_orpeach, ofont = font):
 
 		#initial coordinates
 		self.x = x
@@ -105,10 +105,7 @@ class Label_List(object):
 		# holds the items to display
 		self.labels = []
 
-		if colour == None:
-			self.colour = lcars_orpeach
-		else:
-			self.colour = colour
+		self.font = ofont
 
 
 	# draws the list of items as a text list.
@@ -121,7 +118,7 @@ class Label_List(object):
 
 			string = str(item)
 			# create a text item with the string.
-			thislabel = LabelObj(string, font, colour = self.colour)
+			thislabel = LabelObj(string, self.font, colour = self.colour)
 			thislabel.push(self.x, self.y + self.jump,draw)
 
 			# increase the y position by the height of the last item, plus spacer
@@ -620,7 +617,7 @@ class EMFrame(object):
 
 		self.list = Label_List(22,35, colour = lcars_peach)
 
-		self.overlap_list = Label_List(20,103, colour = lcars_orange)
+		self.overlap_list = Label_List(20,104, colour = lcars_orange, ofont = littlefont)
 
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
