@@ -830,7 +830,7 @@ class EMFrame(object):
 			for ssid in overlapping:
 				name = str(ssid[0])
 				strength = ssid[1]
-				frequency = ssid[3]
+				frequency = ssid[4]
 				frequency = float(frequency.replace(' GHz', ''))
 
 				# package into list
