@@ -41,8 +41,11 @@ class preferences(object):
 							'# IR Infrared Imaging':None,
 							'ir_thermo':'no',								# IR infrared imaging
 							'envirophat':'no',
-							'# Only TR-109 uses this':None,
-							'EM':'yes'}										# Only TR-109 uses this
+							'# Battery level sensor values from the TinyUPS v3.0':None,
+							'tinyups','yes',
+							'# Wifi and BT sensors':None,
+							'EM':'yes,
+							}										# Only TR-109 uses this
 
 		config['INPUT'] =    {'# Controls which input method is active (Choose only one)':None,
 							'kb':'no',
@@ -51,7 +54,11 @@ class preferences(object):
 							'pcf8575':'no',
 							'cap1208':'yes',
 							'sensehat_joystick':'no',
-							'capsensitivity':'50'}							# Used only if cap1208 is 'yes'
+							'# Capacitive touch threshold':None,
+							'capsensitivity':'50',
+							'# Battery monitor':None,
+							'power':'yes',
+							}							# Used only if cap1208 is 'yes'
 
 		config['PIN ASSIGNMENTS'] = {'#I2C pins':None,
 							'PIN_SDA':'2',							# I2C pins
@@ -78,7 +85,8 @@ class preferences(object):
 
 							'# Pocket-Geiger Sensor Pins':None,
 							'PG_SIG':'20',							# PocketGeiger Pins
-							'PG_NS':'21'}
+							'PG_NS':'21,
+							}
 
 		config['OUTPUT'] = {'display':'1',
 							'# Indicator LED Animations':None,
@@ -165,6 +173,8 @@ class preferences(object):
 
 		# toggles wifi/bt scanning
 		self.EM = self.str2bool(config['SENSORS']['EM'])
+
+		self.tinyups = self.str2bool(config['SENSORS']['tinyups'])
 
 
 # INPUT MODULE-----------------------------------------------------------------#
@@ -259,7 +269,10 @@ class preferences(object):
 		# turns alarms on/off
 		self.alarm = [self.str2bool(config['GLOBALS']['alarm'])]
 
-		# If sleep is True the lights will respond to hall effect sensors
+		# turns battery monitor on and off, used to shut down the 
+		self.power = [self.str2bool(config['INPUT']['power'])]
+
+		# If sleep is True the lights and input will respond to the door open/close hall effect sensors
 		self.sleep = [self.str2bool(config['GLOBALS']['sleep'])]
 
 		# controls auto ranging of graphs

@@ -17,9 +17,9 @@ print("Loading Unified Input Module")
 # The TR-108 only has 3 buttons
 
 # Max number of buttons
-#	0	1	 2    3  	4	 5	6		7				8			9		10			11	  12  13  14
-# geo, met, bio, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
-
+#	0	1	 2    3  	4	 5	  6  7		8			9		10			11	  12  13  14
+# geo, met, bio, lib, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
+# next, enter, cancel/switch
 
 import time
 from objects import *
@@ -61,6 +61,9 @@ if configure.sensehat:
 if configure.input_kb:
 	import keyboard
 	keys = ['left','down','right']
+
+if configure.power:
+	pass
 
 # set up requirements for GPIO based inputs
 if configure.input_gpio:
@@ -241,7 +244,7 @@ class Inputs(object):
 					# otherwise just return a line of negatives.
 					return self.clear
 			else:
-				#if the door is close ignore any presses.
+				#if the door is closed ignore any presses.
 				cap1208.clear_interrupt()
 
 		# event handling for system (USB) keyboards
