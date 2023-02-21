@@ -37,6 +37,8 @@ class preferences(object):
 							'# BME680 VOC BSEC':None,
 							'bme_bsec':'no',
 							'amg8833':'yes',
+							'alert_high':'100',
+							'alert_low':'0',
 							'pocket_geiger':'no',
 							'# IR Infrared Imaging':None,
 							'ir_thermo':'no',								# IR infrared imaging
@@ -83,7 +85,10 @@ class preferences(object):
 							'# Cap1208 Alert Pin':None,
 							'ALERTPIN':'0',							# Cap1208 Alert Pin
 
-							'# Pocket-Geiger Sensor Pins':None,
+							'# Power Supply Low Power Alert Pin':None,
+							'LOW_POWER_PIN':'5',					# Power supply low power alert pin
+
+							'# Pocket-Geiger Signal and Noise Pins':None,
 							'PG_SIG':'20',							# PocketGeiger Pins
 							'PG_NS':'21,
 							}
@@ -221,9 +226,13 @@ class preferences(object):
 		# CAP1208 alert pin
 		self.ALERTPIN = int(config['PIN ASSIGNMENTS']['alertpin'])
 
+		# CAP1208 alert pin
+		self.LOW_POWER = int(config['PIN ASSIGNMENTS']['low_power_pin'])
+
 		# PocketGeiger Pins
 		self.PG_SIG = int(config['PIN ASSIGNMENTS']['pg_sig'])
 		self.PG_NS = int(config['PIN ASSIGNMENTS']['pg_ns'])
+
 
 # OUTPUT SETTINGS--------------------------------------------------------------#
 
@@ -291,7 +300,7 @@ class preferences(object):
 		self.max_sensors = [0]
 
 		#sets the upper and lower threshold for the alert
-		self.TEMP_ALERT = (0,100)
+		self.TEMP_ALERT = (int(config['SENSORS']['alert_low']),int(config['SENSORS']['alert_high']))
 		self.interpolate = [True]
 
 		# flag to command the main loop
@@ -321,8 +330,6 @@ class preferences(object):
 
 		# holds sensor data (issued by the sensor module at init)
 		self.sensor_info = []
-
-		self.sensor_data = []
 
 		# holds the global state of the program (allows secondary modules to quit the program should we require it)
 		self.status = ["startup"]
