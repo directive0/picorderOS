@@ -85,7 +85,7 @@ class preferences(object):
 
 							'# Pocket-Geiger Sensor Pins':None,
 							'PG_SIG':'20',							# PocketGeiger Pins
-							'PG_NS':'21,
+							'PG_NS':'21',
 							}
 
 		config['OUTPUT'] = {'display':'1',
