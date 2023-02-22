@@ -42,7 +42,7 @@ class preferences(object):
 							'ir_thermo':'no',								# IR infrared imaging
 							'envirophat':'no',
 							'# Battery level sensor values from the TinyUPS v3.0':None,
-							'tinyups','yes',
+							'tinyups':'yes',
 							'# Wifi and BT sensors':None,
 							'EM':'yes,
 							}										# Only TR-109 uses this
