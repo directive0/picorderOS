@@ -1052,7 +1052,13 @@ class MultiFrame(object):
 				configure.eventready[0] = False
 				return status
 
-			if key[6]:
+			if keys[4]:
+				configure.last_status[0] = "mode_a"
+				status = "poweroff"
+				configure.eventready[0] = False
+				return status
+
+			if keys[6]:
 				status = "mode_c"
 				configure.eventready[0] = False
 				return status
