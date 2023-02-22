@@ -49,6 +49,7 @@ theme1 =  [lcars_orange,lcars_blue,lcars_pinker]
 fore_col = 0
 back_col = 1
 
+
 # Controls text objects drawn to the LCD
 class LabelObj(object):
 	def __init__(self,string, font, colour = lcars_blue):
@@ -128,8 +129,6 @@ class Label_List(object):
 
 		# when loop is over reset jump counter.
 		self.jump = 0
-
-
 
 class SelectableLabel(LabelObj):
 
@@ -1037,23 +1036,24 @@ class MultiFrame(object):
 
 			# if a key is registering as pressed increment or rollover the selection variable.
 			if keys[0]:
-
 				configure.eventready[0] = False
-
 				self.selection += 1
-				if self.selection > 3:
+				if self.selection > 2:
 					self.selection = 0
-					status = "mode_c"
-					return status
 
 			if keys[1]:
 				status =  "mode_b"
 				configure.eventready[0] = False
 				return status
 
-			if keys[2]:
+			if keys[3]:
 				configure.last_status[0] = "mode_a"
 				status = "settings"
+				configure.eventready[0] = False
+				return status
+
+			if key[6]:
+				status = "mode_c"
 				configure.eventready[0] = False
 				return status
 
@@ -1115,9 +1115,6 @@ class MultiFrame(object):
 
 
 		return status
-# governs the screen drawing of the entire program. Everything flows through Screen.
-# Screen instantiates a draw object and passes it the image background.
-# Screen monitors button presses and passes flags for interface updates to the draw object.
 
 class ThermalFrame(object):
 	def __init__(self):
