@@ -44,7 +44,7 @@ class preferences(object):
 							'# Battery level sensor values from the TinyUPS v3.0':None,
 							'tinyups':'yes',
 							'# Wifi and BT sensors':None,
-							'EM':'yes,
+							'EM':'yes',
 							}										# Only TR-109 uses this
 
 		config['INPUT'] =    {'# Controls which input method is active (Choose only one)':None,
