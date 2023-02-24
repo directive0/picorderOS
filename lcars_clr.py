@@ -49,6 +49,43 @@ theme1 =  [lcars_orange,lcars_blue,lcars_pinker]
 fore_col = 0
 back_col = 1
 
+# Class to control the flow of the program. Uses flags and input events to tell each module
+# how to behave.
+class Events(object):
+
+	# at creation takes in a list of events to map the button layout to modules behaviours, and the base module
+
+	def __init__(self, but_map, base):
+		self.but_map = but_map
+		self.base = base
+
+	def check(self):
+
+		# -1 means we have failed, if the query returns -1 we know somethings borked.
+		
+		status = self.base
+		payload = -1
+
+		if configure.eventready[0]:
+			configure.eventready[0] = False
+			keys = configure.eventlist[0]
+
+			for index, key in enumerate(keys):
+				if key:
+					if isinstance(self.but_map[index], str):
+						status = self.but_map[index]
+						if not status == self.base:
+							if status == "last":
+								status = configure.last_status[0]
+							else:
+								configure.last_status[0] = self.base
+						payload = 0
+					elif isinstance(self.but_map[index], int):
+						payload = key
+		else:
+			payload = 0
+		return status,payload
+
 
 # Controls text objects drawn to the LCD
 class LabelObj(object):
@@ -962,8 +999,7 @@ class MultiFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-	def get_x(self):
-		return self.gspanx - self.graphx
+		self.events = Events([1,"mode_b",0,"settings","poweroff",0,0,0,0],"mode_a")
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".1f"):
@@ -1025,45 +1061,13 @@ class MultiFrame(object):
 	# push the image frame and contents to the draw object.
 	def push(self,draw):
 
-
-
 		# returns mode_a to the main loop unless something causes state change
-		status  = "mode_a"
+		status,payload  = self.event()
 
-
-		if configure.eventready[0]:
-			keys = configure.eventlist[0]
-
-			# if a key is registering as pressed increment or rollover the selection variable.
-			if keys[0]:
-				configure.eventready[0] = False
-				self.selection += 1
-				if self.selection > 2:
-					self.selection = 0
-
-			if keys[1]:
-				status =  "mode_b"
-				configure.eventready[0] = False
-				return status
-
-			if keys[3]:
-				configure.last_status[0] = "mode_a"
-				status = "settings"
-				configure.eventready[0] = False
-				return status
-
-			if keys[4]:
-				configure.last_status[0] = "mode_a"
-				status = "poweroff"
-				configure.eventready[0] = False
-				return status
-
-			if keys[6]:
-				status = "mode_c"
-				configure.eventready[0] = False
-				return status
-
-			configure.eventready[0] = False
+		if payload == 1:
+			self.selection += 1
+			if self.selection > 2:
+				self.selection = 0
 
 
 		# passes the current bitmap buffer to the object incase someone else needs it.

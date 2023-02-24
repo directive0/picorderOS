@@ -52,6 +52,13 @@ if configure.tr109:
 	GPIO.setup(hallpin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	GPIO.setup(hallpin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+	if configure.power:
+		powerpin = configure.LOW_POWER_PIN
+
+		GPIO.setup(powerpin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+
+
 if configure.sensehat:
 	if configure.input_joystick:
 		from sense_hat import SenseHat
@@ -62,8 +69,6 @@ if configure.input_kb:
 	import keyboard
 	keys = ['left','down','right']
 
-if configure.power:
-	pass
 
 # set up requirements for GPIO based inputs
 if configure.input_gpio:
@@ -169,6 +174,10 @@ class Inputs(object):
 		pass
 
 	def read(self):
+
+		if configure.power:
+			if GPIO.input(powerpin) == 1:
+				configure.low_power_flag[0] = True
 
 		# looks for door open/close.
 		if configure.tr109 and configure.dr[0]:

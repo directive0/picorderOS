@@ -83,6 +83,11 @@ class preferences(object):
 							'# Cap1208 Alert Pin':None,
 							'ALERTPIN':'0',							# Cap1208 Alert Pin
 
+
+
+							'# GPIO Low Power Pin':None,
+							'LOW_POWER_PIN':'5',					# UPS Low Power Alert Pin
+
 							'# Pocket-Geiger Sensor Pins':None,
 							'PG_SIG':'20',							# PocketGeiger Pins
 							'PG_NS':'21',
@@ -221,6 +226,9 @@ class preferences(object):
 		# CAP1208 alert pin
 		self.ALERTPIN = int(config['PIN ASSIGNMENTS']['alertpin'])
 
+		# UPS Low Power pin
+		self.LOW_POWER_PIN = int(config['PIN ASSIGNMENTS']['LOW_POWER_PIN'])
+
 		# PocketGeiger Pins
 		self.PG_SIG = int(config['PIN ASSIGNMENTS']['pg_sig'])
 		self.PG_NS = int(config['PIN ASSIGNMENTS']['pg_ns'])
@@ -269,8 +277,10 @@ class preferences(object):
 		# turns alarms on/off
 		self.alarm = [self.str2bool(config['GLOBALS']['alarm'])]
 
-		# turns battery monitor on and off, used to shut down the 
+		# turns battery monitor on and off, used to shut down the battery monitor
 		self.power = [self.str2bool(config['INPUT']['power'])]
+
+		self.low_power_flag = [False]
 
 		# If sleep is True the lights and input will respond to the door open/close hall effect sensors
 		self.sleep = [self.str2bool(config['GLOBALS']['sleep'])]
