@@ -60,28 +60,41 @@ class Events(object):
 		self.base = base
 
 	def check(self):
-
-		# -1 means we have failed, if the query returns -1 we know somethings borked.
 		
 		status = self.base
-		payload = -1
+		payload = 0
 
+		# if an event has occured
 		if configure.eventready[0]:
+
 			configure.eventready[0] = False
+			
+			# grab the event list
 			keys = configure.eventlist[0]
 
+			# cycle through each of inputs in the list
 			for index, key in enumerate(keys):
+				# if the button has been pressed
 				if key:
+					# if the desired action from the button map for this input is STR
 					if isinstance(self.but_map[index], str):
+						# set the status to this action
 						status = self.but_map[index]
+
+						# if we are changing statuses from our base
 						if not status == self.base:
+
+							# if the action is to go back
 							if status == "last":
+								# pull the last status for us to switch to
 								status = configure.last_status[0]
+								# overwrite the last status with this one.
+								configure.last_status[0] = self.base
 							else:
 								configure.last_status[0] = self.base
 						payload = 0
 					elif isinstance(self.but_map[index], int):
-						payload = key
+						payload = self.but_map[index]
 		else:
 			payload = 0
 		return status,payload
@@ -337,14 +350,12 @@ class SettingsFrame(object):
 		self.pages = [["Sensor 1", configure.sensor1],
 						["Sensor 2", configure.sensor2],
 						["Sensor 3", configure.sensor3],
-						["Picorder Info", "msd"],
 						["Audio", configure.audio],
 						["Warble", configure.warble],
 						["LEDs", configure.leds_on],
 						["Alarm", configure.alarm],
 						["Auto Range", configure.auto],
-						["Trim Buffer", configure.trim_buffer],
-						["Power Off", "poweroff"]]
+						["Trim Buffer", configure.trim_buffer]]
 
 		# Sets the x and y span of the graph
 		self.gspanx = 133
@@ -377,7 +388,7 @@ class SettingsFrame(object):
 		self.B_Label = LabelObj("Enter",font, colour = lcars_orpeach)
 		self.C_Label = LabelObj("Exit",font, colour = lcars_orpeach)
 
-
+		self.events = Events([1,2,"last","last",0,"msd",0,0],"settings")
 
 
 		# device needs to show multiple settings
@@ -411,27 +422,19 @@ class SettingsFrame(object):
 
 	def push(self, draw):
 
-		status = "settings"
+		# returns mode_a to the main loop unless something causes state change
+		status,payload  = self.events.check()
 
-		if configure.eventready[0]:
-			keys = configure.eventlist[0]
+		if payload == 1:
+			self.selection = self.selection + 1
+			if self.selection > (len(self.pages) - 1):
+				self.selection = 0
+		elif payload == 2:
+			state = self.toggle(self.pages[self.selection][1])
+			if self.status_raised:
+				status = state
+				self.status_raised = False
 
-			if keys[0]:
-				self.selection = self.selection + 1
-				if self.selection > (len(self.pages) - 1):
-					self.selection = 0
-
-			if keys[1]:
-				state = self.toggle(self.pages[self.selection][1])
-
-				if self.status_raised:
-					status = state
-					self.status_raised = False
-
-			if keys[2]:
-				status = configure.last_status[0]
-
-			configure.eventready[0] = False
 
 
 
@@ -659,6 +662,8 @@ class EMFrame(object):
 		self.overlap_list = Label_List(20,93, colour = lcars_blue, ofont = littlefont)
 
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
+
+		self.events = Events([],"mode_b")
 
 	def draw_title(self,title, draw):
 		self.title.string = title
@@ -999,7 +1004,7 @@ class MultiFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-		self.events = Events([1,"mode_b",0,"settings","poweroff",0,0,0,0],"mode_a")
+		self.events = Events([1,"mode_b",0,"settings","poweroff",0,"mode_c",0,0],"mode_a")
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".1f"):
@@ -1062,11 +1067,11 @@ class MultiFrame(object):
 	def push(self,draw):
 
 		# returns mode_a to the main loop unless something causes state change
-		status,payload  = self.event()
+		status,payload  = self.events.check()
 
 		if payload == 1:
 			self.selection += 1
-			if self.selection > 2:
+			if self.selection > 3:
 				self.selection = 0
 
 
@@ -1153,6 +1158,8 @@ class ThermalFrame(object):
 		self.B_Label = LabelObj("No Data",font, colour = lcars_pinker)
 		self.C_Label = LabelObj("No Data",font, colour = lcars_orange)
 
+		self.events = Events([1,"mode_b",0,"settings","poweroff",0,"mode_c","mode_a",0],"mode_c")
+
 
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
@@ -1182,34 +1189,14 @@ class ThermalFrame(object):
 
 	def push(self, draw):
 
-		status  = "mode_c"
-
-		if configure.eventready[0]:
-			keys = configure.eventlist[0]
-
-
-			# ------------- Input handling -------------- #
-			if keys[0]:
-				self.selection += 1
-				if self.selection > 2:
-					self.selection = 0
-					status  = "mode_a"
-					return status
-				configure.eventready[0] = False
-
-
-			if keys[1]:
-				configure.eventready[0] = False
-				status  = "mode_b"
-				return status
-
-			if keys[2]:
-				status = "settings"
-				configure.last_status[0] = "mode_c"
-				configure.eventready[0] = False
-				return status
-
+		# ------------- Input handling -------------- #
+		status,payload  = self.events.check()
+		if payload == 1:
+			self.selection += 1
+			if self.selection > 1:
+				self.selection = 0
 			configure.eventready[0] = False
+
 
 
 		self.draw = draw
@@ -1251,6 +1238,7 @@ class ColourScreen(object):
 		self.tbar = Image.open('assets/lcarssplitframe.png')
 		self.burger = Image.open('assets/lcarsburgerframe.png')
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
+
 		# Load assets
 		self.logo = Image.open('assets/picorderOS_logo.png')
 
@@ -1264,6 +1252,7 @@ class ColourScreen(object):
 		self.startup_frame = StartUp()
 		self.loading_frame = LoadingFrame()
 		self.msd_frame = MasterSystemsDisplay()
+		self.carousel = ["startup","multi","thermal","em","settings","msd"]
 
 	def get_size(self):
 		return self.multi_frame.samples
@@ -1361,3 +1350,6 @@ class ColourScreen(object):
 	def pixdrw(self):
 		thisimage = self.newimage.convert(mode = "RGB")
 		device.display(thisimage)
+
+	def draw(self):
+		pass

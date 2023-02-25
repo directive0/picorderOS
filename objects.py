@@ -83,8 +83,6 @@ class preferences(object):
 							'# Cap1208 Alert Pin':None,
 							'ALERTPIN':'0',							# Cap1208 Alert Pin
 
-
-
 							'# GPIO Low Power Pin':None,
 							'LOW_POWER_PIN':'5',					# UPS Low Power Alert Pin
 
