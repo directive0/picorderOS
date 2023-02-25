@@ -44,9 +44,9 @@ class preferences(object):
 							'ir_thermo':'no',								# IR infrared imaging
 							'envirophat':'no',
 							'# Battery level sensor values from the TinyUPS v3.0':None,
-							'tinyups','yes',
+							'tinyups':'yes',
 							'# Wifi and BT sensors':None,
-							'EM':'yes,
+							'EM':'yes',
 							}										# Only TR-109 uses this
 
 		config['INPUT'] =    {'# Controls which input method is active (Choose only one)':None,
@@ -90,7 +90,7 @@ class preferences(object):
 
 							'# Pocket-Geiger Signal and Noise Pins':None,
 							'PG_SIG':'20',							# PocketGeiger Pins
-							'PG_NS':'21,
+							'PG_NS':'21',
 							}
 
 		config['OUTPUT'] = {'display':'1',
@@ -278,8 +278,10 @@ class preferences(object):
 		# turns alarms on/off
 		self.alarm = [self.str2bool(config['GLOBALS']['alarm'])]
 
-		# turns battery monitor on and off, used to shut down the 
+		# turns battery monitor on and off, used to shut down the battery monitor
 		self.power = [self.str2bool(config['INPUT']['power'])]
+
+		self.low_power_flag = [False]
 
 		# If sleep is True the lights and input will respond to the door open/close hall effect sensors
 		self.sleep = [self.str2bool(config['GLOBALS']['sleep'])]
