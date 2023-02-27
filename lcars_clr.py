@@ -87,11 +87,10 @@ class Events(object):
 							# if the action is to go back
 							if status == "last":
 								# pull the last status for us to switch to
-								status = configure.last_status[0]
-								# overwrite the last status with this one.
-								configure.last_status[0] = self.base
+								status = configure.last_status.pop()
 							else:
-								configure.last_status[0] = self.base
+								configure.last_status.append(self.base)
+								
 						payload = 0
 					elif isinstance(self.but_map[index], int):
 						payload = self.but_map[index]
@@ -298,6 +297,8 @@ class MasterSystemsDisplay(object):
 		else:
 			self.model = "Unknown"
 
+		self.events = Events([1,2,"last",0,0,0,0,0],"msd")
+
 
 	def load_list(self):
 
@@ -314,25 +315,8 @@ class MasterSystemsDisplay(object):
 
 
 	def push(self,draw):
-		status = "msd"
 
-		if configure.eventready[0]:
-			keys = configure.eventlist[0]
-
-			if keys[0]:
-				pass
-
-			if keys[1]:
-				pass
-
-			if keys[2]:
-				status = 'settings'
-				configure.eventready[0] = False
-				return status
-
-
-			configure.eventready[0] = False
-
+		status, payload = self.events.check()
 
 		#draw the frame heading
 		self.title.center(self.titley,0,128,draw)
@@ -561,6 +545,8 @@ class PowerDown(object):
 		self.item = LabelObj("No Data",bigfont,colour = lcars_orpeach)
 		# device needs to show multiple settings
 		# first the sensor palette configuration
+
+		self.events = Events([1,0,"last",0,0,0,0,0])
 
 
 	def push(self, draw):
