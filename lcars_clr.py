@@ -941,7 +941,7 @@ class MultiFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-		self.events = Events(["mode_b",1,"settings","poweroff",0,"mode_c",0,0],"mode_a")
+		self.events = Events(["mode_b",1,0,"settings","poweroff",0,"mode_c",0,0],"mode_a")
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".1f"):
