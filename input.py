@@ -54,7 +54,6 @@ if configure.tr109:
 
 	if configure.power:
 		powerpin = configure.LOW_POWER_PIN
-
 		GPIO.setup(powerpin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 

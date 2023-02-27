@@ -546,54 +546,20 @@ class PowerDown(object):
 		# device needs to show multiple settings
 		# first the sensor palette configuration
 
-		self.events = Events([1,0,"last",0,0,0,0,0], "poweroff")
+		self.events = Events(["shutdown",0,"last","0",0,0,0,0], "poweroff")
 
 
 	def push(self, draw):
 
+		status,payload = self.events.check()
+
 		#draw the frame heading
 
 		self.title.center(self.titley,self.titlex,135,draw)
-
-
-		#draw the option item heading
-		#self.itemlabel.string = str(self.pages[self.selection][0])
-	#	self.itemlabel.push(self.titlex,self.titley+20,draw)
-
-
-
 		self.A_Label.push(23,self.labely,draw)
-
-
-		#self.B_Label.center(self.labely,23,135,draw)
-
-
 		self.C_Label.r_align(156,self.labely,draw)
-
-
-		#draw the 3 graph parameter items
-
 		self.item.string = "Power Down?"
 		self.item.center(self.titley+40, self.titlex, 135,draw)
-
-
-		status = "poweroff"
-
-
-		if configure.eventready[0]:
-
-			keys = configure.eventlist[0]
-
-			if keys[0]:
-				status = "shutdown"
-
-			if keys[1]:
-				pass
-
-			if keys[2]:
-				status = "settings"
-
-			configure.eventready[0] = False
 
 
 		return status
@@ -649,7 +615,7 @@ class EMFrame(object):
 
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
-		self.events = Events([],"mode_b")
+		self.events = Events([1,"mode_a",0,"settings","poweroff",2,0,0],"mode_b")
 
 	def draw_title(self,title, draw):
 		self.title.string = title
@@ -658,25 +624,18 @@ class EMFrame(object):
 
 	def push(self, draw):
 
-		status  = "mode_b"
+		status, payload = self.events.check()
 
-		# input handling
-		if configure.eventready[0]:
-			keys = configure.eventlist[0]
+		if payload == 1:
+			self.selection += 1
 
-
-			# ------------- Input handling -------------- #
-			if keys[0]:
-				status  = "mode_a"
-				configure.eventready[0] = False
-				return status
-
-			if keys[1]:
-				self.selection += 1
-
-				if self.selection >= 4:
-					self.selection = 0
-
+			if self.selection >= 2:
+				self.selection = 0
+		elif payload == 2:
+			if self.selection == 3:
+				self.selection = 0
+			else:
+				self.selection = 3
 
 			if keys[2]:
 				status = "settings"
@@ -990,7 +949,7 @@ class MultiFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-		self.events = Events([1,"mode_b",0,"settings","poweroff",0,"mode_c",0,0],"mode_a")
+		self.events = Events(["mode_b",1,"settings","poweroff",0,"mode_c",0,0],"mode_a")
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".1f"):
@@ -1144,7 +1103,7 @@ class ThermalFrame(object):
 		self.B_Label = LabelObj("No Data",font, colour = lcars_pinker)
 		self.C_Label = LabelObj("No Data",font, colour = lcars_orange)
 
-		self.events = Events([1,"mode_b",0,"settings","poweroff",0,"mode_c","mode_a",0],"mode_c")
+		self.events = Events(["mode_b",1,0,"settings","poweroff","mode_a",0,0],"mode_c")
 
 
 	# this function takes a value and sheds the second digit after the decimal place
@@ -1181,7 +1140,6 @@ class ThermalFrame(object):
 			self.selection += 1
 			if self.selection > 1:
 				self.selection = 0
-			configure.eventready[0] = False
 
 
 
