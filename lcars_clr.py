@@ -629,21 +629,13 @@ class EMFrame(object):
 		if payload == 1:
 			self.selection += 1
 
-			if self.selection >= 2:
+			if self.selection == 3:
 				self.selection = 0
 		elif payload == 2:
 			if self.selection == 3:
 				self.selection = 0
 			else:
 				self.selection = 3
-
-			if keys[2]:
-				status = "settings"
-				configure.last_status[0] = "mode_b"
-				configure.eventready[0] = False
-				return status
-
-			configure.eventready[0] = False
 
 		if self.selection <= 2:
 			self.wifi.update_plars()
@@ -1196,7 +1188,7 @@ class ColourScreen(object):
 		self.startup_frame = StartUp()
 		self.loading_frame = LoadingFrame()
 		self.msd_frame = MasterSystemsDisplay()
-		self.carousel = ["startup","multi","thermal","em","settings","msd"]
+		self.carousel = ["startup","multi","thermal","mode_b","settings","msd"]
 
 	def get_size(self):
 		return self.multi_frame.samples
