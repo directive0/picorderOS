@@ -293,8 +293,7 @@ class MasterSystemsDisplay(object):
 		# grabs the RPI model info
 		if not configure.pc:
 			text = os.popen("cat /proc/device-tree/model").readline()
-			self.model = str(text.rstrip("\x00"))
-			self.model.replace("Raspberry ","")
+			self.model = str(text.rstrip("\x00")).replace("Raspberry Pi","Raspi")
 		else:
 			self.model = "Unknown"
 
