@@ -294,7 +294,7 @@ class MasterSystemsDisplay(object):
 		if not configure.pc:
 			text = os.popen("cat /proc/device-tree/model").readline()
 			self.model = str(text.rstrip("\x00"))
-			self.model.replace("Raspberry Pi","RasPi")
+			self.model.replace("Raspberry ","")
 		else:
 			self.model = "Unknown"
 
