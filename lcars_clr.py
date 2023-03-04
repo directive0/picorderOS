@@ -282,18 +282,19 @@ class MasterSystemsDisplay(object):
 
 
 		# the set labels for the screen
-		self.title = LabelObj("Master Systems Display",littlefont)
+		self.title = LabelObj("Master Systems Display",titlefont,colour = lcars_orpeach)
 
 		# three input cue labels
 		self.C_Label = LabelObj("Exit",font, colour = lcars_orpeach)
 
 		# A list of all the cool data.
-		self.status_list = Label_List(2,33, colour = lcars_blue, ofont = littlefont)
+		self.status_list = Label_List(25,23, colour = lcars_bl, ofont = littlefont)
 
 		# grabs the RPI model info
 		if not configure.pc:
 			text = os.popen("cat /proc/device-tree/model").readline()
 			self.model = text.rstrip("\x00")
+			self.model.replace("Raspberry Pi","RasPi")
 		else:
 			self.model = "Unknown"
 
@@ -319,7 +320,7 @@ class MasterSystemsDisplay(object):
 		status, payload = self.events.check()
 
 		#draw the frame heading
-		self.title.center(self.titley,21,160,draw)
+		self.title.center(self.titley,21,139,draw)
 		self.C_Label.r_align(26,self.labely,draw)
 		self.status_list.update(self.load_list(),draw)
 
