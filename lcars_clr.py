@@ -277,7 +277,7 @@ class MasterSystemsDisplay(object):
 		self.status_list = None
 		#self.draw = draw
 		self.titlex = 2
-		self.titley = 9
+		self.titley = 7
 		self.labely = 23
 
 
