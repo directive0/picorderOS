@@ -288,7 +288,7 @@ class MasterSystemsDisplay(object):
 		self.C_Label = LabelObj("Exit",font, colour = lcars_orpeach)
 
 		# A list of all the cool data.
-		self.status_list = Label_List(25,23, colour = lcars_bl, ofont = littlefont)
+		self.status_list = Label_List(25,23, colour = lcars_blue, ofont = littlefont)
 
 		# grabs the RPI model info
 		if not configure.pc:
