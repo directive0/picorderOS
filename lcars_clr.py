@@ -278,7 +278,7 @@ class MasterSystemsDisplay(object):
 		#self.draw = draw
 		self.titlex = 2
 		self.titley = 11
-		self.labely = 114
+		self.labely = 23
 
 
 		# the set labels for the screen
@@ -319,8 +319,8 @@ class MasterSystemsDisplay(object):
 		status, payload = self.events.check()
 
 		#draw the frame heading
-		self.title.center(self.titley,0,128,draw)
-		self.C_Label.r_align(156,self.labely,draw)
+		self.title.center(self.titley,21,160,draw)
+		self.C_Label.r_align(26,self.labely,draw)
 		self.status_list.update(self.load_list(),draw)
 
 		return status
@@ -941,7 +941,7 @@ class MultiFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-		self.events = Events(["mode_b",1,0,"settings","poweroff",0,"mode_c",0,0],"mode_a")
+		self.events = Events(["mode_b",1,0,"settings","poweroff","mode_c",0,0,0],"mode_a")
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".1f"):
@@ -1174,6 +1174,7 @@ class ColourScreen(object):
 		self.tbar = Image.open('assets/lcarssplitframe.png')
 		self.burger = Image.open('assets/lcarsburgerframe.png')
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
+		self.tr109_schematic = Image.open('assets/tr109.png')
 
 		# Load assets
 		self.logo = Image.open('assets/picorderOS_logo.png')
@@ -1265,7 +1266,9 @@ class ColourScreen(object):
 		return self.status
 
 	def msd(self):
-		self.newimage = self.burger.copy()
+		
+		self.newimage = self.blankimage.copy()
+		self.newimage.paste(self.tr109_schematic,(113,36))
 		self.draw = ImageDraw.Draw(self.newimage)
 		last_status = self.status
 		self.status = self.msd_frame.push(self.draw)
