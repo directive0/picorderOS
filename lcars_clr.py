@@ -282,13 +282,13 @@ class MasterSystemsDisplay(object):
 
 
 		# the set labels for the screen
-		self.title = LabelObj("Master Systems Display",titlefont)
+		self.title = LabelObj("Master Systems Display",littlefont)
 
 		# three input cue labels
 		self.C_Label = LabelObj("Exit",font, colour = lcars_orpeach)
 
 		# A list of all the cool data.
-		self.status_list = Label_List(2,33, colour = lcars_peach)
+		self.status_list = Label_List(2,33, colour = lcars_blue, ofont = littlefont)
 
 		# grabs the RPI model info
 		if not configure.pc:
