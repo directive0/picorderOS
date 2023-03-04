@@ -277,7 +277,7 @@ class MasterSystemsDisplay(object):
 		self.status_list = None
 		#self.draw = draw
 		self.titlex = 2
-		self.titley = 11
+		self.titley = 9
 		self.labely = 23
 
 
@@ -305,7 +305,7 @@ class MasterSystemsDisplay(object):
 		# pulls data from the modulated_em.py
 		wifi = "SSID: " + get_ssid()
 		ip_str = "IP:  " + get_IP()
-		host_str = "Hostname:  " + get_hostname()
+		host_str = "Name:  " + get_hostname()
 		sense_ready = "Sensors Avl:  " + str(len(configure.sensor_info))
 		model_name = "CPU:  " + self.model
 
@@ -320,7 +320,7 @@ class MasterSystemsDisplay(object):
 
 		#draw the frame heading
 		self.title.center(self.titley,21,139,draw)
-		self.C_Label.r_align(26,self.labely,draw)
+		#self.C_Label.r_align(26,self.labely,draw)
 		self.status_list.update(self.load_list(),draw)
 
 		return status
