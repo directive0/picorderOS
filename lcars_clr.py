@@ -278,7 +278,7 @@ class MasterSystemsDisplay(object):
 		#self.draw = draw
 		self.titlex = 2
 		self.titley = 7
-		self.labely = 23
+		self.labely = 24
 
 
 		# the set labels for the screen
@@ -1268,7 +1268,7 @@ class ColourScreen(object):
 	def msd(self):
 		
 		self.newimage = self.blankimage.copy()
-		self.newimage.paste(self.tr109_schematic,(113,36))
+		self.newimage.paste(self.tr109_schematic,(113,38))
 		self.draw = ImageDraw.Draw(self.newimage)
 		last_status = self.status
 		self.status = self.msd_frame.push(self.draw)
