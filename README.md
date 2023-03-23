@@ -40,7 +40,7 @@ PicorderOS can run using an HDMI or Composite screen in some cases, and can also
 A requirements file is included, it can be used to install all the necessary python modules through pip.
 
 ```
-python3 -m pip -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 A fresh Raspberry Pi OS image can usually be initialized to work with picorderOS with the following installation commands:
