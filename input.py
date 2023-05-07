@@ -174,9 +174,14 @@ class Inputs(object):
 
 	def read(self):
 
+		# if power monitoring is active
 		if configure.power:
+			
+			# Toggle the power low flag based on the UPS response.
 			if GPIO.input(powerpin) == 1:
 				configure.low_power_flag[0] = True
+			else:
+				configure.low_power_flag[0] = False
 
 		# looks for door open/close.
 		if configure.tr109 and configure.dr[0]:

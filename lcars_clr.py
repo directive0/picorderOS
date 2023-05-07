@@ -282,7 +282,7 @@ class MasterSystemsDisplay(object):
 
 
 		# the set labels for the screen
-		self.title = LabelObj("Master Systems Display",titlefont,colour = lcars_orpeach)
+		self.title = LabelObj("Master Systems Display",titlefont,colour = lcars_orange)
 
 		# three input cue labels
 		self.C_Label = LabelObj("Exit",font, colour = lcars_orpeach)
