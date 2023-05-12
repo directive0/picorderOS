@@ -41,10 +41,8 @@ if configure.tr109:
 
 	import RPi.GPIO as GPIO
 
-
 	hallpin1 = configure.HALLPIN1
 	hallpin2 = configure.HALLPIN2
-
 
 	alertpin = configure.ALERTPIN
 
@@ -55,8 +53,6 @@ if configure.tr109:
 	if configure.power:
 		powerpin = configure.LOW_POWER_PIN
 		GPIO.setup(powerpin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
-
 
 if configure.sensehat:
 	if configure.input_joystick:

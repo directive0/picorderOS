@@ -227,7 +227,7 @@ class preferences(object):
 		self.ALERTPIN = int(config['PIN ASSIGNMENTS']['alertpin'])
 
 		# CAP1208 alert pin
-		self.LOW_POWER = int(config['PIN ASSIGNMENTS']['low_power_pin'])
+		self.LOW_POWER_PIN = int(config['PIN ASSIGNMENTS']['low_power_pin'])
 
 		# PocketGeiger Pins
 		self.PG_SIG = int(config['PIN ASSIGNMENTS']['pg_sig'])

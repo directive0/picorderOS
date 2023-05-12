@@ -98,6 +98,16 @@ class Events(object):
 			payload = 0
 		return status,payload
 
+class Dialogue(object):
+
+	def __init__(self):
+		pass
+
+	def push(self):
+		pass
+
+	def assign(self,heading,body,results):
+		pass
 
 # Controls text objects drawn to the LCD
 class LabelObj(object):
@@ -937,6 +947,8 @@ class MultiFrame(object):
 
 		self.indicatorA = LabelObj("00",littlefont, colour = (0,0,0))
 		self.indicatorB = LabelObj("00",littlefont, colour = (0,0,0))
+		self.indicatorC = LabelObj("00",littlefont, colour = (0,0,0))
+
 
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
@@ -950,6 +962,28 @@ class MultiFrame(object):
 
 	# defines the labels for the screen
 	def labels(self):
+
+		# Draw the status indicators
+
+		# Graph time length
+		self.indicatorA.string = self.arrangelabel(str(self.A_Graph.timelength/5))
+		self.indicatorA.r_align(19,33,draw)
+
+		# Auto Scale indicator
+		if configure.auto[0]:
+			self.indicatorB.string = "A"
+		else:
+			self.indicatorB.string = "M"
+
+		self.indicatorB.r_align(19,80,draw)
+
+		# Auto Scale indicator
+		if configure.low_power_flag[0]:
+			self.indicatorC.string = "D"
+		else:
+			self.indicatorC.string = "C"
+
+		self.indicatorC.r_align(19,95,draw)
 
 		# depending on which number the "selection" variable takes on.
 
@@ -1061,8 +1095,8 @@ class MultiFrame(object):
 
 
 		self.labels()
-		self.indicatorA.string = self.arrangelabel(str(self.A_Graph.timelength))
-		self.indicatorA.r_align(19,33,draw)
+		#self.indicatorA.string = self.arrangelabel(str(self.A_Graph.timelength))
+		#self.indicatorA.r_align(19,33,draw)
 
 
 
