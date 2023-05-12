@@ -967,7 +967,7 @@ class MultiFrame(object):
 
 		# Graph time length
 		self.indicatorA.string = self.arrangelabel(str(self.A_Graph.timelength/5))
-		self.indicatorA.r_align(19,33,draw)
+		self.indicatorA.r_align(19,33,self.draw)
 
 		# Auto Scale indicator
 		if configure.auto[0]:
@@ -975,7 +975,7 @@ class MultiFrame(object):
 		else:
 			self.indicatorB.string = "M"
 
-		self.indicatorB.r_align(19,80,draw)
+		self.indicatorB.r_align(19,80,self.draw)
 
 		# Auto Scale indicator
 		if configure.low_power_flag[0]:
@@ -983,7 +983,7 @@ class MultiFrame(object):
 		else:
 			self.indicatorC.string = "C"
 
-		self.indicatorC.r_align(19,95,draw)
+		self.indicatorC.r_align(19,95,self.draw)
 
 		# depending on which number the "selection" variable takes on.
 
