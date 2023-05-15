@@ -338,10 +338,10 @@ class Sensor(object):
 			if self.generators:
 				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2))
 
-			#grab wifi and BT data
-			if configure.EM:
-				self.wifi.update_plars()
-				#self.bt.update_plars()
+		#grab wifi and BT data
+		if configure.EM:
+			self.wifi.update_plars()
+			#self.bt.update_plars()
 
 
 
