@@ -25,7 +25,7 @@ from amg8833_pil import *
 from plars import *
 
 
-from modulated_em import *
+
 
 # Load default font.
 littlefont = ImageFont.truetype("assets/babs.otf",10)
@@ -577,9 +577,6 @@ class PowerDown(object):
 class EMFrame(object):
 	def __init__(self):
 
-		self.wifi = Wifi_Scan()
-		self.bt = BT_Scan()
-
 		self.graphcycle = 0
 
 		# Sets the topleft origin of the graph
@@ -647,11 +644,11 @@ class EMFrame(object):
 			else:
 				self.selection = 3
 
-		if self.selection <= 2:
-			self.wifi.update_plars()
+		#if self.selection <= 2:
+		#	self.wifi.update_plars()
 
-		if self.selection >= 3:
-			self.bt.update_plars()
+		#if self.selection >= 3:
+		#	self.bt.update_plars()
 
 		if len(plars.get_top_em_info()) < 1:
 			self.selection = -1
@@ -975,13 +972,13 @@ class MultiFrame(object):
 		else:
 			self.indicatorB.string = "M"
 
-		self.indicatorB.r_align(19,80,self.draw)
+		self.indicatorB.r_align(19,82,self.draw)
 
 		# Auto Scale indicator
 		if configure.low_power_flag[0]:
-			self.indicatorC.string = "D"
-		else:
 			self.indicatorC.string = "C"
+		else:
+			self.indicatorC.string = "D"
 
 		self.indicatorC.r_align(19,95,self.draw)
 

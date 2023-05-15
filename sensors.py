@@ -58,6 +58,8 @@ if configure.amg8833:
 	i2c = busio.I2C(board.SCL, board.SDA)
 	amg = adafruit_amg88xx.AMG88XX(i2c)
 
+if configure.EM:
+	from modulated_em import *
 
 # An object to store each sensor value and context.
 class Fragment(object):
@@ -195,6 +197,11 @@ class Sensor(object):
 			self.amg_high = Fragment(0.0, 80.0, "IRHigh", self.deg_sym + "c", "amg8833")
 			self.amg_low = Fragment(0.0, 80.0, "IRLow", self.deg_sym + "c", "amg8833")
 
+		if configure.EM:
+			self.wifi = Wifi_Scan()
+			self.bt = BT_Scan()
+
+
 		configure.sensor_info = self.get_all_info()
 
 
@@ -330,6 +337,11 @@ class Sensor(object):
 
 			if self.generators:
 				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2))
+
+			#grab wifi and BT data
+			if configure.EM:
+				self.wifi.update_plars()
+				#self.bt.update_plars()
 
 
 
