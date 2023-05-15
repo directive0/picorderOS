@@ -422,6 +422,7 @@ def sensor_process(conn):
 			conn.send(sensors.get())
 			timed.logtime()
 
+wifitimer = timer()
 def threaded_sensor():
 
 	sensors = Sensor()
@@ -445,8 +446,9 @@ def threaded_sensor():
 		#print(data)
 		plars.update(data)
 				#grab wifi and BT data
-		if configure.EM:
+		if configure.EM and wifitimer.timelapsed() > configure.samplerate[0]:
 			wifi.update_plars()
+			wifitimer.logtime()
 			#self.bt.update_plars()
 
 	sense_process.terminate()
