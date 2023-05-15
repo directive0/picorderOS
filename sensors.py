@@ -199,7 +199,7 @@ class Sensor(object):
 
 		if configure.EM:
 			self.wifi = Wifi_Scan()
-			self.bt = BT_Scan()
+			#self.bt = BT_Scan()
 
 
 		configure.sensor_info = self.get_all_info()
@@ -338,10 +338,7 @@ class Sensor(object):
 			if self.generators:
 				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2))
 
-		#grab wifi and BT data
-		if configure.EM:
-			self.wifi.update_plars()
-			#self.bt.update_plars()
+
 
 
 
@@ -428,6 +425,9 @@ def sensor_process(conn):
 def threaded_sensor():
 
 	sensors = Sensor()
+	
+	if configure.EM:
+		wifi = Wifi_Scan()
 
 	sensors.get()
 	configure.buffer_size[0] = configure.graph_size[0]*len(configure.sensor_info)
@@ -444,5 +444,9 @@ def threaded_sensor():
 		data = parent_conn.recv()
 		#print(data)
 		plars.update(data)
+				#grab wifi and BT data
+		if configure.EM:
+			wifi.update_plars()
+			#self.bt.update_plars()
 
 	sense_process.terminate()
