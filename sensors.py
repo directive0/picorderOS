@@ -161,7 +161,7 @@ class Sensor(object):
 			self.irt_ambi = Fragment(0,80,"IR ambient [mlx]",self.deg_sym + "c")
 			self.irt_obje = Fragment(0,80,"IR object [mlx]",self.deg_sym + "c")
 
-		if configure.envirophat: # and not configure.simulate:
+		if configure.envirophat: 
 
 			self.ep_temp = Fragment(0,65,"Thermometer",self.deg_sym + "c","Envirophat")
 			self.ep_colo = Fragment(20,80,"Colour", "RGB","Envirophat")
@@ -182,11 +182,6 @@ class Sensor(object):
 			self.bme_humi = Fragment(0,100,"Hygrometer", "%", "BME680")
 			self.bme_press = Fragment(300,1100,"Barometer","hPa", "BME680")
 			self.bme_voc = Fragment(300000,1100000,"VOC","KOhm", "BME680")
-
-
-			#if configure.bme_bsec:
-			#self.voc_procc = subprocess.Popen(['./bsec_bme680'], stdout=subprocess.PIPE)
-			#	self.bme_bsec = Fragment(-40,85,"Quality",self.deg_sym + "Q", "BME680")
 
 		if configure.pocket_geiger:
 			self.radiat = Fragment(0.0, 10000.0, "Radiation", "ur/h", "pocketgeiger")
