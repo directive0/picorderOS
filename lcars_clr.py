@@ -949,7 +949,7 @@ class MultiFrame(object):
 		# Sets the coordinates of onscreen labels.
 		self.titlex = 23
 		self.titley = 6
-		self.labely = 98
+		self.labely = 95
 		self.labelx = 25
 
 
@@ -1045,21 +1045,21 @@ class MultiFrame(object):
 
 			#set string to item description
 			self.A_Desc.string = configure.sensor_info[configure.sensor1[0]][0]
-			self.A_Desc.push(self.labelx,self.labely+5,self.draw)
+			self.A_Desc.push(self.labelx,self.labely+13,self.draw)
 
 			self.B_Label.string = b_string
 			self.B_Label.center(self.labely,self.labelx,135,self.draw)
 
 			#set string to item description
 			self.B_Desc.string = configure.sensor_info[configure.sensor2[0]][0]
-			self.B_Desc.center(self.labely+5,self.labelx,135,self.draw)
+			self.B_Desc.center(self.labely+13,self.labelx,135,self.draw)
 
 			self.C_Label.string = c_string
 			self.C_Label.r_align(156,self.labely,self.draw)
 
 			#set string to item description
 			self.C_Desc.string = configure.sensor_info[configure.sensor3[0]][0]
-			self.C_Desc.r_align(156,self.labely+5,self.draw)
+			self.C_Desc.r_align(156,self.labely+13,self.draw)
 
 		# displays more details for whatever sensor is in focus
 		if self.selection != 0:
