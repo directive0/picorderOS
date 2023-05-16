@@ -29,6 +29,7 @@ from plars import *
 
 
 # Load default font.
+microfont = ImageFont.truetype("assets/babs.otf",7)
 littlefont = ImageFont.truetype("assets/babs.otf",10)
 font = ImageFont.truetype("assets/babs.otf",13)
 titlefont = ImageFont.truetype("assets/babs.otf",16)
@@ -948,7 +949,7 @@ class MultiFrame(object):
 		# Sets the coordinates of onscreen labels.
 		self.titlex = 23
 		self.titley = 6
-		self.labely = 100
+		self.labely = 98
 		self.labelx = 25
 
 
@@ -971,6 +972,13 @@ class MultiFrame(object):
 		self.B_Label = LabelObj("b_string",font, colour = lcars_blue)
 
 		self.C_Label = LabelObj("c_string",font, colour = lcars_pinker)
+
+
+		self.A_Desc = LabelObj("a_string",littlefont,colour = lcars_orange)
+
+		self.B_Desc = LabelObj("b_string",littlefont, colour = lcars_blue)
+
+		self.C_Desc = LabelObj("c_string",littlefont, colour = lcars_pinker)
 
 		self.focus_Label = LabelObj("test",bigfont, colour = lcars_orpeach)
 		self.focus_high_Label = LabelObj("test",font, colour = lcars_peach)
@@ -1017,7 +1025,7 @@ class MultiFrame(object):
 
 		self.indicatorC.r_align(19,95,self.draw)
 
-		# depending on which number the "selection" variable takes on.
+		# depending on which number the "selection" variable takes on. print the item and its unit symbol
 
 		if self.selection == 0:
 			raw_a = str(self.A_Data)
@@ -1035,16 +1043,29 @@ class MultiFrame(object):
 			self.A_Label.string = a_string
 			self.A_Label.push(self.labelx,self.labely,self.draw)
 
+			#set string to item description
+			self.A_Desc.string = configure.sensor_info[configure.sensor1[0]][0]
+			self.A_Desc.push(self.labelx,self.labely+5,self.draw)
+
 			self.B_Label.string = b_string
 			self.B_Label.center(self.labely,self.labelx,135,self.draw)
 
+			#set string to item description
+			self.B_Desc.string = configure.sensor_info[configure.sensor2[0]][0]
+			self.B_Desc.center(self.labely,self.label+5,135,self.draw)
+
 			self.C_Label.string = c_string
 			self.C_Label.r_align(156,self.labely,self.draw)
+
+			#set string to item description
+			self.C_Desc.string = configure.sensor_info[configure.sensor3[0]][0]
+			self.C_Desc.r_align(156,self.labely+5,self.draw)
 
 		# displays more details for whatever sensor is in focus
 		if self.selection != 0:
 
 			carousel = [self.A_Data,self.B_Data,self.C_Data]
+			carousel2 = [configure.sensor_info[configure.sensor1[0]][2],configure.sensor_info[configure.sensor2[0]][2],configure.sensor_info[configure.sensor3[0]][2]]
 
 			this = self.selection - 1
 
@@ -1053,7 +1074,7 @@ class MultiFrame(object):
 			raw = str(carousel[this])
 
 			adjusted = self.arrangelabel(raw, '.2f')
-			self.focus_Label.string = adjusted
+			self.focus_Label.string = adjusted + str(carousel2[this])
 			self.focus_Label.r_align(156,self.titley-2,self.draw)
 
 			self.focus_high_Label.string = "max " + self.arrangelabel(str(this_bundle.get_high()), '.1f')
