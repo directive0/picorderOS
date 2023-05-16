@@ -948,7 +948,8 @@ class MultiFrame(object):
 		# Sets the coordinates of onscreen labels.
 		self.titlex = 23
 		self.titley = 6
-		self.labely = 102
+		self.labely = 100
+		self.labelx = 25
 
 
 
@@ -1032,10 +1033,10 @@ class MultiFrame(object):
 			c_string = adjusted_c + " " + configure.sensor_info[configure.sensor3[0]][2]
 
 			self.A_Label.string = a_string
-			self.A_Label.push(23,self.labely,self.draw)
+			self.A_Label.push(self.labelx,self.labely,self.draw)
 
 			self.B_Label.string = b_string
-			self.B_Label.center(self.labely,23,135,self.draw)
+			self.B_Label.center(self.labely,self.labelx,135,self.draw)
 
 			self.C_Label.string = c_string
 			self.C_Label.r_align(156,self.labely,self.draw)
@@ -1056,10 +1057,10 @@ class MultiFrame(object):
 			self.focus_Label.r_align(156,self.titley-2,self.draw)
 
 			self.focus_high_Label.string = "max " + self.arrangelabel(str(this_bundle.get_high()), '.1f')
-			self.focus_high_Label.push(23,self.labely,self.draw)
+			self.focus_high_Label.push(self.labelx,self.labely,self.draw)
 
 			self.focus_low_Label.string = "min " + self.arrangelabel(str(this_bundle.get_low()), '.1f')
-			self.focus_low_Label.center(self.labely,23,135,self.draw)
+			self.focus_low_Label.center(self.labely,self.labelx,135,self.draw)
 
 			self.focus_mean_Label.string = "x- " + self.arrangelabel(str(this_bundle.get_average()), '.1f')
 			self.focus_mean_Label.r_align(156,self.labely,self.draw)
@@ -1160,15 +1161,42 @@ class ThermalFrame(object):
 		self.B_Label = LabelObj("No Data",font, colour = lcars_pinker)
 		self.C_Label = LabelObj("No Data",font, colour = lcars_orange)
 
+		self.indicatorA = LabelObj("00",littlefont, colour = (0,0,0))
+		self.indicatorB = LabelObj("00",littlefont, colour = (0,0,0))
+		self.indicatorC = LabelObj("00",littlefont, colour = (0,0,0))
+
+
 		self.events = Events(["mode_b",1,0,"settings","poweroff","mode_a",0,0],"mode_c")
 
 
 	# this function takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data):
+		
 		datareturn = format(float(data), '.0f')
 		return datareturn
 
 	def labels(self):
+		# Draw the status indicators
+
+		# Graph time length
+		self.indicatorA.string = "47"
+		self.indicatorA.r_align(19,33,self.draw)
+
+		# Auto Scale indicator
+		if configure.auto[0]:
+			self.indicatorB.string = "I"
+		else:
+			self.indicatorB.string = "R"
+
+		self.indicatorB.r_align(19,82,self.draw)
+
+		# Auto Scale indicator
+		if configure.low_power_flag[0]:
+			self.indicatorC.string = "C"
+		else:
+			self.indicatorC.string = "D"
+
+		self.indicatorC.r_align(19,95,self.draw)
 
 		if self.selection == 0:
 			raw_a = str(self.low)
