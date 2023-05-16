@@ -101,12 +101,52 @@ class Events(object):
 class Dialogue(object):
 
 	def __init__(self):
-		pass
 
-	def push(self):
-		pass
+		self.selection = 0
+
+
+		self.auto = configure.auto[0]
+		self.interval = timer()
+		self.interval.logtime()
+
+		self.titlex = 25
+		self.titley = 6
+		self.labely = 102
+
+		self.divider = 47
+
+		self.labely = 102
+
+
+		self.title = LabelObj("CAUTION",bigfont, colour = lcars_red)
+		self.itemlabel = LabelObj("Item Label",titlefont,colour = lcars_orange)
+		self.A_Label = LabelObj("Yes",font,colour = lcars_blue)
+		self.B_Label = LabelObj("Enter",font, colour = lcars_blue)
+		self.C_Label = LabelObj("No",font, colour = lcars_blue)
+
+		self.item = LabelObj("No Data",bigfont,colour = lcars_orpeach)
+		# device needs to show multiple settings
+		# first the sensor palette configuration
+
+		self.events = Events(["shutdown",0,"last","0",0,0,0,0], "poweroff")
+
+	def push(self, draw):
+
+		status,payload = self.events.check()
+
+		#draw the frame heading
+
+		self.title.center(self.titley,self.titlex,135,draw)
+		self.A_Label.push(23,self.labely,draw)
+		self.C_Label.r_align(156,self.labely,draw)
+		self.item.string = "Power Down?"
+		self.item.center(self.titley+40, self.titlex, 135,draw)
+
+
+		return status
 
 	def assign(self,heading,body,results):
+		
 		pass
 
 # Controls text objects drawn to the LCD
@@ -313,8 +353,17 @@ class MasterSystemsDisplay(object):
 	def load_list(self):
 
 		# pulls data from the modulated_em.py
-		wifi = "SSID: " + get_ssid()
-		ip_str = "IP:  " + get_IP()
+		wifi = "SSID: " + os.popen("iwgetid").readline()
+
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+		try:
+			s.connect(("8.8.8.8", 80))
+			IPAddr = s.getsockname()[0]
+		except:
+			IPAddr = "No IP Found"
+		
+		ip_str = "IP:  " + IPAddr
 		host_str = "Name:  " + get_hostname()
 		sense_ready = "Sensors Avl:  " + str(len(configure.sensor_info))
 		model_name = "CPU:  " + self.model
@@ -518,16 +567,6 @@ class StartUp(object):
 class PowerDown(object):
 	def __init__(self):
 
-		# Sets the topleft origin of the graph
-		self.graphx = 23
-		self.graphy = 24
-
-		self.status_raised = False
-
-		# Sets the x and y span of the graph
-		self.gspanx = 133
-		self.gspany = 71
-
 		self.selection = 0
 
 
@@ -643,12 +682,6 @@ class EMFrame(object):
 				self.selection = 0
 			else:
 				self.selection = 3
-
-		#if self.selection <= 2:
-		#	self.wifi.update_plars()
-
-		#if self.selection >= 3:
-		#	self.bt.update_plars()
 
 		if len(plars.get_top_em_info()) < 1:
 			self.selection = -1
