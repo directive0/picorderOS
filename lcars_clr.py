@@ -1052,7 +1052,7 @@ class MultiFrame(object):
 
 			#set string to item description
 			self.B_Desc.string = configure.sensor_info[configure.sensor2[0]][0]
-			self.B_Desc.center(self.labely,self.label+5,135,self.draw)
+			self.B_Desc.center(self.labely+5,self.labelx,135,self.draw)
 
 			self.C_Label.string = c_string
 			self.C_Label.r_align(156,self.labely,self.draw)
