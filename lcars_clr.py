@@ -1030,35 +1030,35 @@ class MultiFrame(object):
 		if self.selection == 0:
 			raw_a = str(self.A_Data)
 			adjusted_a = self.arrangelabel(raw_a)
-			a_string = adjusted_a + " " + str(configure.sensor_info[configure.sensor1[0]][2])[:6]
+			a_string = adjusted_a + " " + str(configure.sensor_info[configure.sensor1[0]][2])
 
 			raw_b = str(self.B_Data)
 			adjusted_b = self.arrangelabel(raw_b)
-			b_string = adjusted_b + " " + str(configure.sensor_info[configure.sensor2[0]][2])[:6]
+			b_string = adjusted_b + " " + str(configure.sensor_info[configure.sensor2[0]][2])
 
 			raw_c = str(self.C_Data)
 			adjusted_c = self.arrangelabel(raw_c)
-			c_string = adjusted_c + " " + str(configure.sensor_info[configure.sensor3[0]][2])[:6]
+			c_string = adjusted_c + " " + str(configure.sensor_info[configure.sensor3[0]][2])
 
 			self.A_Label.string = a_string
 			self.A_Label.push(self.labelx,self.labely,self.draw)
 
 			#set string to item description
-			self.A_Desc.string = configure.sensor_info[configure.sensor1[0]][0]
+			self.A_Desc.string = str(configure.sensor_info[configure.sensor1[0]][0])[:6]
 			self.A_Desc.push(self.labelx,self.labely+13,self.draw)
 
 			self.B_Label.string = b_string
 			self.B_Label.center(self.labely,self.labelx,135,self.draw)
 
 			#set string to item description
-			self.B_Desc.string = configure.sensor_info[configure.sensor2[0]][0]
+			self.B_Desc.string = str(configure.sensor_info[configure.sensor2[0]][0])[:6]
 			self.B_Desc.center(self.labely+13,self.labelx,135,self.draw)
 
 			self.C_Label.string = c_string
 			self.C_Label.r_align(156,self.labely,self.draw)
 
 			#set string to item description
-			self.C_Desc.string = configure.sensor_info[configure.sensor3[0]][0]
+			self.C_Desc.string = str(configure.sensor_info[configure.sensor3[0]][0])[:6]
 			self.C_Desc.r_align(156,self.labely+13,self.draw)
 
 		# displays more details for whatever sensor is in focus
