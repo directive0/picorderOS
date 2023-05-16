@@ -365,7 +365,7 @@ class MasterSystemsDisplay(object):
 			IPAddr = "No IP Found"
 		
 		ip_str = "IP:  " + IPAddr
-		host_str = "Name:  " + get_hostname()
+		host_str = "Name:  " + socket.gethostname()
 		sense_ready = "Sensors Avl:  " + str(len(configure.sensor_info))
 		model_name = "CPU:  " + self.model
 
