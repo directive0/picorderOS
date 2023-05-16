@@ -1123,10 +1123,11 @@ class MultiFrame(object):
 		if self.selection != 0:
 			this = self.selection - 1
 			self.title.string = senseslice[this][1]
+			self.title.push(self.titlex,self.titley,draw)
 		else:
 			self.title.string = "Multi-Graph"
+			self.title.r_align(156,self.titley,draw)
 
-		self.title.push(self.titlex,self.titley,draw)
 
 
 		# turns each channel on individually
