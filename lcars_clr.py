@@ -4,6 +4,7 @@ print("Loading 160x128 LCARS Interface")
 from objects import *
 import math
 import time
+import socket
 
 from operator import itemgetter
 
