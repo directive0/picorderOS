@@ -800,6 +800,7 @@ class EMFrame(object):
 					this_ssid = (name,screenpos,lineheight,strength,frequency)
 					items_list.append(this_ssid)
 
+
 				# draw lines and balls
 				#for each item in item_list, in reverse order
 				for index, item in reversed(list(enumerate(items_list))):
@@ -836,7 +837,7 @@ class EMFrame(object):
 
 						# put frequency at lower right
 						self.signal_frequency_sm.string = str(focus_freq) + " GHZ" + ", " + strength_string
-						self.signal_frequency_sm.r_align(153,83,draw)
+						self.signal_frequency_sm.r_align(155,82,draw)
 
 
 					# otherwise just draw the line and dot in the usual color
@@ -854,7 +855,7 @@ class EMFrame(object):
 					overlapping.append(item)
 
 			
-			self.overlapping_no.string = str(len(overlapping))
+			self.overlapping_no.string = str(len(overlapping)-1)
 			self.overlapping_no.r_align(14,97,draw)
 
 			if len(overlapping) > 1:
