@@ -651,7 +651,7 @@ class EMFrame(object):
 		self.signal_strength_sm = LabelObj("ST",littlefont, colour = lcars_peach)
 
 		self.signal_frequency = LabelObj("FQ",titlefont, colour = lcars_orpeach)
-		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_pink)
+		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_peach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 		
 		self.stat_no = LabelObj("00",littlefont, colour = (0,0,0))
@@ -761,7 +761,7 @@ class EMFrame(object):
 
 			# change Background
 			#draw.rectangle((0,0,320,240),(0,0,0))
-			draw._image = self.burgerfull
+			#draw._image = self.burgerfull
 
 
 
@@ -812,7 +812,7 @@ class EMFrame(object):
 					x2 = cords[1][0] + (radius)
 					y2 = cords[1][1] + (radius)
 
-					# if this is the strongest singal draw labels and change colour.
+					# if this is the strongest signal draw labels and change colour.
 					if index == 0:
 						draw.line(cords,lcars_peach,1)
 						draw.ellipse([x1,y1,x2,y2],lcars_peach)
@@ -836,7 +836,7 @@ class EMFrame(object):
 
 						# put frequency at lower right
 						self.signal_frequency_sm.string = str(focus_freq) + " GHZ" + ", " + strength_string
-						self.signal_frequency_sm.r_align(153,84,draw)
+						self.signal_frequency_sm.r_align(153,83,draw)
 
 
 					# otherwise just draw the line and dot in the usual color
