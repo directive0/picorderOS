@@ -86,11 +86,11 @@ class preferences(object):
 							'ALERTPIN':'0',							# Cap1208 Alert Pin
 
 							'# Power Supply Low Power Alert Pin':None,
-							'LOW_POWER_PIN':'5',					# Power supply low power alert pin
+							'LOW_POWER_PIN':'5',					# Power supply charge state alert pin
 
 							'# Pocket-Geiger Signal and Noise Pins':None,
-							'PG_SIG':'20',							# PocketGeiger Pins
-							'PG_NS':'21',
+							'PG_SIG':'25',							# PocketGeiger Pins
+							'PG_NS':'18',
 							}
 
 		config['OUTPUT'] = {'display':'1',
@@ -227,7 +227,7 @@ class preferences(object):
 		self.ALERTPIN = int(config['PIN ASSIGNMENTS']['alertpin'])
 
 		# CAP1208 alert pin
-		self.LOW_POWER_PIN = int(config['PIN ASSIGNMENTS']['low_power_pin'])
+		self.LOW_POWER_PIN = int(config['PIN ASSIGNMENTS']['LOW_POWER_PIN'])
 
 		# PocketGeiger Pins
 		self.PG_SIG = int(config['PIN ASSIGNMENTS']['pg_sig'])
