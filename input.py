@@ -50,9 +50,9 @@ if configure.tr109:
 	GPIO.setup(hallpin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	GPIO.setup(hallpin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-	if configure.power:
-		powerpin = configure.LOW_POWER_PIN
-		GPIO.setup(powerpin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+if configure.power:
+	powerpin = configure.LOW_POWER_PIN
+	GPIO.setup(powerpin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 if configure.sensehat:
 	if configure.input_joystick:
@@ -172,7 +172,6 @@ class Inputs(object):
 
 		# if power monitoring is active
 		if configure.power:
-			
 			# Toggle the power low flag based on the UPS response.
 			if GPIO.input(powerpin) == 1:
 				configure.low_power_flag[0] = True

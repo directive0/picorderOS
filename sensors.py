@@ -443,7 +443,7 @@ def threaded_sensor():
 				#grab wifi and BT data
 		if configure.EM and wifitimer.timelapsed() > configure.samplerate[0]:
 			wifi.update_plars()
-			wifitimer.logtime()
+			wifitimer.logtime() 
 			#self.bt.update_plars()
 
 	sense_process.terminate()

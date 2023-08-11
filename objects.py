@@ -59,7 +59,7 @@ class preferences(object):
 							'# Capacitive touch threshold':None,
 							'capsensitivity':'50',
 							'# Battery monitor':None,
-							'power':'yes',
+							'power_monitor':'yes',
 							}							# Used only if cap1208 is 'yes'
 
 		config['PIN ASSIGNMENTS'] = {'#I2C pins':None,
@@ -279,8 +279,7 @@ class preferences(object):
 		self.alarm = [self.str2bool(config['GLOBALS']['alarm'])]
 
 		# turns battery monitor on and off, used to shut down the battery monitor
-		self.power = [self.str2bool(config['INPUT']['power'])]
-
+		self.power = [self.str2bool(config['INPUT']['power_monitor'])]
 		self.low_power_flag = [False]
 
 		# If sleep is True the lights and input will respond to the door open/close hall effect sensors
