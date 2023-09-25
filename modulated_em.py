@@ -75,11 +75,11 @@ class Wifi_Scan(object):
 				ap["mode"], 
 				'wifi', 
 				timestamp]
-					ap_fragments.append(details)
+				ap_fragments.append(details)
 			else:
 				ap_fragments = None
 
-			return ap_fragments
+		return ap_fragments
 
 
 	def update_plars(self):
