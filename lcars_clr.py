@@ -790,7 +790,7 @@ class EMFrame(object):
 				for ssid in em_list:
 					name = str(ssid[0])
 					strength = ssid[1]
-					frequency = str(ssid[3]) + 'GHz'
+					frequency = ssid[3]
 					#frequency = float(frequency.replace(' GHz', ''))
 
 					# determing x coordinate
