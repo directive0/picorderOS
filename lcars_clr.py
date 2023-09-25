@@ -1422,4 +1422,4 @@ class ColourScreen(object):
 		device.display(thisimage)
 
 	def run(self):
-		configure.status[0] = self.carousel[configure.status[0]]
+		configure.status[0] = self.carousel[configure.status[0]]()
