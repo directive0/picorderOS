@@ -123,7 +123,7 @@ class preferences(object):
 							'# Main Sensors Polling/Sampling Rate':None,
 							'samplerate':'.2',
 							'# EM/BT Polling/Sampling Rate':None,
-							'em_samplerate':'5'
+							'em_samplerate':'5',
 							'# Affects graphing density':None,
 							'samples':'64',
 							'# Currently not used':None,
