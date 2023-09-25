@@ -43,7 +43,7 @@ def get_recent_proc(conn,buffer,dsc,dev,num):
 def update_proc(conn,buffer,data):
 	#listbuilder:
 	fragdata = []
-
+	
 	for fragment in data:
 		#
 		item = fragment.get()

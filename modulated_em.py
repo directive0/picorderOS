@@ -2,6 +2,8 @@
 print("Loading Modulated EM Signal Analysis")
 
 from wifi import Cell, Scheme
+
+import iwlist
 import time
 from plars import *
 from objects import *
@@ -38,7 +40,8 @@ class Wifi_Scan(object):
 		if self.timed.timelapsed() > configure.samplerate[0]:
 			self.timed.logtime()
 			try:
-				ap_list = list(Cell.all('wlan0'))
+				content = iwlist.scan(interface='wlan0')
+				ap_list = iwlist.parse(content)
 			except Exception as e:
 				print("Wifi failed: ", e)
 				ap_list = []
@@ -61,28 +64,13 @@ class Wifi_Scan(object):
 
 		if len(ap_list) > 0:
 			for ap in ap_list:
-				details = [ap.ssid, ap.signal, ap.quality, ap.frequency, ap.encrypted, ap.channel, ap.address, ap.mode, 'wifi', timestamp]
+				details = [ap_list["essid"], ap_list["signal_level_dBm"],ap_list["signal_quality"], ap_list["frequency"], ap_list["encryption"], ap_list["channel"], ap_list["mac"], ap_list["mode"], 'wifi', timestamp]
 				ap_fragments.append(details)
 		else:
 			ap_fragments = None
 
 		return ap_fragments
 
-	def get_strongest_ssid(self):
-		list = self.get_list()
-		strengths = []
-
-		for cell in list:
-			strengths.append(cell.signal)
-
-		max_value = max(strengths)
-		max_index = strengths.index(max_value)
-
-		strongest = list[max_index]
-
-		details = [strongest.ssid, strongest.signal, strongest.quality, strongest.frequency, strongest.encrypted, strongest.channel, strongest.address, strongest.mode]
-
-		return details
 
 	def update_plars(self):
 		data = self.dump_data()

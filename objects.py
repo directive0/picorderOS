@@ -279,7 +279,7 @@ class preferences(object):
 		self.alarm = [self.str2bool(config['GLOBALS']['alarm'])]
 
 		# turns battery monitor on and off, used to shut down the battery monitor
-		self.power = [self.str2bool(config['INPUT']['power_monitor'])]
+		self.power = self.str2bool(config['INPUT']['power_monitor'])
 		self.low_power_flag = [False]
 
 		# If sleep is True the lights and input will respond to the door open/close hall effect sensors
@@ -350,8 +350,6 @@ class preferences(object):
 		self.graph_height = int(config['GLOBALS']['graph_height'])
 		self.graph_x = int(config['GLOBALS']['graph_x'])
 		self.graph_y = int(config['GLOBALS']['graph_y'])
-
-
 
 # create a shared object for global variables and settings.
 configure = preferences()

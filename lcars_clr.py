@@ -559,7 +559,7 @@ class StartUp(object):
 
 
 		if self.interval.timelapsed() > configure.boot_delay and configure.sensor_ready[0]:
-			status = "mode_a"
+			status = "multi"
 		else:
 			status = "startup"
 
@@ -663,7 +663,7 @@ class EMFrame(object):
 
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
-		self.events = Events([1,"mode_a",0,"settings","poweroff",2,0,0],"mode_b")
+		self.events = Events([1,"multi",0,"settings","poweroff",2,0,0],"modem")
 
 	def draw_title(self,title, draw):
 		self.title.string = title
@@ -737,7 +737,6 @@ class EMFrame(object):
 
 					list_for_labels.append(label)
 				
-
 
 				self.list.update(list_for_labels,draw)
 
@@ -994,7 +993,7 @@ class MultiFrame(object):
 
 		self.title = LabelObj("Multi-Graph",titlefont, colour = lcars_peach)
 
-		self.events = Events(["mode_b",1,0,"settings","poweroff","mode_c",0,0,0],"mode_a")
+		self.events = Events(["modem",1,0,"settings","poweroff","thermal",0,0,0],"multi")
 
 	# takes a value and sheds the second digit after the decimal place
 	def arrangelabel(self,data,range = ".1f"):
@@ -1189,7 +1188,7 @@ class ThermalFrame(object):
 		self.indicatorC = LabelObj("00",littlefont, colour = (0,0,0))
 
 
-		self.events = Events(["mode_b",1,0,"settings","poweroff","mode_a",0,0],"mode_c")
+		self.events = Events(["modem",1,0,"settings","poweroff","multi",0,0],"thermal")
 
 
 	# this function takes a value and sheds the second digit after the decimal place
@@ -1301,11 +1300,21 @@ class ColourScreen(object):
 		self.settings_frame = SettingsFrame()
 		self.thermal_frame = ThermalFrame()
 		self.powerdown_frame = PowerDown()
-		self.em_frame = EMFrame()
+		self.em_frame = EMFrame()	
 		self.startup_frame = StartUp()
 		self.loading_frame = LoadingFrame()
 		self.msd_frame = MasterSystemsDisplay()
-		self.carousel = ["startup","multi","thermal","mode_b","settings","msd"]
+
+		# carousel dict to hold the keys and defs for each state
+		self.carousel = {"startup":self.start_up,
+				   "multi":self.graph_screen,
+				   "voc":self.voc_screen,
+				   "thermal":self.thermal_screen,
+				   "modem":self.em_screen,
+				   "settings":self.settings,
+				   "msd":self.msd,
+				   "poweroff":self.powerdown,
+				   "shutdown":self.powerdown}
 
 	def get_size(self):
 		return self.multi_frame.samples
@@ -1342,6 +1351,9 @@ class ColourScreen(object):
 
 		return self.status
 
+	def voc_screen(self):
+		pass
+
 	def em_screen(self):
 		self.newimage = self.tbar.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
@@ -1357,9 +1369,7 @@ class ColourScreen(object):
 	def thermal_screen(self):
 		self.newimage = self.image.copy()
 		self.draw = ImageDraw.Draw(self.newimage)
-
 		last_status = self.status
-
 		self.status = self.thermal_frame.push(self.draw)
 
 		if self.status == last_status:
@@ -1406,5 +1416,5 @@ class ColourScreen(object):
 		thisimage = self.newimage.convert(mode = "RGB")
 		device.display(thisimage)
 
-	def draw(self):
-		pass
+	def run(self):
+		configure.status[0] = self.carousel[configure.status[0]]

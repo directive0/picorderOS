@@ -50,6 +50,7 @@ if configure.tr109:
 	GPIO.setup(hallpin1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	GPIO.setup(hallpin2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+
 if configure.power:
 	powerpin = configure.LOW_POWER_PIN
 	GPIO.setup(powerpin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)

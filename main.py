@@ -54,143 +54,53 @@ def Main():
 	# they all have different names but each display object should use the same
 	# named methods for simplicity sake.
 	if configure.tr108:
-		PyScreen = Screen()
-		configure.graph_size[0] = PyScreen.get_size()
+		screen_object = Screen()
+		configure.graph_size[0] = screen_object.get_size()
 
 	if configure.tr109:
-
 		if configure.display == 0:
-			dotscreen = NokiaScreen()
+			screen_object = NokiaScreen()
 		if configure.display == 1 or configure.display == 2:
-			colourscreen = ColourScreen()
-			colourscreen.start_up()
+			screen_object = ColourScreen()
+			screen_object.start_up()
 
-		configure.graph_size[0] = colourscreen.get_size()
+		configure.graph_size[0] = screen_object.get_size()
+
+
 
 	start_time = time.time()
 
+
+	# The following code sets up the various threads that the rest of the program will use
 	#start the sensor loop
 	sensor_thread = Thread(target = threaded_sensor, args = ())
 	sensor_thread.start()
 
 
-	# if leds enabled start the event monitor for inputs
+	# if leds enabled start the event monitor for LEDs
 	if configure.leds:
 		led_thread = Thread(target = ripple_async, args = ())
 		led_thread.start()
 
 
-
+	# start the input monitor thread
 	input_thread = Thread(target = threaded_input, args = ())
 	input_thread.start()
 
-	#start the audio service
+	#start the audio service thread
 	if configure.audio[0]:
 		audio_thread = Thread(target = threaded_audio, args = ())
 		audio_thread.start()
-
-
 
 	print("Main Loop Starting")
 
 	# Main loop. Break when status is "quit".
 	while configure.status[0] != "quit":
 
-
 		# try allows us to capture a keyboard interrupt and assign behaviours.
 		try:
 
-			# Runs the startup animation played when you first boot the program.
-			if configure.status[0] == "startup":
-
-				if configure.tr109:
-					configure.status[0] = colourscreen.start_up()
-
-
-				if configure.tr108:
-					configure.status[0] = PyScreen.startup_screen(start_time)
-
-			# The rest of these loops all handle a different mode, switched by buttons within the functions.
-			if configure.status[0] == "mode_a":
-
-				# the following is only run if the tr108 flag is set
-				if configure.tr108:
-
-					configure.status[0] = PyScreen.graph_screen()
-
-					if not configure.pc:
-						leda_on()
-						ledb_off()
-						ledc_off()
-
-				if configure.tr109:
-
-					if configure.display == 0:
-						configure.status[0] = dotscreen.push(data)
-					if configure.display == 1 or configure.display == 2:
-						configure.status[0] = colourscreen.graph_screen()
-
-			if configure.status[0] == "mode_b":
-
-				if configure.tr108:
-
-					configure.status[0] = PyScreen.slider_screen()
-					if not configure.pc:
-						leda_off()
-						ledb_on()
-						ledc_off()
-
-				if configure.tr109:
-					if configure.display == 0:
-						configure.status[0] = dotscreen.push(data)
-					if configure.display == 1 or configure.display == 2:
-						configure.status[0] = colourscreen.em_screen()
-
-			if configure.status[0] == "mode_c":
-				if configure.tr109:
-					if configure.display == 1:
-						configure.status[0] = colourscreen.thermal_screen()
-
-				if configure.tr108:
-					if configure.video:
-						configure.status[0] = PyScreen.video_screen()
-					else:
-						configure.status[0] = PyScreen.slider_screen()
-					if not configure.pc:
-						leda_on()
-						ledb_on()
-						ledc_off()
-
-			if configure.status[0] == "settings":
-
-				if configure.tr108:
-					configure.status[0] = PyScreen.settings()
-					if not configure.pc:
-						leda_off()
-						ledb_off()
-						ledc_on()
-
-				if configure.tr109:
-					if configure.display == 0:
-						configure.status[0] = dotscreen.push()
-					if configure.display == 1 or configure.display == 2:
-						configure.status[0] = colourscreen.settings()
-
-			if configure.status[0] == "msd":
-
-				if configure.tr109:
-					if configure.display == 1 or configure.display == 2:
-						configure.status[0] = colourscreen.msd()
-
-
-			# Handles the poweroff screen
-			if configure.status[0] == "poweroff":
-
-				if configure.tr109:
-					if configure.display == 0:
-						configure.status[0] = dotscreen.push()
-					if configure.display == 1 or configure.display == 2:
-						configure.status[0] = colourscreen.powerdown()
+			screen_object.run()
 
 			if configure.status[0] == "shutdown":
 				print("Shut Down!")
