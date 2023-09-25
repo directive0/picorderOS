@@ -37,7 +37,7 @@ class Wifi_Scan(object):
 		pass
 
 	def get_list(self):
-		if self.timed.timelapsed() > configure.samplerate[0]:
+		if self.timed.timelapsed() > configure.em_samplerate:
 			self.timed.logtime()
 			try:
 				content = iwlist.scan(interface='wlan0')

@@ -120,7 +120,10 @@ class preferences(object):
 							'mode_a_y_offset':31,							# y offset for TR108 mode_a
 							'# Interpolate Temperature':None,
 							'interpolate':'yes',							# Interpolate temperature
+							'# Main Sensors Polling/Sampling Rate':None,
 							'samplerate':'.2',
+							'# EM/BT Polling/Sampling Rate':None,
+							'em_samplerate':'5'
 							'# Affects graphing density':None,
 							'samples':'64',
 							'# Currently not used':None,
@@ -326,7 +329,9 @@ class preferences(object):
 		# used to control refresh speed.
 		self.samples = int(config['GLOBALS']['samples'])
 
-		self.samplerate=[float(config['GLOBALS']['samplerate'])]
+		self.samplerate = [float(config['GLOBALS']['samplerate'])]
+		self.em_samplerate = float(config['GLOBALS']['em_samplerate'])
+
 		self.displayinterval=[float(config['GLOBALS']['displayinterval'])]
 
 		# holds sensor data (issued by the sensor module at init)

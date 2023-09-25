@@ -709,7 +709,7 @@ class EMFrame(object):
 
 			self.signal_strength.string = str(info[1]) + " DB"
 			self.signal_strength.r_align(self.labelxr,92,draw)
-			self.signal_frequency.push(20,92,draw, string = info[3])
+			self.signal_frequency.push(20,92,draw, string = info[3]+"GHz")
 			self.signal_mac.push(20,111, draw, string = info[6])
 			
 
@@ -777,27 +777,32 @@ class EMFrame(object):
 
 				# create a list to hold just the info we need for the screen.
 				items_list = []
+				strength_list = []
 
 				#stats
 				noossids = len(em_list)
 
+				for ssid in em_list:
+					strength = ssid[1]
+					strength_list.append(strength)
 
 				#filter info into items_list
 				for ssid in em_list:
 					name = str(ssid[0])
 					strength = ssid[1]
-					frequency = ssid[3]
-					frequency = float(frequency.replace(' GHz', ''))
+					frequency = ssid[3] + 'GHz'
+					#frequency = float(frequency.replace(' GHz', ''))
 
 					# determing x coordinate
 					screenpos = numpy.interp(frequency,(2.412, 2.462),(vizX1 + ballsize, vizX2 - ballsize))
 
 					# determine y coordinate
-					lineheight = numpy.interp(strength, (-100, 0), (vizY2, vizY1 + ballsize))
+					lineheight = numpy.interp(strength, (min(strength_list), max(strength_list)), (vizY2, vizY1 + ballsize))
 
 					# package into list
 					this_ssid = (name,screenpos,lineheight,strength,frequency)
 					items_list.append(this_ssid)
+					
 
 
 				# draw lines and balls
