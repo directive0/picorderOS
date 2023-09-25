@@ -62,23 +62,24 @@ class Wifi_Scan(object):
 		timestamp = time.time()
 		ap_fragments = []
 
-		if len(ap_list) > 0:
-			for ap in ap_list:
-				details = [ap["essid"], 
-			   ap["signal_level_dBm"],
-			   ap["signal_quality"], 
-			   ap["frequency"], 
-			   ap["encryption"], 
-			   ap["channel"], 
-			   ap["mac"], 
-			   ap["mode"], 
-			   'wifi', 
-			   timestamp]
-				ap_fragments.append(details)
-		else:
-			ap_fragments = None
+		if ap_list != None:
+			if len(ap_list) > 0:
+				for ap in ap_list:
+					details = [ap["essid"], 
+				int(ap["signal_level_dBm"]),
+				int(ap["signal_quality"]), 
+				float(ap["frequency"]), 
+				ap["encryption"], 
+				ap["channel"], 
+				ap["mac"], 
+				ap["mode"], 
+				'wifi', 
+				timestamp]
+					ap_fragments.append(details)
+			else:
+				ap_fragments = None
 
-		return ap_fragments
+			return ap_fragments
 
 
 	def update_plars(self):
