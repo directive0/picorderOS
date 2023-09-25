@@ -75,7 +75,7 @@ class Wifi_Scan(object):
 				ap["mode"], 
 				'wifi', 
 				timestamp]
-				ap_fragments.append(details)
+					ap_fragments.append(details)
 			else:
 				ap_fragments = None
 
@@ -128,4 +128,3 @@ class BT_Scan(object):
 
 	def update_plars(self):
 		plars.update_em(self.dump_data())
-
