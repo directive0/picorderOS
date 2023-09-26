@@ -86,8 +86,6 @@ class Wifi_Scan(object):
 		data = self.dump_data()
 		if data != None:
 			plars.update_em(data)
-		else:
-			print("Wifi Data not logged")
 
 	def get_ssid_list(self):
 

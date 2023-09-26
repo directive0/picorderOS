@@ -669,7 +669,6 @@ class EMFrame(object):
 		self.title.string = title
 		self.title.r_align(self.labelxr,self.titley,draw)
 
-
 	def push(self, draw):
 
 		status, payload = self.events.check()
@@ -714,7 +713,7 @@ class EMFrame(object):
 			
 
 		#list of all wifi ssids
-		if self.selection == 1:
+		if self.selection == 2:
 
 			self.draw_title("Modulated EM Scan", draw)
 
@@ -742,7 +741,7 @@ class EMFrame(object):
 
 
 		# frequency intensity map
-		if self.selection == 2:
+		if self.selection == 1:
 		# returns the data necessary for freq_intensity map with EM.
 		# displays each SSID as a line segment. Its position along the x is
 		# determined by frequency. Its height by its signal strength.
@@ -769,6 +768,9 @@ class EMFrame(object):
 
 			#grab EM list
 			unsorted_em_list = plars.get_recent_em_list()
+			noossids = len(unsorted_em_list)
+			self.stat_no.string = str(noossids)
+			self.stat_no.r_align(14,67,draw)
 
 			if len(unsorted_em_list) > 0:
 
@@ -778,9 +780,6 @@ class EMFrame(object):
 				# create a list to hold just the info we need for the screen.
 				items_list = []
 				strength_list = []
-
-				#stats
-				noossids = len(em_list)
 
 				for ssid in em_list:
 					strength = ssid[1]
@@ -797,7 +796,7 @@ class EMFrame(object):
 					screenpos = numpy.interp(frequency,(2.412, 2.462),(vizX1 + ballsize, vizX2 - ballsize))
 
 					# determine y coordinate
-					lineheight = numpy.interp(strength, (min(strength_list), max(strength_list)), (vizY2, vizY1 + ballsize))
+					lineheight = numpy.interp(strength, (min(strength_list), max(strength_list)), (vizY2 - ballsize, vizY1 + ballsize))
 
 					# package into list
 					this_ssid = (name,screenpos,lineheight,strength,frequency)
@@ -827,9 +826,6 @@ class EMFrame(object):
 						trunc_name = name[:16] + (name[16:] and '..')
 
 						focus_freq = item[4]
-
-						self.stat_no.string = str(noossids)
-						self.stat_no.r_align(14,67,draw)
 
 
 						# draw the strongest signals name
