@@ -100,6 +100,21 @@ class Events(object):
 			payload = 0
 		return status,payload
 
+
+class DrawGrid(object):
+	def __init__(self,x,y,w,h,colour):
+		self.x = x
+		self.y = y
+		self.h = h
+		self.w = w
+		self.colour = colour
+
+	def push(self, draw):
+
+		for 
+		# draws the line graph
+		draw.line(cords,self.colour,self.width)
+
 class Dialogue(object):
 
 	def __init__(self):
@@ -686,6 +701,7 @@ class EMFrame(object):
 			self.signal_frequency.push(20,92,draw, string = str(info[3])+"GHz")
 			self.signal_mac.push(20,111, draw, string = info[6])
 
+	# Draws a list of APs with data.
 	def em_scan(self, draw):
 			
 			self.draw_title("Modulated EM Scan", draw)
@@ -711,6 +727,22 @@ class EMFrame(object):
 				
 
 				self.list.update(list_for_labels,draw)
+
+	def em_statistics(self,draw):
+		
+		idents, cur_no, max_no = plars.get_em_stats()
+
+		self.draw_title("Modulated EM Scan", draw)
+
+		str1 = "APs Detected: " + str(cur_no)
+		str2 = "Most Detected: " + str(max_no) 
+		str3 = "Uniques: " + str(len(idents))
+
+		# list to hold the data labels
+		list_for_labels = [str1, str2, str3]
+
+
+		self.list.update(list_for_labels,draw)
 
 	def mod_bt(self,draw):
 		self.draw_title("Modulated BT Scan", draw)
@@ -750,7 +782,7 @@ class EMFrame(object):
 
 			# change Background
 			#draw.rectangle((0,0,320,240),(0,0,0))
-			#draw._image = self.burgerfull
+			#draw._image = self.burgerfull	
 
 
 
@@ -887,10 +919,10 @@ class EMFrame(object):
 			if self.selection == 3:
 				self.selection = 0
 		elif payload == 2:
-			if self.selection == 3:
+			if self.selection == 4:
 				self.selection = 0
 			else:
-				self.selection = 3
+				self.selection = 4
 
 		if len(plars.get_top_em_info()) < 1:
 			self.selection = -1
@@ -912,9 +944,11 @@ class EMFrame(object):
 		if self.selection == 2:
 			self.em_scan(draw)
 				
+		if self.selection == 3:
+			self.em_statistics(draw)
 
 		# bluetooth list
-		if self.selection == 3:
+		if self.selection == 4:
 			self.mod_bt(draw)
 
 

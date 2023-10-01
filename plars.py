@@ -110,11 +110,22 @@ class PLARS(object):
 		#create a buffer for wifi/bt data
 		self.buffer_em = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
 
-		self.em_idents = []
 
+		# variables for EM stats call
+		# all unique MACs received during session
+		self.em_idents = []
+		
+		# how many APs this scan
+		self.current_em_no = 0
+
+		# Max number APs detected in one scan this session
+		self.max_em_no = 0
 
 		self.timer = timer()
 
+	def get_em_stats(self):
+
+		return self.em_idents, self.current_em_no, self.max_em_no
 
 	def shutdown(self):
 		if configure.datalog[0]:
@@ -244,6 +255,13 @@ class PLARS(object):
 
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
+
+
+		# logs some data for statistics.
+		self.current_em_no = len(data)
+		if self.current_em_no > self.max_em_no:
+			self.max_em_no = self.current_em_no
+
 
 		for sample in data:
 			if sample[6] not in self.buffer_em["dev"].values and sample[6] not in self.em_idents:
