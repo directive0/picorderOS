@@ -61,6 +61,20 @@ def update_proc(conn,buffer,data,cols):
 	conn.put(result)
 
 
+# updates the dataframe buffer as a multiprocess.
+def update_em_proc(conn,buffer,data,cols):
+
+	# creates a new dataframe to add new data to
+	newdata = pd.DataFrame(data, columns=cols)
+
+
+	# appends the new data to the buffer
+	result = pd.concat([buffer,newdata], ignore_index=True)
+
+
+	conn.put(result)
+
+
 class PLARS(object):
 
 	def __init__(self):
