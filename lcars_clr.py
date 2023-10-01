@@ -914,7 +914,7 @@ class EMFrame(object):
 		if payload == 1:
 			self.selection += 1
 
-			if self.selection == 3:
+			if self.selection == 4:
 				self.selection = 0
 		elif payload == 2:
 			if self.selection == 4:
