@@ -712,8 +712,27 @@ class EMFrame(object):
 
 				self.list.update(list_for_labels,draw)
 
+	def mod_bt(self,draw):
+		self.draw_title("Modulated BT Scan", draw)
 
-	def frequency_map(self):
+		# list to hold the data labels
+		list_for_labels = []
+
+		# grab EM list
+		bt_list = plars.get_recent_bt_list()
+
+
+		# prepare a list of the data received for display
+		if len(bt_list) > 0:
+			for bt in bt_list:
+				name = str(bt[0])
+				address = str(bt[6])
+
+				label = name + " - " + address
+
+				list_for_labels.append(label)
+
+	def frequency_map(self,draw):
 		# returns the data necessary for freq_intensity map with EM.
 		# displays each SSID as a line segment. Its position along the x is
 		# determined by frequency. Its height by its signal strength.
@@ -857,6 +876,7 @@ class EMFrame(object):
 
 			self.overlap_list.update(label_list,draw)
 
+# This is the main function called by the loop 
 	def push(self, draw):
 
 		status, payload = self.events.check()
@@ -877,7 +897,6 @@ class EMFrame(object):
 
 		# if no wifi available.
 		if self.selection == -1:
-
 			self.title.string = "No SSIDs Detected"
 			self.title.r_align(self.labelxr,self.titley,draw)
 
@@ -885,36 +904,18 @@ class EMFrame(object):
 		if self.selection == 0:
 			self.domin_transciever(draw)
 
-		#list of all wifi ssids
-		if self.selection == 2:
-			self.em_scan(draw)
-
 		# frequency intensity map
 		if self.selection == 1:
 			self.frequency_map(draw)
 
+		#list of all wifi ssids
+		if self.selection == 2:
+			self.em_scan(draw)
 				
 
 		# bluetooth list
 		if self.selection == 3:
-			self.draw_title("Modulated BT Scan", draw)
-
-			# list to hold the data labels
-			list_for_labels = []
-
-			# grab EM list
-			bt_list = plars.get_recent_bt_list()
-
-
-			# prepare a list of the data received for display
-			if len(bt_list) > 0:
-				for bt in bt_list:
-					name = str(bt[0])
-					address = str(bt[6])
-
-					label = name + " - " + address
-
-					list_for_labels.append(label)
+			self.mod_bt(draw)
 
 
 
