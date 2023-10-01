@@ -413,7 +413,7 @@ def sensor_process(conn):
 
 	while True:
 		if timed.timelapsed() > configure.samplerate[0]:
-			#constantly grab sensors.
+			#constantly grab sensors
 			conn.send(sensors.get())
 			timed.logtime()
 

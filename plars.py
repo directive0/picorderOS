@@ -40,7 +40,7 @@ def get_recent_proc(conn,buffer,dsc,dev,num):
 	conn.put(result)
 
 # updates the dataframe buffer as a multiprocess.
-def update_proc(conn,buffer,data):
+def update_proc(conn,buffer,data,cols):
 	#listbuilder:
 	fragdata = []
 	
@@ -51,7 +51,7 @@ def update_proc(conn,buffer,data):
 
 
 	# creates a new dataframe to add new data to
-	newdata = pd.DataFrame(fragdata, columns=['value','min','max','dsc','sym','dev','timestamp'])
+	newdata = pd.DataFrame(fragdata, columns=cols)
 
 
 	# appends the new data to the buffer
@@ -95,6 +95,8 @@ class PLARS(object):
 
 		#create a buffer for wifi/bt data
 		self.buffer_em = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
+
+		self.em_idents = []
 
 
 		self.timer = timer()
@@ -160,6 +162,7 @@ class PLARS(object):
 
 		# find most powerful signal of the most recent transciever data
 		db_column = focus["signal"]
+		
 		strongest = db_column.astype(int).max()
 
 		# Identify the SSID of the strongest signal.
@@ -177,6 +180,10 @@ class PLARS(object):
 
 		#limit focus to data from that timestamp
 		return wifi_buffer.loc[wifi_buffer['timestamp'] == most_recent]
+	
+	# checks if a mac address has been seen already and if not adds it to list.
+	def em_been_seen(self, seen):
+		pass
 
 	def get_bt_recent(self):
 		bt_buffer = self.buffer_em.loc[self.buffer_em['dsc'] == "bluetooth"]
@@ -221,16 +228,36 @@ class PLARS(object):
 	def update_em(self,data):
 		#print("Updating EM Dataframe:")
 
-		newdata = pd.DataFrame(data, columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
-
-
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
 
+		for sample in data:
+			if sample[6] not in self.buffer_em["dev"].values:
+				print("new SSID detected!")
+				self.em_idents.append(sample[6])
+
+		q = Queue()
+
+		get_process = Process(target=update_proc, args=(q, self.buffer_em, data,['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'],))
+		get_process.start()
+
+		# return a list of the values
+		result = q.get()
+		get_process.join()
 
 		# appends the new data to the buffer
-		self.buffer_em = self.buffer_em.append(newdata, ignore_index=True)
+		self.buffer_em = result
 
+		# get buffer size to determine how many rows to remove from the end
+		currentsize = len(self.buffer_em)
+
+		# determine difference between buffer and target size
+		length = currentsize - 3000
+
+		if configure.trim_buffer[0]:
+			# if buffer is larger than double the buffer size
+			if length >= 1800 * 2:
+				self.trimbuffer(self.buffer_em, 3000)
 
 		self.lock.release()
 
@@ -247,7 +274,7 @@ class PLARS(object):
 
 		q = Queue()
 
-		get_process = Process(target=update_proc, args=(q, self.buffer, data,))
+		get_process = Process(target=update_proc, args=(q, self.buffer, data,['value','min','max','dsc','sym','dev','timestamp'],))
 		get_process.start()
 
 		# return a list of the values
@@ -269,7 +296,7 @@ class PLARS(object):
 		if configure.trim_buffer[0]:
 			# if buffer is larger than double the buffer size
 			if length >= configure.buffer_size[0] * 2:
-				self.trimbuffer()
+				self.trimbuffer(self.buffer,configure.buffer_size[0])
 
 		# release the thread lock for other threads
 		self.lock.release()
@@ -340,18 +367,17 @@ class PLARS(object):
 
 
 
-	def trimbuffer(self, save = True):
+	def trimbuffer(self, buffer, targetsize):
 		# should take the buffer in memory and trim some of it
 
 		# get buffer size to determine how many rows to remove from the end
-		currentsize = len(self.buffer)
-		targetsize = configure.buffer_size[0]
+		currentsize = len(buffer)
 
 		# determine difference between buffer and target size
 		length = currentsize - targetsize
 
 		# make a new dataframe of the most recent data to keep using
-		newbuffer = self.buffer.tail(targetsize)
+		newbuffer = buffer.tail(targetsize)
 
 		# slice off the rows outside the buffer and backup to disk
 		tocore = self.buffer.head(length)
@@ -360,7 +386,7 @@ class PLARS(object):
 			self.append_to_core(tocore)
 
 		# replace existing buffer with new trimmed buffer
-		self.buffer = newbuffer
+		return newbuffer
 
 
 	def emrg(self):

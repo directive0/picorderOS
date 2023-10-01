@@ -669,32 +669,7 @@ class EMFrame(object):
 		self.title.string = title
 		self.title.r_align(self.labelxr,self.titley,draw)
 
-	def push(self, draw):
-
-		status, payload = self.events.check()
-
-		if payload == 1:
-			self.selection += 1
-
-			if self.selection == 3:
-				self.selection = 0
-		elif payload == 2:
-			if self.selection == 3:
-				self.selection = 0
-			else:
-				self.selection = 3
-
-		if len(plars.get_top_em_info()) < 1:
-			self.selection = -1
-
-		# if no wifi available.
-		if self.selection == -1:
-
-			self.title.string = "No SSIDs Detected"
-			self.title.r_align(self.labelxr,self.titley,draw)
-
-		# details on strongest wifi network.
-		if self.selection == 0:
+	def domin_transciever(self,draw):
 
 			# grab EM data from plars
 			info = plars.get_top_em_info()[0]
@@ -710,11 +685,9 @@ class EMFrame(object):
 			self.signal_strength.r_align(self.labelxr,92,draw)
 			self.signal_frequency.push(20,92,draw, string = str(info[3])+"GHz")
 			self.signal_mac.push(20,111, draw, string = info[6])
+
+	def em_scan(self, draw):
 			
-
-		#list of all wifi ssids
-		if self.selection == 2:
-
 			self.draw_title("Modulated EM Scan", draw)
 
 			# list to hold the data labels
@@ -740,8 +713,7 @@ class EMFrame(object):
 				self.list.update(list_for_labels,draw)
 
 
-		# frequency intensity map
-		if self.selection == 1:
+	def frequency_map(self):
 		# returns the data necessary for freq_intensity map with EM.
 		# displays each SSID as a line segment. Its position along the x is
 		# determined by frequency. Its height by its signal strength.
@@ -884,6 +856,42 @@ class EMFrame(object):
 				self.overlap_list.colour = lcars_blue
 
 			self.overlap_list.update(label_list,draw)
+
+	def push(self, draw):
+
+		status, payload = self.events.check()
+
+		if payload == 1:
+			self.selection += 1
+
+			if self.selection == 3:
+				self.selection = 0
+		elif payload == 2:
+			if self.selection == 3:
+				self.selection = 0
+			else:
+				self.selection = 3
+
+		if len(plars.get_top_em_info()) < 1:
+			self.selection = -1
+
+		# if no wifi available.
+		if self.selection == -1:
+
+			self.title.string = "No SSIDs Detected"
+			self.title.r_align(self.labelxr,self.titley,draw)
+
+		# details on strongest wifi network.
+		if self.selection == 0:
+			self.domin_transciever(draw)
+
+		#list of all wifi ssids
+		if self.selection == 2:
+			self.em_scan(draw)
+
+		# frequency intensity map
+		if self.selection == 1:
+			self.frequency_map(draw)
 
 				
 
