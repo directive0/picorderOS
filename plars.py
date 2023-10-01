@@ -246,8 +246,7 @@ class PLARS(object):
 		self.lock.acquire()
 
 		for sample in data:
-			if sample[6] not in self.buffer_em["dev"].values:
-				print("new SSID detected!")
+			if sample[6] not in self.buffer_em["dev"].values and sample[6] not in self.em_idents:
 				self.em_idents.append(sample[6])
 
 		q = Queue()
