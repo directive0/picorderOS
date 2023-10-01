@@ -110,8 +110,6 @@ class DrawGrid(object):
 		self.colour = colour
 
 	def push(self, draw):
-
-		for 
 		# draws the line graph
 		draw.line(cords,self.colour,self.width)
 
