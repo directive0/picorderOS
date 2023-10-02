@@ -757,13 +757,14 @@ class EMFrame(object):
 
 			# grab EM data from plars
 			info = plars.get_top_em_info()[0]
+			rect_coords = (self.graphx,self.graphy,self.graphx + self.gspanx,self.graphy + self.gspany)
+			draw.rounded_rectangle(rect_coords, outline = lcars_grid, width = 1, radius = 2)
 
 			# draw screen elements 
 			self.Signal_Grid.push(draw)
 			graphval = self.Signal_Graph.render(draw)
 
-			rect_coords = (self.graphx,self.graphy,self.graphx + self.gspanx,self.graphy + self.gspany)
-			draw.rounded_rectangle(rect_coords, outline = lcars_grid, width = 1, radius = 2)
+
 
 
 			self.draw_title("Dominant Transciever", draw)
