@@ -196,6 +196,15 @@ class ThermalGrid(object):
 		self.average = 0
 		self.ticks = 0
 
+		self.dummy = [[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],]
+
 		for i in range(8):
 			self.rows.append(ThermalRows(self.x, self.y + (i * (h/8)), self.w, self.h / 8))
 
@@ -264,6 +273,9 @@ class ThermalGrid(object):
 
 		if configure.amg8833:
 			self.data = plars.thermal_frame
+
+			if len(self.data) < 1:
+				self.data = self.dummy
 		else:
 			self.data = self.animate()
 
