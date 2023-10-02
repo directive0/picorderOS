@@ -102,16 +102,75 @@ class Events(object):
 
 
 class DrawGrid(object):
-	def __init__(self,x,y,w,h,colour):
+	def __init__(self,x,y,w,h,colour,segx = 5, segy = 5):
 		self.x = x
 		self.y = y
 		self.h = h
 		self.w = w
 		self.colour = colour
+		self.segx = segx
+		self.segy = segy
+
+		#calculate the interval of the vertical segments ( | )
+		self.intervalx = int(self.w / self.segx)
+
+		#calculate the interval of the horizontal segments ( - )
+		self.intervaly = int(self.h / self.segy)
+
+		self.hcoordlist = []
+		self.vcoordlist = []
+
+		self.assign()
+
+	def assign(self):
+
+		# determine verticals
+		
+		# for each division of the totaly width
+		for i in range(self.segx):
+
+			# if not the first and last positions
+			if i != 0 and i != (self.segx - 1):
+
+				# define coords for the line segment for this position along the y
+				y1 = self.y
+				y2 = self.y + self.h 
+				
+				# x position determined by the current i times the interval
+				x = self.x + (self.intervalx * i)
+
+				# append the list of the x/y coords for the line segment into the coord list
+				result = [[x,y1],[x,y2]]
+				self.vcoordlist.append(result)
+
+		# determine horizontals
+		for i in range(self.segy):
+
+			# if not the first and last positions
+			if i != 0 and i != (self.segx - 1):
+
+				# define coords for the line segment for this position along the y
+				x1 = self.x
+				x2 = self.x + self.w 
+				
+				# y position determined by the current i times the interval
+				y = self.y + (self.intervaly * i)
+
+				# append the list of the x/y coords for the line segment into the coord list
+				result = [[x1,y],[x2,y]]
+				self.hcoordlist.append(result)
+			
 
 	def push(self, draw):
-		# draws the line graph
-		draw.line(cords,self.colour,self.width)
+
+		# draws the horizontals	
+		for i in range(len(self.hcoordlist)):
+			draw.line(self.hcoordlist[i],self.colour,self.width)
+		
+		#draws the verticals
+		for i in range(len(self.vcoordlist)):
+			draw.line(self.hcoordlist[i],self.colour,self.width)
+
 
 class Dialogue(object):
 
@@ -654,6 +713,7 @@ class EMFrame(object):
 
 		# create our graph_screen
 		self.Signal_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, lcars_pink, width = 2, type = 1, samples = 45)
+		self.Signal_Grid = DrawGrid(self.graphx,self.graphy,self.gspanx,self.gspany,lcars_blue)
 
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 
@@ -676,6 +736,16 @@ class EMFrame(object):
 
 		self.burgerfull = Image.open('assets/lcarsburgerframefull.png')
 
+		# assign x coordinates for frequency map
+		self.vizX1 = 20
+		self.vizY1 = 36
+		self.vizX2 = 157
+		self.vizY2 = 77
+		self.vixw = self.vizx2 - self.vizx1 
+		self.vizh = self.vizy2 - self.vizy1
+
+		self.freqmap_grid = DrawGrid(self.vizx1, self.vizy1, self.vizw, self.vizh, lcars_blue)
+
 		self.events = Events([1,"multi",0,"settings","poweroff",2,0,0],"modem")
 
 	def draw_title(self,title, draw):
@@ -688,7 +758,9 @@ class EMFrame(object):
 			info = plars.get_top_em_info()[0]
 
 			# draw screen elements
+			self.Signal_Grid.push(draw)
 			graphval = self.Signal_Graph.render(draw)
+
 
 			self.draw_title("Dominant Transciever", draw)
 
@@ -730,7 +802,7 @@ class EMFrame(object):
 		
 		idents, cur_no, max_no = plars.get_em_stats()
 
-		self.draw_title("Modulated EM Scan", draw)
+		self.draw_title("Modulated EM Stats", draw)
 
 		str1 = "APs Detected: " + str(cur_no)
 		str2 = "Most Detected: " + str(max_no) 
@@ -792,6 +864,8 @@ class EMFrame(object):
 			noossids = len(unsorted_em_list)
 			self.stat_no.string = str(noossids)
 			self.stat_no.r_align(14,67,draw)
+
+			self.freqmap_grid.push(draw)
 
 			if len(unsorted_em_list) > 0:
 
@@ -867,7 +941,8 @@ class EMFrame(object):
 						draw.ellipse([x1,y1,x2,y2],lcars_blue)
 
 			#draw round rect background
-			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 2, radius = 4)
+			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 1, radius = 4)
+
 
 			label_list = []
 
