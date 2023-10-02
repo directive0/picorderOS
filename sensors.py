@@ -454,11 +454,12 @@ def threaded_sensor():
 				plars.update(data)
 				plars.update_thermal(thermal)
 			else:
+				if configure.EM and wifitimer.timelapsed() > configure.em_samplerate:
+					wifi.update_plars()
+					wifitimer.logtime() 
 				break
 
 		#grab wifi and BT data
-		if configure.EM and wifitimer.timelapsed() > configure.em_samplerate:
-			wifi.update_plars()
-			wifitimer.logtime() 
+
 
 	sense_process.terminate()
