@@ -713,7 +713,7 @@ class EMFrame(object):
 		self.selection = 0
 
 		# create our graph_screen
-		self.Signal_Graph = graph_area(0,(self.graphx+1,self.graphy+1),(self.gspanx-1,self.gspany-1),self.graphcycle, lcars_pink, width = 2, type = 1, samples = 45)
+		self.Signal_Graph = graph_area(0,(self.graphx+1,self.graphy+1),(self.gspanx-2,self.gspany-1),self.graphcycle, lcars_pink, width = 2, type = 1, samples = 45)
 		self.Signal_Grid = DrawGrid(self.graphx,self.graphy,self.gspanx,self.gspany,lcars_grid)
 
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
@@ -763,7 +763,7 @@ class EMFrame(object):
 			graphval = self.Signal_Graph.render(draw)
 
 			rect_coords = (self.graphx,self.graphy,self.graphx + self.gspanx,self.graphy + self.gspany)
-			draw.rounded_rectangle(rect_coords, outline = lcars_blue, width = 2, radius = 3)
+			draw.rounded_rectangle(rect_coords, outline = lcars_blue, width = 1, radius = 2)
 
 
 			self.draw_title("Dominant Transciever", draw)
