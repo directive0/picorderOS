@@ -102,7 +102,7 @@ class Events(object):
 
 
 class DrawGrid(object):
-	def __init__(self,x,y,w,h,colour,segx = 5, segy = 5):
+	def __init__(self,x,y,w,h,colour,segx = 4, segy = 4):
 		self.x = x
 		self.y = y
 		self.h = h
