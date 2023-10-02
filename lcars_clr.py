@@ -741,10 +741,10 @@ class EMFrame(object):
 		self.vizY1 = 36
 		self.vizX2 = 157
 		self.vizY2 = 77
-		self.vixw = self.vizx2 - self.vizx1 
-		self.vizh = self.vizy2 - self.vizy1
+		self.vizW = self.vizX2 - self.vizX1 
+		self.vizH = self.vizY2 - self.vizY1
 
-		self.freqmap_grid = DrawGrid(self.vizx1, self.vizy1, self.vizw, self.vizh, lcars_blue)
+		self.freqmap_grid = DrawGrid(self.vizX1, self.vizY1, self.vizW, self.vizH, lcars_blue)
 
 		self.events = Events([1,"multi",0,"settings","poweroff",2,0,0],"modem")
 
