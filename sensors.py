@@ -448,7 +448,7 @@ def threaded_sensor():
 		plars.update_thermal(thermal)
 		
 		#grab wifi and BT data
-		if configure.EM and wifitimer.timelapsed() > configure.em_samplerate[0]:
+		if configure.EM and wifitimer.timelapsed() > configure.em_samplerate:
 			wifi.update_plars()
 			wifitimer.logtime() 
 			#self.bt.update_plars()
