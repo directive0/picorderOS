@@ -13,7 +13,7 @@ import PIL.ImageOps
 import numpy as np
 from scipy.interpolate import griddata
 from colour import Color
-
+from plars import *
 
 # some utility functions
 def constrain(val, min_val, max_val):
@@ -263,7 +263,7 @@ class ThermalGrid(object):
 	def update(self):
 
 		if configure.amg8833:
-			self.data = amg.pixels
+			self.data = plars.thermal_frame
 		else:
 			self.data = self.animate()
 

@@ -189,6 +189,7 @@ class Sensor(object):
 			self.radiation.setup()
 
 		if configure.amg8833:
+			self.thermal_frame = []
 			self.amg_high = Fragment(0.0, 80.0, "IRHigh", self.deg_sym + "c", "amg8833")
 			self.amg_low = Fragment(0.0, 80.0, "IRLow", self.deg_sym + "c", "amg8833")
 
@@ -229,6 +230,8 @@ class Sensor(object):
 		self.step += .1
 		return wavestep
 
+	def get_thermal_frame(self):
+		return self.thermal_frame
 
 	def get(self):
 
@@ -277,7 +280,10 @@ class Sensor(object):
 			sensorlist.append(self.radiat)
 
 		if configure.amg8833:
-			data = numpy.array(amg.pixels)
+			self.thermal_frame = amg.pixels
+
+
+			data = numpy.array(self.thermal_frame)
 
 			high = numpy.max(data)
 			low = numpy.min(data)
@@ -332,13 +338,9 @@ class Sensor(object):
 
 			if self.generators:
 				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2))
-
-
-
-
-
-		configure.max_sensors[0] = len(sensorlist)
-
+				 
+			configure.max_sensors[0] = len(sensorlist)
+			
 		if len(sensorlist) < 1:
 			print("NO SENSORS LOADED")
 
@@ -413,11 +415,14 @@ def sensor_process(conn):
 
 	while True:
 		if timed.timelapsed() > configure.samplerate[0]:
+			sensor_data = sensors.get()
+			thermal_frame = sensors.get_thermal_frame()
 			#constantly grab sensors
-			conn.send(sensors.get())
+			conn.send([sensor_data, thermal_frame])
 			timed.logtime()
 
 wifitimer = timer()
+
 def threaded_sensor():
 
 	sensors = Sensor()
@@ -437,11 +442,13 @@ def threaded_sensor():
 
 	while not configure.status == "quit":
 
-		data = parent_conn.recv()
-		#print(data)
+		data, thermal = parent_conn.recv()
+
 		plars.update(data)
-				#grab wifi and BT data
-		if configure.EM and wifitimer.timelapsed() > configure.samplerate[0]:
+		plars.update_thermal(thermal)
+		
+		#grab wifi and BT data
+		if configure.EM and wifitimer.timelapsed() > configure.em_samplerate[0]:
 			wifi.update_plars()
 			wifitimer.logtime() 
 			#self.bt.update_plars()

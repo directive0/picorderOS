@@ -121,6 +121,10 @@ class PLARS(object):
 		# Max number APs detected in one scan this session
 		self.max_em_no = 0
 
+
+		# holds the thermal camera frame for display in other programs
+		self.thermal_frame = []
+
 		self.timer = timer()
 
 	def get_em_stats(self):
@@ -293,6 +297,9 @@ class PLARS(object):
 		self.lock.release()
 
 
+	# updates the thermal frame for display
+	def update_thermal(self, frame):
+		self.thermal_frame = frame
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor.
 	# Sensor data is taken in as Fragment() instance objects. Each one contains
