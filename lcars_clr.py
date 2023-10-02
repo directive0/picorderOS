@@ -112,10 +112,10 @@ class DrawGrid(object):
 		self.segy = segy
 
 		#calculate the interval of the vertical segments ( | )
-		self.intervalx = int(self.w / self.segx)
+		self.intervalx = self.w / self.segx
 
 		#calculate the interval of the horizontal segments ( - )
-		self.intervaly = int(self.h / self.segy)
+		self.intervaly = self.h / self.segy
 
 		self.hcoordlist = []
 		self.vcoordlist = []
@@ -126,7 +126,7 @@ class DrawGrid(object):
 
 		# determine verticals
 		
-		# for each division of the totaly width
+		# for each division of the total width
 		for i in range(self.segx):
 
 			# if not the first and last positions
