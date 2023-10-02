@@ -45,7 +45,7 @@ lcars_peach = (255,204,153)
 lcars_bluer = (153,153,255)
 lcars_orpeach = (255,153,102)
 lcars_pinker = (204,102,153)
-lcars_white = (254,255,206)
+lcars_white = (175,175,175)
 
 theme1 =  [lcars_orange,lcars_blue,lcars_pinker]
 
