@@ -130,7 +130,7 @@ class DrawGrid(object):
 		for i in range(self.segx):
 
 			# if not the first and last positions
-			if i != 0 and i != (self.segx - 1):
+			if i != 0 and i != self.segx:
 
 				# define coords for the line segment for this position along the y
 				y1 = self.y
@@ -147,7 +147,7 @@ class DrawGrid(object):
 		for i in range(self.segy):
 
 			# if not the first and last positions
-			if i != 0 and i != (self.segy - 1):
+			if i != 0 and i != self.segy:
 
 				# define coords for the line segment for this position along the y
 				x1 = self.x
