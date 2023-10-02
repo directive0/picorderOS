@@ -126,3 +126,26 @@ class BT_Scan(object):
 
 	def update_plars(self):
 		plars.update_em(self.dump_data())
+
+def threaded_wifi():
+
+
+	if configure.EM:
+		wifi = Wifi_Scan()
+
+
+	while not configure.status == "quit":
+
+		#grab wifi and BT data
+		if configure.EM and wifitimer.timelapsed() > configure.em_samplerate:
+			wifi.update_plars()
+			wifitimer.logtime() 
+
+
+
+# The following code sets up the various threads that the rest of the program will use
+#start the sensor loop
+wifi_thread = Thread(target = threaded_wifi, args = ())
+wifi_thread.start()
+
+
