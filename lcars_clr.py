@@ -169,7 +169,7 @@ class DrawGrid(object):
 		
 		#draws the verticals
 		for i in range(len(self.vcoordlist)):
-			draw.line(self.hcoordlist[i],self.colour,1)
+			draw.line(self.vcoordlist[i],self.colour,1)
 
 
 class Dialogue(object):
