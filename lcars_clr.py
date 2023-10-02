@@ -140,7 +140,7 @@ class DrawGrid(object):
 				x = self.x + (self.intervalx * i)
 
 				# append the list of the x/y coords for the line segment into the coord list
-				result = [[x,y1],[x,y2]]
+				result = [(x,y1),(x,y2)]
 				self.vcoordlist.append(result)
 
 		# determine horizontals
@@ -157,7 +157,7 @@ class DrawGrid(object):
 				y = self.y + (self.intervaly * i)
 
 				# append the list of the x/y coords for the line segment into the coord list
-				result = [[x1,y],[x2,y]]
+				result = [(x1,y),(x2,y)]
 				self.hcoordlist.append(result)
 			
 
