@@ -442,15 +442,13 @@ def threaded_sensor():
 
 	while not configure.status == "quit":
 
-		while True:
-			item = parent_conn.recv()
-			if item is not None:
-				data, thermal = item
+		item = parent_conn.recv()
+		if item is not None:
+			data, thermal = item
 
-				plars.update(data)
-				plars.update_thermal(thermal)
-			else:
-				break
+			plars.update(data)
+			plars.update_thermal(thermal)
+
 		
 		#grab wifi and BT data
 		if configure.EM and wifitimer.timelapsed() > configure.em_samplerate:
