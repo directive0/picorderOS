@@ -713,7 +713,7 @@ class EMFrame(object):
 
 		# create our graph_screen
 		self.Signal_Graph = graph_area(0,(self.graphx,self.graphy),(self.gspanx,self.gspany),self.graphcycle, lcars_pink, width = 2, type = 1, samples = 45)
-		self.Signal_Grid = DrawGrid(self.graphx,self.graphy,self.gspanx,self.gspany,lcars_blue)
+		self.Signal_Grid = DrawGrid(self.graphx,self.graphy,self.gspanx,self.gspany,lcars_orpeach)
 
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 
@@ -744,7 +744,7 @@ class EMFrame(object):
 		self.vizW = self.vizX2 - self.vizX1 
 		self.vizH = self.vizY2 - self.vizY1
 
-		self.freqmap_grid = DrawGrid(self.vizX1, self.vizY1, self.vizW, self.vizH, lcars_blue)
+		self.freqmap_grid = DrawGrid(self.vizX1, self.vizY1, self.vizW, self.vizH, lcars_orpeach)
 
 		self.events = Events([1,"multi",0,"settings","poweroff",2,0,0],"modem")
 
