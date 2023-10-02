@@ -45,7 +45,7 @@ lcars_peach = (255,204,153)
 lcars_bluer = (153,153,255)
 lcars_orpeach = (255,153,102)
 lcars_pinker = (204,102,153)
-lcars_white = (175,175,175)
+lcars_grid = (153,152,255)
 
 theme1 =  [lcars_orange,lcars_blue,lcars_pinker]
 
@@ -714,7 +714,7 @@ class EMFrame(object):
 
 		# create our graph_screen
 		self.Signal_Graph = graph_area(0,(self.graphx+1,self.graphy+1),(self.gspanx-1,self.gspany-1),self.graphcycle, lcars_pink, width = 2, type = 1, samples = 45)
-		self.Signal_Grid = DrawGrid(self.graphx,self.graphy,self.gspanx,self.gspany,lcars_white)
+		self.Signal_Grid = DrawGrid(self.graphx,self.graphy,self.gspanx,self.gspany,lcars_grid)
 
 		self.title = LabelObj("Modulated EM Scan",titlefont, colour = lcars_orange)
 
@@ -745,7 +745,7 @@ class EMFrame(object):
 		self.vizW = self.vizX2 - self.vizX1 
 		self.vizH = self.vizY2 - self.vizY1
 
-		self.freqmap_grid = DrawGrid(self.vizX1, self.vizY1, self.vizW, self.vizH, lcars_white)
+		self.freqmap_grid = DrawGrid(self.vizX1, self.vizY1, self.vizW, self.vizH, lcars_grid)
 
 		self.events = Events([1,"multi",0,"settings","poweroff",2,0,0],"modem")
 
