@@ -761,6 +761,9 @@ class EMFrame(object):
 			self.Signal_Grid.push(draw)
 			graphval = self.Signal_Graph.render(draw)
 
+			rect_coords = (self.graphx,self.graphy,self.graphx + self.gspanx,self.graphy + self.gspany)
+			draw.rounded_rectangle(rect_coords, outline = lcars_blue, width = 1, radius = 3)
+
 
 			self.draw_title("Dominant Transciever", draw)
 
@@ -941,7 +944,7 @@ class EMFrame(object):
 						draw.ellipse([x1,y1,x2,y2],lcars_blue)
 
 			#draw round rect background
-			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 1, radius = 4)
+			draw.rounded_rectangle((vizX1,vizY1,vizX2,vizY2), outline = lcars_blue, width = 1, radius = 3)
 
 
 			label_list = []
