@@ -127,6 +127,18 @@ class PLARS(object):
 
 		self.timer = timer()
 
+	def get_plars_size(self):
+
+		# set the thread lock so other threads are unable to add data
+		self.lock.acquire()
+
+		main_size = len(self.buffer)
+		em_size = len(self.buffer_em)
+		
+		# release the thread lock.
+		self.lock.release()
+		return main_size, em_size
+
 	def get_em_stats(self):
 
 		return self.em_idents, self.current_em_no, self.max_em_no
