@@ -129,10 +129,9 @@ class BT_Scan(object):
 		plars.update_em(self.dump_data())
 
 def threaded_wifi():
-
-	wifitimer = timer()
-
+	
 	if configure.EM:
+		wifitimer = timer()
 		wifi = Wifi_Scan()
 
 
