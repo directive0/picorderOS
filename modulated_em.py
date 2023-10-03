@@ -130,6 +130,7 @@ class BT_Scan(object):
 
 def threaded_wifi():
 
+	wifitimer = timer()
 
 	if configure.EM:
 		wifi = Wifi_Scan()

@@ -286,13 +286,10 @@ class PLARS(object):
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer_em)
 
-		# determine difference between buffer and target size
-		length = currentsize - 3000
-
 		if configure.trim_buffer[0]:
 			# if buffer is larger than double the buffer size
-			if length >= 1800 * 2:
-				self.trimbuffer(self.buffer_em, 3000)
+			if length >= configure.buffer_size[0] * 2:
+				self.buffer_em = self.trimbuffer(self.buffer_em, 3000)
 
 		self.lock.release()
 
@@ -300,6 +297,8 @@ class PLARS(object):
 	# updates the thermal frame for display
 	def update_thermal(self, frame):
 		self.thermal_frame = frame
+
+
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor.
 	# Sensor data is taken in as Fragment() instance objects. Each one contains
@@ -325,16 +324,10 @@ class PLARS(object):
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer)
 
-		targetsize = configure.buffer_size[0]
-
-		# determine difference between buffer and target size
-		length = currentsize - targetsize
-
-
 		if configure.trim_buffer[0]:
 			# if buffer is larger than double the buffer size
 			if length >= configure.buffer_size[0] * 2:
-				self.trimbuffer(self.buffer,configure.buffer_size[0])
+				self.buffer = self.trimbuffer(self.buffer,configure.buffer_size[0])
 
 		# release the thread lock for other threads
 		self.lock.release()
