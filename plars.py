@@ -288,8 +288,8 @@ class PLARS(object):
 
 		if configure.trim_buffer[0]:
 			# if buffer is larger than double the buffer size
-			if length >= configure.buffer_size[0] * 2:
-				self.buffer_em = self.trimbuffer(self.buffer_em, 3000)
+			if currentsize >= configure.buffer_size[0] * 2:
+				self.buffer_em = self.trimbuffer(self.buffer_em, configure.buffer_size[0])
 
 		self.lock.release()
 
@@ -326,7 +326,7 @@ class PLARS(object):
 
 		if configure.trim_buffer[0]:
 			# if buffer is larger than double the buffer size
-			if length >= configure.buffer_size[0] * 2:
+			if currentsize >= configure.buffer_size[0] * 2:
 				self.buffer = self.trimbuffer(self.buffer,configure.buffer_size[0])
 
 		# release the thread lock for other threads
