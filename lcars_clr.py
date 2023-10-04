@@ -443,8 +443,8 @@ class MasterSystemsDisplay(object):
 		sense_ready = "Sensors Avl:  " + str(len(configure.sensor_info))
 		model_name = "CPU:  " + self.model
 		PLARS_size, PLARS_em_size = plars.get_plars_size()
-		db_size = "PLARS Size:	" + str(PLARS_size)
-		em_size = "PLARS EM Size:	" + str(PLARS_em_size)
+		db_size = "PLARS Size:  " + str(PLARS_size)
+		em_size = "PLARS EM Size:  " + str(PLARS_em_size)
 
 		status_list = [model_name, ip_str, host_str, sense_ready, db_size, em_size]
 		return status_list

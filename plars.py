@@ -84,21 +84,37 @@ class PLARS(object):
 
 		# PLARS opens a data frame at initialization.
 		# If the csv file exists it opens it, otherwise creates it.
-		# self.core is used to refer to the archive on disk
+		# self.core is used to refer to the archive on disk for sensor data
+		# self.em_core is used to refer to the archive on disk for EM data
 		# self.buffer is created as a truncated dataframe for drawing to screen.
+		# self.buffer_em is created as a truncated dataframe for drawing  to screen.
 
 		# create buffer
 		self.file_path = "data/datacore.csv"
+		self.em_file_path = "data/em_datacore.csv"
+
+
 
 		if configure.datalog[0]:
-			if os.path.exists(self.file_path):
-				if configure.recall[0]:
-					self.core = pd.read_csv(self.file_path)
-			else:
-				if not os.path.exists("data"):
+
+			# make sure the data folder exist
+			if not os.path.exists("data"):
 					os.mkdir("data")
+
+			# check if a datacore csv file exists
+			if os.path.exists(self.file_path):
+				self.core = pd.read_csv(self.file_path)
+			else:
 				self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
 				self.core.to_csv(self.file_path)
+
+			# check if an EM datacore csv file exists
+			if os.path.exists(self.em_file_path):
+				self.core = pd.read_csv(self.em_file_path)
+			else:
+				self.core = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
+				self.core.to_csv(self.em_file_path)
+
 
 
 		# Set floating point display to raw, instead of exponent
@@ -161,10 +177,14 @@ class PLARS(object):
 		newcore = self.index_by_time(newcore)
 		newcore.to_csv(self.file_path,index=False)
 
-	#pends a new set of data to the CSV file.
+	#appends a new set of data to the CSV file.
 	def append_to_core(self, data):
 		data.to_csv(self.file_path, mode='a', header=False)
 
+
+	#appends a new set of data to the EM CSV file.
+	def append_to_em_core(self, data):
+		data.to_csv(self.em_file_path, mode='a', header=False)
 
 	def get_recent_bt_list(self):
 		# set the thread lock so other threads are unable to add data
@@ -410,7 +430,7 @@ class PLARS(object):
 
 
 
-	def trimbuffer(self, buffer, targetsize):
+	def trimbuffer(self, buffer, targetsize, type = 0):
 		# should take the buffer in memory and trim some of it
 
 		# get buffer size to determine how many rows to remove from the end
@@ -426,8 +446,10 @@ class PLARS(object):
 		tocore = self.buffer.head(length)
 
 		if configure.datalog[0]:
-			self.append_to_core(tocore)
-
+			if type = 0:
+				self.append_to_core(tocore)
+			else:
+				self.append_to_em_core(tocore)
 		# replace existing buffer with new trimmed buffer
 		return newbuffer
 
