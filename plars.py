@@ -446,7 +446,7 @@ class PLARS(object):
 		tocore = self.buffer.head(length)
 
 		if configure.datalog[0]:
-			if type = 0:
+			if type == 0:
 				self.append_to_core(tocore)
 			else:
 				self.append_to_em_core(tocore)
