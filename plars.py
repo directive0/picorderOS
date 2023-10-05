@@ -312,7 +312,7 @@ class PLARS(object):
 		if configure.trim_buffer[0]:
 			# if buffer is larger than double the buffer size
 			if currentsize >= configure.buffer_size[0] * 2:
-				self.buffer_em = self.trimbuffer(self.buffer_em, configure.buffer_size[0], type = 1)
+				self.buffer_em = self.trim_em_buffer(configure.buffer_size[0])
 
 		self.lock.release()
 
@@ -418,29 +418,46 @@ class PLARS(object):
 		# return a list of the values
 		return trimmed_data['signal'].tolist()
 
-
-
-
-	def trimbuffer(self, buffer, targetsize, type = 0):
+	def trim_em_buffer(self, targetsize):
 		# should take the buffer in memory and trim some of it
 
 		# get buffer size to determine how many rows to remove from the end
-		currentsize = len(buffer)
+		currentsize = len(self.buffer_em)
 
 		# determine difference between buffer and target size
 		length = currentsize - targetsize
 
 		# make a new dataframe of the most recent data to keep using
-		newbuffer = buffer.tail(targetsize)
+		newbuffer = self.buffer_em.tail(targetsize)
 
 		# slice off the rows outside the buffer and backup to disk
-		tocore = buffer.head(length)
+		tocore = self.buffer_em.head(length)
 
 		if configure.datalog[0]:
-			if type == 0:
-				self.append_to_core(tocore)
-			elif type == 1:
 				self.append_to_em_core(tocore)
+
+		# replace existing buffer with new trimmed buffer
+		return newbuffer
+
+	def trimbuffer(self, targetsize):
+		# should take the buffer in memory and trim some of it
+
+		# get buffer size to determine how many rows to remove from the end
+		currentsize = len(self.buffer)
+
+		# determine difference between buffer and target size
+		length = currentsize - targetsize
+
+		# make a new dataframe of the most recent data to keep using
+		newbuffer = self.buffer.tail(targetsize)
+
+		# slice off the rows outside the buffer and backup to disk
+		tocore = self.buffer.head(length)
+
+		if configure.datalog[0]:
+				self.append_to_core(tocore)
+
+
 		# replace existing buffer with new trimmed buffer
 		return newbuffer
 
