@@ -475,7 +475,8 @@ class SettingsFrame(object):
 						["LEDs", configure.leds_on],
 						["Alarm", configure.alarm],
 						["Auto Range", configure.auto],
-						["Trim Buffer", configure.trim_buffer]]
+						["Trim Buffer", configure.trim_buffer],
+						["Data Logging", configure.datalog]]
 
 		# Sets the x and y span of the graph
 		self.gspanx = 133
@@ -710,9 +711,11 @@ class EMFrame(object):
 		self.average = 0
 		self.labely = 4
 		self.labelxr = 156
-
-
 		self.selection = 0
+
+		self.ossification = 0
+
+		
 
 		# create our graph_screen
 		self.Signal_Graph = graph_area(0,(self.graphx+1,self.graphy+1),(self.gspanx-3,self.gspany-3),self.graphcycle, lcars_pink, width = 1, type = 1, samples = 45)
