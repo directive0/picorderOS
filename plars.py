@@ -110,10 +110,10 @@ class PLARS(object):
 
 			# check if an EM datacore csv file exists
 			if os.path.exists(self.em_file_path):
-				self.core = pd.read_csv(self.em_file_path)
+				self.em_core = pd.read_csv(self.em_file_path)
 			else:
-				self.core = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
-				self.core.to_csv(self.em_file_path)
+				self.em_core = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
+				self.em_core.to_csv(self.em_file_path)
 
 
 
