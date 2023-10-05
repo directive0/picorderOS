@@ -39,13 +39,13 @@ class Wifi_Scan(object):
 
 	def get_list(self):
 		if self.timed.timelapsed() > configure.em_samplerate:
-			self.timed.logtime()
 			try:
 				content = iwlist.scan(interface='wlan0')
 				ap_list = iwlist.parse(content)
 			except Exception as e:
 				print("Wifi failed: ", e)
 				ap_list = []
+			self.timed.logtime()
 			return ap_list
 
 	def get_info(self,selection):

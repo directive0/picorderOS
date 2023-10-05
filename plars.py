@@ -162,20 +162,12 @@ class PLARS(object):
 	def shutdown(self):
 		if configure.datalog[0]:
 			self.append_to_core(self.buffer)
+			self.append_to_em_core(self.buffer_em)
 
 	# gets the latest CSV file
 	def get_core(self):
 		datacore = pd.read_csv(self.file_path)
 		return datacore
-
-	def merge_with_core(self):
-		print("PLARS - merging to core")
-		# open the csv
-		core = self.get_core()
-		copydf = self.buffer.copy()
-		newcore = pd.concat([core,copydf]).drop_duplicates().reset_index(drop=True)
-		newcore = self.index_by_time(newcore)
-		newcore.to_csv(self.file_path,index=False)
 
 	#appends a new set of data to the CSV file.
 	def append_to_core(self, data):
@@ -442,7 +434,7 @@ class PLARS(object):
 		newbuffer = buffer.tail(targetsize)
 
 		# slice off the rows outside the buffer and backup to disk
-		tocore = self.buffer.head(length)
+		tocore = buffer.head(length)
 
 		if configure.datalog[0]:
 			if type == 0:

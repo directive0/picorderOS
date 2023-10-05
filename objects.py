@@ -340,6 +340,7 @@ class preferences(object):
 		# holds the global state of the program (allows secondary modules to quit the program should we require it)
 		self.status = ["startup"]
 		self.last_status = ["startup"]
+		self.emrg = [False]
 
 		# Enables/disables door detection
 		self.dr = [self.str2bool(config['GLOBALS']['doordetection'])]
@@ -355,6 +356,8 @@ class preferences(object):
 		self.graph_height = int(config['GLOBALS']['graph_height'])
 		self.graph_x = int(config['GLOBALS']['graph_x'])
 		self.graph_y = int(config['GLOBALS']['graph_y'])
+
+
 
 # create a shared object for global variables and settings.
 configure = preferences()
