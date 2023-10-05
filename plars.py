@@ -181,7 +181,6 @@ class PLARS(object):
 	def append_to_core(self, data):
 		data.to_csv(self.file_path, mode='a', header=False)
 
-
 	#appends a new set of data to the EM CSV file.
 	def append_to_em_core(self, data):
 		data.to_csv(self.em_file_path, mode='a', header=False)
@@ -448,7 +447,7 @@ class PLARS(object):
 		if configure.datalog[0]:
 			if type == 0:
 				self.append_to_core(tocore)
-			else:
+			elif type == 1:
 				self.append_to_em_core(tocore)
 		# replace existing buffer with new trimmed buffer
 		return newbuffer
