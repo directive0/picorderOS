@@ -6,11 +6,14 @@ import psutil
 import numpy
 import math
 
+# pull in the picorder stuff
+from objects import *
+from plars import *
 
 error = ""
 frame = 0
-
-title = "BeepyDash-----------------------------------------"
+		
+title = "PicorderOS----------------------------------------"
 		
 run = True
 
@@ -155,6 +158,25 @@ class CLI_display(object):
 		self.graph0 = graph(3,14,32,3,title = "Temp")
 		self.graph1 = graph(9,14,32,3,title = "CPU %")
 
+	def domin_transciever(self):
+
+		# grab EM data from plars
+		info = plars.get_top_em_info()[0]
+
+		return info
+
+
+
+		# self.draw_title("Dominant Transciever", draw)
+
+		# self.signal_name.push(20,35,draw, string = info[0])
+
+		# self.signal_strength.string = str(info[1]) + " DB"
+		# self.signal_strength.r_align(self.labelxr,92,draw)
+		# self.signal_frequency.push(20,92,draw, string = str(info[3])+"GHz")
+		# self.signal_mac.push(20,111, draw, string = info[6])
+
+
 
 	def push(self):
 
@@ -163,7 +185,7 @@ class CLI_display(object):
 			stdscr.addstr(0,0,title)
 			data = self.sense.get()
 			self.graph0.render(data[0])
-			self.graph1.render(data[1])
+			self.graph1.render(self.domin_transciever[1])
 			self.indicators.draw()
 			stdscr.refresh()
 
