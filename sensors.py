@@ -418,6 +418,8 @@ def sensor_process(conn):
 			sensor_data = sensors.get()
 			if configure.amg8833:
 				thermal_frame = sensors.get_thermal_frame()
+			else:
+				thermal_frame = []
 			#constantly grab sensors
 			conn.send([sensor_data, thermal_frame])
 			timed.logtime()
