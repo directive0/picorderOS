@@ -1,7 +1,6 @@
 # PicorderOS Wifi Module Proto
 print("Loading Modulated EM Signal Analysis")
 
-from wifi import Cell, Scheme
 from threading import Thread
 
 import iwlist
