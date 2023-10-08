@@ -158,7 +158,7 @@ class cli_display(object):
 		self.graph0 = graph(4,1,48,5,title = "Temp")
 		self.graph1 = graph(14,1,48,5,title = "CPU %")
 
-		self.refresh = Timer()
+		self.refresh = timer()
 		self.refreshrate = .3
 
 	def push(self):
