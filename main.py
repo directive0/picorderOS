@@ -70,7 +70,7 @@ def Main():
 		configure.graph_size[0] = screen_object.get_size()
 
 	if configure.CLI:
-		screen_object = CLI_display()
+		screen_object = cli_display()
 
 
 	start_time = time.time()
