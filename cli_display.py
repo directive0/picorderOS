@@ -42,7 +42,7 @@ class abgd(object):
 		self.titles = ["ALPHA", "BETA", "GAMMA", "DELTA"]
 		self.symbols = ["██████", "    ", "    ", "    "]
 		self.frame = 0
-		self.timeit = Timer()
+		self.timeit = timer()
 		self.timeit.logtime()
 		self.interval = .25
 
