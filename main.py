@@ -45,6 +45,9 @@ if configure.tr109:
 	if configure.display == 0:
 		from lcars_bw import *
 
+if configure.CLI:
+	from cli_display import *
+
 
 
 # the following function is our main loop, it contains all the flow for our program.
@@ -66,6 +69,8 @@ def Main():
 
 		configure.graph_size[0] = screen_object.get_size()
 
+	if configure.CLI:
+		screen_object = CLI_display()
 
 
 	start_time = time.time()

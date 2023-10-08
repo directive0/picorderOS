@@ -23,9 +23,10 @@ class preferences(object):
 							'boot_delay':'2',								# boot delay
 							'# Emulating the hardware on a PC?':None,
 							'pc':'no',       								# emulating the hardware on a PC?
-							'# Select either TR-108, or TR-109. You must choose only one.':None,
-							'tr108':'no',									# Running a TR-108 simulation - mutually exclusive with tr109
-							'tr109':'yes',									# Running a TR-109 simulation - mutually exclusive with tr108
+							'# Select TR-108, or TR-109, or simply Command Line Interfact (CLI). You must choose only one.':None,
+							'tr108':'no',									# Running a TR-108 - mutually exclusive with tr109
+							'tr109':'yes',									# Running a TR-109 - mutually exclusive with tr108
+							'CLI':'no,'										# Running in the Command Line, good for terminals/SSH
 							}
 
 
@@ -165,6 +166,7 @@ class preferences(object):
 		# If both true the screens will fight for control!
 		self.tr108 = self.str2bool(config['SYSTEM']['tr108'])
 		self.tr109 = self.str2bool(config['SYSTEM']['tr109'])
+		self.CLI = self.str2bool(config['SYSTEM']['CLI'])
 # SENSORS----------------------------------------------------------------------#
 		# TR108 uses this sensehat
 		self.sensehat = self.str2bool(config['SENSORS']['sensehat'])

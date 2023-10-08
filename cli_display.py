@@ -1,20 +1,21 @@
 import time
 import curses
+from curses import wrapper
 import sys
 import os
 import psutil
 import numpy
 import math
 
-# pull in the picorder stuff
-from objects import *
 from plars import *
+from objects import *
+
 
 error = ""
 frame = 0
-		
-title = "PicorderOS----------------------------------------"
-		
+
+title = "@icorderOS---------------------------------"
+
 run = True
 
 stdscr = curses.initscr()
@@ -25,6 +26,14 @@ stdscr.keypad(True)
 curses.curs_set(False)
 
 
+class input_handler(object):
+	def __init__(self):
+		pass
+
+	def get(self):
+		pass
+
+
 class abgd(object):
 
 	def __init__(self,y,x):
@@ -33,7 +42,7 @@ class abgd(object):
 		self.titles = ["ALPHA", "BETA", "GAMMA", "DELTA"]
 		self.symbols = ["██████", "    ", "    ", "    "]
 		self.frame = 0
-		self.timeit = timer()
+		self.timeit = Timer()
 		self.timeit.logtime()
 		self.interval = .25
 
@@ -59,7 +68,6 @@ class graph(object):
 		self.g_low = self.y + self.h
 		self.buffer = []
 		self.data_buffer = []
-		self.sense = Sense()
 		self.range = (0,100)
 		self.draw_range = (self.g_low, self.y)
 		self.title = title
@@ -87,9 +95,7 @@ class graph(object):
 		# draw envelope
 		# go column by column
 		for column in range(self.w):
-
 			position = column + self.x
-			
 			# determine distance from last notch
 			if column > 0 and column < len(self.buffer):
 				now = self.buffer[column]
@@ -116,95 +122,62 @@ class graph(object):
 
 		for i in range(0, n - self.w):
 			self.data_buffer.pop()
-#			self.buffer = []
 
 
 class Sense(object):
 
-	def __init__(self):
-#		self.step = 0.0
-#		self.step2 = 0.0
-#		self.steptan = 0.0
-#		totalmem = float(psutil.virtual_memory().total) / 1024
-
-#		self.cputemp = [0, 100, "CpuTemp", self.deg_sym + "c", "RaspberryPi"]
-#		self.cpuperc = [0,100,"CpuPercent","%","Raspberry Pi"]
-#		self.virtmem = [0,totalmem,"VirtualMemory","b","RaspberryPi"]
-#		self.bytsent = [0,100000,"BytesSent","b","RaspberryPi"]
-#		self.bytrece = [0, 100000,"BytesReceived","b","RaspberryPi"]
+	def __init__(self,samplerate):
 		self.buffer = []
 		self.max = 0
 		self.min = 0
+		self.samplerate = samplerate
+		self.timer = Timer()
+		self.buffer = [0,0,0,0]
 
 	def get(self):
+		if self.timer.timelapsed() > self.samplerate:
+			f = os.popen("cat /sys/class/thermal/thermal_zone0/temp").readline()
+			temp = float(f[0:2] + "." + f[2:])
+			cpu_percent = float(psutil.cpu_percent())
+			virtmeminfo = float(psutil.virtual_memory().available * 0.0000001)
+			io_counter_info = float(psutil.net_io_counters().bytes_recv * 0.00001)
+			self.timer.logtime()
 
-		f = os.popen("cat /sys/class/thermal/thermal_zone0/temp").readline()
-		temp = float(f[0:2] + "." + f[2:])
-		cpu_percent = float(psutil.cpu_percent())
-		virtmeminfo = float(psutil.virtual_memory().available * 0.0000001)
-		io_counter_info = float(psutil.net_io_counters().bytes_recv * 0.00001)
-
-		return [temp,cpu_percent,virtmeminfo,io_counter_info]
+			self.buffer = [temp,cpu_percent,virtmeminfo,io_counter_info]
+		return self.buffer
 
 
-class CLI_display(object):
+class cli_display(object):
 
 	def __init__(self):
 
-		self.sense = Sense()
+		self.sense = Sense(1.0)
 
 		self.error = ""
 		self.indicators = abgd(4,2)
-		self.graph0 = graph(3,14,32,3,title = "Temp")
-		self.graph1 = graph(9,14,32,3,title = "CPU %")
+		self.graph0 = graph(4,1,48,5,title = "Temp")
+		self.graph1 = graph(14,1,48,5,title = "CPU %")
 
-	def domin_transciever(self):
-
-		# grab EM data from plars
-		info = plars.get_top_em_info()[0]
-
-		return info
-
-
-
-		# self.draw_title("Dominant Transciever", draw)
-
-		# self.signal_name.push(20,35,draw, string = info[0])
-
-		# self.signal_strength.string = str(info[1]) + " DB"
-		# self.signal_strength.r_align(self.labelxr,92,draw)
-		# self.signal_frequency.push(20,92,draw, string = str(info[3])+"GHz")
-		# self.signal_mac.push(20,111, draw, string = info[6])
-
-
+		self.refresh = Timer()
+		self.refreshrate = .3
 
 	def push(self):
-
-		try:
-			stdscr.clear()
-			stdscr.addstr(0,0,title)
-			data = self.sense.get()
-			self.graph0.render(data[0])
-			self.graph1.render(self.domin_transciever[1])
-			self.indicators.draw()
-			stdscr.refresh()
-
-		except Exception as err:
-			self.error = err
-			self.reset()
-			return False
-
-		return True
-
+		data = plars.get_top_em_info()[0]
+		stdscr.clear()
+		stdscr.addstr(0,0,title)
+#		keyget = stdscr.getkey()
+#		stdscr.addstr(1,0,keyget)
+		data = self.sense.get()
+		self.graph0.render(data[0])
+		#self.indicators.draw()
+		stdscr.refresh()
 
 	def reset(self):
 		curses.echo()
 		curses.endwin()
 		print(self.error)
 
-
-display = CLI_display()
-
-while run:
-	run = display.push()
-	time.sleep(.3)
+	def run(self):
+		if self.refresh.timelapsed() > self.refreshrate:
+			self.push()
+			self.refresh.logtime()
