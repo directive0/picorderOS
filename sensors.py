@@ -416,7 +416,8 @@ def sensor_process(conn):
 	while True:
 		if timed.timelapsed() > configure.samplerate[0]:
 			sensor_data = sensors.get()
-			thermal_frame = sensors.get_thermal_frame()
+			if configure.amg8833:
+				thermal_frame = sensors.get_thermal_frame()
 			#constantly grab sensors
 			conn.send([sensor_data, thermal_frame])
 			timed.logtime()
