@@ -131,7 +131,7 @@ class Sense(object):
 		self.max = 0
 		self.min = 0
 		self.samplerate = samplerate
-		self.timer = Timer()
+		self.timer = timer()
 		self.buffer = [0,0,0,0]
 
 	def get(self):
