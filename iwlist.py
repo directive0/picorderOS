@@ -1,4 +1,4 @@
-# python-iwlist by Ian Coleman
+# python-iwlist parser by Ian Coleman
 # https://github.com/iancoleman/python-iwlist
 
 import re
