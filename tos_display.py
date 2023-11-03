@@ -371,7 +371,7 @@ def startUp(surface):
 	secblurb.draw(surface)
 
 	pygame.display.flip()
-	elapsed = timenow - boot_delay
+	elapsed = timenow - configure.boot_delay
 
 	#waits for x seconds to elapse before returning the state that will take us to the sensor readout
 	if elapsed > configure.boot_delay and configure.sensor_ready[0]:
