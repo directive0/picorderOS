@@ -989,9 +989,7 @@ class Screen(object):
 				   "graph":self.graph_screen,
 				   "voc":self.video_screen,
 				   "slider":self.slider_screen,
-				   "settings":self.settings,
-				   "poweroff":self.powerdown,
-				   "shutdown":self.powerdown}
+				   "settings":self.settings}
 
 
 	def get_size(self):
