@@ -52,54 +52,6 @@ theme1 =  [lcars_orange,lcars_blue,lcars_pinker]
 fore_col = 0
 back_col = 1
 
-# Class to control the flow of the program. Uses flags and input events to tell each module
-# how to behave.
-class Events(object):
-
-	# at creation takes in a list of events to map the button layout to modules behaviours, and the base module
-
-	def __init__(self, but_map, base):
-		self.but_map = but_map
-		self.base = base
-
-	def check(self):
-		
-		status = self.base
-		payload = 0
-
-		# if an event has occured
-		if configure.eventready[0]:
-
-			configure.eventready[0] = False
-			
-			# grab the event list
-			keys = configure.eventlist[0]
-
-			# cycle through each of inputs in the list
-			for index, key in enumerate(keys):
-				# if the button has been pressed
-				if key:
-					# if the desired action from the button map for this input is STR
-					if isinstance(self.but_map[index], str):
-						# set the status to this action
-						status = self.but_map[index]
-
-						# if we are changing statuses from our base
-						if not status == self.base:
-
-							# if the action is to go back
-							if status == "last":
-								# pull the last status for us to switch to
-								status = configure.last_status.pop()
-							else:
-								configure.last_status.append(self.base)
-								
-						payload = 0
-					elif isinstance(self.but_map[index], int):
-						payload = self.but_map[index]
-		else:
-			payload = 0
-		return status,payload
 
 
 class DrawGrid(object):
@@ -192,7 +144,7 @@ class Dialogue(object):
 
 		self.labely = 102
 
-
+		self.result = "multi"
 		self.title = LabelObj("CAUTION",bigfont, colour = lcars_red)
 		self.itemlabel = LabelObj("Item Label",titlefont,colour = lcars_orange)
 		self.A_Label = LabelObj("Yes",font,colour = lcars_blue)
@@ -203,7 +155,7 @@ class Dialogue(object):
 		# device needs to show multiple settings
 		# first the sensor palette configuration
 
-		self.events = Events(["shutdown",0,"last","0",0,0,0,0], "poweroff")
+		self.events = Events([self.result,0,"last",0,0,0,0,0], "poweroff")
 
 	def push(self, draw):
 
@@ -220,8 +172,10 @@ class Dialogue(object):
 
 		return status
 
-	def assign(self,heading,body,results):
-		
+	def assign(self,heading,body,result):
+		self.title.string = heading
+		self.itemlabel.string = body
+		self.result = result
 		pass
 
 # Controls text objects drawn to the LCD
@@ -458,6 +412,124 @@ class MasterSystemsDisplay(object):
 		self.title.center(self.titley,21,139,draw)
 		#self.C_Label.r_align(26,self.labely,draw)
 		self.status_list.update(self.load_list(),draw)
+
+		return status
+
+class PowerMenu(object):
+	
+	def __init__(self):
+
+		# pages are a description string and an item to change. 
+		# If a boolean it will toggle it. 
+		# First 3 items are reserved for graph items.
+		self.pages = [["Shutdown", "poweroff"],
+						["Reboot", "reboot"],
+						["Fault Mode", "fault"],
+						["Timed Shutdown", "timer"]]
+
+		# Sets the x and y span of the graph
+		self.gspanx = 133
+		self.gspany = 71
+
+		self.selection = 0
+		self.status_raised = False
+
+		self.auto = configure.auto[0]
+		self.interval = timer()
+		self.interval.logtime()
+		#self.draw = draw
+		self.titlex = 2
+		self.titley = 11
+		self.labely = 114
+
+		self.graphcycle = 0
+		self.decimal = 1
+
+		self.divider = 47
+
+
+		# the set labels for the screen
+		self.title = LabelObj("Power Control",bigfont)
+		self.itemlabel = LabelObj("Item Label",bigfont,colour = lcars_peach)
+		self.item = LabelObj("No Data",titlefont,colour = lcars_pink)
+
+		# three input cue labels
+		self.A_Label = LabelObj("Next",font,colour = lcars_orpeach)
+		self.B_Label = LabelObj("Enter",font, colour = lcars_orpeach)
+		self.C_Label = LabelObj("Exit",font, colour = lcars_orpeach)
+
+		self.events = Events([1,2,"last","last",0,"msd",0,0],"settings")
+
+
+		# device needs to show multiple settings
+		# first the sensor palette configuration
+
+	def toggle(self,oper):
+
+		# if the parameter supplied is a boolean
+		if isinstance(oper[0], bool):
+			#toggle its state
+			oper[0] = not oper[0]
+
+		#if the parameter supplied is an integer
+		elif isinstance(oper[0], int):
+
+			# increment the integer.
+			oper[0] += 1
+
+			# if the integer is larger than the pool
+			if oper[0] > configure.max_sensors[0]-1:
+				oper[0] = 0
+
+		elif isinstance(oper, str):
+			#configure.last_status[0] = configure.status[0]
+			self.status_raised = True
+			configure.status[0] = oper
+
+
+		return oper
+
+
+	def push(self, draw):
+
+		# returns mode_a to the main loop unless something causes state change
+		status,payload  = self.events.check()
+
+		if payload == 1:
+			self.selection = self.selection + 1
+			if self.selection > (len(self.pages) - 1):
+				self.selection = 0
+		elif payload == 2:
+			state = self.toggle(self.pages[self.selection][1])
+			if self.status_raised:
+				status = state
+				self.status_raised = False
+
+
+
+
+		#draw the frame heading
+		self.title.push(self.titlex,self.titley,draw)
+
+
+		#draw the option item heading
+		self.itemlabel.string = str(self.pages[self.selection][0])
+		self.itemlabel.push(self.titlex+23,self.titley+25,draw)
+
+		self.A_Label.push(2,self.labely,draw)
+		self.B_Label.center(self.labely,23,114,draw)
+		self.C_Label.r_align(156,self.labely,draw)
+
+
+		#draw the 3 graph parameter items
+		if self.selection == 0 or self.selection == 1 or self.selection == 2:
+			self.item.string = str(configure.sensor_info[self.pages[self.selection][1][0]][0])
+			self.item.push(self.titlex+23,self.titley+53,draw)
+		else:
+			if isinstance(self.pages[self.selection][1][0], bool):
+				self.item.string = str(self.pages[self.selection][1][0])
+				self.item.push(self.titlex+23,self.titley+53,draw)
+
 
 		return status
 
@@ -714,7 +786,7 @@ class EMFrame(object):
 		self.selection = 0
 
 		self.ossification = 0
-
+``
 		
 
 		# create our graph_screen
@@ -733,7 +805,8 @@ class EMFrame(object):
 		self.signal_frequency_sm = LabelObj("FQ",littlefont, colour = lcars_peach)
 		self.signal_mac = LabelObj("MAC",font, colour = lcars_orpeach)
 		
-		self.stat_no = LabelObj("00",littlefont, colour = (0,0,0))
+
+		self.indicator1 = LabelObj("00",littlefont, colour = (0,0,0))
 		self.overlapping_no = LabelObj("00",littlefont, colour = (0,0,0))
 
 		self.list = Label_List(22,35, colour = lcars_peach)
@@ -753,6 +826,14 @@ class EMFrame(object):
 		self.freqmap_grid = DrawGrid(self.vizX1, self.vizY1, self.vizW, self.vizH, lcars_grid)
 
 		self.events = Events([1,"multi",0,"settings","poweroff",2,0,0],"modem")
+
+	def draw_indicators(self,draw):
+			idents, cur_no, max_no = plars.get_em_stats()
+			self.indicator1.string = str(cur_no)
+			self.indicator1.r_align(14,67,draw)
+
+			self.overlapping_no.string = str(cur_no)
+			self.overlapping_no.r_align(14,97,draw)
 
 	def draw_title(self,title, draw):
 		self.title.string = title
@@ -872,8 +953,7 @@ class EMFrame(object):
 			#grab EM list
 			unsorted_em_list = plars.get_recent_em_list()
 			noossids = len(unsorted_em_list)
-			self.stat_no.string = str(noossids)
-			self.stat_no.r_align(14,67,draw)
+
 
 			self.freqmap_grid.push(draw)
 
@@ -960,9 +1040,8 @@ class EMFrame(object):
 				if item[4] == focus_freq:
 					overlapping.append(item)
 
-			
-			self.overlapping_no.string = str(len(overlapping)-1)
-			self.overlapping_no.r_align(14,97,draw)
+
+
 
 			if len(overlapping) > 1:
 				del overlapping[0]
@@ -974,7 +1053,7 @@ class EMFrame(object):
 					# package into list
 					this_ssid = (name,strength)
 					label_list.append(this_ssid)
-				
+
 				self.overlap_list.colour = lcars_pink
 			else:
 				thislist = sorted(unsorted_em_list, key=itemgetter(1), reverse = True)

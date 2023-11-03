@@ -53,7 +53,7 @@ def threaded_audio():
             if not configure.warble[0]:
                 warble.stop()
 
-            if configure.alarm_ready[0]:
+            if configure.alarm_ready[0] and configure.alarm[0]:
                 if not alarm.is_playing():
                     alarm = alarmsound.play()
                 configure.alarm_ready[0] = False

@@ -193,10 +193,6 @@ class Sensor(object):
 			self.amg_high = Fragment(0.0, 80.0, "IRHigh", self.deg_sym + "c", "amg8833")
 			self.amg_low = Fragment(0.0, 80.0, "IRLow", self.deg_sym + "c", "amg8833")
 
-		if configure.EM:
-			self.wifi = Wifi_Scan()
-			#self.bt = BT_Scan()
-
 
 		configure.sensor_info = self.get_all_info()
 
@@ -429,9 +425,6 @@ wifitimer = timer()
 def threaded_sensor():
 
 	sensors = Sensor()
-
-	if configure.EM:
-		wifi = Wifi_Scan()
 
 	sensors.get()
 	configure.buffer_size[0] = configure.graph_size[0]*len(configure.sensor_info)

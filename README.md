@@ -11,6 +11,9 @@ PicorderOS is experimental and in development. A lot of user configuration is re
 For further information on hardware please visit the [Wiki](https://squaredwave.com/wiki/index.php?title=PicorderOS)
 
 ## Requirements:
+
+PicorderOS was written to be run on a Raspberry Pi (of any kind) running Raspberry Pi OS - Legacy. 
+
 Depending on hardware configuration picorderOS can use a number of existing third party libraries to communicate with i2c sensors. At present only a few sensors are currently officially supported like
 
 - The [Sensehat](https://projects.raspberrypi.org/en/projects/getting-started-with-the-sense-hat/2) using the [sensehat library](https://pythonhosted.org/sense-hat/)
@@ -39,8 +42,10 @@ PicorderOS can run using an HDMI or Composite screen in some cases, and can also
 
 A requirements file is included, it can be used to install all the necessary python modules through pip.
 
+Issue the following commands from within the picorderOS folder:
+
 ```
-python3 -m pip -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 A fresh Raspberry Pi OS image can usually be initialized to work with picorderOS with the following installation commands:
@@ -50,15 +55,12 @@ sudo apt-get update
 
 sudo apt-get upgrade
 
-sudo apt install libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-net-2.0-0 libsdl2-ttf-2.0-0
+sudo apt install libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-net-2.0-0 libsdl2-ttf-2.0-0 libatlas-base-dev libsdl2-dev libopenjp2-7-dev libtiff5 python3-pandas python3-psutil
 
-sudo apt-get install libatlas-base-dev libsdl2-dev libopenjp2-7-dev libtiff5 python3-pandas python3-psutil
-
-pip3 install --upgrade colour luma.lcd luma.emulator pygame==2.0.0
 ```
-Depending on your sensors, you will need to install a package that supports it:
+Depending on your sensors, you will need to install a package that supports it for example in the case of the Bosch BME 680:
 ```
-pip3 install adafruit-circuitpython-bme680 sense-hat adafruit-circuitpython-mpr121
+pip3 install adafruit-circuitpython-bme680
 
 ```
 

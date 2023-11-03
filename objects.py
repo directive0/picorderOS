@@ -413,3 +413,52 @@ class timer(object):
 	def post(self, caption):
 		print(caption, "took: ", self.timelapsed(), "Seconds")
 		self.logtime()
+
+# Class to control the flow of the program using inputs. Uses flags and input events to tell each module
+# how to behave.
+class Events(object):
+
+	# at creation takes in a list of events to map the button layout to modules behaviours, and the base module
+
+	def __init__(self, but_map, base):
+		self.but_map = but_map
+		self.base = base
+
+	def check(self):
+		
+		status = self.base
+		payload = 0
+
+		# if an event has occured
+		if configure.eventready[0]:
+
+			configure.eventready[0] = False
+			
+			# grab the event list
+			keys = configure.eventlist[0]
+
+			# cycle through each of inputs in the list
+			for index, key in enumerate(keys):
+				# if the button has been pressed
+				if key:
+					# if the desired action from the button map for this input is STR
+					if isinstance(self.but_map[index], str):
+						# set the status to this action
+						status = self.but_map[index]
+
+						# if we are changing statuses from our base
+						if not status == self.base:
+
+							# if the action is to go back
+							if status == "last":
+								# pull the last status for us to switch to
+								status = configure.last_status.pop()
+							else:
+								configure.last_status.append(self.base)
+								
+						payload = 0
+					elif isinstance(self.but_map[index], int):
+						payload = self.but_map[index]
+		else:
+			payload = 0
+		return status,payload
