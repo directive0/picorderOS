@@ -4,3 +4,4 @@
 *.csv
 /__pycache__/*
 data/
+configure.ini
