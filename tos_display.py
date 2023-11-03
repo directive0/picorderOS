@@ -334,7 +334,7 @@ def graphit(data, auto = True):
 
 
 # the following function runs the startup animation
-def startUp(surface,timeSinceStart):
+def startUp(surface):
 	#This function draws the opening splash screen for the program that provides the user with basic information.
 
 	#Sets a black screen ready for our UI elements
@@ -371,7 +371,7 @@ def startUp(surface,timeSinceStart):
 	secblurb.draw(surface)
 
 	pygame.display.flip()
-	elapsed = timenow - timeSinceStart
+	elapsed = timenow - boot_delay
 
 	#waits for x seconds to elapse before returning the state that will take us to the sensor readout
 	if elapsed > configure.boot_delay and configure.sensor_ready[0]:
