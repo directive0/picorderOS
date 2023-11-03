@@ -995,8 +995,8 @@ class Screen(object):
 	def get_size(self):
 		return SAMPLE_SIZE
 
-	def startup_screen(self,start_time):
-		status = startUp(self.surface,start_time)
+	def startup_screen(self):
+		status = startUp(self.surface)
 		return status
 
 	def about_screen(self):
