@@ -55,7 +55,7 @@ sudo apt-get update
 
 sudo apt-get upgrade
 
-sudo apt install libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-net-2.0-0 libsdl2-ttf-2.0-0 libatlas-base-dev libsdl2-dev libopenjp2-7-dev libtiff5 python3-pandas python3-psutil
+sudo apt install libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-net-2.0-0 libsdl2-ttf-2.0-0 libatlas-base-dev libsdl2-dev libopenjp2-7-dev libopenblas-dev libtiff5 python3-pandas python3-psutil
 
 ```
 Depending on your sensors, you will need to install a package that supports it for example in the case of the Bosch BME 680:

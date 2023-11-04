@@ -314,16 +314,19 @@ def graphit(data, auto = True):
 	#grabs our databuffer object.
 	buffer = data
 
-
 	prep = []
 
 	for i in data:
 
-
 		if configure.auto[0]:
 			# autoscales the data.
-			data_high = max(buffer)
-			data_low = min(buffer)
+			if len(buffer) > 0:
+				data_high = max(buffer)
+				data_low = min(buffer)
+			else:
+				data_high = 0
+				data_low = 0
+		
 			# scales the data on the y axis.
 			prep.append(numpy.interp(i, (data_low, data_high), (GRAPH_Y2, GRAPH_Y)))
 		else:
@@ -573,7 +576,7 @@ class Graph_Screen(object):
 
 
 	def frame(self):
-		status  = "mode_a"
+		status  = "graph"
 
 		if configure.eventready[0]:
 
@@ -587,12 +590,12 @@ class Graph_Screen(object):
 					self.selection = 0
 
 			if keys[1]:
-				status =  "mode_b"
+				status =  "slider"
 				configure.eventready[0] = False
 				return status
 
 			if keys[2]:
-				configure.last_status[0] = "mode_a"
+				configure.last_status[0] = "graph"
 				status = "settings"
 				configure.eventready[0] = False
 				return status
@@ -631,7 +634,7 @@ class Graph_Screen(object):
 			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
 			# grabs sensor data
-			datas[i] = plars.get_recent(dsc,dev,num = SAMPLE_SIZE)
+			datas[i] = plars.get_recent(dsc,dev,num = SAMPLE_SIZE)[0]
 
 
 			# if data capture has failed, replace with 47 for diagnostic
@@ -698,6 +701,7 @@ class Graph_Screen(object):
 			self.slider2.update(sliderb, 283, b_slide)
 			self.slider3.update(sliderb, 283, c_slide)
 		else:
+			# find the most recent coordinates and y for that coord  
 			self.slider1.update(sliderb, 283, a_cords[-1][1]-10)
 			self.slider2.update(sliderb, 283, b_cords[-1][1]-10)
 			self.slider3.update(sliderb, 283, c_cords[-1][1]-10)
@@ -790,14 +794,14 @@ class EdithKeeler_Screen(object):
             # if a key is registering as pressed.
             if keys[0]:
                 print("Button 1")
-                self.status = "mode_b"
+                self.status = "slider"
                 configure.eventready[0] = False
                 self.running = False
                 self.clip.close()
                 return self.status
 
             if keys[1]:
-                self.status =  "mode_c"
+                self.status =  "video"
                 self.clip.toggle_pause()
                 if self.paused:
                     self.paused = False
@@ -812,7 +816,7 @@ class EdithKeeler_Screen(object):
 
 
             if keys[2]:
-                configure.last_status[0] = "mode_c"
+                configure.last_status[0] = "video"
                 print("Button 3")
                 self.status = "settings"
                 self.running = False
@@ -855,14 +859,14 @@ class Slider_Screen(object):
 		self.slider1 = Image()
 		self.slider2 = Image()
 		self.slider3 = Image()
-		self.status = "mode_b"
+		self.status = "graph"
 		self.input = input
 
 
 
 	def frame(self):
 		#set status for return to main
-		status  = "mode_b"
+		status  = "slider"
 
 
 		if configure.eventready[0]:
@@ -872,16 +876,16 @@ class Slider_Screen(object):
 
 			# if a key is registering as pressed.
 			if keys[0]:
-				status =  "mode_a"
+				status =  "graph"
 				return status
 
 			if keys[1]:
-				status =  "mode_c"
+				status =  "slider"
 				configure.eventready[0] = False
 				return status
 
 			if keys[2]:
-				configure.last_status[0] = "mode_b"
+				configure.last_status[0] = "slider"
 				status = "settings"
 				configure.eventready[0] = False
 				return status
@@ -987,7 +991,7 @@ class Screen(object):
 		# carousel dict to hold the keys and defs for each state
 		self.carousel = {"startup":self.startup_screen,
 				   "graph":self.graph_screen,
-				   "voc":self.video_screen,
+				   "video":self.video_screen,
 				   "slider":self.slider_screen,
 				   "settings":self.settings}
 
