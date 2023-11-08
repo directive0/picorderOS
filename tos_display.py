@@ -187,9 +187,7 @@ class SelectableLabel(Label):
 		self.indicator = Image()
 		self.content = "default"
 
-		# this variable is a reference to a list stored in "objects.py"
-		# containing either a boolean or an integer. This allows the Selectable
-		# Lable to actually change settings on the fly.
+		#is either 
 		self.oper = oper
 
 	def update(self, content, fontSize, nx, ny, fontType, color):
@@ -227,18 +225,18 @@ class SelectableLabel(Label):
 		return self.oper[0]
 
 	def draw(self, surface):
+
 		if self.selected:
 			self.indicator.draw(surface)
 
 		label = self.myfont.render(self.content, 1, self.color)
 
-		dsc,dev,sym,maxi,mini = configure.sensor_info[self.oper[0]]
-
 		status_text = "dummy"
+
 		if self.special == 0:
-			status_text = str(self.oper[0])
+			status_text = str(bool(self.oper))
 		elif self.special == 1:
-			status_text = dsc
+			status_text,dev,sym,maxi,mini = configure.sensor_info[self.oper[0]]
 		elif self.special == 2:
 			status_text = themenames[self.oper[0]]
 
@@ -457,7 +455,7 @@ class Settings_Panel(object):
 		self.option7 = SelectableLabel(configure.moire)
 		self.option7.update("Moire: ", 20, self.left_margin, self.labelstart + (self.labeljump*6), titleFont, orange)
 
-		self.options = [self.option1,self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
+		self.options = [self.option1, self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
 
 	def colour_update(self):
 		self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,themes[configure.theme[0]][0])
@@ -477,6 +475,7 @@ class Settings_Panel(object):
 
 		for i in range(len(self.options)):
 			if i == self.index:
+
 				self.options[i].selected = True
 			else:
 				self.options[i].selected = False
@@ -484,6 +483,7 @@ class Settings_Panel(object):
 			self.options[i].draw(self.surface)
 
 		self.colour_update()
+
 		# draws UI to frame buffer
 		pygame.display.flip()
 
@@ -503,10 +503,11 @@ class Settings_Panel(object):
 
 			if keys[1]:
 				self.options[self.index].toggle()
-
+				
 			if keys[2]:
 				result = configure.last_status[0]
 				configure.eventready[0] = False
+				return status
 
 			configure.eventready[0] = False
 
@@ -845,7 +846,9 @@ class Slider_Screen(object):
 		#checks time
 		self.timenow = time.time()
 
-		#compares time just taken with time of start to animate the apperance of text
+		# Slide Coordinates
+		self.slider_ylow = 204
+		self.slider_yhigh = 15
 
 		# Sets a black screen ready for our UI elements
 		self.surface.fill(black)
@@ -899,10 +902,9 @@ class Slider_Screen(object):
 			# determines the sensor keys for each of the three main sensors
 			this_index = int(configure.sensors[i][0])
 
-			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
+			dsc,dev,sym,mini,maxi = configure.sensor_info[this_index]
 
-
-			item = plars.get_recent(dsc,dev,num = 1)
+			item = plars.get_recent(dsc,dev,num = 1)[0]
 
 			if len(item) > 0:
 				senseslice.append([item[0], sym, mini, maxi])
@@ -915,7 +917,6 @@ class Slider_Screen(object):
 		c_newest = float(senseslice[2][0])
 		newests = [a_newest,b_newest,c_newest]
 
-
 		# data labels
 		a_content = str(int(a_newest))
 		self.a_label.update(a_content + senseslice[0][1],19,47,215,titleFont,yellow)
@@ -927,12 +928,9 @@ class Slider_Screen(object):
 		# slider data adjustment
 		# the routine takes the raw sensor data and converts it to screen coordinates to move the sliders
 		# determines the sensor keys for each of the three main sensors
-
-
-
-		a_slide = translate(senseslice[0][0], senseslice[0][2], senseslice[0][3], 204, 15)
-		b_slide = translate(senseslice[1][0], senseslice[1][2], senseslice[1][3], 204, 15)
-		c_slide = translate(senseslice[2][0], senseslice[2][2], senseslice[2][3], 204, 15)
+		a_slide = translate(senseslice[0][0], senseslice[0][2], senseslice[0][3], self.slider_ylow, self.slider_yhigh)
+		b_slide = translate(senseslice[1][0], senseslice[1][2], senseslice[1][3], self.slider_ylow, self.slider_yhigh)
+		c_slide = translate(senseslice[2][0], senseslice[2][2], senseslice[2][3], self.slider_ylow, self.slider_yhigh)
 
 		# Updates our UI objects with data parsed from sensor/weather
 		self.backPlane.update(backplane, 0, 0)
@@ -954,6 +952,7 @@ class Slider_Screen(object):
 		pygame.display.update()
 		# draws UI to frame buffer
 		return status
+
 # A basic screen object. Is given parameters and displays them on a number of preset panels
 class Screen(object):
 

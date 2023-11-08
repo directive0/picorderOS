@@ -144,8 +144,8 @@ class Sensor(object):
 			# activates low light conditions to not blind the user.
 			self.sense.low_light = True
 
-			self.sh_temp = Fragment(0,65,"Thermometer",self.deg_sym + "c", "sensehat")
-			self.sh_humi = Fragment(20,80,"Hygrometer", "%", "sensehat")
+			self.sh_temp = Fragment(-40,120,"Thermometer",self.deg_sym + "c", "sensehat")
+			self.sh_humi = Fragment(0,100,"Hygrometer", "%", "sensehat")
 			self.sh_baro = Fragment(260,1260,"Barometer","hPa", "sensehat")
 			self.sh_magx = Fragment(-500,500,"MagnetX","G", "sensehat")
 			self.sh_magy = Fragment(-500,500,"MagnetY","G", "sensehat")
