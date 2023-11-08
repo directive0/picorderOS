@@ -456,6 +456,8 @@ class Settings_Panel(object):
 		self.option7.update("Moire: ", 20, self.left_margin, self.labelstart + (self.labeljump*6), titleFont, orange)
 
 		self.options = [self.option1, self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
+		
+		self.events = Events([1,2,"settings"],configure.last_status[0])
 
 	def colour_update(self):
 		self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,themes[configure.theme[0]][0])
@@ -487,30 +489,15 @@ class Settings_Panel(object):
 		# draws UI to frame buffer
 		pygame.display.flip()
 
-		result = "settings"
+		# Uses the event class to set the status and check for state changes
+		result,payload  = self.events.check()
 
-		if configure.eventready[0]:
-
-			# The following code handles inputs and button presses.
-			keys = configure.eventlist[0]
-
-			# if a key is registering as pressed.
-			if keys[0]:
-				self.index += 1
-
-				if self.index > (len(self.options) - 1):
-					self.index = 0
-
-			if keys[1]:
-				self.options[self.index].toggle()
-				
-			if keys[2]:
-				result = configure.last_status[0]
-				configure.eventready[0] = False
-				return status
-
-			configure.eventready[0] = False
-
+		if payload == 1:
+			self.index += 1
+			if self.index > 3:
+				self.index = 0
+		elif payload == 2:
+			self.options[self.index].toggle()
 
 		return result
 
@@ -571,38 +558,22 @@ class Graph_Screen(object):
 
 		self.visibility = [self.graphon1,self.graphon2,self.graphon3]
 
+		self.events = Events([1,"slider","settings"],"graph")
+
 		self.margin = 16
 
 
 
 
 	def frame(self):
-		status  = "graph"
 
-		if configure.eventready[0]:
+		# Uses the event class to set the status and check for state changes
+		status,payload  = self.events.check()
 
-			# The following code handles inputs and button presses.
-			keys = configure.eventlist[0]
-
-			# if a key is registering as pressed.
-			if keys[0]:
-				self.selection += 1
-				if self.selection > 3:
-					self.selection = 0
-
-			if keys[1]:
-				status =  "slider"
-				configure.eventready[0] = False
-				return status
-
-			if keys[2]:
-				configure.last_status[0] = "graph"
-				status = "settings"
-				configure.eventready[0] = False
-				return status
-
-			configure.eventready[0] = False
-
+		if payload == 1:
+			self.selection += 1
+			if self.selection > 3:
+				self.selection = 0
 
 		# grabs sensor info from settings for quick reference and display
 		sense_info_a = configure.sensor_info[configure.sensors[0][0]]
@@ -865,36 +836,18 @@ class Slider_Screen(object):
 		self.status = "graph"
 		self.input = input
 
-
+		self.events = Events(["graph","slider","settings"],"slider")
 
 	def frame(self):
-		#set status for return to main
-		status  = "slider"
+		
+		# Uses the event class to set the status and check for state changes
+		status,payload  = self.events.check()
 
-
-		if configure.eventready[0]:
-
-			# The following code handles inputs and button presses.
-			keys = configure.eventlist[0]
-
-			# if a key is registering as pressed.
-			if keys[0]:
-				status =  "graph"
-				return status
-
-			if keys[1]:
-				status =  "slider"
-				configure.eventready[0] = False
-				return status
-
-			if keys[2]:
-				configure.last_status[0] = "slider"
-				status = "settings"
-				configure.eventready[0] = False
-				return status
-
-			configure.eventready[0] = False
-
+		if payload == 1:
+			self.selection += 1
+			if self.selection > 3:
+				self.selection = 0
+		
 		senseslice = []
 
 		for i in range(3):

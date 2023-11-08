@@ -24,7 +24,7 @@ if configure.audio[0]:
 # This part loads the appropriate modules depending on which preference flags are set.
 
 # load up the LED indicator module
-if configure.leds:
+if configure.led[0]:
 	from leds import *
 
 
@@ -83,7 +83,7 @@ def Main():
 
 
 	# if leds enabled start the event monitor for LEDs
-	if configure.leds:
+	if configure.leds[0]:
 		led_thread = Thread(target = ripple_async, args = ())
 		led_thread.start()
 
