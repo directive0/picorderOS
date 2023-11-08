@@ -24,7 +24,7 @@ if configure.audio[0]:
 # This part loads the appropriate modules depending on which preference flags are set.
 
 # load up the LED indicator module
-if configure.led[0]:
+if configure.leds[0]:
 	from leds import *
 
 
