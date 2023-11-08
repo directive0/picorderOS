@@ -457,7 +457,7 @@ class Settings_Panel(object):
 
 		self.options = [self.option1, self.option2, self.option3, self.option4, self.option5, self.option6, self.option7]
 		
-		self.events = Events([1,2,configure.last_status[0]],"settings")
+		self.events = Events([1,2,"last"],"settings")
 
 	def colour_update(self):
 		self.option1.update("Graph 1: ",20,self.left_margin,47,titleFont,themes[configure.theme[0]][0])
