@@ -494,7 +494,7 @@ class Settings_Panel(object):
 
 		if payload == 1:
 			self.index += 1
-			if self.index > 3:
+			if self.index > (len(self.options) - 1):
 				self.index = 0
 		elif payload == 2:
 			self.options[self.index].toggle()
