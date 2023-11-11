@@ -427,7 +427,13 @@ def threaded_sensor():
 	sensors = Sensor()
 
 	sensors.get()
-	configure.buffer_size[0] = configure.graph_size[0]*len(configure.sensor_info)
+
+	# checks if custom buffer size has not been set.
+	if configure.buffer_size[0] == 0:
+		# uses graph length and sensor array number to determine optimal buffer size.
+		# stores enough data for the highest graph length. 
+		configure.buffer_size[0] = configure.graph_size[0]*len(configure.sensor_info)
+
 	configure.sensor_ready[0] = True
 
 

@@ -26,7 +26,7 @@ class preferences(object):
 							'# Select TR-108, or TR-109, or simply Command Line Interfact (CLI). You must choose only one.':None,
 							'tr108':'no',									# Running a TR-108 - mutually exclusive with tr109
 							'tr109':'yes',									# Running a TR-109 - mutually exclusive with tr108
-							'CLI':'no,'										# Running in the Command Line, good for terminals/SSH
+							'CLI':'no'										# Running in the Command Line, good for terminals/SSH
 							}
 
 
@@ -34,10 +34,10 @@ class preferences(object):
 							'sensehat':'no',								# Only TR-108 uses this
 							'system_vitals':'yes',
 							'# BME680 Raw Values':None,
-							'bme':'yes',
+							'bme':'no',
 							'# BME680 VOC BSEC':None,
 							'bme_bsec':'no',
-							'amg8833':'yes',
+							'amg8833':'no',
 							'alert_high':'100',
 							'alert_low':'0',
 							'pocket_geiger':'no',
@@ -45,10 +45,12 @@ class preferences(object):
 							'ir_thermo':'no',								# IR infrared imaging
 							'envirophat':'no',
 							'# Battery level sensor values from the TinyUPS v3.0':None,
-							'tinyups':'yes',
+							'tinyups':'no',
 							'# Wifi and BT sensors':None,
-							'EM':'yes',
-							}										# Only TR-109 uses this
+							'EM':'no',
+							'# GPS Location Data (GPS module through USB serial)':None,
+							'GPS':'no'
+							}										
 
 		config['INPUT'] =    {'# Controls which input method is active (Choose only one)':None,
 							'kb':'no',
@@ -103,6 +105,7 @@ class preferences(object):
 							'leds':'yes',
 							'# Enables the moire pattern on the SenseHat LED matrix - TR-108 only':None,
 							'moire':'no',
+							'# Enables video playback':None,
 							'video':'no',
 							'# Enables audio playback (videos will not play without this)':None,
 							'audio':'yes',									# Enables audio playback
@@ -110,11 +113,13 @@ class preferences(object):
 							'warble':'yes',									# Enables audio playback
                             '# Enables video player capabilities':None,
 							'video':'no',
+							'# Enable alarm when thermal cam exceeds min/max':None,
 							'alarm':'no',
 							'# If sleep is "yes" then lights will respond to Hall Effect sensors':None,
 							'sleep':'yes',									# If sleep is True the lights will respond to hall effect sensors
 							'# Autoranging of graphs':None,
 							'autoranging':'yes',							# Auto ranging of graphs
+							'# Controls graph width for TR108':None,
 							'mode_a_graph_width':'280',						# graph width for TR108 mode_a
 							'mode_a_graph_height':'160',					# graph height for TR108 mode_a
 							'mode_a_x_offset':18,							# x offset for TR108 mode_a
@@ -131,7 +136,9 @@ class preferences(object):
 							'displayinterval':'0',
 							'# Turns data logging on - data is written to data/datacore.csv':None,
 							'datalog':'no',
+							'# Trim the PLARS buffer when buffer sample size reaches this number':None,
 							'trim_buffer':'yes',
+							'# Respond to door open/close (requires hall effect sensors)':None,
 							'doordetection':'yes',
 							'# Settings for mode_a Graph Screen on TR-108':None,
 							'graph_width':'280',
@@ -429,9 +436,10 @@ class Events(object):
 		status = self.base
 		payload = 0
 
-		# if an event has occured
+		# if an event has occured, this is set by input.py
 		if configure.eventready[0]:
 
+			# clear the event flag.
 			configure.eventready[0] = False
 			
 			# grab the event list

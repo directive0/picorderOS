@@ -14,7 +14,7 @@ from objects import *
 error = ""
 frame = 0
 
-title = "@icorderOS---------------------------------"
+title = "PicorderOS---------------------------------"
 
 run = True
 
@@ -133,6 +133,7 @@ class Sense(object):
 		self.samplerate = samplerate
 		self.timer = timer()
 		self.buffer = [0,0,0,0]
+		self.datas = [47,47,47]
 
 	def get(self):
 		if self.timer.timelapsed() > self.samplerate:
@@ -156,19 +157,32 @@ class cli_display(object):
 		self.error = ""
 		self.indicators = abgd(4,2)
 		self.graph0 = graph(4,1,48,5,title = "Temp")
-		self.graph1 = graph(14,1,48,5,title = "CPU %")
+		self.graph1 = graph(14,1,48,5,title = "Baro")
 
 		self.refresh = timer()
 		self.refreshrate = .3
 
 	def push(self):
-		data = plars.get_top_em_info()[0]
+		#gathers the data for all three sensors currently selected for each slot.
+
+		for i in range(3):
+
+			# determines the sensor keys for each of the three main sensors
+			this_index = int(configure.sensors[i][0])
+
+			# grabs the sensor metadata for display
+			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
+
+			# grabs sensor data
+			self.datas[i] = plars.get_recent(dsc,dev,num = SAMPLE_SIZE)[0]
+
 		stdscr.clear()
 		stdscr.addstr(0,0,title)
 #		keyget = stdscr.getkey()
 #		stdscr.addstr(1,0,keyget)
 		data = self.sense.get()
-		self.graph0.render(data[0])
+		self.graph0.render(datas[0])
+		self.graph1.render(datas[1])
 		#self.indicators.draw()
 		stdscr.refresh()
 
