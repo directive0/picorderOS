@@ -14,12 +14,11 @@ from objects import *
 error = ""
 frame = 0
 
-title = "PicorderOS---------------------------------"
+title = "[PicorderOS]-----------------------------------[CLI MODE]"
 
 run = True
 
 stdscr = curses.initscr()
-
 curses.noecho()
 curses.nocbreak()
 stdscr.keypad(True)
@@ -105,15 +104,15 @@ class graph(object):
 				if abs(difference) > 1:
 					if difference < 0:
 						for i in range(abs(difference)):
-							stdscr.addstr(self.buffer[column]+i,position,"█")
+							stdscr.addstr(self.buffer[column]+i,position,"O")
 					else:
 						for i in range(abs(difference)):
-							stdscr.addstr(self.buffer[column]-i,position,"█")
+							stdscr.addstr(self.buffer[column]-i,position,"O")
 
 			if column < len(self.buffer):
 
 				# draw this point
-				stdscr.addstr(self.buffer[column],position,"█")
+				stdscr.addstr(self.buffer[column],position,"O")
 			else:
 				#no data
 				stdscr.addstr(self.g_low,position,"X")
@@ -158,33 +157,44 @@ class cli_display(object):
 		self.indicators = abgd(4,2)
 		self.graph0 = graph(4,1,48,5,title = "Temp")
 		self.graph1 = graph(14,1,48,5,title = "Baro")
+		self.graph2 = graph(24,1,48,5,title = "Humid")
 
 		self.refresh = timer()
-		self.refreshrate = .3
+		self.refreshrate = .2
+		self.datas = [47,47,47]
 
 	def push(self):
-		#gathers the data for all three sensors currently selected for each slot.
-
-		for i in range(3):
-
-			# determines the sensor keys for each of the three main sensors
-			this_index = int(configure.sensors[i][0])
-
-			# grabs the sensor metadata for display
-			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
-
-			# grabs sensor data
-			self.datas[i] = plars.get_recent(dsc,dev,num = SAMPLE_SIZE)[0]
 
 		stdscr.clear()
 		stdscr.addstr(0,0,title)
-#		keyget = stdscr.getkey()
-#		stdscr.addstr(1,0,keyget)
-		data = self.sense.get()
-		self.graph0.render(datas[0])
-		self.graph1.render(datas[1])
-		#self.indicators.draw()
-		stdscr.refresh()
+
+		#gathers the data for all three sensors currently selected for each slot.
+		if configure.sensor_ready[0]:
+
+			for i in range(3):
+
+				# determines the sensor keys for each of the three main sensors
+				this_index = int(configure.sensors[i][0])
+
+				# grabs the sensor metadata for display
+				dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
+
+				# grabs sensor data
+				value = plars.get_recent(dsc,dev,num=1)[0]
+#				print(">>>>>>>>>>>>>>", value)
+
+				if len(value) > 0:
+					self.datas[i] = value[0]
+				else:
+					self.datas[i] = 47
+
+
+#			print("//////////////////////////////////>", self.datas)
+			self.graph0.render(self.datas[0])
+			self.graph1.render(self.datas[1])
+			self.graph2.render(self.datas[2])
+
+			stdscr.refresh()
 
 	def reset(self):
 		curses.echo()
