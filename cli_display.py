@@ -1,11 +1,8 @@
-import time
 import curses
 from curses import wrapper
-import sys
 import os
 import psutil
 import numpy
-import math
 
 from plars import *
 from objects import *
@@ -104,15 +101,15 @@ class graph(object):
 				if abs(difference) > 1:
 					if difference < 0:
 						for i in range(abs(difference)):
-							stdscr.addstr(self.buffer[column]+i,position,"O")
+							stdscr.addstr(self.buffer[column]+i,position,curses.ACS_BLOCK)
 					else:
 						for i in range(abs(difference)):
-							stdscr.addstr(self.buffer[column]-i,position,"O")
+							stdscr.addstr(self.buffer[column]-i,position,curses.ACS_BLOCK)
 
 			if column < len(self.buffer):
 
 				# draw this point
-				stdscr.addstr(self.buffer[column],position,"O")
+				stdscr.addstr(self.buffer[column],position,curses.ACS_BLOCK)
 			else:
 				#no data
 				stdscr.addstr(self.g_low,position,"X")
