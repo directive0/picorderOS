@@ -90,6 +90,7 @@ class graph(object):
 
 		# draw envelope
 		# go column by column
+		block = ' '
 		for column in range(self.w):
 			position = column + self.x
 			# determine distance from last notch
@@ -101,15 +102,15 @@ class graph(object):
 				if abs(difference) > 1:
 					if difference < 0:
 						for i in range(abs(difference)):
-							stdscr.addstr(self.buffer[column]+i,position,curses.ACS_BLOCK)
+							stdscr.addch(self.buffer[column]+i,position,block,curses.A_REVERSE)
 					else:
 						for i in range(abs(difference)):
-							stdscr.addstr(self.buffer[column]-i,position,curses.ACS_BLOCK)
+							stdscr.addch(self.buffer[column]-i,position,block,curses.A_REVERSE)
 
 			if column < len(self.buffer):
 
 				# draw this point
-				stdscr.addstr(self.buffer[column],position,curses.ACS_BLOCK)
+				stdscr.addch(self.buffer[column],position,block,curses.A_REVERSE)
 			else:
 				#no data
 				stdscr.addstr(self.g_low,position,"X")
