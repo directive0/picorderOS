@@ -11,7 +11,7 @@ from objects import *
 error = ""
 frame = 0
 
-title = "[PicorderOS]-----------------------------------[CLI MODE]"
+title = "[PicorderOS]----------------------------[CLI MODE]"
 
 run = True
 
