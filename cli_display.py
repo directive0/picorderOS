@@ -160,6 +160,7 @@ class cli_display(object):
 		self.refresh = timer()
 		self.refreshrate = .2
 		self.datas = [47,47,47]
+		self.titles = ["default", "default", "default"]
 
 	def push(self):
 
@@ -182,14 +183,21 @@ class cli_display(object):
 #				print(">>>>>>>>>>>>>>", value)
 
 				if len(value) > 0:
+					self.titles[i] = dsc
 					self.datas[i] = value[0]
 				else:
+					self.titles[i] = "OFFLINE"
 					self.datas[i] = 47
 
 
 #			print("//////////////////////////////////>", self.datas)
+			self.graph0.title = self.titles[0]
 			self.graph0.render(self.datas[0])
+
+			self.graph1.title = self.titles[1]
 			self.graph1.render(self.datas[1])
+
+			self.graph2.title = self.titles[2]
 			self.graph2.render(self.datas[2])
 
 			stdscr.refresh()
