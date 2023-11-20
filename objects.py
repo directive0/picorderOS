@@ -25,10 +25,9 @@ class preferences(object):
 							'pc':'no',       								# emulating the hardware on a PC?
 							'# Select TR-108, or TR-109, or simply Command Line Interfact (CLI). You must choose only one.':None,
 							'tr108':'no',									# Running a TR-108 - mutually exclusive with tr109
-							'tr109':'yes',									# Running a TR-109 - mutually exclusive with tr108
-							'CLI':'no'										# Running in the Command Line, good for terminals/SSH
+							'tr109':'no',									# Running a TR-109 - mutually exclusive with tr108
+							'CLI':'yes'										# Running in the Command Line, good for terminals/SSH
 							}
-
 
 		config['SENSORS'] =  {'# Only TR-108 uses SenseHat':None,
 							'sensehat':'no',								# Only TR-108 uses this
@@ -57,17 +56,24 @@ class preferences(object):
 							'gpio':'no',
 							'cap_mpr121':'no',
 							'pcf8575':'no',
-							'cap1208':'yes',
+							'cap1208':'no',
 							'sensehat_joystick':'no',
 							'# Capacitive touch threshold':None,
 							'capsensitivity':'50',
 							'# Battery monitor':None,
-							'power_monitor':'yes',
+							'power_monitor':'no',
 							}							# Used only if cap1208 is 'yes'
 
 		config['PIN ASSIGNMENTS'] = {'#I2C pins':None,
 							'PIN_SDA':'2',							# I2C pins
 							'PIN_SCL':'3',
+
+							
+							'# Basic GPIO pins. For TR108/Beepy Specifically'
+							'pin_in0':'5',
+							'pin_in1':'6',
+							'pin_in2':'13',
+
 							'# Main board shift register pins':None,
 							'# The TR-109 supports two shift registers, and two sets of pin addresses':None,
 							'# Prototype units 00 and 01 have different pin assignments,':None,
@@ -96,7 +102,8 @@ class preferences(object):
 							'PG_NS':'18',
 							}
 
-		config['OUTPUT'] = {'display':'1',
+		config['OUTPUT'] = {'# Display Target (for luma/other driver etc) 1 is st7735 Luma Display.':None,
+					  		'display':'1',
 							'# Indicator LED Animations':None,
 							'LED_timer':'0.2',
 							}
@@ -156,7 +163,7 @@ class preferences(object):
 		if not exists("config.ini"):
 			self.createMissingINI('config.ini')
 
-		config=configparser.ConfigParser()
+		config = configparser.ConfigParser()
 		config.read('config.ini')
 
 		# Sets the variables for boot up
@@ -174,7 +181,9 @@ class preferences(object):
 		self.tr108 = self.str2bool(config['SYSTEM']['tr108'])
 		self.tr109 = self.str2bool(config['SYSTEM']['tr109'])
 		self.CLI = self.str2bool(config['SYSTEM']['CLI'])
+
 # SENSORS----------------------------------------------------------------------#
+
 		# TR108 uses this sensehat
 		self.sensehat = self.str2bool(config['SENSORS']['sensehat'])
 
@@ -188,7 +197,7 @@ class preferences(object):
 		self.ir_thermo = self.str2bool(config['SENSORS']['ir_thermo'])
 		self.envirophat = self.str2bool(config['SENSORS']['envirophat'])
 
-		# toggles wifi/bt scanning
+		# Toggles wifi/bt scanning
 		self.EM = self.str2bool(config['SENSORS']['EM'])
 
 		self.tinyups = self.str2bool(config['SENSORS']['tinyups'])
@@ -219,6 +228,11 @@ class preferences(object):
 		# the tr109 supports two shift registers, and so two sets of pin addresses
 		# prototype unit 00 and 01 have different pin assignments for latch and clock
 		# so these values may need to be swapped
+
+		# Basic 3 GPIO pins (for tr108, beepcorder, anything with basic gpio)
+		self.PIN_IN0  = int(config['PIN ASSIGNMENTS']['pin_in0'])
+		self.PIN_IN1  = int(config['PIN ASSIGNMENTS']['pin_in1'])
+		self.PIN_IN2  = int(config['PIN ASSIGNMENTS']['pin_in2'])
 
 		# Main board shift register pins
 		self.PIN_DATA  = int(config['PIN ASSIGNMENTS']['pin_data'])
@@ -305,6 +319,7 @@ class preferences(object):
 		self.mode_a_graph_height = int(config['GLOBALS']['mode_a_graph_height'])
 		self.mode_a_x_offset = int(config['GLOBALS']['mode_a_x_offset'])
 		self.mode_a_y_offset = int(config['GLOBALS']['mode_a_y_offset'])
+
 		# holds theme state for UI
 		self.theme = [0]
 
@@ -312,8 +327,10 @@ class preferences(object):
 		# (is automatically set by the sensor module at startup)
 		self.max_sensors = [0]
 
-		#sets the upper and lower threshold for the alert
+		# sets the upper and lower threshold for the alert
 		self.TEMP_ALERT = (int(config['SENSORS']['alert_low']),int(config['SENSORS']['alert_high']))
+
+		# toggles interpolation for thermal camera
 		self.interpolate = [True]
 
 		# flag to command the main loop
@@ -365,7 +382,6 @@ class preferences(object):
 		self.graph_height = int(config['GLOBALS']['graph_height'])
 		self.graph_x = int(config['GLOBALS']['graph_x'])
 		self.graph_y = int(config['GLOBALS']['graph_y'])
-
 
 
 # create a shared object for global variables and settings.

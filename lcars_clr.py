@@ -786,7 +786,6 @@ class EMFrame(object):
 		self.selection = 0
 
 		self.ossification = 0
-``
 		
 
 		# create our graph_screen

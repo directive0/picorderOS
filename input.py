@@ -17,8 +17,8 @@ print("Loading Unified Input Module")
 # The TR-108 only has 3 buttons
 
 # Max number of buttons
-#	0	1	 2    3  	4	 5	  6  7		8			9		10			11	  12  13  14
-# geo, met, bio, lib, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, ID
+#	0	1	 2    3  	4	 5	  6  7		8				9			10		11	  		12  13  14
+# geo, met, bio, lib, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, Id
 # next, enter, cancel/switch
 
 import time
@@ -34,7 +34,7 @@ release_threshold = 2
 
 # if tr108 set up pins for gpio buttons
 if configure.tr108:
-	pins = [5,6,13]
+	pins = [configure.PIN_IN0,configure.PIN_IN1,configure.PIN_IN2]
 
 # tr109 by default uses cap1208. This will require modifying for other inputs
 if configure.tr109:
@@ -74,17 +74,10 @@ if configure.input_gpio:
 
 	GPIO.setmode(GPIO.BCM)
 
-	if configure.tr108:
-		# setup our 3 control buttons
-		GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-		GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-		GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+	for pin in pins:
+		GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-	if configure.tr109:
-		# setup our 3 control buttons
-		GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-		GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-		GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
 
 
 # set up requirements for capacitive buttons using an mpr121
@@ -107,11 +100,8 @@ if configure.input_cap_mpr121:
 
 if configure.input_cap1208:
 
-
 	import RPi.GPIO as GPIO
-
 	GPIO.setmode(GPIO.BCM)
-
 
 	GPIO.setup(configure.ALERTPIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	GPIO.add_event_detect(configure.ALERTPIN, GPIO.BOTH)
@@ -208,6 +198,7 @@ class Inputs(object):
 
 			# if the door is open, the picorder is deployed and ready for input.
 			if configure.dr_open[0]:
+
 				# if the alert pin is brought LOW
 				if GPIO.input(configure.ALERTPIN) == 0 and configure.eventready[0] == False:
 
@@ -285,7 +276,6 @@ class Inputs(object):
 						self.pressed[i] = False
 					else:
 						self.buttonlist[i] = False
-			
 
 		# event handling for GPIO
 		if configure.input_gpio:
@@ -294,13 +284,16 @@ class Inputs(object):
 
 				# if the button has not been registered as pressed
 				if GPIO.input(pins[i]) == 0:  # button pressed
+					# if it is not known to be pressed already
 					if not self.pressed[i]:
+						# set it as pressed
 						self.pressed[i] = True
+
+						# raise the event flag
 						configure.eventlist[0] = True
 
-
-				if GPIO.input(pins[i]) == 1:
-
+				if GPIO.input(pins[i]) == 1:  # button up
+					# if it is in the list of buttons that are being pressed
 					if self.pressed[i]:
 						self.buttonlist[i] = True
 						self.pressed[i] = False

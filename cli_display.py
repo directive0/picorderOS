@@ -21,13 +21,26 @@ curses.nocbreak()
 stdscr.keypad(True)
 curses.curs_set(False)
 
-
-class input_handler(object):
-	def __init__(self):
-		pass
-
-	def get(self):
-		pass
+logo = """
+ :==+=+=-  .==+=+-- 
+ +      .+--      :-
+ +   .:. :+  :..  -:
+ :+    :=+#=-    .+ 
+  :+:  :####=. .=+  
+    :*##*+++###*.   
+   :*+:       -*+.  
+  =+.        .::+#: 
+ =*      .=*+=-:-#* 
+:+    .=+=.      -#-
+*-  :+=.        .*.*
+#- =*.         -+. #
+*===         :+=   *
+.*#.      .-*=    -=
+ =#-  .:=++:      *.
+  +#+==-:       :*- 
+   -#=.       :++:  
+     -**+===+#+:    
+"""
 
 
 class abgd(object):
@@ -121,35 +134,9 @@ class graph(object):
 			self.data_buffer.pop()
 
 
-class Sense(object):
-
-	def __init__(self,samplerate):
-		self.buffer = []
-		self.max = 0
-		self.min = 0
-		self.samplerate = samplerate
-		self.timer = timer()
-		self.buffer = [0,0,0,0]
-		self.datas = [47,47,47]
-
-	def get(self):
-		if self.timer.timelapsed() > self.samplerate:
-			f = os.popen("cat /sys/class/thermal/thermal_zone0/temp").readline()
-			temp = float(f[0:2] + "." + f[2:])
-			cpu_percent = float(psutil.cpu_percent())
-			virtmeminfo = float(psutil.virtual_memory().available * 0.0000001)
-			io_counter_info = float(psutil.net_io_counters().bytes_recv * 0.00001)
-			self.timer.logtime()
-
-			self.buffer = [temp,cpu_percent,virtmeminfo,io_counter_info]
-		return self.buffer
-
-
-class cli_display(object):
+class Multi_Frame(object):
 
 	def __init__(self):
-
-		self.sense = Sense(1.0)
 
 		self.error = ""
 		self.indicators = abgd(4,2)
@@ -161,6 +148,8 @@ class cli_display(object):
 		self.refreshrate = .2
 		self.datas = [47,47,47]
 		self.titles = ["default", "default", "default"]
+		self.events = Events(["modem"],"multi")
+
 
 	def push(self):
 
@@ -180,7 +169,6 @@ class cli_display(object):
 
 				# grabs sensor data
 				value = plars.get_recent(dsc,dev,num=1)[0]
-#				print(">>>>>>>>>>>>>>", value)
 
 				if len(value) > 0:
 					self.titles[i] = dsc
@@ -189,8 +177,6 @@ class cli_display(object):
 					self.titles[i] = "OFFLINE"
 					self.datas[i] = 47
 
-
-#			print("//////////////////////////////////>", self.datas)
 			self.graph0.title = self.titles[0]
 			self.graph0.render(self.datas[0])
 
@@ -202,12 +188,81 @@ class cli_display(object):
 
 			stdscr.refresh()
 
-	def reset(self):
+class EM_Frame(object):
+	def __init__(self):
+
+		self.graphcycle = 0
+
+		# Sets the topleft origin of the graph
+		self.graphx = 20
+		self.graphy = 58
+
+		# Sets the x and y span of the graph
+		self.gspanx = 135
+		self.gspany = 29
+		self.titlex = 23
+		self.titley = 2
+
+		self.high = 0
+		self.low = 0
+		self.average = 0
+		self.labely = 4
+		self.labelxr = 156
+		self.selection = 0
+
+
+		# assign x coordinates for frequency map
+		self.vizX1 = 20
+		self.vizY1 = 36
+		self.vizX2 = 157
+		self.vizY2 = 77
+		self.vizW = self.vizX2 - self.vizX1 
+		self.vizH = self.vizY2 - self.vizY1
+
+		self.freqmap_grid = DrawGrid(self.vizX1, self.vizY1, self.vizW, self.vizH, lcars_grid)
+
+		self.events = Events([1,0,0],"modem")
+
+class cli_display(object):
+
+	def __init__(self):
+
+		self.startup = StartUp()
+		self.multi_frame = Multi_Frame()
+
+		# carousel dict to hold the keys and defs for each state
+		self.carousel = {"startup":self.start_up,
+				   "multi":self.graph_screen,
+				   "modem":self.em_screen,
+				   "settings":self.settings,
+				   "msd":self.msd,
+				   "shutdown":self.powerdown}
+
+	def start_up(self):
+		configure.status[0] = "multi"
+
+	def graph_screen(self):
+		self.status = self.multi_frame.display()
+
+	def em_screen(self):
+		pass
+
+	def settings(self):
+		pass
+
+	def esd(self):
+		pass
+
+	def powerdown(self):
+		pass
+
+	def powerdown(self):
 		curses.echo()
 		curses.endwin()
-		print(self.error)
+
 
 	def run(self):
 		if self.refresh.timelapsed() > self.refreshrate:
+			configure.status[0] = self.carousel[configure.status[0]]()
 			self.push()
 			self.refresh.logtime()
