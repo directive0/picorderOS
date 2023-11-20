@@ -172,13 +172,15 @@ class Multi_Frame(object):
 
 		self.datas = [47,47,47]
 		self.titles = ["default", "default", "default"]
-		self.events = Events(["startup"],"multi")
+		self.events = Events(["modem"],"multi")
 
 
 	def display(self):
 
 		# returns mode to the main loop unless something causes state change
 		status,payload  = self.events.check()
+
+		self.indicators.draw()
 
 		#gathers the data for all three sensors currently selected for each slot.
 		for i in range(3):
@@ -248,8 +250,39 @@ class EM_Frame(object):
 
 		self.events = Events([1,0,0],"modem")
 
+	# Draws a list of APs with data.
+	def em_scan(self):
+			
+			stdscr.addstr(2,2,"Modulated EM Scan")
+
+			# list to hold the data labels
+			list_for_labels = []
+
+			# grab EM list
+			em_list = plars.get_recent_em_list()
+
+			if len(em_list) > 0:
+				#sort it so strongest is first
+				sorted_em_list = sorted(em_list, key=itemgetter(1), reverse = True)
+
+				# prepare a list of the data received for display
+				for ssid in sorted_em_list:
+					name = str(ssid[0])
+					strength = str(ssid[1])
+
+					label = strength + " dB • " + name
+
+					list_for_labels.append(label)
+				
+
+				self.list.update(list_for_labels,draw)
+				for y, line in enumerate(logo.splitlines(), 3):
+					if y < stdscr.getmaxyx()[0]:
+						stdscr.addstr(y, 2, line)
+
 	def display(self):
-		pass
+		self.em_scan()
+		return "modem"
 
 # function to shut down CLI if needed from outside this loop.
 def cli_reset(self):
@@ -306,6 +339,8 @@ class CLI_Display(object):
 			# retrieve status from whatever frame matches current status
 			configure.status[0] = self.carousel[configure.status[0]]()
 			
+			# Draw the screen
 			stdscr.refresh()
+			
 			# keep track of time for refresh
 			self.refresh.logtime()
