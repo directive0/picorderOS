@@ -83,7 +83,7 @@ class Wifi_Scan(object):
 
 
 	def update_plars(self):
-		data = self.get_list()
+		data = self.dump_data()
 		if data != None:
 			plars.update_em(data)
 
