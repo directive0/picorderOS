@@ -21,8 +21,7 @@ curses.nocbreak()
 stdscr.keypad(True)
 curses.curs_set(False)
 
-logo = """
- :==+=+=-  .==+=+-- 
+logo = """ :==+=+=-  .==+=+-- 
  +      .+--      :-
  +   .:. :+  :..  -:
  :+    :=+#=-    .+ 
@@ -48,7 +47,7 @@ class Start_Frame(object):
 		self.started = False
 		self.timesup = timer()
 		self.logoxy = [2,2]
-		self.titlexy = [30,2]
+		self.titlexy = [1,1]
 
 	def display(self):
 
@@ -58,7 +57,7 @@ class Start_Frame(object):
 
 		# display splash logo
 		if self.started:
-			for y, line in enumerate(logo.splitlines(), 2):
+			for y, line in enumerate(logo.splitlines(), self.logoxy[1]):
 				stdscr.addstr(y, self.logoxy[0], line)
 
 			
@@ -208,7 +207,7 @@ class Multi_Frame(object):
 		self.graph2.title = self.titles[2]
 		self.graph2.render(self.datas[2])
 
-		stdscr.refresh()
+
 
 		return status
 
@@ -306,5 +305,6 @@ class CLI_Display(object):
 			# retrieve status from whatever frame matches current status
 			configure.status[0] = self.carousel[configure.status[0]]()
 			
+			stdscr.refresh()
 			# keep track of time for refresh
 			self.refresh.logtime()
