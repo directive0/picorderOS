@@ -60,7 +60,7 @@ class Start_Frame(object):
 		if self.started:
 			for y, line in enumerate(logo.splitlines(), self.logoxy[1]):
 				stdscr.addstr(y, self.logoxy[0], line)
-				stdscr.addnstr
+
 			
 
 			if self.timesup.timelapsed() >= configure.boot_delay and configure.sensor_ready[0]:
