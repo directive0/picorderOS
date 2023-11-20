@@ -289,7 +289,7 @@ class Inputs(object):
 						self.pressed[i] = True
 
 						# raise the event flag
-						configure.eventlist[0] = True
+						configure.eventready[0] = True
 
 				if GPIO.input(pins[i]) == 1:  # button up
 					# if it is in the list of buttons that are being pressed
@@ -298,6 +298,8 @@ class Inputs(object):
 						self.pressed[i] = False
 					else:
 						self.buttonlist[i] = False
+			# fill the payload to send back to the querying entity
+			configure.eventlist[0] = self.pressed
 
 		# event handling for SenseHat joystick
 		if configure.sensehat and configure.input_joystick:
