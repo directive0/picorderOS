@@ -63,7 +63,7 @@ class Start_Frame(object):
 				stdscr.addnstr
 			
 
-			if self.timesup.timelapsed >= configure.boot_delay and configure.sensor_ready[0]:
+			if self.timesup.timelapsed() >= configure.boot_delay and configure.sensor_ready[0]:
 				return "multi"
 
 
