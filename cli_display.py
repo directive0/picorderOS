@@ -335,7 +335,7 @@ class CLI_Display(object):
 		if self.refresh.timelapsed() > self.refreshrate:
 
 			# Clear the screen
-			stdscr.clear()
+			stdscr.erase()
 
 			# Add the Window Title
 			stdscr.addstr(0,0,title)
