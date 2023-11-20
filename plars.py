@@ -88,7 +88,7 @@ class PLARS(object):
 		# self.em_core is used to refer to the archive on disk for EM data
 		# self.buffer is created as a truncated dataframe for drawing to screen.
 		# self.buffer_em is created as a truncated dataframe for drawing  to screen.
-
+			
 		# create buffer
 		self.file_path = "data/datacore.csv"
 		self.em_file_path = "data/em_datacore.csv"
@@ -284,7 +284,7 @@ class PLARS(object):
 		self.lock.acquire()
 
 
-		# logs some data for statistics.
+		# logs some data for statistics.nan
 		self.current_em_no = len(data)
 		if self.current_em_no > self.max_em_no:
 			self.max_em_no = self.current_em_no
@@ -325,23 +325,24 @@ class PLARS(object):
 	# updates the data storage file with the most recent sensor values from each
 	# initialized sensor.
 	# Sensor data is taken in as Fragment() instance objects. Each one contains
-	# the a sensor value and context for it (scale, symbol, unit, etc).
+	# the sensor value and context for it (scale, symbol, unit, etc).
 	def update(self,data):
 
 		# sets/requests the thread lock to prevent other threads reading data.
 		self.lock.acquire()
 
 
+		# breaks out the compilation of existing and newest dataframe as a process.
 		q = Queue()
 
 		get_process = Process(target=update_proc, args=(q, self.buffer, data,['value','min','max','dsc','sym','dev','timestamp'],))
 		get_process.start()
 
-		# return a list of the values
+		# return a list of the values from the process
 		result = q.get()
 		get_process.join()
 
-		# appends the new data to the buffer
+		# sets the new dataframe as the buffer
 		self.buffer = result
 
 		# get buffer size to determine how many rows to remove from the end

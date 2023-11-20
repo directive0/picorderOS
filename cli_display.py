@@ -42,14 +42,40 @@ logo = """
      -**+===+#+:    
 """
 
+class Start_Up(object):
+	def __init__(self):
+		self.bootto = "multi"
+		self.started = False
+		self.timesup = timer()
+		self.logoxy = [2,2]
+		self.titlexy = [30,2]
 
+	def display(self):
+
+		if not self.started:
+			self.timesup.logtime()
+			self.started = True
+
+		# display splash logo
+		if self.started:
+			for y, line in enumerate(logo.splitlines(), self.logoxy[1]):
+				stdscr.addstr(y, self.logoxy[0], line)
+				stdscr.addnstr
+			
+
+			if self.timesup.timelapsed >= configure.boot_delay and configure.sensor_ready[0]:
+				return "multi"
+
+
+		return "startup"
+# A pointless indicator widget to mimic the Alpha Beta Gamma Delta annunciators from the prop.
 class abgd(object):
 
 	def __init__(self,y,x):
 		self.x = x
 		self.y = y
-		self.titles = ["ALPHA", "BETA", "GAMMA", "DELTA"]
-		self.symbols = ["██████", "    ", "    ", "    "]
+		self.titles =  ["ALPHA", "BETA", "GAMMA", "DELTA"]
+		self.symbols = ["████", "    ", "    ", "    "]
 		self.frame = 0
 		self.timeit = timer()
 		self.timeit.logtime()
@@ -157,36 +183,37 @@ class Multi_Frame(object):
 		stdscr.addstr(0,0,title)
 
 		#gathers the data for all three sensors currently selected for each slot.
-		if configure.sensor_ready[0]:
+		for i in range(3):
 
-			for i in range(3):
+			# determines the sensor keys for each of the three main sensors
+			this_index = int(configure.sensors[i][0])
 
-				# determines the sensor keys for each of the three main sensors
-				this_index = int(configure.sensors[i][0])
+			# grabs the sensor metadata for display
+			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
 
-				# grabs the sensor metadata for display
-				dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
+			# grabs sensor data
+			value = plars.get_recent(dsc,dev,num=1)[0]
 
-				# grabs sensor data
-				value = plars.get_recent(dsc,dev,num=1)[0]
+			if len(value) > 0:
+				self.titles[i] = dsc
+				self.datas[i] = value[0]
+			else:
+				self.titles[i] = "OFFLINE"
+				self.datas[i] = 47
 
-				if len(value) > 0:
-					self.titles[i] = dsc
-					self.datas[i] = value[0]
-				else:
-					self.titles[i] = "OFFLINE"
-					self.datas[i] = 47
+		self.graph0.title = self.titles[0]
+		self.graph0.render(self.datas[0])
 
-			self.graph0.title = self.titles[0]
-			self.graph0.render(self.datas[0])
+		self.graph1.title = self.titles[1]
+		self.graph1.render(self.datas[1])
 
-			self.graph1.title = self.titles[1]
-			self.graph1.render(self.datas[1])
+		self.graph2.title = self.titles[2]
+		self.graph2.render(self.datas[2])
 
-			self.graph2.title = self.titles[2]
-			self.graph2.render(self.datas[2])
+		stdscr.refresh()
 
-			stdscr.refresh()
+
+
 
 class EM_Frame(object):
 	def __init__(self):
@@ -223,12 +250,19 @@ class EM_Frame(object):
 
 		self.events = Events([1,0,0],"modem")
 
-class cli_display(object):
+# function to shut down CLI if needed.
+def cli_reset(self):
+	curses.nocbreak()
+	stdscr.keypad(False)
+	curses.echo()
+
+class CLI_Display(object):
 
 	def __init__(self):
 
 		self.startup = StartUp()
 		self.multi_frame = Multi_Frame()
+		self.em_frame = EM_Frame()
 
 		# carousel dict to hold the keys and defs for each state
 		self.carousel = {"startup":self.start_up,
@@ -239,13 +273,13 @@ class cli_display(object):
 				   "shutdown":self.powerdown}
 
 	def start_up(self):
-		configure.status[0] = "multi"
+		return self.startup.display()
 
 	def graph_screen(self):
-		self.status = self.multi_frame.display()
+		return self.multi_frame.display()
 
 	def em_screen(self):
-		pass
+		return self.em_frame.display()
 
 	def settings(self):
 		pass
@@ -256,13 +290,13 @@ class cli_display(object):
 	def powerdown(self):
 		pass
 
-	def powerdown(self):
-		curses.echo()
-		curses.endwin()
-
-
 	def run(self):
+
+		# 
 		if self.refresh.timelapsed() > self.refreshrate:
+
+			# retrieve status from whatever frame matches current status
 			configure.status[0] = self.carousel[configure.status[0]]()
-			self.push()
+			
+			# keep track of time for refresh
 			self.refresh.logtime()

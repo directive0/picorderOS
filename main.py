@@ -70,7 +70,7 @@ def Main():
 		configure.graph_size[0] = screen_object.get_size()
 
 	if configure.CLI:
-		screen_object = cli_display()
+		screen_object = CLI_Display()
 
 
 	start_time = time.time()
@@ -118,6 +118,7 @@ def Main():
 					cleangpio()
 
 				os.system("sudo shutdown -h now")
+				
 
 		# If CTRL-C is received the program gracefully turns off the LEDs and resets the GPIO.
 		except KeyboardInterrupt:
@@ -132,6 +133,9 @@ def Main():
 
 	if configure.input_gpio:
 		cleangpio()
+
+	if configure.CLI:
+		cli_reset()
 
 	plars.shutdown()
 
