@@ -268,7 +268,7 @@ class CLI_Display(object):
 				   "modem":self.em_screen,
 				   "settings":self.settings,
 				   "msd":self.msd,
-				   "shutdown":self.powerdown}
+				   "powerdown":self.powerdown}
 
 	def start_up(self):
 		return self.startup.display()
@@ -282,7 +282,7 @@ class CLI_Display(object):
 	def settings(self):
 		pass
 
-	def esd(self):
+	def msd(self):
 		pass
 
 	def powerdown(self):
@@ -290,7 +290,6 @@ class CLI_Display(object):
 
 	def run(self):
 
-		# 
 		if self.refresh.timelapsed() > self.refreshrate:
 
 			# retrieve status from whatever frame matches current status
