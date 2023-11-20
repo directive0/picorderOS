@@ -170,8 +170,6 @@ class Multi_Frame(object):
 		self.graph1 = graph(14,1,48,5,title = "Baro")
 		self.graph2 = graph(24,1,48,5,title = "Humid")
 
-		self.refresh = timer()
-		self.refreshrate = .2
 		self.datas = [47,47,47]
 		self.titles = ["default", "default", "default"]
 		self.events = Events(["modem"],"multi")
@@ -257,6 +255,8 @@ def cli_reset(self):
 class CLI_Display(object):
 
 	def __init__(self):
+		self.refresh = timer()
+		self.refreshrate = .2 
 
 		self.startup = Start_Frame()
 		self.multi_frame = Multi_Frame()
