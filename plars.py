@@ -291,8 +291,8 @@ class PLARS(object):
 
 
 		for sample in data:
-			if sample[6] not in self.buffer_em["dev"].values and sample[6] not in self.em_idents:
-				self.em_idents.append(sample[6])
+			if sample['mac'] not in self.buffer_em["dev"].values and sample["mac"] not in self.em_idents:
+				self.em_idents.append(sample["mac"])
 
 		q = Queue()
 

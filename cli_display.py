@@ -275,9 +275,9 @@ class EM_Frame(object):
 					list_for_labels.append(label)
 				
 
-				self.list.update(list_for_labels,draw)
-				for y, line in enumerate(logo.splitlines(), 3):
-					if y < stdscr.getmaxyx()[0]:
+
+				for y, line in enumerate(list_for_labels, 3):
+					if y <= stdscr.getmaxyx()[0]:
 						stdscr.addstr(y, 2, line)
 
 	def display(self):
