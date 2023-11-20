@@ -69,7 +69,7 @@ class preferences(object):
 							'PIN_SCL':'3',
 
 							
-							'# Basic GPIO pins. For TR108/Beepy Specifically'
+							'# Basic GPIO pins. For TR108/Beepy Specifically':None,
 							'pin_in0':'5',
 							'pin_in1':'6',
 							'pin_in2':'13',
