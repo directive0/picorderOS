@@ -250,7 +250,7 @@ class EM_Frame(object):
 		self.vizW = self.vizX2 - self.vizX1 
 		self.vizH = self.vizY2 - self.vizY1
 
-		self.events = Events([1,0,0],"modem")
+		self.events = Events(["multi",0,0],"modem")
 
 	# Draws a list of APs with data.
 	def em_scan(self):
