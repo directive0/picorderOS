@@ -42,7 +42,7 @@ logo = """
      -**+===+#+:    
 """
 
-class Start_Up(object):
+class Start_Frame(object):
 	def __init__(self):
 		self.bootto = "multi"
 		self.started = False
@@ -260,7 +260,7 @@ class CLI_Display(object):
 
 	def __init__(self):
 
-		self.startup = StartUp()
+		self.startup = Start_Frame()
 		self.multi_frame = Multi_Frame()
 		self.em_frame = EM_Frame()
 
