@@ -172,7 +172,7 @@ class Multi_Frame(object):
 
 		self.datas = [47,47,47]
 		self.titles = ["default", "default", "default"]
-		self.events = Events(["modem"],"multi")
+		self.events = Events(["startup"],"multi")
 
 
 	def display(self):
