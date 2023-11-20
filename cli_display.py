@@ -63,6 +63,7 @@ class Start_Frame(object):
 			
 
 			if self.timesup.timelapsed() >= configure.boot_delay and configure.sensor_ready[0]:
+				self.started = False
 				return "multi"
 
 
