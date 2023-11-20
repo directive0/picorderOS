@@ -175,10 +175,10 @@ class Multi_Frame(object):
 		self.events = Events(["modem"],"multi")
 
 
-	def push(self):
+	def display(self):
 
-		stdscr.clear()
-		stdscr.addstr(0,0,title)
+		# returns mode to the main loop unless something causes state change
+		status,payload  = self.events.check()
 
 		#gathers the data for all three sensors currently selected for each slot.
 		for i in range(3):
@@ -209,6 +209,8 @@ class Multi_Frame(object):
 		self.graph2.render(self.datas[2])
 
 		stdscr.refresh()
+
+		return status
 
 
 
@@ -246,7 +248,10 @@ class EM_Frame(object):
 
 		self.events = Events([1,0,0],"modem")
 
-# function to shut down CLI if needed.
+	def display(self):
+		pass
+
+# function to shut down CLI if needed from outside this loop.
 def cli_reset(self):
 	curses.nocbreak()
 	stdscr.keypad(False)
@@ -291,6 +296,12 @@ class CLI_Display(object):
 	def run(self):
 
 		if self.refresh.timelapsed() > self.refreshrate:
+
+			# Clear the screen
+			stdscr.clear()
+
+			# Add the Window Title
+			stdscr.addstr(0,0,title)
 
 			# retrieve status from whatever frame matches current status
 			configure.status[0] = self.carousel[configure.status[0]]()
