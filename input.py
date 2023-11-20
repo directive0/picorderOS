@@ -32,9 +32,8 @@ threshold = 3
 release_threshold = 2
 
 
-# if tr108 set up pins for gpio buttons
-if configure.tr108:
-	pins = [configure.PIN_IN0,configure.PIN_IN1,configure.PIN_IN2]
+# pins for basic gpio buttons
+pins = [configure.PIN_IN0,configure.PIN_IN1,configure.PIN_IN2]
 
 # tr109 by default uses cap1208. This will require modifying for other inputs
 if configure.tr109:
