@@ -166,9 +166,9 @@ class Multi_Frame(object):
 
 		self.error = ""
 		self.indicators = abgd(4,2)
-		self.graph0 = graph(4,1,48,5,title = "Temp")
-		self.graph1 = graph(14,1,48,5,title = "Baro")
-		self.graph2 = graph(24,1,48,5,title = "Humid")
+		self.graph0 = graph(4,9,40,5,title = "Temp")
+		self.graph1 = graph(14,9,40,5,title = "Baro")
+		self.graph2 = graph(24,9,40,5,title = "Humid")
 
 		self.datas = [47,47,47]
 		self.titles = ["default", "default", "default"]
