@@ -285,8 +285,12 @@ class EM_Frame(object):
 				stdscr.addstr(2, 2, "No SSIDS Detected OR PLARS Error!")
 
 	def display(self):
+
+		# returns mode to the main loop unless something causes state change
+		status,payload  = self.events.check()
+
 		self.em_scan()
-		return "modem"
+		return status
 
 # function to shut down CLI if needed from outside this loop.
 def cli_reset(self):
