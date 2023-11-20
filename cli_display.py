@@ -58,7 +58,7 @@ class Start_Frame(object):
 
 		# display splash logo
 		if self.started:
-			for y, line in enumerate(logo.splitlines(), self.logoxy[1]):
+			for y, line in enumerate(logo.splitlines(), 2):
 				stdscr.addstr(y, self.logoxy[0], line)
 
 			
