@@ -279,6 +279,8 @@ class EM_Frame(object):
 				for y, line in enumerate(list_for_labels, 3):
 					if y <= stdscr.getmaxyx()[0]:
 						stdscr.addstr(y, 2, line)
+			else:
+				stdscr.addstr(2, 2, "No SSIDS Detected OR PLARS Error!")
 
 	def display(self):
 		self.em_scan()
