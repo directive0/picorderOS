@@ -246,8 +246,6 @@ class EM_Frame(object):
 		self.vizW = self.vizX2 - self.vizX1 
 		self.vizH = self.vizY2 - self.vizY1
 
-		self.freqmap_grid = DrawGrid(self.vizX1, self.vizY1, self.vizW, self.vizH, lcars_grid)
-
 		self.events = Events([1,0,0],"modem")
 
 # function to shut down CLI if needed.
