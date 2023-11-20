@@ -291,8 +291,8 @@ class PLARS(object):
 
 
 		for sample in data:
-			if sample['mac'] not in self.buffer_em["dev"].values and sample["mac"] not in self.em_idents:
-				self.em_idents.append(sample["mac"])
+			if sample[6] not in self.buffer_em["dev"].values and sample[6] not in self.em_idents:
+				self.em_idents.append(sample[6])
 
 		q = Queue()
 
@@ -305,6 +305,7 @@ class PLARS(object):
 
 		# appends the new data to the buffer
 		self.buffer_em = result
+
 
 		# get buffer size to determine how many rows to remove from the end
 		currentsize = len(self.buffer_em)
