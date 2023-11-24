@@ -105,14 +105,14 @@ class PLARS(object):
 			if os.path.exists(self.file_path):
 				self.core = pd.read_csv(self.file_path)
 			else:
-				self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
+				self.core = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp','position'])
 				self.core.to_csv(self.file_path)
 
 			# check if an EM datacore csv file exists
 			if os.path.exists(self.em_file_path):
 				self.em_core = pd.read_csv(self.em_file_path)
 			else:
-				self.em_core = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
+				self.em_core = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp','position'])
 				self.em_core.to_csv(self.em_file_path)
 
 
@@ -121,10 +121,10 @@ class PLARS(object):
 		pd.set_option('display.float_format', '{:.7f}'.format)
 
 		#create a buffer object to hold screen data
-		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp'])
+		self.buffer = pd.DataFrame(columns=['value','min','max','dsc','sym','dev','timestamp','position'])
 
 		#create a buffer for wifi/bt data
-		self.buffer_em = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp'])
+		self.buffer_em = pd.DataFrame(columns=['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp','position'])
 
 
 		# variables for EM stats call

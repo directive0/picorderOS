@@ -66,15 +66,16 @@ class Wifi_Scan(object):
 			if len(ap_list) > 0:
 				for ap in ap_list:
 					details = [ap["essid"], 
-				int(ap["signal_level_dBm"]),
-				int(ap["signal_quality"]), 
-				float(ap["frequency"]), 
-				ap["encryption"], 
-				ap["channel"], 
-				ap["mac"], 
-				ap["mode"], 
-				'wifi', 
-				timestamp]
+							int(ap["signal_level_dBm"]),
+							int(ap["signal_quality"]), 
+							float(ap["frequency"]), 
+							ap["encryption"], 
+							ap["channel"], 
+							ap["mac"], 
+							ap["mode"], 
+							'wifi', 
+							timestamp,
+							configure.position]
 					ap_fragments.append(details)
 			else:
 				ap_fragments = None

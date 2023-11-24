@@ -120,9 +120,8 @@ class Sensor(object):
 		#'value','min','max','dsc','sym','dev','timestamp'
 
 
-		# testing:
 		# data fragments (objects that contain the most recent sensor value,
-		# plus its context) are objects called Fragment().
+		# plus metadata for context) are objects called Fragment().
 
 		if configure.system_vitals:
 
@@ -472,6 +471,7 @@ def threaded_sensor():
 				data, thermal = item
 				plars.update(data)
 				plars.update_thermal(thermal)
+				configure.position = data[0][7]
 			else:
 				break
 
