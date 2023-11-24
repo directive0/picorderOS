@@ -359,7 +359,7 @@ class preferences(object):
 
 		# Max buffer size allowed (usually defined by display module constraints, if 0 display will set otherwise it will apply user config)
 		# If the display module does not support setting make sure to set this to non zero or else no data will be graphed
-		self.buffer_size = int(config['GLOBALS']['buffer_size'])
+		self.buffer_size = [int(config['GLOBALS']['buffer_size'])]
 
 		# Sets the size of the graph. Not supported by all display modules.
 		self.graph_size = [int(config['GLOBALS']['graph_size'])]
