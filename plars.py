@@ -323,7 +323,7 @@ class PLARS(object):
 		self.thermal_frame = frame
 
 
-	# updates the data storage file with the most recent sensor values from each
+	# updates the dataframe in memory with the most recent sensor values from each
 	# initialized sensor.
 	# Sensor data is taken in as Fragment() instance objects. Each one contains
 	# the sensor value and context for it (scale, symbol, unit, etc).
@@ -336,7 +336,7 @@ class PLARS(object):
 		# breaks out the compilation of existing and newest dataframe as a process.
 		q = Queue()
 
-		get_process = Process(target=update_proc, args=(q, self.buffer, data,['value','min','max','dsc','sym','dev','timestamp'],))
+		get_process = Process(target=update_proc, args=(q, self.buffer, data,['value','min','max','dsc','sym','dev','timestamp','position'],))
 		get_process.start()
 
 		# return a list of the values from the process

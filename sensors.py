@@ -61,6 +61,14 @@ if configure.amg8833:
 if configure.EM:
 	from modulated_em import *
 
+if configure.gps:
+	from gps import *
+	gps_parent_conn,gps_child_conn = Pipe()
+	gps_process = Process(target=GPS_process, args=(gps_child_conn,))
+	gps_process.start()
+
+
+
 # An object to store each sensor value and context.
 class Fragment(object):
 
@@ -73,17 +81,20 @@ class Fragment(object):
 		self.dev = dev
 		self.sym = sym
 		self.value = 47
+		self.timestamp = 47
 
 	# Sets the value and timestamp for the fragment.
-	def set(self,value, timestamp):
+	def set(self,value, timestamp, position):
 
 		self.value = value
 
 		self.timestamp = timestamp
 
+		self.position = position
+
 	# Returns all the data for the fragment.
 	def get(self):
-		return [self.value, self.mini, self.maxi, self.dsc, self.sym, self.dev, self.timestamp]
+		return [self.value, self.mini, self.maxi, self.dsc, self.sym, self.dev, self.timestamp, self.position]
 
 	# Returns only the info constants for this fragment
 	def get_info(self):
@@ -112,6 +123,7 @@ class Sensor(object):
 		# testing:
 		# data fragments (objects that contain the most recent sensor value,
 		# plus its context) are objects called Fragment().
+
 		if configure.system_vitals:
 
 			self.step = 0.0
@@ -237,14 +249,20 @@ class Sensor(object):
 		#timestamp for this sensor get.
 		timestamp = time.time()
 
+		if configure.gps:
+			position_data = gps_parent_conn.recv()
+			position = [position_data.lat,position_data.lon]
+		else:
+			position = [47.98,47.98]
 
+			
 
 		if configure.bme:
 
-			self.bme_temp.set(self.bme.temperature,timestamp)
-			self.bme_humi.set(self.bme.humidity,timestamp)
-			self.bme_press.set(self.bme.pressure,timestamp)
-			self.bme_voc.set(self.bme.gas / 1000,timestamp)
+			self.bme_temp.set(self.bme.temperature,timestamp, position)
+			self.bme_humi.set(self.bme.humidity,timestamp, position)
+			self.bme_press.set(self.bme.pressure,timestamp, position)
+			self.bme_voc.set(self.bme.gas / 1000,timestamp, position)
 
 			sensorlist.extend((self.bme_temp,self.bme_humi,self.bme_press, self.bme_voc))
 
@@ -253,15 +271,15 @@ class Sensor(object):
 			magdata = sense.get_compass_raw()
 			acceldata = sense.get_accelerometer_raw()
 
-			self.sh_temp.set(sense.get_temperature(),timestamp)
-			self.sh_humi.set(sense.get_humidity(),timestamp)
-			self.sh_baro.set(sense.get_pressure(),timestamp)
-			self.sh_magx.set(magdata["x"],timestamp)
-			self.sh_magy.set(magdata["y"],timestamp)
-			self.sh_magz.set(magdata["z"],timestamp)
-			self.sh_accx.set(acceldata['x'],timestamp)
-			self.sh_accy.set(acceldata['y'],timestamp)
-			self.sh_accz.set(acceldata['z'],timestamp)
+			self.sh_temp.set(sense.get_temperature(),timestamp, position)
+			self.sh_humi.set(sense.get_humidity(),timestamp, position)
+			self.sh_baro.set(sense.get_pressure(),timestamp, position)
+			self.sh_magx.set(magdata["x"],timestamp, position)
+			self.sh_magy.set(magdata["y"],timestamp, position)
+			self.sh_magz.set(magdata["z"],timestamp, position)
+			self.sh_accx.set(acceldata['x'],timestamp, position)
+			self.sh_accy.set(acceldata['y'],timestamp, position)
+			self.sh_accz.set(acceldata['z'],timestamp, position)
 
 			sensorlist.extend((self.sh_temp, self.sh_baro, self.sh_humi, self.sh_magx, self.sh_magy, self.sh_magz, self.sh_accx, self.sh_accy, self.sh_accz))
 
@@ -295,15 +313,15 @@ class Sensor(object):
 			self.mag_values = motion.magnetometer()
 			self.acc_values = [round(x, 2) for x in motion.accelerometer()]
 
-			self.ep_temp.set(weather.temperature(),timestamp)
-			self.ep_colo.set(light.light(),timestamp)
-			self.ep_baro.set(weather.pressure(unit='hpa'), timestamp)
-			self.ep_magx.set(self.mag_values[0],timestamp)
-			self.ep_magy.set(self.mag_values[1],timestamp)
-			self.ep_magz.set(self.mag_values[2],timestamp)
-			self.ep_accx.set(self.acc_values[0],timestamp)
-			self.ep_accy.set(self.acc_values[1],timestamp)
-			self.ep_accz.set(self.acc_values[2],timestamp)
+			self.ep_temp.set(weather.temperature(),timestamp, position)
+			self.ep_colo.set(light.light(),timestamp, position)
+			self.ep_baro.set(weather.pressure(unit='hpa'), timestamp, position)
+			self.ep_magx.set(self.mag_values[0],timestamp, position)
+			self.ep_magy.set(self.mag_values[1],timestamp, position)
+			self.ep_magz.set(self.mag_values[2],timestamp, position)
+			self.ep_accx.set(self.acc_values[0],timestamp, position)
+			self.ep_accy.set(self.acc_values[1],timestamp, position)
+			self.ep_accz.set(self.acc_values[2],timestamp, position)
 
 			sensorlist.extend((self.ep_temp, self.ep_baro, self.ep_colo, self.ep_magx, self.ep_magy, self.ep_magz, self.ep_accx, self.ep_accy, self.ep_accz))
 
@@ -317,17 +335,17 @@ class Sensor(object):
 				t = float(47)
 
 			# update each fragment with new data and mark the time.
-			self.cputemp.set(t,timestamp)
-			self.cpuperc.set(float(psutil.cpu_percent()),timestamp)
-			self.virtmem.set(float(psutil.virtual_memory().available * 0.0000001),timestamp)
-			self.bytsent.set(float(psutil.net_io_counters().bytes_recv * 0.00001),timestamp)
-			self.bytrece.set(float(psutil.net_io_counters().bytes_recv * 0.00001),timestamp)
+			self.cputemp.set(t,timestamp, position)
+			self.cpuperc.set(float(psutil.cpu_percent()),timestamp, position)
+			self.virtmem.set(float(psutil.virtual_memory().available * 0.0000001),timestamp, position)
+			self.bytsent.set(float(psutil.net_io_counters().bytes_recv * 0.00001),timestamp, position)
+			self.bytrece.set(float(psutil.net_io_counters().bytes_recv * 0.00001),timestamp, position)
 
 			if self.generators:
-				self.sinewav.set(float(self.sin_gen()*100),timestamp)
-				self.tanwave.set(float(self.tan_gen()*100),timestamp)
-				self.coswave.set(float(self.cos_gen()*100),timestamp)
-				self.sinwav2.set(float(self.sin2_gen()*100),timestamp)
+				self.sinewav.set(float(self.sin_gen()*100),timestamp, position)
+				self.tanwave.set(float(self.tan_gen()*100),timestamp, position)
+				self.coswave.set(float(self.cos_gen()*100),timestamp, position)
+				self.sinwav2.set(float(self.sin2_gen()*100),timestamp, position)
 
 			# load the fragments into the sensorlist
 			sensorlist.extend((self.cputemp, self.cpuperc, self.virtmem, self.bytsent, self.bytrece))

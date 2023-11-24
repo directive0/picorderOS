@@ -202,6 +202,9 @@ class preferences(object):
 
 		self.tinyups = self.str2bool(config['SENSORS']['tinyups'])
 
+		# Toggles position data from USB Serial GPS module
+		self.gps = self.str2bool(config['SENSORS']['gps'])
+
 
 # INPUT MODULE-----------------------------------------------------------------#
 
