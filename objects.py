@@ -143,8 +143,12 @@ class preferences(object):
 							'displayinterval':'0',
 							'# Turns data logging on - data is written to data/datacore.csv':None,
 							'datalog':'no',
-							'# Trim the PLARS buffer when buffer sample size reaches this number':None,
+							'# Toggles memory buffer trimming':None,
 							'trim_buffer':'yes',
+							'# Max buffer size for trimming':None,
+							'buffer_size':'0',
+							'# Set the size of the graph, usually set by a display module at startup':None,
+							'graph_size':'0',																				
 							'# Respond to door open/close (requires hall effect sensors)':None,
 							'doordetection':'yes',
 							'# Settings for mode_a Graph Screen on TR-108':None,
@@ -349,15 +353,23 @@ class preferences(object):
 
 		# sets data logging mode.
 		self.datalog = [self.str2bool(config['GLOBALS']['datalog'])]
+
+		# toggles buffer trimming
 		self.trim_buffer = [self.str2bool(config['GLOBALS']['trim_buffer'])]
-		self.buffer_size = [0]
-		self.graph_size = [0]
+
+		# Max buffer size allowed (usually defined by display module constraints, if 0 display will set otherwise it will apply user config)
+		# If the display module does not support setting make sure to set this to non zero or else no data will be graphed
+		self.buffer_size = int(config['GLOBALS']['buffer_size'])
+
+		# Sets the size of the graph. Not supported by all display modules.
+		self.graph_size = [int(config['GLOBALS']['graph_size'])]
 		self.logtime = [60]
 		self.recall = [False]
 
 		# used to control refresh speed.
 		self.samples = int(config['GLOBALS']['samples'])
 
+		# used to control refresh rate of sensor queries
 		self.samplerate = [float(config['GLOBALS']['samplerate'])]
 		self.em_samplerate = float(config['GLOBALS']['em_samplerate'])
 
@@ -369,6 +381,8 @@ class preferences(object):
 		# holds the global state of the program (allows secondary modules to quit the program should we require it)
 		self.status = ["startup"]
 		self.last_status = ["startup"]
+
+		# Planned feature; If raised immidiately halt, backup all data, transmit data if possible, shutdown.
 		self.emrg = [False]
 
 		# Enables/disables door detection
