@@ -386,6 +386,9 @@ class preferences(object):
 		self.graph_x = int(config['GLOBALS']['graph_x'])
 		self.graph_y = int(config['GLOBALS']['graph_y'])
 
+		# Global holder for current position (lat,lon) as provided by GPS/etc. 
+		self.position = [47,47]
+
 
 # create a shared object for global variables and settings.
 configure = preferences()
