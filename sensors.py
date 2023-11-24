@@ -72,7 +72,7 @@ if configure.gps:
 # An object to store each sensor value and context.
 class Fragment(object):
 
-	__slots__ = ('value','mini','maxi','dsc','sym','dev','timestamp')
+	__slots__ = ('value','mini','maxi','dsc','sym','dev','timestamp','position')
 
 	def __init__(self,mini,maxi,dsc,sym,dev):
 		self.mini = mini
@@ -471,7 +471,7 @@ def threaded_sensor():
 				data, thermal = item
 				plars.update(data)
 				plars.update_thermal(thermal)
-				configure.position = data[0][7]
+				configure.position =data[0][7]
 			else:
 				break
 
