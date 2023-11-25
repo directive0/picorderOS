@@ -63,17 +63,22 @@ class Start_Frame(object):
 		self.bootto = "multi"
 		self.started = False
 		self.timesup = timer()
-		self.logoxy = [2,2]
-		self.titlexy = [1,1]
+		self.logoxy = [15,2]
+		self.titlexy = [1,25]
 
 	def display(self):
 
 		if not self.started:
 			self.timesup.logtime()
 			self.started = True
+		
+
 
 		# display splash logo
 		if self.started:
+
+			stdscr.addstr(self.titlexy[1],self.titlexy[0],configure.boot_message)
+
 			for y, line in enumerate(logo.splitlines(), self.logoxy[1]):
 				stdscr.addstr(y, self.logoxy[0], line)
 
