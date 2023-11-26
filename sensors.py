@@ -72,7 +72,7 @@ if configure.gps:
 # An object to store each sensor value and context.
 class Fragment(object):
 
-	__slots__ = ('value','mini','maxi','dsc','sym','dev','timestamp','latitude','longitude')
+	__slots__ = ('value','mini','maxi','dsc','sym','dev','timestamp','position')
 
 	def __init__(self,mini,maxi,dsc,sym,dev):
 		self.mini = mini
