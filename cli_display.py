@@ -118,32 +118,63 @@ class abgd(object):
 
 class graph(object):
 
-	def __init__(self,y,x,w,h,title = "graph"):
+	def __init__(self,y,x,w,h,setting):
 		self.cursor = 0
 		self.y, self.x = y,x
 		self.w, self.h = w,h
 		self.g_low = self.y + self.h
+		self.data = 47
 		self.buffer = []
 		self.data_buffer = []
 		self.range = (0,100)
 		self.draw_range = (self.g_low, self.y)
-		self.title = title
+		self.setting = setting
+		self.dsc = 'none'
+		self.dev = 'none'
+		self.sym - 'none'
 
+		self.get_identity()
+
+	def get_identity(self):
+
+		# determines the sensor keys for each of the three main sensors
+		this_index = int(configure.sensors[self.setting][0])
+
+		# grabs the sensor metadata for display
+		self.dsc,self.dev,self.sym,maxi,mini = configure.sensor_info[this_index]
+
+	def get_value(self):
+		# grabs sensor data
+		value = plars.get_recent(self.dsc,self.dev,num=1)
+		
+		if len(value) > 0:
+			self.title = self.dsc
+			self.data = value[0]
+		else:
+			self.titles[i] = "OFFLINE"
+			self.data = 47
+		
 	def set_cursor(self,cur):
 		self.cursor = cur
 
-	def render(self, data):
+	def render(self):
 
-		self.data_buffer.insert(0,data)
+		self.get_value()
+
+		self.data_buffer.insert(0,self.data)
 
 		if len(self.data_buffer) > 0:
 			this_range = (min(self.data_buffer),max(self.data_buffer))
 		else:
 			this_range = self.range
 
-		stdscr.addstr(self.y-1,self.x,self.title)
-		stdscr.addstr(self.y-1,self.x+len(self.title)+1,str(data))
+		# Draw description
+		stdscr.addstr(self.y-2,self.x,self.title)
 
+		# Draw value
+		stdscr.addstr(self.y-2,self.x+len(self.title)+1,str(data))
+
+		# update the graph buffer
 		for i in range(self.w):
 			if len(self.data_buffer) > i:
 				result = int(numpy.interp(self.data_buffer[i],this_range,self.draw_range))
@@ -188,9 +219,9 @@ class Multi_Frame(object):
 
 		self.error = ""
 		self.indicators = abgd(4,2)
-		self.graph0 = graph(4,9,40,5,title = "Temp")
-		self.graph1 = graph(14,9,40,5,title = "Baro")
-		self.graph2 = graph(24,9,40,5,title = "Humid")
+		self.graph0 = graph(4,9,40,5,0)
+		self.graph1 = graph(14,9,40,5,1)
+		self.graph2 = graph(24,9,40,5,2)
 
 		self.datas = [47,47,47]
 		self.titles = ["default", "default", "default"]
@@ -204,33 +235,9 @@ class Multi_Frame(object):
 
 		self.indicators.draw()
 
-		#gathers the data for all three sensors currently selected for each slot.
-		for i in range(3):
-
-			# determines the sensor keys for each of the three main sensors
-			this_index = int(configure.sensors[i][0])
-
-			# grabs the sensor metadata for display
-			dsc,dev,sym,maxi,mini = configure.sensor_info[this_index]
-
-			# grabs sensor data
-			value = plars.get_recent(dsc,dev,num=1)[0]
-
-			if len(value) > 0:
-				self.titles[i] = dsc
-				self.datas[i] = value[0]
-			else:
-				self.titles[i] = "OFFLINE"
-				self.datas[i] = 47
-
-		self.graph0.title = self.titles[0]
-		self.graph0.render(self.datas[0])
-
-		self.graph1.title = self.titles[1]
-		self.graph1.render(self.datas[1])
-
-		self.graph2.title = self.titles[2]
-		self.graph2.render(self.datas[2])
+		self.graph0.render()
+		self.graph1.render()
+		self.graph2.render()
 
 
 
