@@ -82,7 +82,7 @@ class Fragment(object):
 		self.sym = sym
 		self.value = 47
 		self.timestamp = self.value
-		self.postion = [self.value,self.value]
+		self.position = [self.value,self.value]
 
 	# Sets the value and timestamp for the fragment.
 	def set(self,value, timestamp, position):
