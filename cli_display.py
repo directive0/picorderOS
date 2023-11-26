@@ -236,7 +236,38 @@ class Multi_Frame(object):
 
 		return status
 
+class Position_Frame(object):
+	def __init__(self):
 
+		self.graphcycle = 0
+
+		# Sets the topleft origin of the graph
+		self.graphx = 20
+		self.graphy = 58
+
+		# Sets the x and y span of the graph
+		self.gspanx = 135
+		self.gspany = 29
+		self.titlex = 23
+		self.titley = 2
+
+		self.high = 0
+		self.low = 0
+		self.average = 0
+		self.labely = 4
+		self.labelxr = 156
+		self.selection = 0
+
+
+		# assign x coordinates for frequency map
+		self.vizX1 = 20
+		self.vizY1 = 36
+		self.vizX2 = 157
+		self.vizY2 = 77
+		self.vizW = self.vizX2 - self.vizX1 
+		self.vizH = self.vizY2 - self.vizY1
+
+		self.events = Events(["multi",0,0],"modem")
 
 
 class EM_Frame(object):
@@ -346,12 +377,14 @@ class CLI_Display(object):
 		self.startup = Start_Frame()
 		self.multi_frame = Multi_Frame()
 		self.em_frame = EM_Frame()
+		self.position_frame = Position_Frame()
 
 		# carousel dict to hold the keys and defs for each state
 		self.carousel = {"startup":self.start_up,
 				   "multi":self.graph_screen,
 				   "modem":self.em_screen,
 				   "settings":self.settings,
+				   "position":self.position,
 				   "msd":self.msd,
 				   "powerdown":self.powerdown}
 
@@ -363,6 +396,9 @@ class CLI_Display(object):
 
 	def em_screen(self):
 		return self.em_frame.display()
+	
+	def position(self):
+		return self.position_frame.display()
 
 	def settings(self):
 		pass
