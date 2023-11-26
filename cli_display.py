@@ -275,7 +275,7 @@ class EM_Frame(object):
 	# Draws a list of APs with data.
 	def em_scan(self):
 			
-			stdscr.addstr(2,2,"Modulated EM Scan")
+			stdscr.addstr(7,2,"Modulated EM Scan")
 
 			# list to hold the data labels
 			list_for_labels = []
@@ -298,17 +298,36 @@ class EM_Frame(object):
 				
 
 
-				for y, line in enumerate(list_for_labels, 3):
+				for y, line in enumerate(list_for_labels, 8):
 					if y <= stdscr.getmaxyx()[0]:
 						stdscr.addstr(y, 2, line)
 			else:
 				stdscr.addstr(2, 2, "No SSIDS Detected OR PLARS Error!")
+
+
+	def em_statistics(self,draw):
+		
+		idents, cur_no, max_no = plars.get_em_stats()
+
+		stdscr.addstr(2,2,"Modulated EM Stats")
+
+		str1 = "APs Detected: " + str(cur_no)
+		str2 = "Most Detected: " + str(max_no) 
+		str3 = "Uniques: " + str(len(idents))
+
+		# list to hold the data labels
+		list_for_labels = [str1, str2, str3]
+
+		for y, line in enumerate(list_for_labels, 3):
+			if y <= stdscr.getmaxyx()[0]:
+				stdscr.addstr(y, 2, line)
 
 	def display(self):
 
 		# returns mode to the main loop unless something causes state change
 		status,payload  = self.events.check()
 
+		self.em_statistics()
 		self.em_scan()
 		return status
 
