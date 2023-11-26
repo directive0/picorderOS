@@ -305,7 +305,7 @@ class EM_Frame(object):
 				stdscr.addstr(2, 2, "No SSIDS Detected OR PLARS Error!")
 
 
-	def em_statistics(self,draw):
+	def em_statistics(self):
 		
 		idents, cur_no, max_no = plars.get_em_stats()
 
