@@ -72,7 +72,7 @@ if configure.gps:
 # An object to store each sensor value and context.
 class Fragment(object):
 
-	__slots__ = ('value','mini','maxi','dsc','sym','dev','timestamp','position')
+	__slots__ = ('value','mini','maxi','dsc','sym','dev','timestamp','latitude','longitude')
 
 	def __init__(self,mini,maxi,dsc,sym,dev):
 		self.mini = mini
@@ -94,7 +94,7 @@ class Fragment(object):
 
 	# Returns all the data for the fragment.
 	def get(self):
-		return [self.value, self.mini, self.maxi, self.dsc, self.sym, self.dev, self.timestamp, self.position]
+		return [self.value, self.mini, self.maxi, self.dsc, self.sym, self.dev, self.timestamp, self.position[0], self.position[1]]
 
 	# Returns only the info constants for this fragment
 	def get_info(self):
@@ -253,8 +253,6 @@ class Sensor(object):
 			position = [position_data.lat,position_data.lon]
 		else:
 			position = [47.98,47.98]
-
-			
 
 		if configure.bme:
 
