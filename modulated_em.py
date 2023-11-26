@@ -75,7 +75,8 @@ class Wifi_Scan(object):
 							ap["mode"], 
 							'wifi', 
 							timestamp,
-							configure.position]
+							configure.position[0],
+							configure.position[1]]
 					ap_fragments.append(details)
 			else:
 				ap_fragments = None
