@@ -470,7 +470,7 @@ def threaded_sensor():
 				data, thermal = item
 				plars.update(data)
 				plars.update_thermal(thermal)
-				configure.position = data[0].get()[7]
+				configure.position = [data[0].get()[7],data[0].get()[8]]
 			else:
 				break
 
