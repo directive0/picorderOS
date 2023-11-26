@@ -296,7 +296,7 @@ class PLARS(object):
 
 		q = Queue()
 
-		get_process = Process(target=update_em_proc, args=(q, self.buffer_em, data,['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp','position'],))
+		get_process = Process(target=update_em_proc, args=(q, self.buffer_em, data,['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp','latitude','longitude'],))
 		get_process.start()
 
 		# return a list of the values
