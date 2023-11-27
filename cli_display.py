@@ -258,6 +258,7 @@ class Position_Frame(object):
 
 	def display(self):
 
+		lasty = 0
 		# returns mode to the main loop unless something causes state change
 		status,payload  = self.events.check()
 
@@ -265,10 +266,11 @@ class Position_Frame(object):
 
 		for y, line in enumerate(map.splitlines(), self.mapy):
 			stdscr.addstr(y, self.mapx, line)
-
+			lasty = y
+			
 		locationy = int(numpy.interp(configure.position[0],[-90,90],[self.mapy,12]))
-		locationx = int(numpy.interp(configure.position[1],[-180,180],[self.mapx,48]))
-		stdscr.addstr(locationy, locationx, "O")
+		locationx = int(numpy.interp(configure.position[1],[-180,180],[self.mapx,lasty]))
+		stdscr.addstr(locationy, locationx, "X")
 
 		stdscr.addstr(16, 2, "Lat = " + str(configure.position[0]))
 		stdscr.addstr(17, 2, "Lon = " + str(configure.position[1]))
