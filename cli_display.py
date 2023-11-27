@@ -266,7 +266,7 @@ class Position_Frame(object):
 
 		locationy = int(numpy.interp(configure.position[0],[-90,90],[self.mapy,12]))
 		locationx = int(numpy.interp(configure.position[1],[-180,180],[self.mapx,48]))
-		stdscr.addstr(, configure.position[y], "O")
+		stdscr.addstr(locationy, locationx, "O")
 		return status
 
 class EM_Frame(object):
