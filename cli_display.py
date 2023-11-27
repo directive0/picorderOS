@@ -130,7 +130,7 @@ class graph(object):
 		self.setting = setting
 		self.dsc = 'none'
 		self.dev = 'none'
-		self.sym - 'none'
+		self.sym = 'none'
 
 		self.get_identity()
 
