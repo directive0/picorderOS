@@ -262,6 +262,8 @@ class Position_Frame(object):
 		for y, line in enumerate(map.splitlines(), self.mapy):
 			stdscr.addstr(y, self.mapx, line)
 
+		return status
+
 class EM_Frame(object):
 	def __init__(self):
 
