@@ -149,13 +149,13 @@ class graph(object):
 
 	def get_value(self):
 		# grabs sensor data
-		value = plars.get_recent(self.dsc,self.dev,num=1)
+		value = plars.get_recent(self.dsc,self.dev,num=1)[0]
 		
 		if len(value) > 0:
 			self.title = self.dsc
 			self.data = value[0]
 		else:
-			self.titles[i] = "OFFLINE"
+			self.title = "OFFLINE"
 			self.data = 47
 		
 	def set_cursor(self,cur):
