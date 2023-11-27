@@ -253,7 +253,17 @@ class Sensor(object):
 
 		if configure.gps:
 			position_data = gps_parent_conn.recv()
-			position = [float(position_data.lat),float(position_data.lon)]
+			if position_data.lat != '':
+				lat = float(position_data.lat)
+			else:
+				lat = 47.98
+
+			if position_data.lon != '':
+				lon = float(position_data.lon)
+			else:
+				lon = 47.98
+
+			position = [lat,lon]
 		else:
 			position = [47.98,47.98]
 
