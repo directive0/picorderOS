@@ -138,9 +138,14 @@ class graph(object):
 
 		# determines the sensor keys for each of the three main sensors
 		this_index = int(configure.sensors[self.setting][0])
+		infopack = configure.sensor_info
 
+		if len(infopack) > 0:
+			self.dsc,self.dev,self.sym,maxi,mini = configure.sensor_info[this_index]
+
+		
 		# grabs the sensor metadata for display
-		self.dsc,self.dev,self.sym,maxi,mini = configure.sensor_info[this_index]
+		
 
 	def get_value(self):
 		# grabs sensor data
