@@ -16,14 +16,14 @@ def GPS_process(conn):
 		(raw_data, parsed_data) = nmr.read()
 
 		if hasattr(parsed_data, "lat"):
-			print(item.lat, ",",  item.lon)
-			if position_data.lat != '':
-				lat = float(position_data.lat)
+
+			if parsed_data.lat != '':
+				lat = float(parsed_data.lat)
 			else:
 				lat = 47.98
 
-			if position_data.lon != '':
-				lon = float(position_data.lon)
+			if parsed_data.lon != '':
+				lon = float(parsed_data.lon)
 			else:
 				lon = 47.98
 
