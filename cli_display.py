@@ -23,6 +23,8 @@ curses.nocbreak()
 stdscr.keypad(True)
 curses.curs_set(False)
 
+rows, cols = stdscr.getmaxyx()
+
 logo = """ :==+=+=-  .==+=+-- 
  +      .+--      :-
  +   .:. :+  :..  -:
@@ -248,7 +250,7 @@ class Multi_Frame(object):
 class Position_Frame(object):
 	def __init__(self):
 		self.last_position = [47,47]
-		self.mapx = 0
+		self.mapx = 1
 		self.mapy = 4
 		self.events = Events(["multi",0,0],"position")
 
@@ -262,6 +264,9 @@ class Position_Frame(object):
 		for y, line in enumerate(map.splitlines(), self.mapy):
 			stdscr.addstr(y, self.mapx, line)
 
+		locationy = int(numpy.interp(configure.position[0],[-90,90],[self.mapy,12]))
+		locationx = int(numpy.interp(configure.position[1],[-180,180],[self.mapx,48]))
+		stdscr.addstr(, configure.position[y], "O")
 		return status
 
 class EM_Frame(object):
