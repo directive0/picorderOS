@@ -132,7 +132,7 @@ class graph(object):
 		self.dev = 'none'
 		self.sym = 'none'
 
-		self.get_identity()
+		
 
 	def get_identity(self):
 
@@ -148,6 +148,7 @@ class graph(object):
 		
 
 	def get_value(self):
+		self.get_identity()
 		# grabs sensor data
 		value = plars.get_recent(self.dsc,self.dev,num=1)[0]
 		
