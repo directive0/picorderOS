@@ -115,7 +115,6 @@ class abgd(object):
 			self.symbols.insert(0,item)
 			self.timeit.logtime()
 
-
 class graph(object):
 
 	def __init__(self,y,x,w,h,setting):
@@ -212,7 +211,6 @@ class graph(object):
 		for i in range(0, n - self.w):
 			self.data_buffer.pop()
 
-
 class Multi_Frame(object):
 
 	def __init__(self):
@@ -239,43 +237,24 @@ class Multi_Frame(object):
 		self.graph1.render()
 		self.graph2.render()
 
-
-
 		return status
 
 class Position_Frame(object):
 	def __init__(self):
+		self.last_position = [47,47]
+		self.mapx = 0
+		self.mapy = 4
+		self.events = Events(["multi",0,0],"position")
 
-		self.graphcycle = 0
+	def display(self):
 
-		# Sets the topleft origin of the graph
-		self.graphx = 20
-		self.graphy = 58
+		# returns mode to the main loop unless something causes state change
+		status,payload  = self.events.check()
 
-		# Sets the x and y span of the graph
-		self.gspanx = 135
-		self.gspany = 29
-		self.titlex = 23
-		self.titley = 2
+		stdscr.addstr(7,1,"Orbit Supplied Position")
 
-		self.high = 0
-		self.low = 0
-		self.average = 0
-		self.labely = 4
-		self.labelxr = 156
-		self.selection = 0
-
-
-		# assign x coordinates for frequency map
-		self.vizX1 = 20
-		self.vizY1 = 36
-		self.vizX2 = 157
-		self.vizY2 = 77
-		self.vizW = self.vizX2 - self.vizX1 
-		self.vizH = self.vizY2 - self.vizY1
-
-		self.events = Events(["multi",0,0],"modem")
-
+		for y, line in enumerate(map.splitlines(), self.mapy):
+			stdscr.addstr(y, self.mapx, line)
 
 class EM_Frame(object):
 	def __init__(self):
@@ -308,7 +287,7 @@ class EM_Frame(object):
 		self.vizW = self.vizX2 - self.vizX1 
 		self.vizH = self.vizY2 - self.vizY1
 
-		self.events = Events(["multi",0,0],"modem")
+		self.events = Events(["position",0,0],"modem")
 
 	# Draws a list of APs with data.
 	def em_scan(self):

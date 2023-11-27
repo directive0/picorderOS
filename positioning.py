@@ -10,22 +10,19 @@ serialPort = serial.Serial(port, baudrate = baud, timeout = 0.5)
 
 # function to collect GPS data as a process.
 def GPS_process(conn):
- while True:
-	stream = serial.Serial(port, 9600, timeout=3)
-	nmr = NMEAReader(stream)
-	(raw_data, parsed_data) = nmr.read()
-	time.sleep(0.1)
-	conn.send(parsed_data)
-
+	while True:
+		stream = serial.Serial(port, 9600, timeout=3)
+		nmr = NMEAReader(stream)
+		(raw_data, parsed_data) = nmr.read()
+		time.sleep(0.1)
+		conn.send(parsed_data)
 
 def threaded_GPS(conn):
 
-	item = conn.recv()
+	item = parent_conn.recv()
 
 	if hasattr(item, "lat"):
 			print(item.lat, ",",  item.lon)
-
-	#gps_process.terminate()
 
 parent_conn,child_conn = Pipe()
 gps_process = Process(target=GPS_process, args=(child_conn,))

@@ -349,8 +349,8 @@ class Sensor(object):
 			sensorlist.extend((self.cputemp, self.cpuperc, self.virtmem, self.bytsent, self.bytrece))
 
 			if self.generators:
-				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2))
-				 
+				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2)) 
+			
 			configure.max_sensors[0] = len(sensorlist)
 			
 		if len(sensorlist) < 1:
