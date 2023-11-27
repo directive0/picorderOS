@@ -176,7 +176,7 @@ class graph(object):
 		stdscr.addstr(self.y-2,self.x,self.title)
 
 		# Draw value
-		stdscr.addstr(self.y-2,self.x+len(self.title)+1,str(data))
+		stdscr.addstr(self.y-2,self.x+len(self.title)+1,str(self.data))
 
 		# update the graph buffer
 		for i in range(self.w):
