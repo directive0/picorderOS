@@ -27,7 +27,7 @@ def GPS_process(conn):
 			else:
 				lon = 47.98
 
-		conn.send(lat,lon)
+		conn.send([lat,lon])
 
 def threaded_GPS(conn):
 
