@@ -14,7 +14,20 @@ def GPS_process(conn):
 		stream = serial.Serial(port, 9600, timeout=3)
 		nmr = NMEAReader(stream)
 		(raw_data, parsed_data) = nmr.read()
-		conn.send(parsed_data)
+
+		if hasattr(parsed_data, "lat"):
+			print(item.lat, ",",  item.lon)
+			if position_data.lat != '':
+				lat = float(position_data.lat)
+			else:
+				lat = 47.98
+
+			if position_data.lon != '':
+				lon = float(position_data.lon)
+			else:
+				lon = 47.98
+
+		conn.send(lat,lon)
 
 def threaded_GPS(conn):
 
