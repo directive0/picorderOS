@@ -169,6 +169,11 @@ class graph(object):
 
 		if len(self.data_buffer) > 0:
 			this_range = (min(self.data_buffer),max(self.data_buffer))
+					# update the graph buffer
+			for i in range(self.w):
+				if len(self.data_buffer) > i:
+					result = int(numpy.interp(self.data_buffer[i],this_range,self.draw_range))
+					self.buffer.insert(0, result)
 		else:
 			this_range = self.range
 
@@ -178,11 +183,7 @@ class graph(object):
 		# Draw value
 		stdscr.addstr(self.y-2,self.x+len(self.title)+1,str(self.data))
 
-		# update the graph buffer
-		for i in range(self.w):
-			if len(self.data_buffer) > i:
-				result = int(numpy.interp(self.data_buffer[i],this_range,self.draw_range))
-				self.buffer.insert(0, result)
+
 
 		# draw envelope
 		# go column by column
