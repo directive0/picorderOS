@@ -14,7 +14,6 @@ def GPS_process(conn):
 		stream = serial.Serial(port, 9600, timeout=3)
 		nmr = NMEAReader(stream)
 		(raw_data, parsed_data) = nmr.read()
-		time.sleep(0.1)
 		conn.send(parsed_data)
 
 def threaded_GPS(conn):
@@ -24,10 +23,11 @@ def threaded_GPS(conn):
 	if hasattr(item, "lat"):
 			print(item.lat, ",",  item.lon)
 
-parent_conn,child_conn = Pipe()
-gps_process = Process(target=GPS_process, args=(child_conn,))
-gps_process.start()
+def test_GPS():
+	parent_conn,child_conn = Pipe()
+	gps_process = Process(target=GPS_process, args=(child_conn,))
+	gps_process.start()
 
 
-while True:
-	threaded_GPS(parent_conn)
+	while True:
+		threaded_GPS(parent_conn)

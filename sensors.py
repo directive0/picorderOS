@@ -62,7 +62,7 @@ if configure.EM:
 	from modulated_em import *
 
 if configure.gps:
-	from gps import *
+	from positioning import *
 	gps_parent_conn,gps_child_conn = Pipe()
 	gps_process = Process(target=GPS_process, args=(gps_child_conn,))
 	gps_process.start()
@@ -241,6 +241,8 @@ class Sensor(object):
 	def get_thermal_frame(self):
 		return self.thermal_frame
 
+
+# the main function that collects all sensor data
 	def get(self):
 
 		#sensorlist holds all the data fragments to be handed to plars.
@@ -251,7 +253,7 @@ class Sensor(object):
 
 		if configure.gps:
 			position_data = gps_parent_conn.recv()
-			position = [position_data.lat,position_data.lon]
+			position = [float(position_data.lat),float(position_data.lon)]
 		else:
 			position = [47.98,47.98]
 
