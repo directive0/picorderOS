@@ -13,7 +13,8 @@ from objects import *
 error = ""
 frame = 0
 
-title = "[PicorderOS]----------------------------[CLI MODE]"
+title = "[PicorderOS]--------------------------------------"
+
 
 run = True
 
@@ -271,7 +272,7 @@ class Position_Frame(object):
 			
 		locationy = int(numpy.interp(configure.position[0],[-90,90],[lasty,self.mapy]))
 		locationx = int(numpy.interp(configure.position[1],[-180,180],[self.mapx,self.mapx + 47]))
-		stdscr.addstr(locationy, locationx, "X")
+		stdscr.addstr(locationy, locationx, "+")
 
 		stdscr.addstr(16, 2, "Lat = " + str(configure.position[0]))
 		stdscr.addstr(17, 2, "Lon = " + str(configure.position[1]))
@@ -394,6 +395,14 @@ class CLI_Display(object):
 				   "position":self.position,
 				   "msd":self.msd,
 				   "powerdown":self.powerdown}
+		
+		self.labels = {"startup":"[CLI MODE]",
+				   "multi":self."[MULTI GRAPH]",
+				   "modem":"[MODULATED EM]",
+				   "settings":"[OPERATION]",
+				   "position":"[GEOGRAPHIC POSITION]",
+				   "msd":"[MASTER SYSTEM DISPLAY]",
+				   "powerdown":"[POWERDOWN]"}
 
 	def start_up(self):
 		return self.startup.display()
@@ -416,6 +425,18 @@ class CLI_Display(object):
 	def powerdown(self):
 		pass
 
+	def label_draw(self):
+		
+			# Add the Window Title
+			stdscr.addstr(0,0,title)
+
+			thislabel = self.labels[configure.status[0]]
+
+			size = len(thislabel)
+
+			# Add the Window Title
+			stdscr.addstr(0,cols - size,thislabel)
+
 	def run(self):
 
 		if self.refresh.timelapsed() > self.refreshrate:
@@ -423,8 +444,8 @@ class CLI_Display(object):
 			# Clear the screen
 			stdscr.erase()
 
-			# Add the Window Title
-			stdscr.addstr(0,0,title)
+			# Draw the title bar
+			self.label_draw()
 
 			# retrieve status from whatever frame matches current status
 			configure.status[0] = self.carousel[configure.status[0]]()

@@ -9,7 +9,6 @@ import json
 #	single surface for storing and retrieving data for display in any of the
 #	different Picorder screen modes.
 
-
 import os
 import numpy
 import datetime
