@@ -274,8 +274,11 @@ class Position_Frame(object):
 		locationx = int(numpy.interp(configure.position[1],[-180,180],[self.mapx,self.mapx + 47]))
 		stdscr.addstr(locationy, locationx, "+")
 
-		stdscr.addstr(16, 2, "Lat = " + str(configure.position[0]))
-		stdscr.addstr(17, 2, "Lon = " + str(configure.position[1]))
+		stdscr.addstr(17, 2, "Current Location")
+		stdscr.addstr(18, 2, "Lat = " + str(configure.position[0]))
+		stdscr.addstr(19, 2, "Lon = " + str(configure.position[1]))
+
+		
 		return status
 
 class EM_Frame(object):

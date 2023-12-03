@@ -9,8 +9,14 @@ baud = 9600
 serialPort = serial.Serial(port, baudrate = baud, timeout = 0.5)
 
 def GPS_function():
+		
+
 		lat = 47.98
 		lon = 47.98
+		speed = 0.00
+		track = 0.00
+
+
 		stream = serial.Serial(port, 9600, timeout=3)
 		nmr = NMEAReader(stream)
 		(raw_data, parsed_data) = nmr.read()
@@ -32,7 +38,7 @@ def GPS_process(conn):
 
 def threaded_GPS(conn):
 
-	item = parent_conn.recv()
+	item = conn.recv()
 
 	if hasattr(item, "lat"):
 			print(item.lat, ",",  item.lon)
