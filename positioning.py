@@ -8,9 +8,7 @@ baud = 9600
 
 serialPort = serial.Serial(port, baudrate = baud, timeout = 0.5)
 
-# function to collect GPS data as a process.
-def GPS_process(conn):
-	while True:
+def GPS_function():
 		lat = 47.98
 		lon = 47.98
 		stream = serial.Serial(port, 9600, timeout=3)
@@ -24,7 +22,12 @@ def GPS_process(conn):
 
 			if parsed_data.lon != '':
 				lon = float(parsed_data.lon)
+		return lat,lon
 
+# function to collect GPS data as a process.
+def GPS_process(conn):
+	while True:
+		lat,lon = GPS_function()
 		conn.send([lat,lon])
 
 def threaded_GPS(conn):
