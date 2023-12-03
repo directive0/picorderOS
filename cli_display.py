@@ -395,9 +395,9 @@ class CLI_Display(object):
 				   "position":self.position,
 				   "msd":self.msd,
 				   "powerdown":self.powerdown}
-		
+
 		self.labels = {"startup":"[CLI MODE]",
-				   "multi":self."[MULTI GRAPH]",
+				   "multi":"[MULTI GRAPH]",
 				   "modem":"[MODULATED EM]",
 				   "settings":"[OPERATION]",
 				   "position":"[GEOGRAPHIC POSITION]",
