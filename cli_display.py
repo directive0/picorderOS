@@ -60,7 +60,7 @@ map = """             @   .-
             @@@         *@            @@@@@@   
             @                                @ 
                                                
-                                               """
+-----------------------------------------------"""
 
 class Start_Frame(object):
 	def __init__(self):
@@ -269,7 +269,7 @@ class Position_Frame(object):
 			stdscr.addstr(y, self.mapx, line)
 			lasty = y
 			
-		locationy = int(numpy.interp(configure.position[0],[-90,90],[self.mapy,lasty + self.mapy]))
+		locationy = int(numpy.interp(configure.position[0],[-90,90],[lasty,self.mapy]))
 		locationx = int(numpy.interp(configure.position[1],[-180,180],[self.mapx,self.mapx + 47]))
 		stdscr.addstr(locationy, locationx, "X")
 

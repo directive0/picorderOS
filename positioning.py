@@ -11,6 +11,8 @@ serialPort = serial.Serial(port, baudrate = baud, timeout = 0.5)
 # function to collect GPS data as a process.
 def GPS_process(conn):
 	while True:
+		lat = 47.98
+		lon = 47.98
 		stream = serial.Serial(port, 9600, timeout=3)
 		nmr = NMEAReader(stream)
 		(raw_data, parsed_data) = nmr.read()
@@ -19,13 +21,9 @@ def GPS_process(conn):
 
 			if parsed_data.lat != '':
 				lat = float(parsed_data.lat)
-			else:
-				lat = 47.98
 
 			if parsed_data.lon != '':
 				lon = float(parsed_data.lon)
-			else:
-				lon = 47.98
 
 		conn.send([lat,lon])
 

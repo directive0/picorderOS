@@ -63,9 +63,7 @@ if configure.EM:
 
 if configure.gps:
 	from positioning import *
-	gps_parent_conn,gps_child_conn = Pipe()
-	gps_process = Process(target=GPS_process, args=(gps_child_conn,))
-	gps_process.start()
+
 
 
 
@@ -108,6 +106,10 @@ class Sensor(object):
 
 	def __init__(self):
 
+		if configure.gps:
+			self.gps_parent_conn,self.gps_child_conn = Pipe()
+			self.gps_process = Process(target=GPS_process, args=(gps_child_conn,))
+			self.gps_process.start()
 		#set up the necessary info for the sensors that are active.
 
 		# create a simple reference for the degree symbol since we use it a lot
@@ -252,7 +254,7 @@ class Sensor(object):
 		timestamp = time.time()
 
 		if configure.gps:
-			lat,lon = gps_parent_conn.recv()
+			lat,lon = self.gps_parent_conn.recv()
 			position = [lat,lon]
 		else:
 			position = [47.98,47.98]
