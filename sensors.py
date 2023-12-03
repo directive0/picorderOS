@@ -100,16 +100,13 @@ class Fragment(object):
 		return [self.mini, self.maxi, self.dsc, self.sym, self.dev]
 
 class Sensor(object):
+
 	# sensors should check the configuration flags to see which sensors are
 	# selected and then if active should poll the sensor and append it to the
 	# sensor array.
 
 	def __init__(self):
 
-		if configure.gps:
-			self.gps_parent_conn,self.gps_child_conn = Pipe()
-			self.gps_process = Process(target=GPS_process, args=(gps_child_conn,))
-			self.gps_process.start()
 		#set up the necessary info for the sensors that are active.
 
 		# create a simple reference for the degree symbol since we use it a lot
@@ -254,7 +251,7 @@ class Sensor(object):
 		timestamp = time.time()
 
 		if configure.gps:
-			lat,lon = self.gps_parent_conn.recv()
+			lat,lon = GPS_function()
 			position = [lat,lon]
 		else:
 			position = [47.98,47.98]
