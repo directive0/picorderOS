@@ -251,8 +251,8 @@ class Sensor(object):
 		timestamp = time.time()
 
 		if configure.gps:
-			lat,lon = GPS_function()
-			position = [lat,lon]
+			gps_data = GPS_function()
+			position = [gps_data["lat"],gps_data["lon"]]
 		else:
 			position = [47.98,47.98]
 

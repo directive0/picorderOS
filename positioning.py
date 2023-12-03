@@ -11,11 +11,7 @@ serialPort = serial.Serial(port, baudrate = baud, timeout = 0.5)
 def GPS_function():
 		
 
-		lat = 47.98
-		lon = 47.98
-		speed = 0.00
-		track = 0.00
-
+		gps_update = {"lat" : 47.98, "lon" : 47.98, "speed" : 0.00, "track" : 0.00}
 
 		stream = serial.Serial(port, 9600, timeout=3)
 		nmr = NMEAReader(stream)
@@ -24,11 +20,12 @@ def GPS_function():
 		if hasattr(parsed_data, "lat"):
 
 			if parsed_data.lat != '':
-				lat = float(parsed_data.lat)
+				gps_update["lat"] = float(parsed_data.lat)
 
 			if parsed_data.lon != '':
-				lon = float(parsed_data.lon)
-		return lat,lon
+				gps_update["lon"] = float(parsed_data.lon)
+		return gps_update
+
 
 # function to collect GPS data as a process.
 def GPS_process(conn):
@@ -37,11 +34,7 @@ def GPS_process(conn):
 		conn.send([lat,lon])
 
 def threaded_GPS(conn):
-
 	item = conn.recv()
-
-	if hasattr(item, "lat"):
-			print(item.lat, ",",  item.lon)
 
 def test_GPS():
 	parent_conn,child_conn = Pipe()
