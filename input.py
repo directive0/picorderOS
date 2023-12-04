@@ -61,7 +61,7 @@ if configure.sensehat:
 
 # set up requirements for USB keyboard
 if configure.input_kb:
-	import keyboard
+	from sshkeyboard import listen_keyboard
 	keys = ['left','down','right']
 
 
