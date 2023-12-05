@@ -256,7 +256,7 @@ class Sensor(object):
 		if configure.gps:
 			gps_data = GPS_function()
 			position = [gps_data["lat"],gps_data["lon"]]
-			self.gps_speed.set(self.bme.temperature,timestamp, position)
+			self.gps_speed.set(gps_data["speed"],timestamp, position)
 			sensorlist.append((self.gps_speed))
 		else:
 			position = [47.98,47.98]
