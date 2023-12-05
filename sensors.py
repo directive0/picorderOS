@@ -123,6 +123,9 @@ class Sensor(object):
 		# data fragments (objects that contain the most recent sensor value,
 		# plus metadata for context) are objects called Fragment().
 
+		if configure.gps:
+			self.gps_speed = Fragment(0.0,0.0,"GPS Speed","kn", "gps")
+
 		if configure.system_vitals:
 
 			self.step = 0.0
@@ -253,8 +256,11 @@ class Sensor(object):
 		if configure.gps:
 			gps_data = GPS_function()
 			position = [gps_data["lat"],gps_data["lon"]]
+			self.gps_speed.set(self.bme.temperature,timestamp, position)
+			sensorlist.append((self.gps_speed))
 		else:
 			position = [47.98,47.98]
+
 
 		if configure.bme:
 
