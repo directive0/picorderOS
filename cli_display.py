@@ -257,6 +257,18 @@ class Position_Frame(object):
 		self.mapy = 2
 		self.events = Events(["multi",0,0],"position")
 
+	def retrieve_data(self):
+
+		if configure.gps:
+			value = plars.get_recent("GPS Speed","gps",num=1)[0]
+		else:
+			return 47
+
+		if len(value) > 0:
+			return value
+		else:
+			return 47
+
 	def display(self):
 
 		lasty = 0
@@ -277,6 +289,7 @@ class Position_Frame(object):
 		stdscr.addstr(17, 2, "Current Location")
 		stdscr.addstr(18, 2, "Lat = " + str(configure.position[0]))
 		stdscr.addstr(19, 2, "Lon = " + str(configure.position[1]))
+		stdscr.addstr(19, 2, "Speed = " + self.retrieve_data()))
 
 		
 		return status
