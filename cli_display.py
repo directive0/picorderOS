@@ -289,7 +289,7 @@ class Position_Frame(object):
 		stdscr.addstr(17, 2, "Current Location")
 		stdscr.addstr(18, 2, "Lat = " + str(configure.position[0]))
 		stdscr.addstr(19, 2, "Lon = " + str(configure.position[1]))
-		stdscr.addstr(19, 2, "Speed = " + self.retrieve_data()))
+		stdscr.addstr(19, 2, "Speed = " + self.retrieve_data())
 
 		
 		return status
