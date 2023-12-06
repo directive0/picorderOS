@@ -35,6 +35,6 @@ def GPS_function():
 		if hasattr(parsed_data, "speed"):
 
 			if parsed_data.speed != '':
-				gps_update["speed"] = float(parsed_data.altitude)
+				gps_update["speed"] = float(parsed_data.speed)
 
 		return gps_update
