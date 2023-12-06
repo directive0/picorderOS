@@ -3,6 +3,7 @@ from curses import wrapper
 import os
 import psutil
 import numpy
+import socket
 
 from operator import itemgetter
 
