@@ -148,7 +148,6 @@ class graph(object):
 		if len(infopack) > 0:
 			self.dsc,self.dev,self.sym,maxi,mini = configure.sensor_info[this_index]
 
-		
 		# grabs the sensor metadata for display
 		
 
@@ -249,13 +248,69 @@ class Multi_Frame(object):
 		self.graph2.render()
 
 		return status
+	
+class Master_Systems_Display_Frame(object):
+	def __init__(self):
+
+		self.events = Events(["multi",0,0],"msd")
+
+		# grabs the RPI model info
+		if not configure.pc:
+			text = os.popen("cat /proc/device-tree/model").readline()
+			self.model = str(text.rstrip("\x00")).replace("Raspberry Pi","Raspi")
+		else:
+			self.model = "Unknown"
+
+
+	def display(self):
+
+		lasty = 0
+
+		# returns mode to the main loop unless something causes state change
+		status,payload  = self.events.check()
+
+		# pulls data from the modulated_em.py
+		wifi = "SSID: " + os.popen("iwgetid").readline()
+
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+		try:
+			s.connect(("8.8.8.8", 80))
+			IPAddr = s.getsockname()[0]
+		except:
+			IPAddr = "No IP Found"
+		
+		ip_str = "IP:  " + IPAddr
+		host_str = "Name:  " + socket.gethostname()
+		sense_ready = "Sensors Avl:  " + str(len(configure.sensor_info))
+		cpu_name = "CPU:  " + self.model
+		PLARS_size, PLARS_em_size = plars.get_plars_size()
+		db_size = "PLARS Size:  " + str(PLARS_size)
+		em_size = "PLARS EM Size:  " + str(PLARS_em_size)
+
+		# Device Info
+		stdscr.addstr(3, 2, "Device")
+		stdscr.addstr(4, 2, host_str)
+		stdscr.addstr(5, 2, cpu_name)
+
+		stdscr.addstr(7, 2, "Network Uplink")
+		stdscr.addstr(8, 2, wifi)
+		stdscr.addstr(9, 2, ip_str)
+
+		stdscr.addstr(11, 2, "PLARS Database Status")
+		stdscr.addstr(12, 2, sense_ready)
+		stdscr.addstr(13, 2, db_size)
+		stdscr.addstr(14, 2, em_size)
+
+		
+		return status
 
 class Position_Frame(object):
 	def __init__(self):
 		self.last_position = [47,47]
 		self.mapx = 1
 		self.mapy = 2
-		self.events = Events(["multi",0,0],"position")
+		self.events = Events(["msd",0,0],"position")
 
 	def retrieve_data(self):
 
@@ -402,6 +457,7 @@ class CLI_Display(object):
 		self.multi_frame = Multi_Frame()
 		self.em_frame = EM_Frame()
 		self.position_frame = Position_Frame()
+		self.msd_frame = Master_Systems_Display_Frame()
 
 		# carousel dict to hold the keys and defs for each state
 		self.carousel = {"startup":self.start_up,
@@ -436,7 +492,7 @@ class CLI_Display(object):
 		pass
 
 	def msd(self):
-		pass
+		return self.msd_frame.display()
 
 	def powerdown(self):
 		pass
