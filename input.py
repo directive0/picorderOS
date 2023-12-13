@@ -16,7 +16,7 @@ print("Loading Unified Input Module")
 # array holds the pins for each hard coded button on the tric
 # The TR-108 only has 3 buttons
 
-# Max number of buttons
+# Max number of buttons for tr109 style (TNG)
 #	0	1	 2    3  	4	 5	  6  7		8				9			10		11	  		12  13  14
 # geo, met, bio, lib, pwr, f1/f2, I, E, accpt/pool, intrship/tricrder, EMRG, fwd/input, rvs/erase, Ib, Eb, Id
 # next, enter, cancel/switch

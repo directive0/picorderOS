@@ -52,9 +52,7 @@ def update_proc(conn,buffer,data,cols):
 	# creates a new dataframe to add new data to
 	newdata = pd.DataFrame(fragdata, columns=cols)
 
-
-	# appends the new data to the buffer
-	result = pd.concat([buffer,newdata], ignore_index=True)
+	result = join_dataframes(buffer,newdata)
 
 
 	conn.put(result)
@@ -67,12 +65,30 @@ def update_em_proc(conn,buffer,data,cols):
 	newdata = pd.DataFrame(data, columns=cols)
 
 
-	# appends the new data to the buffer
-	result = pd.concat([buffer,newdata], ignore_index=True)
-
+	result = join_dataframes(buffer,newdata)
 
 	conn.put(result)
 
+def join_dataframes(buffer,newdata):
+		# if the buffer isn't empty
+	if len(buffer) > 0:
+
+		# if the new data frame isn't empty
+		if len(newdata) > 0:
+			# appends the new data to the buffer
+			result = pd.concat([buffer,newdata], ignore_index=True)
+		else:
+			result = buffer
+	#if the buffer IS EMPTY
+	else:
+		# if the new data frame isn't empty
+		if len(newdata) > 0:
+			result = newdata
+			#just make the result the new data (nothing to join yet)
+		else:
+			result = buffer
+	
+	return result
 
 class PLARS(object):
 

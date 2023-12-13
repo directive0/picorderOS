@@ -5,6 +5,9 @@ import psutil
 import numpy
 import socket
 
+from sshkeyboard import listen_keyboard
+
+
 from operator import itemgetter
 
 from plars import *
@@ -64,6 +67,20 @@ map = """             @   .-
                                                
 -----------------------------------------------"""
 
+class keyboard_events(object):
+	
+	def __init__(self):
+		self.keymap = {'left':0,'up':1,'right':2}
+		listen_keyboard(on_press=self.check)
+
+	def check(self,key):
+
+		for keys in self.keymap:
+			if key = keys:
+				configure.eventlist[self.keymap[keys]] = True
+				configure.eventready[0] = True
+
+
 class Start_Frame(object):
 	def __init__(self):
 		self.bootto = "multi"
@@ -120,6 +137,92 @@ class abgd(object):
 			item = self.symbols.pop()
 			self.symbols.insert(0,item)
 			self.timeit.logtime()
+
+class PLARS_Graph():
+
+	def __init__(self,y,x,w,h,setting):
+		self.cursor = 0
+		self.y, self.x = y,x
+		self.w, self.h = w,h
+		self.g_low = self.y + self.h
+		self.data = 47
+		self.buffer = []
+		self.data_buffer = []
+		self.range = (0,100)
+		self.draw_range = (self.g_low, self.y)
+		self.setting = setting
+		self.dsc = 'none'
+		self.dev = 'none'
+		self.sym = 'none'
+
+	def get_identity(self):
+
+		# determines the sensor keys for each of the three main sensors
+		this_index = int(configure.sensors[self.setting][0])
+		infopack = configure.sensor_info
+
+		if len(infopack) > 0:
+			self.dsc,self.dev,self.sym,maxi,mini = configure.sensor_info[this_index]
+
+		# grabs the sensor metadata for display
+
+	def render(self):
+
+		self.get_value()
+
+		self.data_buffer.insert(0,self.data)
+
+		if len(self.data_buffer) > 0:
+			this_range = (min(self.data_buffer),max(self.data_buffer))
+		else:
+			this_range = self.range
+
+		# Draw description
+		stdscr.addstr(self.y-2,self.x,self.title)
+
+		# Draw value
+		stdscr.addstr(self.y-2,self.x+len(self.title)+1,str(self.data))
+
+		# update the graph buffer
+		for i in range(self.w):
+			if len(self.data_buffer) > i:
+				result = int(numpy.interp(self.data_buffer[i],this_range,self.draw_range))
+				self.buffer.insert(0, result)
+
+		# draw envelope
+		# go column by column
+		block = ' '
+		for column in range(self.w):
+			position = column + self.x
+			# determine distance from last notch
+			if column > 0 and column < len(self.buffer):
+				now = self.buffer[column]
+				last = self.buffer[column - 1]
+				difference = now - last
+				#only draw a tail if needed
+				if abs(difference) > 1:
+					if difference < 0:
+						for i in range(abs(difference)):
+							stdscr.addch(self.buffer[column]+i,position,block,curses.A_REVERSE)
+					else:
+						for i in range(abs(difference)):
+							stdscr.addch(self.buffer[column]-i,position,block,curses.A_REVERSE)
+
+			if column < len(self.buffer):
+
+				# draw this point
+				stdscr.addch(self.buffer[column],position,block,curses.A_REVERSE)
+			else:
+				#no data
+				stdscr.addstr(self.g_low,position,"X")
+
+		n = len(self.data_buffer)
+
+		for i in range(0, n - self.w):
+			self.data_buffer.pop()
+
+
+
 
 class graph(object):
 
