@@ -76,7 +76,7 @@ class keyboard_events(object):
 	def check(self,key):
 
 		for keys in self.keymap:
-			if key = keys:
+			if key == keys:
 				configure.eventlist[self.keymap[keys]] = True
 				configure.eventready[0] = True
 
