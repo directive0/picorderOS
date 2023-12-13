@@ -294,7 +294,7 @@ class Sensor(object):
 			rad_data = float(data["uSvh"])
 
 			# times 100 to convert to urem/h
-			self.radiat.set(rad_data*100, timestamp)
+			self.radiat.set(rad_data*100, timestamp, position)
 
 			sensorlist.append(self.radiat)
 

@@ -118,8 +118,6 @@ class preferences(object):
 							'audio':'yes',									# Enables audio playback
 							'# Enables warble playback':None,
 							'warble':'yes',									# Enables audio playback
-                            '# Enables video player capabilities':None,
-							'video':'no',
 							'# Enable alarm when thermal cam exceeds min/max':None,
 							'alarm':'no',
 							'# If sleep is "yes" then lights will respond to Hall Effect sensors':None,
