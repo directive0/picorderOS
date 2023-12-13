@@ -19,3 +19,6 @@ scipy>=1.10.0
 sense_hat>=2.2.0
 simpleaudio>=1.0.4
 wifi>=0.3.8
+pandas>=2.4.1
+ffpyplayer
+pymediainfo

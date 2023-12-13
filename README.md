@@ -47,17 +47,34 @@ Issue the following commands from within the picorderOS folder:
 ```
 python3 -m pip install -r requirements.txt
 ```
+RaspberryPi OS now ships with a version of pip that requires you install new modules in a virtual environment so as not to trash system modules.
+
+A virtual 
 
 A fresh Raspberry Pi OS image can usually be initialized to work with picorderOS with the following installation commands:
 
 ```
-sudo apt-get update
+sudo apt update
+sudo apt upgrade -y
 
-sudo apt-get upgrade
+sudo apt install -y build-essential git python3-virtualenv libsdl2-dev python3-pandas libsdl2-ttf-dev libjpeg-dev libsdl=image-dev libsdl2-ttf-dev libsdl2-mixer-dev libportmidi-dev python3-dev python3-scipy python3-pygame libavcodec-dev libavfilter-dev libavdevice-dev ffmpeg
 
-sudo apt install libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-net-2.0-0 libsdl2-ttf-2.0-0 libatlas-base-dev libsdl2-dev libopenjp2-7-dev libopenblas-dev libtiff6 python3-pandas python3-psutil
+git clone https://github.com/RPi-Distro/RTIMULib
+cd /RTIMULIB/Linux/python
+python3 setup.py install
+cd ../../..
+
+git clone https://github.com/directive0/picorderOS 
+cd picorderOS
+python3 -m venv .picorder
+source .picorder/bin/activate
+pip3 install -r requirements.txt
+mkdir data
 
 ```
+
+## Suggested Information:
+
 Depending on your sensors, you will need to install a package that supports it for example in the case of the Bosch BME 680:
 ```
 pip3 install adafruit-circuitpython-bme680
