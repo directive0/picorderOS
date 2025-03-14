@@ -3,6 +3,7 @@ print("Loading Modulated EM Signal Analysis")
 
 from threading import Thread
 
+import re
 import iwlist
 import time
 from plars import *
