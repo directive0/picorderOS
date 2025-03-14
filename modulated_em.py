@@ -46,7 +46,7 @@ class Wifi_Scan(object):
 		return ap_list
 
 	def dump_data(self):
-		ap_list = parse_iwlist_output(self.get_list())
+		ap_list = self.parse_iwlist_output(self.get_list())
 		return self.plars_package(ap_list)
 
 	def plars_package(self, ap_list):
