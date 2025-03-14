@@ -33,29 +33,20 @@ class Wifi_Scan(object):
 
 	timed = timer()
 
-	def __init__(self):
+	def __init__(self): 
 		pass
 
 	def get_list(self):
-		if self.timed.timelapsed() > configure.em_samplerate:
-			try:
-				content = iwlist.scan(interface='wlan0')
-				ap_list = iwlist.parse(content)
-			except Exception as e:
-				print("Wifi failed: ", e)
-				ap_list = []
-			self.timed.logtime()
-			return ap_list
+		try:
+			ap_list = iwlist.scan(interface='wlan0')
+		except Exception as e:
+			print("Wifi failed: ", e)
+			ap_list = []
 
-	def get_info(self,selection):
-		ap_list = self.update()
-
-		if selection <= (len(ap_list)-1):
-			return (ap_list[selection].ssid, int(ap_list[selection].signal), ap_list[selection].quality, ap_list[selection].frequency, ap_list[selection].bitrates, ap_list[selection].encrypted, ap_list[selection].channel, ap_list[selection].address, ap_list[selection].mode)
-
+		return ap_list
 
 	def dump_data(self):
-		ap_list = self.get_list()
+		ap_list = parse_iwlist_output(self.get_list())
 		return self.plars_package(ap_list)
 
 	def plars_package(self, ap_list):
@@ -83,6 +74,27 @@ class Wifi_Scan(object):
 
 		return ap_fragments
 
+	def parse_iwlist_output(self, iwlist_output):
+		# Regular expression patterns for parsing iwlist output
+		ap_list = []
+		ap_pattern = re.compile(r"Cell (\d+):\n\s*Address: (.*)\n\s*ESSID:\"(.*?)\"\n\s*Mode:(.*)\n\s*Channel:(\d+)\n\s*Frequency:(\d+\.\d+) GHz\n\s*Quality=(\d+/\d+)\s*Signal level=(\-?\d+) dBm\n\s*Encryption key:(\w+)\n", re.DOTALL)
+
+		# Loop over all APs in the output
+		matches = ap_pattern.findall(iwlist_output)
+		for match in matches:
+			ap = {
+				"mac": match[1],
+				"essid": match[2],
+				"mode": match[3].strip(),
+				"channel": match[4],
+				"frequency": float(match[5]),
+				"signal_quality": match[6].split('/')[0],  # Extract quality from "Quality=XX/XX"
+				"signal_level_dBm": match[7],
+				"encryption": 'WEP' if match[8] == 'on' else 'None'  # Assuming 'on' indicates WEP encryption
+			}
+			ap_list.append(ap)
+		
+		return ap_list
 
 	def update_plars(self):
 		data = self.dump_data()
@@ -99,8 +111,6 @@ class Wifi_Scan(object):
 			title_list.append(name)
 
 		return title_list
-
-
 
 class BT_Scan(object):
 

@@ -46,9 +46,7 @@ Issue the following commands from within the picorderOS folder:
 ```
 python3 -m pip install -r requirements.txt
 ```
-RaspberryPi OS now ships with a version of pip that requires you install new modules in a virtual environment so as not to trash system modules.
-
-A virtual 
+RaspberryPi OS now ships with a version of pip that requires you install new modules in a virtual environment so as not to trash system modules. There are directions below to do this, but in my experience running the apt-get command and then running the pip install command with spooky --break-system-packages command is fine (not officially recommended though).
 
 A fresh Raspberry Pi OS image can usually be initialized to work with picorderOS with the following installation commands:
 
@@ -56,7 +54,7 @@ A fresh Raspberry Pi OS image can usually be initialized to work with picorderOS
 sudo apt update
 sudo apt upgrade -y
 
-sudo apt install -y build-essential git python3-virtualenv libsdl2-dev python3-pandas libsdl2-ttf-dev libjpeg-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libportmidi-dev python3-dev python3-scipy python3-pygame libavcodec-dev libavfilter-dev libavdevice-dev ffmpeg
+sudo apt install -y build-essential git python3-virtualenv libsdl2-dev python3-pandas libsdl2-ttf-dev libjpeg-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libportmidi-dev python3-dev python3-scipy python3-pygame libavcodec-dev libavfilter-dev libavdevice-dev ffmpeg python3-bluez
 
 git clone https://github.com/directive0/picorderOS 
 cd picorderOS
