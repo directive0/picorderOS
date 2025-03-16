@@ -426,7 +426,14 @@ class preferences(object):
 		self.position = [47,47]
 
 		# Global holder for current Thermal frame.
-		self.thermal_frame = [47,47,47,47,47,47,47,47]
+		self.thermal_frame = [[47,47,47,47,47,47,47,47],
+							[47,47,47,47,47,47,47,47],
+							[47,47,47,47,47,47,47,47],
+							[47,47,47,47,47,47,47,47],
+							[47,47,47,47,47,47,47,47],
+							[47,47,47,47,47,47,47,47],
+							[47,47,47,47,47,47,47,47],
+							[47,47,47,47,47,47,47,47]]
 
 
 # create a shared object for global variables and settings.
