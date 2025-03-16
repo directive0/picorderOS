@@ -467,7 +467,8 @@ def threaded_sensor():
 			item = parent_conn.recv()
 
 			if item is not None:
-				plars.update(item[0])
+				data = item
+				plars.update(data)
 				#sets current position
 				configure.position = [data[0].get()[7],data[0].get()[8]]
 			else:
