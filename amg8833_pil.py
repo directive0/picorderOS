@@ -15,6 +15,14 @@ from scipy.interpolate import griddata
 from colour import Color
 from plars import *
 
+
+if configure.amg8833:
+	import adafruit_amg88xx
+	import busio
+	i2c = busio.I2C(configure.PIN_SCL, configure.PIN_SDA)
+	amg = adafruit_amg88xx.AMG88XX(i2c)
+
+
 # some utility functions
 def constrain(val, min_val, max_val):
 	return min(max_val, max(min_val, val))
@@ -266,7 +274,7 @@ class ThermalGrid(object):
 	def update(self):
 
 		if configure.amg8833:
-			self.data = configure.thermal_frame
+			self.data = amg.pixels
 
 			if len(self.data) < 1:
 				self.data = self.dummy
