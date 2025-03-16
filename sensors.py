@@ -300,7 +300,7 @@ class Sensor(object):
 		if configure.amg8833:
 			self.thermal_frame = amg.pixels
 
-
+			configure.thermal_frame = self.thermal_frame
 			data = numpy.array(self.thermal_frame)
 
 			high = numpy.max(data)
@@ -434,12 +434,8 @@ def sensor_process(conn):
 	while True:
 		if timed.timelapsed() > configure.samplerate[0]:
 			sensor_data = sensors.get()
-			if configure.amg8833:
-				thermal_frame = sensors.get_thermal_frame()
-			else:
-				thermal_frame = []
 			#constantly grab sensors
-			conn.send([sensor_data, thermal_frame])
+			conn.send([sensor_data])
 			timed.logtime()
 
 wifitimer = timer()
@@ -467,17 +463,11 @@ def threaded_sensor():
 	while not configure.status == "quit":
 
 		while True:
-			
-	
+
 			item = parent_conn.recv()
-			
+
 			if item is not None:
-
-
-				data, thermal = item
-				plars.update(data)
-				plars.update_thermal(thermal)
-
+				plars.update(item[0])
 				#sets current position
 				configure.position = [data[0].get()[7],data[0].get()[8]]
 			else:

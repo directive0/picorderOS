@@ -266,7 +266,7 @@ class ThermalGrid(object):
 	def update(self):
 
 		if configure.amg8833:
-			self.data = plars.get_thermal_frame()
+			self.data = configure.thermal_frame
 
 			if len(self.data) < 1:
 				self.data = self.dummy

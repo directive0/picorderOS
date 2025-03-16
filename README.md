@@ -44,9 +44,17 @@ A requirements file is included, it can be used to install all the necessary pyt
 Issue the following commands from within the picorderOS folder:
 
 ```
-python3 -m pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
+
 RaspberryPi OS now ships with a version of pip that requires you install new modules in a virtual environment so as not to trash system modules. There are directions below to do this, but in my experience running the apt-get command and then running the pip install command with spooky --break-system-packages command is fine (not officially recommended though).
+
+Because of changes to how Raspberry Pi OS handles GPIO you will need to remove the deprecated GPIO handler:
+
+```
+pip uninstall RPi.GPIO --break-system-packages
+```
+
 
 A fresh Raspberry Pi OS image can usually be initialized to work with picorderOS with the following installation commands:
 

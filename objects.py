@@ -147,6 +147,8 @@ class preferences(object):
 							'samplerate':'.2',
 							'# EM/BT Polling/Sampling Rate':None,
 							'em_samplerate':'5',
+							'# Thermal Polling/Sampling Rate':None,
+							'thermal_samplerate':'5',
 							'# Input Sample Rate (how often inputs are registered)':None,
 							'input_samplerate':'0',
 							'# Affects graphing density':None,
@@ -156,7 +158,7 @@ class preferences(object):
 							'# Toggles memory buffer trimming':None,
 							'trim_buffer':'yes',
 							'# Max buffer size for trimming':None,
-							'buffer_size':'0',
+							'buffer_size':'200',
 							'# Turns data logging on - data is written to data/datacore.csv':None,
 							'datalog':'no',
 							'# Set the size of the graph, usually set by a display module at startup':None,
@@ -389,7 +391,9 @@ class preferences(object):
 		# used to control refresh rate of sensor queries
 		self.samplerate = [float(config['GLOBALS']['samplerate'])]
 		self.em_samplerate = float(config['GLOBALS']['em_samplerate'])
+		self.thermal_samplerate = float(config['GLOBALS']['thermal_samplerate'])
 		self.input_samplerate  = float(config['GLOBALS']['input_samplerate'])
+		
 
 		self.displayinterval=[float(config['GLOBALS']['displayinterval'])]
 
@@ -420,6 +424,9 @@ class preferences(object):
 
 		# Global holder for current position (lat,lon) as provided by GPS/etc. 
 		self.position = [47,47]
+
+		# Global holder for current Thermal frame.
+		self.thermal_frame = [47,47,47,47,47,47,47,47]
 
 
 # create a shared object for global variables and settings.
