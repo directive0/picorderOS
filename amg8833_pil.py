@@ -218,6 +218,8 @@ class ThermalGrid(object):
 				self.rows[i].update(self.data[i],self.high,self.low,surface)
 		else:
 			self.interpolate(surface)
+
+			
 	# Function to draw a pretty pattern to the display for demonstration.
 	def animate(self):
 

@@ -96,7 +96,7 @@ def Main():
 
 	#start the audio service thread
 	if configure.audio[0]:
-		audio_thread = Thread(target = threaded_tng_audio, args = ())
+		audio_thread = Thread(target = threaded_audio, args = ())
 		audio_thread.start()
 
 	print("Main Loop Starting")

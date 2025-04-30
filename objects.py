@@ -200,7 +200,7 @@ class preferences(object):
 
 # SENSORS----------------------------------------------------------------------#
 
-		# TR108 uses this sensehat
+		# TR108 uses this sensehatpython
 		self.sensehat = self.str2bool(config['SENSORS']['sensehat'])
 
 		# Toggles individual sensor support

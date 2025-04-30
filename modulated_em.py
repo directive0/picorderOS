@@ -4,12 +4,15 @@ print("Loading Modulated EM Signal Analysis")
 from threading import Thread
 
 import re
-import iwlist
 import time
 from plars import *
 from objects import *
 import socket
 from bluetooth import *
+import multiprocessing
+import subprocess
+import re
+
 
 def get_hostname():
 	hostname = socket.gethostname()
@@ -140,19 +143,89 @@ class BT_Scan(object):
 	def update_plars(self):
 		plars.update_em(self.dump_data())
 
+def plars_package_direct(iwlist_output):
+    """
+    Parses the raw iwlist output and packages it directly into the 'plars' format.
+    """
+    timestamp = time.time()
+    ap_fragments = []
+    cell_pattern = re.compile(r"Cell \d+ - Address: (.*?\n(?:.*?Signal level=(.*?)\s+dBm)?[\s\S]*?ESSID:\"(.*?)\"(?:[\s\S]*?Mode:(.*?))?(?:[\s\S]*?Channel:(.*?))?(?:[\s\S]*?Frequency:(.*?) GHz)?(?:[\s\S]*?Encryption key:(.*?))?)", re.MULTILINE)
+    quality_pattern = re.compile(r"Quality=(\d+/\d+)")
+    encryption_pattern = re.compile(r"Encryption key:(on|off)")
+
+
+    for cell_match in cell_pattern.finditer(iwlist_output):
+        mac = cell_match.group(1).strip()
+        signal_level_str = cell_match.group(2)
+        essid = cell_match.group(3)
+        mode = cell_match.group(4).strip() if cell_match.group(4) else 'n/a'
+        channel = cell_match.group(5).strip() if cell_match.group(5) else 'n/a'
+        frequency_str = cell_match.group(6)
+        frequency = float(frequency_str) if frequency_str else 0.0
+        encryption_status = cell_match.group(7)
+        encryption = 'WEP' if encryption_status == 'on' else 'None' if encryption_status == 'off' else 'n/a'
+
+        quality_match = quality_pattern.search(cell_match.group(0))
+        quality = quality_match.group(1).split('/')[0] if quality_match else '0'
+
+        signal_level = int(signal_level_str) if signal_level_str else -100 # Default low signal
+
+        details = [essid,
+                   signal_level,
+                   int(quality),
+                   frequency,
+                   encryption,
+                   channel,
+                   mac,
+                   mode,
+                   'wifi',
+                   timestamp]
+        ap_fragments.append(details)
+
+    return ap_fragments
+
+
+def get_wifi_scan_root_process(output_queue):
+    """
+    Scans Wi-Fi networks with root privileges and returns a list of SSIDs
+    with detailed information as dictionaries via a multiprocessing Queue.
+    """
+    try:
+        # Execute iwlist with sudo to get root privileges
+        output = subprocess.check_output(['sudo', 'iwlist', 'wlan0', 'scanning'], text=True, stderr=subprocess.PIPE)
+        ap_list = plars_package_direct(output)
+        output_queue.put(ap_list)
+    except subprocess.CalledProcessError as e:
+        error_message = f"Error scanning Wi-Fi: {e.stderr}"
+        output_queue.put({"error": error_message})
+    except FileNotFoundError:
+        error_message = "Error: iwlist not found. Ensure it's in your system's PATH."
+        output_queue.put({"error": error_message})
+    except Exception as e:
+        error_message = f"An unexpected error occurred: {e}"
+        output_queue.put({"error": error_message})
+
 def threaded_wifi():
 	
 	if configure.EM:
-		wifitimer = timer()
-		wifi = Wifi_Scan()
+		output_queue = multiprocessing.Queue()
+		wifi_process = multiprocessing.Process(target=get_wifi_scan_root_process, args=(output_queue,))
+		wifi_process.start()
+		wifi_process.join()
+	
 
 
 	while not configure.status == "quit":
 
 		#grab wifi and BT data
-		if configure.EM and wifitimer.timelapsed() > configure.em_samplerate:
-			wifi.update_plars()
-			wifitimer.logtime() 
+		if configure.EM:
+			result = output_queue.get()
+			if result != None:
+				for ssid in result:
+					ssid.append(configure.position[0])
+					ssid.append(configure.position[1])
+				plars.update_em(result)
+
 
 
 

@@ -31,11 +31,6 @@ RST = 24
 SPI_PORT = 0
 SPI_DEVICE = 0
 
-# Beaglebone Black hardware SPI config:
-# DC = 'P9_15'
-# RST = 'P9_12'
-# SPI_PORT = 1
-# SPI_DEVICE = 0
 
 # Hardware SPI usage:
 if configure.pc:

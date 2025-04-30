@@ -105,6 +105,7 @@ def shiftout(byte,board = 0):
 # a function to clear the gpio
 def cleangpio():
 	resetleds()
+	screen_off()
 	GPIO.cleanup() # cleanup all GPIO
 
 # a function to clear the LEDs

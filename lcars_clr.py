@@ -25,9 +25,6 @@ from pilgraph import *
 from amg8833_pil import *
 from plars import *
 
-
-
-
 # Load default font.
 microfont = ImageFont.truetype("assets/babs.otf",7)
 littlefont = ImageFont.truetype("assets/babs.otf",10)
@@ -1432,13 +1429,11 @@ class ThermalFrame(object):
 			self.A_Label.string = a_string
 			self.A_Label.push(23,self.labely,self.draw)
 
-		if self.selection == 0:
 			raw_b = str(self.high)
 			adjusted_b = self.arrangelabel(raw_b)
 			self.B_Label.string = "High: " + adjusted_b
 			self.B_Label.center(self.labely,23,135, self.draw)
 
-		if self.selection == 0:
 			raw_c = str(self.average)
 			adjusted_c = self.arrangelabel(raw_c)
 			self.C_Label.string = "Avg: " + adjusted_c
@@ -1468,7 +1463,7 @@ class ThermalFrame(object):
 		if self.selection == 1:
 			self.average,self.high,self.low = self.t_grid_full.update()
 
-		if not configure.alarm_ready[0]:
+		if configure.alarm and not configure.alarm_ready[0]:
 			if self.high >= configure.TEMP_ALERT[1]:
 				configure.alarm_ready[0] = True
 			if self.low <= configure.TEMP_ALERT[0]:

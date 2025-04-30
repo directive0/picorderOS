@@ -288,7 +288,7 @@ class graph(object):
 		for i in range(self.w):
 			if len(self.data_buffer) > i:
 				result = int(numpy.interp(self.data_buffer[i],this_range,self.draw_range))
-				self.buffer.append(0, result)
+				self.buffer.append(result)
 
 		# draw envelope
 		# go column by column
