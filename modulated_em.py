@@ -145,38 +145,42 @@ class BT_Scan(object):
 		plars.update_em(self.dump_data())
 
 def plars_package_direct(output):
-	"""Parses the output of 'iwlist wlan0 scanning' into a list of dictionaries."""
-	aps = []
-	current_ap = {}
-	for line in output.strip().split('\n'):
-		line = line.strip()
-		if line.startswith("Cell"):
-			if current_ap:
-				aps.append(current_ap)
-			current_ap = {}
-			match = re.search(r"Address: (([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})", line)
-			if match:
-				current_ap['mac'] = match.group(1)
-		elif line.startswith("ESSID:"):
-			current_ap['ssid'] = line.split('"')[1]
-		elif line.startswith("Channel:"):
-			current_ap['channel'] = int(line.split(':')[1])
-		elif line.startswith("Frequency:"):
-			match = re.search(r"(\d+\.\d+) GHz", line)
-			if match:
-				current_ap['frequency'] = float(match.group(1))
-		elif line.startswith("Quality="):
-			match = re.search(r"Quality=(\d+/\d+)\s+Signal level=(-?\d+) dBm", line)
-			if match:
-				quality_parts = match.group(1).split('/')
-				current_ap['quality'] = int(quality_parts[0]) / int(quality_parts[1]) if quality_parts[1] != '0' else 0
-				current_ap['signal_level_dbm'] = int(match.group(2))
-		elif line.startswith("Encryption key:"):
-			current_ap['encryption'] = "on" if line.endswith("on") else "off"
+    """Parses the output of 'iwlist wlan0 scanning' into a list of lists.
 
-	if current_ap:
-		aps.append(current_ap)
-	return aps
+    Returns a list where each inner list contains:
+    [SSID, MAC Address, Channel, Frequency, Signal Level (dBm), Quality, Encryption]
+    """
+    aps = []
+    for line in output.strip().split('\n'):
+        line = line.strip()
+        if line.startswith("Cell"):
+            if current_ap:
+                aps.append(current_ap)
+            current_ap = [None, None, None, None, None, None, None]  # Initialize with None values
+            match = re.search(r"Address: (([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})", line)
+            if match:
+                current_ap[1] = match.group(1)  # MAC Address
+        elif line.startswith("ESSID:"):
+            current_ap[0] = line.split('"')[1]  # SSID
+        elif line.startswith("Channel:"):
+            current_ap[2] = int(line.split(':')[1])  # Channel
+        elif line.startswith("Frequency:"):
+            match = re.search(r"(\d+\.\d+) GHz", line)
+            if match:
+                current_ap[3] = float(match.group(1))  # Frequency
+        elif line.startswith("Quality="):
+            match = re.search(r"Quality=(\d+/\d+)\s+Signal level=(-?\d+) dBm", line)
+            if match:
+                quality_parts = match.group(1).split('/')
+                quality = int(quality_parts[0]) / int(quality_parts[1]) if quality_parts[1] != '0' else 0
+                current_ap[4] = int(match.group(2))  # Signal Level
+                current_ap[5] = quality # Quality
+        elif line.startswith("Encryption key:"):
+            current_ap[6] = "on" if line.endswith("on") else "off"  # Encryption
+
+    if current_ap != [None, None, None, None, None, None, None]:
+        aps.append(current_ap)
+    return aps
 
 
 
