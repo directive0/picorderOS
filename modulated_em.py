@@ -186,24 +186,25 @@ def plars_package_direct(iwlist_output):
 
 
 def get_wifi_scan_root_process(output_queue):
-    """
-    Scans Wi-Fi networks with root privileges and returns a list of SSIDs
-    with detailed information as dictionaries via a multiprocessing Queue.
-    """
-    try:
-        # Execute iwlist with sudo to get root privileges
-        output = subprocess.check_output(['sudo', 'iwlist', 'wlan0', 'scanning'], text=True, stderr=subprocess.PIPE)
-        ap_list = plars_package_direct(output)
-        output_queue.put(ap_list)
-    except subprocess.CalledProcessError as e:
-        error_message = f"Error scanning Wi-Fi: {e.stderr}"
-        output_queue.put({"error": error_message})
-    except FileNotFoundError:
-        error_message = "Error: iwlist not found. Ensure it's in your system's PATH."
-        output_queue.put({"error": error_message})
-    except Exception as e:
-        error_message = f"An unexpected error occurred: {e}"
-        output_queue.put({"error": error_message})
+	while True:
+		"""
+		Scans Wi-Fi networks with root privileges and returns a list of SSIDs
+		with detailed information as dictionaries via a multiprocessing Queue.
+		"""
+		try:
+			# Execute iwlist with sudo to get root privileges
+			output = subprocess.check_output(['sudo', 'iwlist', 'wlan0', 'scanning'], text=True, stderr=subprocess.PIPE)
+			ap_list = plars_package_direct(output)
+			output_queue.put(ap_list)
+		except subprocess.CalledProcessError as e:
+			error_message = f"Error scanning Wi-Fi: {e.stderr}"
+			output_queue.put({"error": error_message})
+		except FileNotFoundError:
+			error_message = "Error: iwlist not found. Ensure it's in your system's PATH."
+			output_queue.put({"error": error_message})
+		except Exception as e:
+			error_message = f"An unexpected error occurred: {e}"
+			output_queue.put({"error": error_message})
 
 def threaded_wifi():
 	
@@ -215,7 +216,7 @@ def threaded_wifi():
 	
 
 
-	while not configure.status == "quit":
+	while True:
 
 		#grab wifi and BT data
 		if configure.EM:
