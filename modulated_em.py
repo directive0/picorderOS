@@ -150,41 +150,51 @@ def plars_package_direct(iwlist_output):
 	"""
 	timestamp = time.time()
 	ap_fragments = []
-	cell_pattern = re.compile(r"Cell \d+ - Address: (.*?\n(?:.*?Signal level=(.*?)\s+dBm)?[\s\S]*?ESSID:\"(.*?)\"(?:[\s\S]*?Mode:(.*?))?(?:[\s\S]*?Channel:(.*?))?(?:[\s\S]*?Frequency:(.*?) GHz)?(?:[\s\S]*?Encryption key:(.*?))?)", re.MULTILINE)
-	quality_pattern = re.compile(r"Quality=(\d+/\d+)")
-	encryption_pattern = re.compile(r"Encryption key:(on|off)")
-
-
-	for cell_match in cell_pattern.finditer(iwlist_output):
-		mac = cell_match.group(1).strip()
-		signal_level_str = cell_match.group(2)
-		essid = cell_match.group(3)
-		mode = cell_match.group(4).strip() if cell_match.group(4) else 'n/a'
-		channel = cell_match.group(5).strip() if cell_match.group(5) else 'n/a'
-		frequency_str = cell_match.group(6)
-		frequency = float(frequency_str) if frequency_str else 0.0
-		encryption_status = cell_match.group(7)
-		encryption = 'WEP' if encryption_status == 'on' else 'None' if encryption_status == 'off' else 'n/a'
-
-		quality_match = quality_pattern.search(cell_match.group(0))
-		quality = quality_match.group(1).split('/')[0] if quality_match else '0'
-
-		signal_level = int(signal_level_str) if signal_level_str else -100 # Default low signal
-
-		details = [essid,
-				   signal_level,
-				   int(quality),
-				   frequency,
-				   encryption,
-				   channel,
-				   mac,
-				   mode,
-				   'wifi',
-				   timestamp]
-		ap_fragments.append(details)
-
+	
+	# Split the output by Cell entries
+	cells = re.split(r"Cell \d+ - ", iwlist_output)[1:]  # Skip the first empty element
+	
+	for cell in cells:
+		try:
+			# Extract the basic information with more precise regex patterns
+			mac_match = re.search(r"Address: ([0-9A-F:]{17})", cell, re.IGNORECASE)
+			essid_match = re.search(r"ESSID:\"(.*?)\"", cell)
+			channel_match = re.search(r"Channel:(\d+)", cell)
+			frequency_match = re.search(r"Frequency:(\d+\.\d+) GHz", cell)
+			quality_match = re.search(r"Quality=(\d+)/\d+", cell)
+			signal_match = re.search(r"Signal level=(-?\d+) dBm", cell)
+			encryption_match = re.search(r"Encryption key:(on|off)", cell)
+			mode_match = re.search(r"Mode:(.*?)$", cell, re.MULTILINE)
+			
+			# Extract values or use defaults
+			mac = mac_match.group(1) if mac_match else 'n/a'
+			essid = essid_match.group(1) if essid_match else ''
+			channel = channel_match.group(1) if channel_match else 'n/a'
+			frequency = float(frequency_match.group(1)) if frequency_match else 0.0
+			quality = int(quality_match.group(1)) if quality_match else 0
+			signal_level = int(signal_match.group(1)) if signal_match else -100
+			encryption = 'WEP' if (encryption_match and encryption_match.group(1) == 'on') else 'None'
+			mode = mode_match.group(1).strip() if mode_match else 'n/a'
+			
+			# Create the details list
+			details = [
+				essid,
+				signal_level,
+				quality,
+				frequency,
+				encryption,
+				channel,
+				mac,
+				mode,
+				'wifi',
+				timestamp
+			]
+			ap_fragments.append(details)
+		except Exception as e:
+			print(f"Error parsing cell: {e}")
+			continue
+	
 	return ap_fragments
-
 
 def get_wifi_scan_root_process(output_queue):
 	while True:
