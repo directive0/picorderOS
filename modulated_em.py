@@ -216,7 +216,7 @@ def threaded_wifi():
 		wifi_process = multiprocessing.Process(target=get_wifi_scan_root_process, args=(output_queue,))
 		wifi_process.daemon = True
 		wifi_process.start()
-		wifi_process.join()
+		#wifi_process.join()
 	
 
 
