@@ -144,44 +144,46 @@ class BT_Scan(object):
 	def update_plars(self):
 		plars.update_em(self.dump_data())
 
-def plars_package_direct(output):
-    """Parses the output of 'iwlist wlan0 scanning' into a list of lists.
+def plars_package_direct(iwlist_output):
+	"""
+	Parses the raw iwlist output and packages it directly into the 'plars' format.
+	"""
+	timestamp = time.time()
+	ap_fragments = []
+	cell_pattern = re.compile(r"Cell \d+ - Address: (.*?\n(?:.*?Signal level=(.*?)\s+dBm)?[\s\S]*?ESSID:\"(.*?)\"(?:[\s\S]*?Mode:(.*?))?(?:[\s\S]*?Channel:(.*?))?(?:[\s\S]*?Frequency:(.*?) GHz)?(?:[\s\S]*?Encryption key:(.*?))?)", re.MULTILINE)
+	quality_pattern = re.compile(r"Quality=(\d+/\d+)")
+	encryption_pattern = re.compile(r"Encryption key:(on|off)")
 
-    Returns a list where each inner list contains:
-    [SSID, MAC Address, Channel, Frequency, Signal Level (dBm), Quality, Encryption]
-    """
-    aps = []
-    for line in output.strip().split('\n'):
-        line = line.strip()
-        if line.startswith("Cell"):
-            if current_ap:
-                aps.append(current_ap)
-            current_ap = [None, None, None, None, None, None, None]  # Initialize with None values
-            match = re.search(r"Address: (([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})", line)
-            if match:
-                current_ap[1] = match.group(1)  # MAC Address
-        elif line.startswith("ESSID:"):
-            current_ap[0] = line.split('"')[1]  # SSID
-        elif line.startswith("Channel:"):
-            current_ap[2] = int(line.split(':')[1])  # Channel
-        elif line.startswith("Frequency:"):
-            match = re.search(r"(\d+\.\d+) GHz", line)
-            if match:
-                current_ap[3] = float(match.group(1))  # Frequency
-        elif line.startswith("Quality="):
-            match = re.search(r"Quality=(\d+/\d+)\s+Signal level=(-?\d+) dBm", line)
-            if match:
-                quality_parts = match.group(1).split('/')
-                quality = int(quality_parts[0]) / int(quality_parts[1]) if quality_parts[1] != '0' else 0
-                current_ap[4] = int(match.group(2))  # Signal Level
-                current_ap[5] = quality # Quality
-        elif line.startswith("Encryption key:"):
-            current_ap[6] = "on" if line.endswith("on") else "off"  # Encryption
 
-    if current_ap != [None, None, None, None, None, None, None]:
-        aps.append(current_ap)
-    return aps
+	for cell_match in cell_pattern.finditer(iwlist_output):
+		mac = cell_match.group(1).strip()
+		signal_level_str = cell_match.group(2)
+		essid = cell_match.group(3)
+		mode = cell_match.group(4).strip() if cell_match.group(4) else 'n/a'
+		channel = cell_match.group(5).strip() if cell_match.group(5) else 'n/a'
+		frequency_str = cell_match.group(6)
+		frequency = float(frequency_str) if frequency_str else 0.0
+		encryption_status = cell_match.group(7)
+		encryption = 'WEP' if encryption_status == 'on' else 'None' if encryption_status == 'off' else 'n/a'
 
+		quality_match = quality_pattern.search(cell_match.group(0))
+		quality = quality_match.group(1).split('/')[0] if quality_match else '0'
+
+		signal_level = int(signal_level_str) if signal_level_str else -100 # Default low signal
+
+		details = [essid,
+				   signal_level,
+				   int(quality),
+				   frequency,
+				   encryption,
+				   channel,
+				   mac,
+				   mode,
+				   'wifi',
+				   timestamp]
+		ap_fragments.append(details)
+
+	return ap_fragments
 
 
 def get_wifi_scan_root_process(output_queue):
@@ -225,11 +227,12 @@ def threaded_wifi():
 			try:
 				# Non-blocking get with timeout
 				result = output_queue.get(timeout=1)
+				wifilist = []
 				if result is not None:
-					for ssid in result:
-						ssid.append(configure.position[0])
-						ssid.append(configure.position[1])
-					plars.update_em(result)
+					for item in result:
+						item.append(configure.position[0])
+						item.append(configure.position[1])
+					plars.update_em(wifilist)
 			except queue.Empty:
 				# No data available, just continue
 				pass
