@@ -242,7 +242,7 @@ def threaded_wifi():
 					for item in result:
 						item.append(configure.position[0])
 						item.append(configure.position[1])
-					plars.update_em(wifilist)
+					plars.update_em(result)
 			except queue.Empty:
 				# No data available, just continue
 				pass
