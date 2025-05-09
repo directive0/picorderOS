@@ -63,8 +63,6 @@ def update_em_proc(conn,buffer,data,cols):
 
 	# creates a new dataframe to add new data to
 	newdata = pd.DataFrame(data, columns=cols)
-
-
 	result = join_dataframes(buffer,newdata)
 
 	conn.put(result)
@@ -161,11 +159,11 @@ class PLARS(object):
 		self.timer = timer()
 
 	@contextlib.contextmanager
-
 	def safe_lock(self):
 		"""Context manager to ensure lock is always released."""
 		try:
 			self.lock.acquire()
+			
 			yield
 		finally:
 			self.lock.release()
@@ -174,14 +172,14 @@ class PLARS(object):
 		with self.safe_lock():
 			main_size = len(self.buffer)
 			em_size = len(self.buffer_em)
-		return main_size, em_size
+			return main_size, em_size
 
 	def get_em_stats(self):
 		with self.safe_lock():
 			idents = self.em_idents
 			current_em_no = self.current_em_no
 			max_em_no = self.max_em_no
-		return idents, current_em_no, max_em_no
+			return idents, current_em_no, max_em_no
 
 	def shutdown(self):
 		if configure.datalog[0]:
@@ -205,7 +203,7 @@ class PLARS(object):
 		with self.safe_lock():
 			# get the most recent ssids discovered
 			recent_em = self.get_bt_recent()
-		return recent_em.values.tolist()
+			return recent_em.values.tolist()
 
 
 	# returns a list of every EM transciever that was discovered last scan.
@@ -215,7 +213,7 @@ class PLARS(object):
 			recent_em = self.get_em_recent()
 			# sort it by signal strength
 			recent_em.sort_values(by=['signal'], ascending=False)
-		return recent_em.values.tolist()
+			return recent_em.values.tolist()
 
 	def get_top_em_info(self):
 		with self.safe_lock():
@@ -231,7 +229,7 @@ class PLARS(object):
 			self.identity = focus.loc[focus['signal'] == strongest]
 
 		# Return the SSID of the strongest signal as a list.
-		return self.identity.values.tolist()
+			return self.identity.values.tolist()
 
 	def get_em_recent(self):
 		with self.safe_lock():
@@ -242,7 +240,7 @@ class PLARS(object):
 			most_recent = time_column.max()
 
 		#limit focus to data from that timestamp
-		return wifi_buffer.loc[wifi_buffer['timestamp'] == most_recent]
+			return wifi_buffer.loc[wifi_buffer['timestamp'] == most_recent]
 	
 	# checks if a mac address has been seen already and if not adds it to list.
 	def em_been_seen(self, seen):
@@ -256,7 +254,7 @@ class PLARS(object):
 			most_recent = time_column.max()
 
 			#limit focus to data from that timestamp
-		return bt_buffer.loc[bt_buffer['timestamp'] == most_recent]
+			return bt_buffer.loc[bt_buffer['timestamp'] == most_recent]
 
 	def get_top_em_history(self, no = 5):
 		# returns a list of Db values for whatever SSID is currently the strongest.
@@ -284,7 +282,7 @@ class PLARS(object):
 
 
 
-		return self.get_recent_em(dev,frq, num = no)
+			return self.get_recent_em(dev,frq, num = no)
 
 
 	def update_em(self,data):
