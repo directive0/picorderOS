@@ -217,7 +217,7 @@ def get_wifi_scan_root_process(output_queue):
 			error_message = f"An unexpected error occurred: {e}"
 			output_queue.put({"error": error_message})
 		
-		time.sleep(5)
+		time.sleep(1)
 
 def threaded_wifi():
 	
@@ -246,7 +246,7 @@ def threaded_wifi():
 			except queue.Empty:
 				# No data available, just continue
 				pass
-			time.sleep(0.1)  # Small delay to prevent CPU hogging
+			#time.sleep(0.1)  # Small delay to prevent CPU hogging
 
 
 
