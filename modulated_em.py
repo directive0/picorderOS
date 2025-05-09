@@ -237,7 +237,6 @@ def threaded_wifi():
 			try:
 				# Non-blocking get with timeout
 				result = output_queue.get(timeout=1)
-				wifilist = []
 				if result is not None:
 					for item in result:
 						item.append(configure.position[0])

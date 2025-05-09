@@ -15,7 +15,7 @@ import datetime
 from array import *
 import pandas as pd
 import json
-
+import contextlib
 import threading
 
 # Broken out functions for use with processing:
@@ -160,280 +160,137 @@ class PLARS(object):
 
 		self.timer = timer()
 
+	@contextlib.contextmanager
+	def safe_lock(self):
+		"""Context manager to ensure lock is always released."""
+		try:
+			self.lock.acquire()
+			yield
+		finally:
+			self.lock.release()
+		   
 	def get_plars_size(self):
-
-		# set the thread lock so other threads are unable to add data
-		self.lock.acquire()
-
-		main_size = len(self.buffer)
-		em_size = len(self.buffer_em)
-		
-		# release the thread lock.
-		self.lock.release()
+		with self.safe_lock():
+			main_size = len(self.buffer)
+			em_size = len(self.buffer_em)
 		return main_size, em_size
 
-	def get_em_stats(self):
-
-		return self.em_idents, self.current_em_no, self.max_em_no
-
-	def shutdown(self):
-		if configure.datalog[0]:
-			self.append_to_core(self.buffer)
-			self.append_to_em_core(self.buffer_em)
-
-	# gets the latest CSV file
-	def get_core(self):
-		datacore = pd.read_csv(self.file_path)
-		return datacore
-
-	#appends a new set of data to the CSV file.
-	def append_to_core(self, data):
-		data.to_csv(self.file_path, mode='a', header=False)
-
-	#appends a new set of data to the EM CSV file.
-	def append_to_em_core(self, data):
-		data.to_csv(self.em_file_path, mode='a', header=False)
-
 	def get_recent_bt_list(self):
-		# set the thread lock so other threads are unable to add data
-		self.lock.acquire()
-
-		# get the most recent ssids discovered
-		recent_em = self.get_bt_recent()
-
-		# release the thread lock.
-		self.lock.release()
-
+		with self.safe_lock():
+			# get the most recent ssids discovered
+			recent_em = self.get_bt_recent()
 		return recent_em.values.tolist()
 
-
-	# returns a list of every EM transciever that was discovered last scan.
 	def get_recent_em_list(self):
-
-		# set the thread lock so other threads are unable to add data
-		self.lock.acquire()
-
-		# get the most recent ssids discovered
-		recent_em = self.get_em_recent()
-
-		# sort it by signal strength
-		recent_em.sort_values(by=['signal'], ascending = False)
-
-		# release the thread lock.
-		self.lock.release()
-
+		with self.safe_lock():
+			# get the most recent ssids discovered
+			recent_em = self.get_em_recent()
+			# sort it by signal strength
+			recent_em.sort_values(by=['signal'], ascending=False)
 		return recent_em.values.tolist()
-
-	def get_top_em_info(self):
-
-		#find the most recent timestamp to limit focus
-		focus = self.get_em_recent()
-
-		# find most powerful signal of the most recent transciever data
-		db_column = focus["signal"]
 		
-		strongest = db_column.astype(int).max()
+	def update_em(self, data):
+		with self.safe_lock():
+			# logs some data for statistics
+			self.current_em_no = len(data)
+			if self.current_em_no > self.max_em_no:
+				self.max_em_no = self.current_em_no
 
-		# Identify the SSID of the strongest signal.
-		self.identity = focus.loc[focus['signal'] == strongest]
+			# Add identifiers
+			for sample in data:
+				if sample[6] not in self.buffer_em["dev"].values and sample[6] not in self.em_idents:
+					self.em_idents.append(sample[6])
 
-		# Return the SSID of the strongest signal as a list.
-		return self.identity.values.tolist()
+			# Process data safely
+			try:
+				q = Queue()
+				get_process = Process(target=update_em_proc, args=(q, self.buffer_em, data, ['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp','latitude','longitude']))
+				get_process.start()
+				
+				# Set timeout for q.get() to prevent hanging
+				result = q.get(timeout=10)  # 10 second timeout
+				get_process.join(timeout=5)  # 5 second timeout
+				
+				if get_process.is_alive():
+					get_process.terminate()
+					raise TimeoutError("Process timed out")
+					
+				# appends the new data to the buffer
+				self.buffer_em = result
 
-	def get_em_recent(self):
-		wifi_buffer = self.buffer_em.loc[self.buffer_em['dsc'] == "wifi"]
+				# get buffer size to determine how many rows to remove from the end
+				currentsize = len(self.buffer_em)
 
-		# find the most recent timestamp
-		time_column = wifi_buffer["timestamp"]
-		most_recent = time_column.max()
+				if configure.trim_buffer[0]:
+					# if buffer is larger than double the buffer size
+					if currentsize >= configure.buffer_size[0]:
+						self.buffer_em = self.trim_em_buffer(configure.buffer_size[0])
+			except Exception as e:
+				print(f"Error in update_em: {e}")
+				# Handle the error appropriately
 
-		#limit focus to data from that timestamp
-		return wifi_buffer.loc[wifi_buffer['timestamp'] == most_recent]
-	
-	# checks if a mac address has been seen already and if not adds it to list.
-	def em_been_seen(self, seen):
-		pass
-
-	def get_bt_recent(self):
-		bt_buffer = self.buffer_em.loc[self.buffer_em['dsc'] == "bluetooth"]
-		# find the most recent timestamp
-		time_column = bt_buffer["timestamp"]
-		most_recent = time_column.max()
-
-		#limit focus to data from that timestamp
-		return bt_buffer.loc[bt_buffer['timestamp'] == most_recent]
-
-	def get_top_em_history(self, no = 5):
-		# returns a list of Db values for whatever SSID is currently the strongest.
-		# suitable to be fed into pilgraph for graphing.
-
-		# set the thread lock so other threads are unable to add data
-		self.lock.acquire()
-
-		#limit focus to data from that timestamp
-		focus = self.get_em_recent()
-
-		# find most powerful signal
-		db_column = focus["signal"]
-		strongest = db_column.astype(int).max()
-
-		# Identify the SSID of the strongest signal.
-		self.identity = focus.loc[focus['signal'] == strongest]
-
-
-		# prepare markers to pull data
-		# Wifi APs can have the same name and different paramaters
-		# I use MAC and frequency to individualize a signal
-		dev = self.identity["dev"].iloc[0]
-		frq = self.identity["frequency"].iloc[0]
-
-
-		# release the thread lock.
-		self.lock.release()
-
-		return self.get_recent_em(dev,frq, num = no)
-
-
-	def update_em(self,data):
-		#print("Updating EM Dataframe:")
-
-		# sets/requests the thread lock to prevent other threads reading data.
-		self.lock.acquire()
-
-
-		# logs some data for statistics.nan
-		self.current_em_no = len(data)
-		if self.current_em_no > self.max_em_no:
-			self.max_em_no = self.current_em_no
-
-
-		for sample in data:
-			if sample[6] not in self.buffer_em["dev"].values and sample[6] not in self.em_idents:
-				self.em_idents.append(sample[6])
-
-		q = Queue()
-
-		get_process = Process(target=update_em_proc, args=(q, self.buffer_em, data,['ssid','signal','quality','frequency','encrypted','channel','dev','mode','dsc','timestamp','latitude','longitude'],))
-		get_process.start()
-
-		# return a list of the values
-		result = q.get()
-		get_process.join()
-
-		# appends the new data to the buffer
-		self.buffer_em = result
-
-
-		# get buffer size to determine how many rows to remove from the end
-		currentsize = len(self.buffer_em)
-
-		if configure.trim_buffer[0]:
-			# if buffer is larger than double the buffer size
-			if currentsize >= configure.buffer_size[0] * 2:
-				self.buffer_em = self.trim_em_buffer(configure.buffer_size[0])
-
-		self.lock.release()
-
-
-	# updates the thermal frame for display
 	def update_thermal(self, frame):
+		with self.safe_lock():
+			self.thermal_frame = frame
 
-		# sets/requests the thread lock to prevent other threads reading data.
-		self.lock.acquire()
+	def update(self, data):
+		with self.safe_lock():
+			try:
+				q = Queue()
+				get_process = Process(target=update_proc, args=(q, self.buffer, data, ['value','min','max','dsc','sym','dev','timestamp','latitude','longitude']))
+				get_process.start()
+				
+				# Set timeout for q.get() to prevent hanging
+				result = q.get(timeout=10)  # 10 second timeout
+				get_process.join(timeout=5)  # 5 second timeout
+				
+				if get_process.is_alive():
+					get_process.terminate()
+					raise TimeoutError("Process timed out")
+				
+				# sets the new dataframe as the buffer
+				self.buffer = result
 
-		self.thermal_frame = frame
+				# get buffer size to determine how many rows to remove from the end
+				currentsize = len(self.buffer)
 
-		# release the thread lock for other threads
-		self.lock.release()
+				if configure.trim_buffer[0]:
+					# if buffer is larger than double the buffer size
+					if currentsize >= configure.buffer_size[0] * 2:
+						self.buffer = self.trimbuffer(configure.buffer_size[0])
+			except Exception as e:
+				print(f"Error in update: {e}")
+				# Handle the error appropriately
 
+	def get_recent(self, dsc, dev, num=5, time=False):
+		with self.safe_lock():
+			try:
+				q = Queue()
+				get_process = Process(target=get_recent_proc, args=(q, self.buffer, dsc, dev, num))
+				get_process.start()
+				
+				# Set timeout for q.get() to prevent hanging
+				result = q.get(timeout=10)  # 10 second timeout
+				get_process.join(timeout=5)  # 5 second timeout
+				
+				if get_process.is_alive():
+					get_process.terminate()
+					raise TimeoutError("Process timed out")
+					
+				values = result[0]
+				timelength = 0
 
-	# updates the dataframe in memory with the most recent sensor values from each
-	# initialized sensor.
-	# Sensor data is taken in as Fragment() instance objects. Each one contains
-	# the sensor value and context for it (scale, symbol, unit, etc).
-	def update(self,data):
-
-		# sets/requests the thread lock to prevent other threads reading data.
-		self.lock.acquire()
-
-
-		# breaks out the compilation of existing and newest dataframe as a process.
-		q = Queue()
-
-		get_process = Process(target=update_proc, args=(q, self.buffer, data,['value','min','max','dsc','sym','dev','timestamp','latitude','longitude'],))
-		get_process.start()
-
-		# return a list of the values from the process
-		result = q.get()
-		get_process.join()
-
-		# sets the new dataframe as the buffer
-		self.buffer = result
-
-		# get buffer size to determine how many rows to remove from the end
-		currentsize = len(self.buffer)
-
-		if configure.trim_buffer[0]:
-			# if buffer is larger than double the buffer size
-			if currentsize >= configure.buffer_size[0] * 2:
-				self.buffer = self.trimbuffer(configure.buffer_size[0])
-
-		# release the thread lock for other threads
-		self.lock.release()
-
-
-	# return a list of n most recent data from specific sensor defined by keys
-	def get_recent(self, dsc, dev, num = 5, time = False):
-
-		# set the thread lock so other threads are unable to add sensor data
-		self.lock.acquire()
-
-		q = Queue()
-		get_process = Process(target=get_recent_proc, args=(q,self.buffer,dsc,dev,num,))
-		get_process.start()
-
-		# return a list of the values
-		result = q.get()
-		get_process.join()
-
-		# release the thread lock.
-		self.lock.release()
-
-		values = result[0]
-
-		timelength = 0
-
-		if len(result[1]) > 0:			
-			timelength = max(result[1]) - min(result[1])
-
-		return values, timelength
-
-
-	def get_em(self,dev,frequency):
-		result = self.buffer_em.loc[self.buffer_em['dev'] == dev]
-		result2 = result.loc[result["frequency"] == frequency]
-
-		return result2
-
-	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
-	def get_sensor(self,dsc,dev):
-
-		result = self.buffer[self.buffer["dsc"] == dsc]
-
-		result2 = result.loc[result['dev'] == dev]
-
-		return result2
+				if len(result[1]) > 0:            
+					timelength = max(result[1]) - min(result[1])
+					
+				return values, timelength
+			except Exception as e:
+				print(f"Error in get_recent: {e}")
+				return [], 0
 
 	def get_thermal_frame(self):
-
-		# sets/requests the thread lock to prevent other threads reading data.
-		self.lock.acquire()
-
-		thermalframe = self.thermal_frame
-
-		# release the thread lock for other threads
-		self.lock.release()
-
+		with self.safe_lock():
+			thermalframe = self.thermal_frame
 		return thermalframe
 
 	def index_by_time(self,df, ascending = False):
