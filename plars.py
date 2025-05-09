@@ -161,6 +161,7 @@ class PLARS(object):
 		self.timer = timer()
 
 	@contextlib.contextmanager
+
 	def safe_lock(self):
 		"""Context manager to ensure lock is always released."""
 		try:
@@ -168,12 +169,37 @@ class PLARS(object):
 			yield
 		finally:
 			self.lock.release()
-		   
+
 	def get_plars_size(self):
 		with self.safe_lock():
 			main_size = len(self.buffer)
 			em_size = len(self.buffer_em)
 		return main_size, em_size
+
+	def get_em_stats(self):
+		with self.safe_lock():
+			idents = self.em_idents
+			current_em_no = self.current_em_no
+			max_em_no = self.max_em_no
+		return idents, current_em_no, max_em_no
+
+	def shutdown(self):
+		if configure.datalog[0]:
+			self.append_to_core(self.buffer)
+			self.append_to_em_core(self.buffer_em)
+
+	# gets the latest CSV file
+	def get_core(self):
+		datacore = pd.read_csv(self.file_path)
+		return datacore
+
+	#appends a new set of data to the CSV file.
+	def append_to_core(self, data):
+		data.to_csv(self.file_path, mode='a', header=False)
+
+	#appends a new set of data to the EM CSV file.
+	def append_to_em_core(self, data):
+		data.to_csv(self.em_file_path, mode='a', header=False)
 
 	def get_recent_bt_list(self):
 		with self.safe_lock():
@@ -181,6 +207,8 @@ class PLARS(object):
 			recent_em = self.get_bt_recent()
 		return recent_em.values.tolist()
 
+
+	# returns a list of every EM transciever that was discovered last scan.
 	def get_recent_em_list(self):
 		with self.safe_lock():
 			# get the most recent ssids discovered
@@ -188,8 +216,78 @@ class PLARS(object):
 			# sort it by signal strength
 			recent_em.sort_values(by=['signal'], ascending=False)
 		return recent_em.values.tolist()
-		
-	def update_em(self, data):
+
+	def get_top_em_info(self):
+		with self.safe_lock():
+			#find the most recent timestamp to limit focus
+			focus = self.get_em_recent()
+
+			# find most powerful signal of the most recent transciever data
+			db_column = focus["signal"]
+			
+			strongest = db_column.astype(int).max()
+
+			# Identify the SSID of the strongest signal.
+			self.identity = focus.loc[focus['signal'] == strongest]
+
+		# Return the SSID of the strongest signal as a list.
+		return self.identity.values.tolist()
+
+	def get_em_recent(self):
+		with self.safe_lock():
+			wifi_buffer = self.buffer_em.loc[self.buffer_em['dsc'] == "wifi"]
+
+			# find the most recent timestamp
+			time_column = wifi_buffer["timestamp"]
+			most_recent = time_column.max()
+
+		#limit focus to data from that timestamp
+		return wifi_buffer.loc[wifi_buffer['timestamp'] == most_recent]
+	
+	# checks if a mac address has been seen already and if not adds it to list.
+	def em_been_seen(self, seen):
+		pass
+
+	def get_bt_recent(self):
+		with self.safe_lock():
+			bt_buffer = self.buffer_em.loc[self.buffer_em['dsc'] == "bluetooth"]
+			# find the most recent timestamp
+			time_column = bt_buffer["timestamp"]
+			most_recent = time_column.max()
+
+			#limit focus to data from that timestamp
+		return bt_buffer.loc[bt_buffer['timestamp'] == most_recent]
+
+	def get_top_em_history(self, no = 5):
+		# returns a list of Db values for whatever SSID is currently the strongest.
+		# suitable to be fed into pilgraph for graphing.
+
+		with self.safe_lock():
+
+			#limit focus to data from that timestamp
+			focus = self.get_em_recent()
+
+			# find most powerful signal
+			db_column = focus["signal"]
+			strongest = db_column.astype(int).max()
+
+			# Identify the SSID of the strongest signal.
+			self.identity = focus.loc[focus['signal'] == strongest]
+
+
+			# prepare markers to pull data
+			# Wifi APs can have the same name and different paramaters
+			# I use MAC and frequency to individualize a signal
+			dev = self.identity["dev"].iloc[0]
+			frq = self.identity["frequency"].iloc[0]
+
+
+
+
+		return self.get_recent_em(dev,frq, num = no)
+
+
+	def update_em(self,data):
 		with self.safe_lock():
 			# logs some data for statistics
 			self.current_em_no = len(data)
@@ -229,11 +327,17 @@ class PLARS(object):
 				print(f"Error in update_em: {e}")
 				# Handle the error appropriately
 
+
+	# updates the thermal frame for display
 	def update_thermal(self, frame):
 		with self.safe_lock():
 			self.thermal_frame = frame
 
-	def update(self, data):
+	# updates the dataframe in memory with the most recent sensor values from each
+	# initialized sensor.
+	# Sensor data is taken in as Fragment() instance objects. Each one contains
+	# the sensor value and context for it (scale, symbol, unit, etc).
+	def update(self,data):
 		with self.safe_lock():
 			try:
 				q = Queue()
@@ -262,7 +366,9 @@ class PLARS(object):
 				print(f"Error in update: {e}")
 				# Handle the error appropriately
 
-	def get_recent(self, dsc, dev, num=5, time=False):
+
+	# return a list of n most recent data from specific sensor defined by keys
+	def get_recent(self, dsc, dev, num = 5, time = False):
 		with self.safe_lock():
 			try:
 				q = Queue()
@@ -288,9 +394,32 @@ class PLARS(object):
 				print(f"Error in get_recent: {e}")
 				return [], 0
 
+
+	def get_em(self,dev,frequency):
+		result = self.buffer_em.loc[self.buffer_em['dev'] == dev]
+		result2 = result.loc[result["frequency"] == frequency]
+
+		return result2
+
+	# returns all sensor data in the buffer for the specific sensor (dsc,dev)
+	def get_sensor(self,dsc,dev):
+
+		result = self.buffer[self.buffer["dsc"] == dsc]
+
+		result2 = result.loc[result['dev'] == dev]
+
+		return result2
+
 	def get_thermal_frame(self):
-		with self.safe_lock():
-			thermalframe = self.thermal_frame
+
+		# sets/requests the thread lock to prevent other threads reading data.
+		self.lock.acquire()
+
+		thermalframe = self.thermal_frame
+
+		# release the thread lock for other threads
+		self.lock.release()
+
 		return thermalframe
 
 	def index_by_time(self,df, ascending = False):
