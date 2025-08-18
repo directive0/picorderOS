@@ -2,14 +2,14 @@ import sys
 from queue import Empty
 import traceback
 
-from objects import * # Assuming 'objects.py' exists and is in PYTHONPATH
+from objects import *
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
 import numpy
 from array import *
-from plars import * # Assuming 'plars.py' exists and is in PYTHONPATH
+from plars import *
 from multiprocessing import Process,Queue,Pipe
 
 
@@ -26,27 +26,25 @@ def graph_prep_process(conn,samples,datalist,auto,newrange,targetrange,sourceran
 					scaledata = abs(numpy.interp(datalist[indexer],sourcerange,targetrange))
 				newlist.append((linepoint,scaledata))
 			else:
+				# This part now only executes if datalist is shorter than samples
+				# If datalist is empty, sourcelow will be used.
 				scaledata = abs(numpy.interp(sourcelow,sourcerange,targetrange))
 				newlist.append((linepoint,scaledata))
 			linepoint = linepoint + jump
 
 		conn.put(newlist)
-		# Keep this print for confirmation of child process completion, useful for diagnosing hangs
-		# if the parent is waiting for q.get()
-		sys.exit(0) # Explicitly exit the child process immediately after putting data.
+		sys.exit(0)
 
 	except Exception as e:
 		error_message = f"ERROR IN graph_prep_process: {e}\nTraceback:\n{traceback.format_exc()}"
 		print(error_message, file=sys.stderr)
 		with open("graph_prep_process_error.log", "a") as f:
 			f.write(error_message + "\n")
-		sys.exit(1) # Ensure the child process exits with an error code
+		sys.exit(1)
 
 
 class graph_area(object):
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0, samples = False):
-		# print("graph_area.__init__ called", file=sys.stderr) # Removed non-essential print
-
 		if not samples:
 			try:
 				self.samples = configure.samples
@@ -66,6 +64,8 @@ class graph_area(object):
 		self.doth = 6
 		self.buff = array('f', [])
 		self.type = type
+		self.last_known_data = [] # Stores raw data for potential recalculation if last_known_cords is empty
+		self.last_known_cords = [] # Stores calculated screen coordinates for direct redraw
 
 		try:
 			self.timeit = timer()
@@ -88,7 +88,6 @@ class graph_area(object):
 			self.buff.append(self.datalow)
 
 
-
 	def grabglist(self):
 		return self.glist
 
@@ -97,7 +96,6 @@ class graph_area(object):
 
 	def get_average(self):
 		if not self.buff:
-
 			return 0.0
 		return sum(self.buff) / len(self.buff)
 
@@ -117,8 +115,6 @@ class graph_area(object):
 
 
 	def graphprep(self, datalist, ranger = None):
-
-
 		try:
 			index = configure.sensors[self.ident][0]
 			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
@@ -150,22 +146,12 @@ class graph_area(object):
 		self.newrange = (self.datalow,self.datahigh)
 
 		q = Queue()
-		# print("PARENT(graphprep): Starting graph_prep_process...", file=sys.stderr) # Removed non-essential print
 		prep_process = Process(target=graph_prep_process, args=(q,self.samples,datalist,self.auto,self.newrange,self.targetrange,self.sourcerange,self.linepoint,self.jump,sourcelow,))
 		prep_process.start()
 
 		result = []
 		try:
-			# print("PARENT(graphprep): Waiting for result from queue (timeout 5s)...", file=sys.stderr) # Removed non-essential print
 			result = q.get(timeout=5)
-			# print("PARENT(graphprep): Successfully received result from queue.", file=sys.stderr) # Removed non-essential print
-			# Keep these prints if you ever need to inspect the data coming from the child
-			# print(f"PARENT(graphprep): Type of result: {type(result)}", file=sys.stderr)
-			# print(f"PARENT(graphprep): Length of result: {len(result)}", file=sys.stderr)
-			# if len(result) > 0:
-			#     print(f"PARENT(graphprep): First 5 elements of result: {result[:5]}", file=sys.stderr)
-			# else:
-			#     print("PARENT(graphprep) WARNING: Result list is empty from child process.", file=sys.stderr)
 
 		except Empty:
 			print("PARENT(graphprep) ERROR: graph_prep_process timed out or did not return data. Terminating child.", file=sys.stderr)
@@ -177,14 +163,10 @@ class graph_area(object):
 				f.write(error_message + "\n")
 			prep_process.terminate()
 		finally:
-			# print("PARENT(graphprep): Process status before join:", prep_process.is_alive(), file=sys.stderr) # Removed non-essential print
 			try:
-				# print("PARENT(graphprep): Joining graph_prep_process...", file=sys.stderr) # Removed non-essential print
 				prep_process.join(timeout=1)
 				if prep_process.is_alive():
-					print("PARENT(graphprep) WARNING: Child process still alive after join timeout. Forcing termination.", file=sys.stderr)
 					prep_process.terminate()
-				# print("PARENT(graphprep): graph_prep_process joined.", file=sys.stderr) # Removed non-essential print
 			except Exception as e:
 				error_message = f"PARENT(graphprep) ERROR: Exception during prep_process.join(): {e}\nTraceback:\n{traceback.format_exc()}"
 				print(error_message, file=sys.stderr)
@@ -192,26 +174,24 @@ class graph_area(object):
 					f.write(error_message + "\n")
 				prep_process.terminate()
 
-		# print("PARENT(graphprep): Returning result from graphprep.", file=sys.stderr) # Removed non-essential print
 		return result
 
 
 	def render(self, draw, auto = True, dot = True, ranger = None):
-
-		# print("entered pilgraph render", file=sys.stderr) # Removed non-essential print
 		return_value = 0
 
-		# print("gets auto status", file=sys.stderr) # Removed non-essential print
 		try:
 			self.auto = configure.auto[0]
 		except (NameError, AttributeError, IndexError) as e:
 			print(f"ERROR: 'configure.auto' not found or invalid. Defaulting auto to True: {e}", file=sys.stderr)
 			self.auto = True
 
-		# print("determining graph type", file=sys.stderr) # Removed non-essential print
 		dsc, dev = None, None
+		
+		current_data_retrieved = False
+		recent_raw_data = [] # Temporary variable to hold newly fetched raw data
+
 		if self.type == 0:
-			# print("getting this graphs sensor info: ", self.ident, file=sys.stderr) # Removed non-essential print
 			try:
 				index = configure.sensors[self.ident][0]
 				dsc,dev,sym,maxi,mini = configure.sensor_info[index]
@@ -219,65 +199,96 @@ class graph_area(object):
 				print(f"ERROR: Failed to get sensor info for graph {self.ident} from 'configure': {e}", file=sys.stderr)
 				dsc,dev,sym,maxi,mini = "default_sensor", "default_device", "SYM", 100.0, 0.0
 
-			# print("query PLARS for data", file=sys.stderr) # Removed non-essential print
 			try:
-				recent, self.timelength = plars.get_recent(dsc,dev,num = self.samples, time = True)
-				if recent is None:
-					print("WARNING: plars.get_recent returned None. Initializing recent as empty list.", file=sys.stderr)
-					recent = []
+				queried_recent, self.timelength = plars.get_recent(dsc,dev,num = self.samples, time = True)
+				if queried_recent is not None and len(queried_recent) > 0:
+					recent_raw_data = queried_recent
+					current_data_retrieved = True
+				else:
+					print("WARNING: plars.get_recent returned no new data.", file=sys.stderr)
 			except Exception as e:
 				print(f"ERROR: Failed to query PLARS for recent data for {dsc}/{dev}: {e}", file=sys.stderr)
-				recent = []
 
-			# print("assigning 47 if no data", file=sys.stderr) # Removed non-essential print
-			if len(recent) == 0:
-				return_value = 47
+			if len(recent_raw_data) == 0:
+				if self.last_known_data:
+					return_value = self.last_known_data[-1]
+				else:
+					return_value = 47 
 			else:
-				return_value = recent[-1]
+				return_value = recent_raw_data[-1]
 
 		elif self.type == 1:
-			# print("query PLARS for top EM history data.", file=sys.stderr) # Removed non-essential print
 			try:
-				recent = plars.get_top_em_history(no = self.samples)
-				if recent is None:
-					print("WARNING: plars.get_top_em_history returned None. Initializing recent as empty list.", file=sys.stderr)
-					recent = []
+				queried_recent = plars.get_top_em_history(no = self.samples)
+				if queried_recent is not None and len(queried_recent) > 0:
+					recent_raw_data = queried_recent
+					current_data_retrieved = True
+				else:
+					print("WARNING: plars.get_top_em_history returned no new data.", file=sys.stderr)
 			except Exception as e:
 				print(f"ERROR: Failed to query PLARS for EM history: {e}", file=sys.stderr)
-				recent = []
 
-			if len(recent) == 0:
-				return_value = -999
+			if len(recent_raw_data) == 0:
+				if self.last_known_data:
+					return_value = self.last_known_data[-1]
+				else:
+					return_value = -999
 			else:
-				return_value = recent[-1]
+				return_value = recent_raw_data[-1]
 
 		elif self.type == 2:
-			# print("query PLARS for new graph type 2 data.", file=sys.stderr) # Removed non-essential print
 			try:
-				recent = plars.get_recent(dsc,dev,num = self.samples)
-				if recent is None:
-					print("WARNING: plars.get_recent for type 2 returned None. Initializing recent as empty list.", file=sys.stderr)
-					recent = []
+				queried_recent = plars.get_recent(dsc,dev,num = self.samples)
+				if queried_recent is not None and len(queried_recent) > 0:
+					recent_raw_data = queried_recent
+					current_data_retrieved = True
+				else:
+					print("WARNING: plars.get_recent for type 2 returned no new data.", file=sys.stderr)
 			except Exception as e:
 				print(f"ERROR: Failed to query PLARS for type 2 data: {e}", file=sys.stderr)
-				recent = []
+			
+			if len(recent_raw_data) == 0:
+				if self.last_known_data:
+					return_value = self.last_known_data[-1]
+				else:
+					return_value = 0 # Or some appropriate default for type 2
+			else:
+				return_value = recent_raw_data[-1]
 
 
-		# print("sending data to graphprep", file=sys.stderr) # Removed non-essential print
-		cords = self.graphprep(recent)
-		# print("returned from graphprep", file=sys.stderr) # Removed non-essential print
+		# Determine which data to use for drawing
+		cords = []
+		if current_data_retrieved and len(recent_raw_data) > 0:
+			cords = self.graphprep(recent_raw_data)
+			# Update last_known_data and last_known_cords if new data was successfully retrieved
+			self.last_known_data = recent_raw_data
+			if cords: # Only update last_known_cords if graphprep actually returned coordinates
+				self.last_known_cords = cords
+		elif self.last_known_cords:
+			# Use previously calculated screen coordinates if no new data
+			cords = self.last_known_cords
+			#print(f"INFO: Using last known screen coordinates for graph {self.ident}.", file=sys.stderr)
+		else:
+			# If no new data and no last known cords, try to use last known raw data
+			if self.last_known_data:
+				#print(f"INFO: No new data, no last known cords. Recalculating from last known raw data for graph {self.ident}.", file=sys.stderr)
+				cords = self.graphprep(self.last_known_data)
+				if cords:
+					self.last_known_cords = cords # Update last_known_cords after recalculation
+			else:
+				#print(f"WARNING: No new data, no last known cords, and no last known raw data for graph {self.ident}. Graph will be flat.", file=sys.stderr)
+				# As a last resort, pass an empty list and let graphprep handle the flat line based on sourcelow.
+				cords = self.graphprep([])
 
-		self.buff = recent
 
-		# print("drawing graph", file=sys.stderr) # Removed non-essential print
+		self.buff = recent_raw_data # self.buff should reflect the raw data that was processed or intended for processing
+
 		try:
 			draw.line(cords,self.colour,self.width)
 		except Exception as e:
-			print(f"ERROR: Failed to draw line graph with cords: {cords[:10]}... Error: {e}", file=sys.stderr)
+			print(f"ERROR: Failed to draw line graph with cords (first 10): {cords[:10]}... Error: {e}", file=sys.stderr)
 			print(f"Traceback:\n{traceback.format_exc()}", file=sys.stderr)
 
-
-		# print("drawing dots", file=sys.stderr) # Removed non-essential print
 		if dot:
 			try:
 				if len(cords) > 0:
@@ -287,11 +298,10 @@ class graph_area(object):
 					y2 = cords[0][1] + (self.doth/2)
 					draw.ellipse([x1,y1,x2,y2],self.colour)
 				else:
-					print("PILgraph: No cords to draw dot, skipping.", file=sys.stderr) # Retained this warning
+					pass
+					#print("PILgraph: No cords to draw dot, skipping.", file=sys.stderr)
 			except Exception as e:
 				print(f"ERROR: Failed to draw dot with cords[0]: {cords[0] if len(cords)>0 else 'N/A'}. Error: {e}", file=sys.stderr)
 				print(f"Traceback:\n{traceback.format_exc()}", file=sys.stderr)
 
-
-		# print("returning from pilgraph", file=sys.stderr) # Removed non-essential print
 		return return_value
