@@ -7,7 +7,6 @@ board
 Cap1xxx
 colour
 envirophat
-ffpyplayer
 luma.core
 luma.emulator
 luma.lcd
@@ -18,6 +17,4 @@ pygame
 sense_hat
 simpleaudio
 wifi
-pandas
-ffpyplayer
 pymediainfo

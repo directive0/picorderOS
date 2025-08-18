@@ -1,195 +1,146 @@
-print("Loading Python IL Module")
+import sys
+from queue import Empty
+import traceback
 
-
-# PILgraph provides an object (graphlist) that will draw a new graph each frame.
-# It was written to contain all the previous sensor readings, but this
-# feature is no longer necessary as PLARS now handles all data history.
-
-# To do:
-# - request from PLARS the N most recent values for the sensor assigned to this identifier
-
-
-
-
-
-
-from objects import *
+from objects import * # Assuming 'objects.py' exists and is in PYTHONPATH
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
 import numpy
 from array import *
-from plars import *
+from plars import * # Assuming 'plars.py' exists and is in PYTHONPATH
 from multiprocessing import Process,Queue,Pipe
+
 
 # function to calculate onscreen coordinates of graph pixels as a process.
 def graph_prep_process(conn,samples,datalist,auto,newrange,targetrange,sourcerange,linepoint,jump,sourcelow):
 	newlist = []
-	# for each vertical bar in the graph size
-	for i in range(samples):
-
-
-
-		# if the cursor has data to write
-		if i < len(datalist):
-
-			# gives me an index within the current length of the datalist
-			# goes from the most recent data backwards
-			# so the graph prints from left-right: oldest-newest data.
-			indexer = (len(datalist) - i) - 1
-
-			# if auto scaling is on
-			if auto == True:
-				# take the sensor value received and map it against the on screen limits
-				scaledata = abs(numpy.interp(datalist[indexer],newrange,targetrange))
+	try:
+		for i in range(samples):
+			if i < len(datalist):
+				indexer = (len(datalist) - i) - 1
+				if auto == True:
+					scaledata = abs(numpy.interp(datalist[indexer],newrange,targetrange))
+				else:
+					scaledata = abs(numpy.interp(datalist[indexer],sourcerange,targetrange))
+				newlist.append((linepoint,scaledata))
 			else:
-				# use the sensors stated limits as the range.
-				scaledata = abs(numpy.interp(datalist[indexer],sourcerange,targetrange))
+				scaledata = abs(numpy.interp(sourcelow,sourcerange,targetrange))
+				newlist.append((linepoint,scaledata))
+			linepoint = linepoint + jump
 
-			# append the current x position, with this new scaled data as the y positioning into the buffer
-			newlist.append((linepoint,scaledata))
-		else:
-			# If no data just write intensity as scaled zero
-			scaledata = abs(numpy.interp(sourcelow,sourcerange,targetrange))
-			newlist.append((linepoint,scaledata))
+		conn.put(newlist)
+		# Keep this print for confirmation of child process completion, useful for diagnosing hangs
+		# if the parent is waiting for q.get()
+		print("graph_prep_process: Successfully put data on queue.", file=sys.stderr)
+		sys.exit(0) # Explicitly exit the child process immediately after putting data.
 
-		# increment the cursor
-		linepoint = linepoint + jump
-
-	conn.put(newlist)
+	except Exception as e:
+		error_message = f"ERROR IN graph_prep_process: {e}\nTraceback:\n{traceback.format_exc()}"
+		print(error_message, file=sys.stderr)
+		with open("graph_prep_process_error.log", "a") as f:
+			f.write(error_message + "\n")
+		sys.exit(1) # Ensure the child process exits with an error code
 
 
 class graph_area(object):
-# it is initialized with:
-# - ident: a graph identifier number so it knows which currently selected graphable sensor (0-2) this graph is
-# - graphcoords: list containing the top left x,y coordinates
-# - graphspan: list containing the x and y span in pixels
-
-
 	def __init__(self, ident, graphcoords, graphspan, cycle = 0, colour = 0, width = 1, type = 0, samples = False):
+		# print("graph_area.__init__ called", file=sys.stderr) # Removed non-essential print
 
-		# if a samplesize is provided use it, otherwise grab global setting.
 		if not samples:
-			self.samples = configure.samples
+			try:
+				self.samples = configure.samples
+			except (NameError, AttributeError):
+				print("ERROR: 'configure' object or 'configure.samples' not found. Defaulting samples to 100.", file=sys.stderr)
+				self.samples = 100
 		else:
 			self.samples = samples
 
 		self.cycle = cycle
-
-
 		self.glist = array('f', [])
 		self.dlist = array('f', [])
-
 		self.colour = colour
-
-		#controls auto scaling (set by global variable at render)
 		self.auto = True
-
-		# controls width
 		self.width = width
-
 		self.dotw = 6
 		self.doth = 6
 		self.buff = array('f', [])
 		self.type = type
 
-		self.timeit = timer()
+		try:
+			self.timeit = timer()
+		except NameError:
+			print("ERROR: 'timer' object not found. Skipping timer initialization.", file=sys.stderr)
+			self.timeit = None
 
 		self.datahigh = 0
 		self.datalow = 0
 		self.newrange = (self.datalow,self.datahigh)
-
 		self.timelength = 0
-
-		# stores the graph identifier, there are three on the multiframe
 		self.ident = ident
-
-		# collect data for where the graph should be drawn to screen.
 		self.x, self.y = graphcoords
 		self.spanx,self.spany = graphspan
-
-		# defines the vertical limits of the screen based on the area provided
 		self.targetrange = ((self.y + self.spany), self.y)
 
-		# seeds a list with the coordinates for 0 to give us a list that we
-		# can put our scaled graph values in
 		for i in range(self.spanx):
 			self.glist.append(self.y + self.spany)
-
-		# seeds a list with sourcerange zero so we can put our sensor readings into it.
-		# dlist is the list where we store the raw sensor values with no scaling
-		for i in range(self.spanx):
 			self.dlist.append(self.datalow)
 			self.buff.append(self.datalow)
+		# print("graph_area.__init__ finished", file=sys.stderr) # Removed non-essential print
 
 
-	# the following function returns the graph list.
 	def grabglist(self):
 		return self.glist
 
-	# the following function returns the data list.
 	def grabdlist(self):
 		return self.dlist
 
-	# Returns the average of the current dataset
 	def get_average(self):
-		average = sum(self.buff) / len(self.buff)
-		return average
+		if not self.buff:
+			# print("WARNING: buff is empty, cannot calculate average.", file=sys.stderr) # Removed non-essential print
+			return 0.0
+		return sum(self.buff) / len(self.buff)
 
-	# returns the highest
 	def get_high(self):
+		if not self.buff:
+			return self.datahigh
 		return max(self.buff)
 
 	def get_low(self):
+		if not self.buff:
+			return self.datalow
 		return min(self.buff)
 
-	# this function calculates the approximate time scale of the graph
 	def giveperiod(self):
 		self.period = (self.spanx * self.cycle) / 60
-
 		return self.period
 
 
-
-	# the following pairs the list of values with coordinates on the X axis.
-
-	# if the auto flag is set then the class will autoscale the graph so that
-	# the highest and lowest currently displayed values are presented.
-	# takes in a list/array with length => span
 	def graphprep(self, datalist, ranger = None):
+		# print("PARENT(graphprep): Entering graphprep method.", file=sys.stderr) # Removed non-essential print
 
-		index = configure.sensors[self.ident][0]
+		try:
+			index = configure.sensors[self.ident][0]
+			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
+		except (NameError, AttributeError, IndexError) as e:
+			print(f"PARENT(graphprep) ERROR: Failed to get sensor info from 'configure': {e}", file=sys.stderr)
+			print("PARENT(graphprep): Using default sensor ranges due to error.", file=sys.stderr)
+			dsc,dev,sym,maxi,mini = "default_sensor", "default_device", "SYM", 100.0, 0.0
 
-		dsc,dev,sym,maxi,mini = configure.sensor_info[index]
-
-		# The starting X coordinate, the graph draws from right to left (new to old).
 		self.linepoint = self.spanx + self.x
-
-		# calculate how many pixels per sample the graph will take.
 		spacing = self.spanx / self.samples
-
-		# Spacing between each point.
 		self.jump = -spacing
 
-
-
-		# if this graph ISNT for WIFI.
 		if self.type == 0:
-			# grabs the currently selected sensors range data.
 			sourcelow = mini
 			sourcehigh = maxi
-
 			self.sourcerange = [sourcelow,sourcehigh]
-		#otherwise assume its for wifi.
 		else:
 			sourcelow = -90
-
 			sourcehigh = -5
-
 			self.sourcerange = [sourcelow,sourcehigh]
 
-		# get the range of the data.
 		if len(datalist) > 0:
 			self.datahigh = max(datalist)
 			self.datalow = min(datalist)
@@ -199,77 +150,149 @@ class graph_area(object):
 
 		self.newrange = (self.datalow,self.datahigh)
 
-
-
 		q = Queue()
+		# print("PARENT(graphprep): Starting graph_prep_process...", file=sys.stderr) # Removed non-essential print
 		prep_process = Process(target=graph_prep_process, args=(q,self.samples,datalist,self.auto,self.newrange,self.targetrange,self.sourcerange,self.linepoint,self.jump,sourcelow,))
 		prep_process.start()
 
-		prep_process.join()
-		result = q.get()
+		result = []
+		try:
+			# print("PARENT(graphprep): Waiting for result from queue (timeout 5s)...", file=sys.stderr) # Removed non-essential print
+			result = q.get(timeout=5)
+			# print("PARENT(graphprep): Successfully received result from queue.", file=sys.stderr) # Removed non-essential print
+			# Keep these prints if you ever need to inspect the data coming from the child
+			# print(f"PARENT(graphprep): Type of result: {type(result)}", file=sys.stderr)
+			# print(f"PARENT(graphprep): Length of result: {len(result)}", file=sys.stderr)
+			# if len(result) > 0:
+			#     print(f"PARENT(graphprep): First 5 elements of result: {result[:5]}", file=sys.stderr)
+			# else:
+			#     print("PARENT(graphprep) WARNING: Result list is empty from child process.", file=sys.stderr)
 
+		except Empty:
+			print("PARENT(graphprep) ERROR: graph_prep_process timed out or did not return data. Terminating child.", file=sys.stderr)
+			prep_process.terminate()
+		except Exception as e:
+			error_message = f"PARENT(graphprep) ERROR: Exception getting result from graph_prep_process queue: {e}\nTraceback:\n{traceback.format_exc()}"
+			print(error_message, file=sys.stderr)
+			with open("graph_prep_process_error.log", "a") as f:
+				f.write(error_message + "\n")
+			prep_process.terminate()
+		finally:
+			# print("PARENT(graphprep): Process status before join:", prep_process.is_alive(), file=sys.stderr) # Removed non-essential print
+			try:
+				# print("PARENT(graphprep): Joining graph_prep_process...", file=sys.stderr) # Removed non-essential print
+				prep_process.join(timeout=1)
+				if prep_process.is_alive():
+					print("PARENT(graphprep) WARNING: Child process still alive after join timeout. Forcing termination.", file=sys.stderr)
+					prep_process.terminate()
+				# print("PARENT(graphprep): graph_prep_process joined.", file=sys.stderr) # Removed non-essential print
+			except Exception as e:
+				error_message = f"PARENT(graphprep) ERROR: Exception during prep_process.join(): {e}\nTraceback:\n{traceback.format_exc()}"
+				print(error_message, file=sys.stderr)
+				with open("graph_prep_process_error.log", "a") as f:
+					f.write(error_message + "\n")
+				prep_process.terminate()
+
+		# print("PARENT(graphprep): Returning result from graphprep.", file=sys.stderr) # Removed non-essential print
 		return result
-
-
 
 
 	def render(self, draw, auto = True, dot = True, ranger = None):
 
-
+		# print("entered pilgraph render", file=sys.stderr) # Removed non-essential print
 		return_value = 0
 
-		self.auto = configure.auto[0]
+		# print("gets auto status", file=sys.stderr) # Removed non-essential print
+		try:
+			self.auto = configure.auto[0]
+		except (NameError, AttributeError, IndexError) as e:
+			print(f"ERROR: 'configure.auto' not found or invalid. Defaulting auto to True: {e}", file=sys.stderr)
+			self.auto = True
 
-		# for PLARS we reduce the common identifier of our currently selected sensor
-		# by using its description (dsc) and device (dev): eg
-		# BME680 has a thermometer and hygrometer,
-		# therefore the thermometer's dsc is "thermometer" and the device is 'BME680'
-		# the hygrometer's dsc is "hygrometer" and the the device is "BME680"
-
-		# so every time through the loop PILgraph will pull the latest sensor
-		# settings.
-
-		# standard pilgraph: takes DSC,DEV keypairs from screen drawer, asks
-		# plars for data, graphs it.
-
-		# Standard graph
+		# print("determining graph type", file=sys.stderr) # Removed non-essential print
+		dsc, dev = None, None
 		if self.type == 0:
-			index = configure.sensors[self.ident][0]
-			dsc,dev,sym,maxi,mini = configure.sensor_info[index]
-			recent, self.timelength = plars.get_recent(dsc,dev,num = self.samples, time = True)
+			# print("getting this graphs sensor info: ", self.ident, file=sys.stderr) # Removed non-essential print
+			try:
+				index = configure.sensors[self.ident][0]
+				dsc,dev,sym,maxi,mini = configure.sensor_info[index]
+			except (NameError, AttributeError, IndexError) as e:
+				print(f"ERROR: Failed to get sensor info for graph {self.ident} from 'configure': {e}", file=sys.stderr)
+				dsc,dev,sym,maxi,mini = "default_sensor", "default_device", "SYM", 100.0, 0.0
 
+			# print("query PLARS for data", file=sys.stderr) # Removed non-essential print
+			try:
+				recent, self.timelength = plars.get_recent(dsc,dev,num = self.samples, time = True)
+				if recent is None:
+					print("WARNING: plars.get_recent returned None. Initializing recent as empty list.", file=sys.stderr)
+					recent = []
+			except Exception as e:
+				print(f"ERROR: Failed to query PLARS for recent data for {dsc}/{dev}: {e}", file=sys.stderr)
+				recent = []
 
-			# for returning last value on multigraph
+			# print("assigning 47 if no data", file=sys.stderr) # Removed non-essential print
 			if len(recent) == 0:
 				return_value = 47
 			else:
 				return_value = recent[-1]
 
-		# EM pilgraph: pulls wifi data only.
 		elif self.type == 1:
-			recent = plars.get_top_em_history(no = self.samples)
-			return_value = recent[-1]
+			# print("query PLARS for top EM history data.", file=sys.stderr) # Removed non-essential print
+			try:
+				recent = plars.get_top_em_history(no = self.samples)
+				if recent is None:
+					print("WARNING: plars.get_top_em_history returned None. Initializing recent as empty list.", file=sys.stderr)
+					recent = []
+			except Exception as e:
+				print(f"ERROR: Failed to query PLARS for EM history: {e}", file=sys.stderr)
+				recent = []
 
-		# Testing a new graph
+			if len(recent) == 0:
+				return_value = -999
+			else:
+				return_value = recent[-1]
+
 		elif self.type == 2:
-			recent = plars.get_recent(dsc,dev,num = self.samples)
+			# print("query PLARS for new graph type 2 data.", file=sys.stderr) # Removed non-essential print
+			try:
+				recent = plars.get_recent(dsc,dev,num = self.samples)
+				if recent is None:
+					print("WARNING: plars.get_recent for type 2 returned None. Initializing recent as empty list.", file=sys.stderr)
+					recent = []
+			except Exception as e:
+				print(f"ERROR: Failed to query PLARS for type 2 data: {e}", file=sys.stderr)
+				recent = []
 
 
-
+		# print("sending data to graphprep", file=sys.stderr) # Removed non-essential print
 		cords = self.graphprep(recent)
+		# print("returned from graphprep", file=sys.stderr) # Removed non-essential print
+
 		self.buff = recent
 
-		# draws the line graph
-		draw.line(cords,self.colour,self.width)
+		# print("drawing graph", file=sys.stderr) # Removed non-essential print
+		try:
+			draw.line(cords,self.colour,self.width)
+		except Exception as e:
+			print(f"ERROR: Failed to draw line graph with cords: {cords[:10]}... Error: {e}", file=sys.stderr)
+			print(f"Traceback:\n{traceback.format_exc()}", file=sys.stderr)
 
-		# draws the line dot.
+
+		# print("drawing dots", file=sys.stderr) # Removed non-essential print
 		if dot:
-			x1 = cords[0][0] - (self.dotw/2)
-			y1 = cords[0][1] - (self.doth/2)
+			try:
+				if len(cords) > 0:
+					x1 = cords[0][0] - (self.dotw/2)
+					y1 = cords[0][1] - (self.doth/2)
+					x2 = cords[0][0] + (self.dotw/2)
+					y2 = cords[0][1] + (self.doth/2)
+					draw.ellipse([x1,y1,x2,y2],self.colour)
+				else:
+					print("PILgraph: No cords to draw dot, skipping.", file=sys.stderr) # Retained this warning
+			except Exception as e:
+				print(f"ERROR: Failed to draw dot with cords[0]: {cords[0] if len(cords)>0 else 'N/A'}. Error: {e}", file=sys.stderr)
+				print(f"Traceback:\n{traceback.format_exc()}", file=sys.stderr)
 
-			x2 = cords[0][0] + (self.dotw/2)
-			y2 = cords[0][1] + (self.doth/2)
-			draw.ellipse([x1,y1,x2,y2],self.colour)
 
-
+		# print("returning from pilgraph", file=sys.stderr) # Removed non-essential print
 		return return_value

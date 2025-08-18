@@ -1,8 +1,13 @@
 #!/usr/bin/python
+#!/usr/bin/env python3
 
-# PicorderOS --------------------------------------------- 2023
+
+# PicorderOS --------------------------------------------- 2025
 # Created by Chris Barrett ------------------------- directive0
 # For my sister, a real life Beverly Crusher.
+#
+#
+# (may contain small portions of vibe coded slush)
 
 print("PicorderOS")
 print("Loading Components")

@@ -292,6 +292,19 @@ class Sensor(object):
 
 			sensorlist.append(self.radiat)
 
+		if configure.amg8833:
+			self.thermal_frame = amg.pixels
+
+			configure.thermal_frame = self.thermal_frame
+			data = numpy.array(self.thermal_frame)
+
+			high = numpy.max(data)
+			low = numpy.min(data)
+
+			self.amg_high.set(high,timestamp, position)
+			self.amg_low.set(low,timestamp, position)
+
+			sensorlist.extend((self.amg_high, self.amg_low))
 
 		if configure.envirophat:
 			self.rgb = light.rgb()
@@ -417,7 +430,14 @@ def sensor_process(conn):
 		if timed.timelapsed() > configure.samplerate[0]:
 			sensor_data = sensors.get()
 			#constantly grab sensors
-			conn.send([sensor_data])
+
+			if configure.amg8833:
+				thermal_frame = sensors.get_thermal_frame()
+			else:
+				thermal_frame = []
+
+			conn.send([sensor_data, thermal_frame])
+
 			timed.logtime()
 
 wifitimer = timer()
@@ -450,7 +470,9 @@ def threaded_sensor():
 
 			if item is not None:
 				data = item[0]
+				data, thermal = item
 				plars.update(data)
+				plars.update_thermal(thermal)
 				#sets current position
 				configure.position = [data[0].get()[7],data[0].get()[8]]
 			else:

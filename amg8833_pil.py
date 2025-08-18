@@ -7,6 +7,9 @@ import numpy
 # Load up the image library stuff to help draw bitmaps to push to the screen
 import PIL.ImageOps
 
+# for hang protection.
+from multiprocessing import Process, Queue
+import time
 
 # from https://learn.adafruit.com/adafruit-amg8833-8x8-thermal-camera-sensor/raspberry-pi-thermal-camera
 # interpolates the data into a smoothed screen res
@@ -88,7 +91,12 @@ from objects import *
 
 import sensors
 
-
+def interpolate_worker(points, pixels, grid_x, grid_y, result_queue):
+	try:
+		bicubic = griddata(points, pixels, (grid_x, grid_y), method="linear")
+		result_queue.put(bicubic)
+	except Exception as e:
+		result_queue.put(e)
 
 # create an 8x8 array for testing purposes. Displays random 'sensor data'.
 def makegrid(random = True):
@@ -210,6 +218,8 @@ class ThermalGrid(object):
 		for i in range(8):
 			self.rows.append(ThermalRows(self.x, self.y + (i * (h/8)), self.w, self.h / 8))
 
+		self.last_griddata = []
+
 		self.update()
 
 	def push(self,surface):
@@ -259,24 +269,56 @@ class ThermalGrid(object):
 
 		for row in self.data:
 			pixels = pixels + list(row)
+
 		pixels = [numpy.interp(p,(mintemp,maxtemp),(0,COLORDEPTH - 1)) for p in pixels]
+		
+		# Define a timeout in seconds
+		timeout_seconds = 2 
+		
+		# Create a queue to receive the result from the process
+		result_queue = Queue()
+		
+		# Create and start the process with the wrapper function
+		interpolation_process = Process(target=interpolate_worker, args=(points, pixels, grid_x, grid_y, result_queue))
+		interpolation_process.start()
+		
+		# Wait for the process to finish or for the timeout to expire
+		interpolation_process.join(timeout_seconds)
+		
+		# Check if the process is still alive after the timeout
+		if interpolation_process.is_alive():
+			print("Thermal interpolation timed out. Terminating process. Using last good frame")
+			interpolation_process.terminate()
+			bicubic = self.last_griddata  # Set bicubic to last good set of data
+		else:
+			# Get the result from the queue
+			result = result_queue.get()
+			if isinstance(result, Exception):
+				print(f"An error occurred during thermal interpolation: {result}")
+				bicubic = self.last_griddata # Set bicubic to last good set of data
+			else:
+				bicubic = result
+				self.last_griddata = bicubic
 
-		# perform interpolation
-		bicubic = griddata(points, pixels, (grid_x, grid_y), method="cubic")
-
-		# draw everything
-		for ix, row in enumerate(bicubic):
-			for jx, pixel in enumerate(row):
-				x = self.x + (displayPixelHeight * ix)
-				y = self.y + (displayPixelWidth * jx)
-				x2 = x + displayPixelHeight
-				y2 = y + displayPixelWidth
-				surface.rectangle([(x, y), (x2, y2)], fill = colors[constrain(int(pixel), 0, COLORDEPTH - 1)], outline=None)
+		
+		# You'll need to handle the case where bicubic is None
+		if bicubic is not None:
+			# draw everything
+			for ix, row in enumerate(bicubic):
+				for jx, pixel in enumerate(row):
+					x = self.x + (displayPixelHeight * ix)
+					y = self.y + (displayPixelWidth * jx)
+					x2 = x + displayPixelHeight
+					y2 = y + displayPixelWidth
+					surface.rectangle([(x, y), (x2, y2)], fill=colors[constrain(int(pixel), 0, COLORDEPTH - 1)], outline=None)
+		else:
+			print("Skipping drawing due to interpolation timeout or error.")
 
 	def update(self):
 
 		if configure.amg8833:
-			self.data = amg.pixels
+			self.data = plars.get_thermal_frame()
+
 
 			if len(self.data) < 1:
 				self.data = self.dummy
