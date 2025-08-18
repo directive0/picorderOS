@@ -204,8 +204,6 @@ class graph_area(object):
 				if queried_recent is not None and len(queried_recent) > 0:
 					recent_raw_data = queried_recent
 					current_data_retrieved = True
-				else:
-					print("WARNING: plars.get_recent returned no new data.", file=sys.stderr)
 			except Exception as e:
 				print(f"ERROR: Failed to query PLARS for recent data for {dsc}/{dev}: {e}", file=sys.stderr)
 
@@ -223,8 +221,7 @@ class graph_area(object):
 				if queried_recent is not None and len(queried_recent) > 0:
 					recent_raw_data = queried_recent
 					current_data_retrieved = True
-				else:
-					print("WARNING: plars.get_top_em_history returned no new data.", file=sys.stderr)
+
 			except Exception as e:
 				print(f"ERROR: Failed to query PLARS for EM history: {e}", file=sys.stderr)
 
@@ -242,8 +239,6 @@ class graph_area(object):
 				if queried_recent is not None and len(queried_recent) > 0:
 					recent_raw_data = queried_recent
 					current_data_retrieved = True
-				else:
-					print("WARNING: plars.get_recent for type 2 returned no new data.", file=sys.stderr)
 			except Exception as e:
 				print(f"ERROR: Failed to query PLARS for type 2 data: {e}", file=sys.stderr)
 			

@@ -742,7 +742,7 @@ class PowerDown(object):
 		# device needs to show multiple settings
 		# first the sensor palette configuration
 
-		self.events = Events(["shutdown",0,"last","0",0,0,0,0], "poweroff")
+		self.events = Events(["shutdown",0,"last","last",0,0,0,0], "poweroff")
 
 
 	def push(self, draw):
