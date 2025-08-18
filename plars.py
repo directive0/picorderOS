@@ -329,7 +329,6 @@ class PLARS(object):
 				
 				if process.is_alive():
 					process.terminate()
-					print("Process timed out in update_em")
 					return
 			except Exception as e:
 				print(f"Error getting process result in update_em: {e}")
@@ -385,7 +384,6 @@ class PLARS(object):
 				
 				if process.is_alive():
 					process.terminate()
-					print("Process timed out in update")
 					return
 			except Exception as e:
 				print(f"Error getting process result in update: {e}")
@@ -422,7 +420,6 @@ class PLARS(object):
 				
 				if process.is_alive():
 					process.terminate()
-					print("Process timed out in get_recent")
 					return [], 0
 			except Exception as e:
 				print(f"Error getting process result in get_recent: {e}")

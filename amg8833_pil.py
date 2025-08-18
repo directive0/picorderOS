@@ -287,14 +287,12 @@ class ThermalGrid(object):
 		
 		# Check if the process is still alive after the timeout
 		if interpolation_process.is_alive():
-			print("Thermal interpolation timed out. Terminating process. Using last good frame")
 			interpolation_process.terminate()
 			bicubic = self.last_griddata  # Set bicubic to last good set of data
 		else:
 			# Get the result from the queue
 			result = result_queue.get()
 			if isinstance(result, Exception):
-				print(f"An error occurred during thermal interpolation: {result}")
 				bicubic = self.last_griddata # Set bicubic to last good set of data
 			else:
 				bicubic = result

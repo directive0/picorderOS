@@ -33,7 +33,6 @@ def graph_prep_process(conn,samples,datalist,auto,newrange,targetrange,sourceran
 		conn.put(newlist)
 		# Keep this print for confirmation of child process completion, useful for diagnosing hangs
 		# if the parent is waiting for q.get()
-		print("graph_prep_process: Successfully put data on queue.", file=sys.stderr)
 		sys.exit(0) # Explicitly exit the child process immediately after putting data.
 
 	except Exception as e:
@@ -87,7 +86,7 @@ class graph_area(object):
 			self.glist.append(self.y + self.spany)
 			self.dlist.append(self.datalow)
 			self.buff.append(self.datalow)
-		# print("graph_area.__init__ finished", file=sys.stderr) # Removed non-essential print
+
 
 
 	def grabglist(self):
@@ -98,7 +97,7 @@ class graph_area(object):
 
 	def get_average(self):
 		if not self.buff:
-			# print("WARNING: buff is empty, cannot calculate average.", file=sys.stderr) # Removed non-essential print
+
 			return 0.0
 		return sum(self.buff) / len(self.buff)
 
@@ -118,7 +117,7 @@ class graph_area(object):
 
 
 	def graphprep(self, datalist, ranger = None):
-		# print("PARENT(graphprep): Entering graphprep method.", file=sys.stderr) # Removed non-essential print
+
 
 		try:
 			index = configure.sensors[self.ident][0]
