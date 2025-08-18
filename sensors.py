@@ -51,6 +51,12 @@ if configure.system_vitals:
 if configure.pocket_geiger:
 	from PiPocketGeiger import RadiationWatch
 
+if configure.amg8833:
+	import adafruit_amg88xx
+	import busio
+	i2c = busio.I2C(configure.PIN_SCL, configure.PIN_SDA)
+	amg = adafruit_amg88xx.AMG88XX(i2c)
+
 
 if configure.EM:
 	from modulated_em import *
