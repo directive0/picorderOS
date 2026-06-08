@@ -8,7 +8,14 @@ import csv
 import os
 import logging
 from datetime import datetime
-from bleak import BleakScanner, BleakClient
+import threading
+
+# Shared storage for integration with picorderOS
+# Format: { "description": [value, min, max, symbol, device, timestamp, position] }
+latest_data = {}
+data_lock = threading.Lock()
+_receiver_thread = None
+
 
 # Nordic UART Service UUIDs
 UART_SERVICE_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
@@ -53,6 +60,10 @@ class BLEReceiver:
             with open(self.data_file, 'a', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow(data_row)
+            
+            # Update shared storage for sensors.py integration
+            with data_lock:
+                latest_data[data_row[3]] = data_row
             
             self.logger.info(f"Saved: {data_row[3]} = {data_row[0]} {data_row[4]} from {data_row[5]}")
             
@@ -108,6 +119,7 @@ class BLEReceiver:
     async def scan_for_devices(self, duration=10, target_name=None):
         """Scan for BLE devices"""
         self.logger.info(f"Scanning for BLE devices{' named ' + target_name if target_name else ''}...")
+        from bleak import BleakScanner
         
         devices = await BleakScanner.discover(timeout=duration)
         found_devices = []
@@ -131,6 +143,7 @@ class BLEReceiver:
     
     async def connect_to_device(self, device):
         """Connect to a BLE device and handle data"""
+        from bleak import BleakClient
         client = None
         try:
             self.logger.info(f"Connecting to {device.name} ({device.address})...")
@@ -225,6 +238,7 @@ class BLEReceiver:
         self.logger.info("Stopping receiver...")
 
 async def main():
+    from bleak import BleakScanner, BleakClient
     receiver = BLEReceiver()
     
     try:
@@ -242,6 +256,24 @@ async def main():
         print("\nShutting down...")
     finally:
         receiver.stop()
+
+def start_background_receiver(device_name="TempSensor01"):
+    """Helper to run the async receiver in a background thread for picorderOS integration"""
+    global _receiver_thread
+    
+    # Prevent starting multiple threads in the same process
+    if _receiver_thread and _receiver_thread.is_alive():
+        return _receiver_thread
+
+    def run_async():
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        receiver = BLEReceiver()
+        loop.run_until_complete(receiver.start_receiver(device_name))
+        
+    thread = threading.Thread(target=run_async, daemon=True)
+    thread.start()
+    return thread
 
 if __name__ == "__main__":
     asyncio.run(main())

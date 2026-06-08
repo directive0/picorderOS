@@ -64,7 +64,7 @@ if configure.EM:
 if configure.gps:
 	from positioning import *
 
-
+handheld = None
 
 
 # An object to store each sensor value and context.
@@ -105,7 +105,7 @@ class Sensor(object):
 	# selected and then if active should poll the sensor and append it to the
 	# sensor array.
 
-	def __init__(self):
+	def __init__(self, polling=False):
 
 		#set up the necessary info for the sensors that are active.
 
@@ -206,6 +206,13 @@ class Sensor(object):
 			self.thermal_frame = []
 			self.amg_high = Fragment(0.0, 80.0, "IRHigh", self.deg_sym + "c", "amg8833")
 			self.amg_low = Fragment(0.0, 80.0, "IRLow", self.deg_sym + "c", "amg8833")
+
+		if configure.handheld:
+			global handheld
+			import handheld
+			if polling:
+				handheld.start_background_receiver(configure.handheld_name)
+			self.handheld_fragment = Fragment(0.0, 80.0, "ObjectTemp", self.deg_sym + "c", "handheld")
 
 
 		configure.sensor_info = self.get_all_info()
@@ -355,10 +362,18 @@ class Sensor(object):
 			# load the fragments into the sensorlist
 			sensorlist.extend((self.cputemp, self.cpuperc, self.virtmem, self.bytsent, self.bytrece))
 
-			if self.generators:
-				 sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2)) 
+		if configure.handheld:
+			with handheld.data_lock:
+				# Pull remote data matching the fragment's description ("IR Thermo")
+				remote_data = handheld.latest_data.get(self.handheld_fragment.dsc)
+				if remote_data:
+					self.handheld_fragment.set(remote_data[0], timestamp, position)
+			sensorlist.append(self.handheld_fragment)
+
+		if self.generators:
+			sensorlist.extend((self.sinewav, self.tanwave, self.coswave, self.sinwav2)) 
 			
-			configure.max_sensors[0] = len(sensorlist)
+		configure.max_sensors[0] = len(sensorlist)
 			
 		if len(sensorlist) < 1:
 			print("NO SENSORS LOADED")
@@ -429,7 +444,7 @@ class MLX90614():
 # function to use the sensor class as a process.
 def sensor_process(conn):
 	#init sensors
-	sensors = Sensor()
+	sensors = Sensor(polling=True)
 	timed = timer()
 
 	while True:
@@ -450,7 +465,7 @@ wifitimer = timer()
 
 def threaded_sensor():
 
-	sensors = Sensor()
+	sensors = Sensor(polling=False)
 
 	sensors.get()
 

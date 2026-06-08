@@ -2,7 +2,7 @@
 # This module holds the initialization and global variables for the program.
 # Special thanks to SCIFI.radio for their work on the INI loader!
 
-import time, configparser
+import time, configparser, json
 from os.path import exists
 
 
@@ -48,7 +48,10 @@ class preferences(object):
 							'# Wifi and BT sensors':None,
 							'EM':'no',
 							'# GPS Location Data (GPS module through USB serial)':None,
-							'GPS':'no'
+							'GPS':'no',
+							'# Remote Pi Pico via BLE':None,
+							'handheld':'no',
+							'handheld_name':'TempSensor01'
 							}										
 
 		config['INPUT'] =    {'# Controls which operator input method is active (Choose only one)':None,
@@ -220,6 +223,9 @@ class preferences(object):
 
 		# Toggles position data from USB Serial GPS module
 		self.gps = self.str2bool(config['SENSORS']['gps'])
+
+		self.handheld = self.str2bool(config['SENSORS']['handheld'])
+		self.handheld_name = config['SENSORS']['handheld_name']
 
 
 # INPUT MODULE-----------------------------------------------------------------#
@@ -501,7 +507,18 @@ class Events(object):
 		# button map for rearranging control scheme (for making wiring input easier)
 		# first number is where input currently is connected (pin number)
 		# second number is where input should go.
-		self.button_map = {0:1, 1:2, 2:4, 3:5, 4:6, 5:7, 6:3, 7:0, 8:8, 9:9, 10:10, 11:11, 12:12, 13:13, 14:14, 15:15}
+		self.button_map = {0:7, 1:6, 2:5, 3:4, 4:0, 5:2, 6:1, 7:3, 8:8, 9:9, 10:10, 11:11, 12:12, 13:13, 14:14, 15:15}
+
+		# Attempt to load custom mapping from JSON if it exists
+		if exists("buttonmap.json"):
+			try:
+				with open("buttonmap.json", "r") as f:
+					loaded_map = json.load(f)
+					# Convert string keys/values from JSON back to integers
+					configure.button_map = {int(k): int(v) for k, v in loaded_map.items()}
+					print(self.button_map)
+			except Exception:
+				pass
 
 	def check(self):
 		
